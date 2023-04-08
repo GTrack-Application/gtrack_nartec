@@ -82,50 +82,50 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container(
-                      margin: const EdgeInsets.only(left: 60),
-                      child: const Text('Enter your password'),
-                    ),
-                    CustomTextField(
-                      emailController: passwordController,
-                      leadingIcon: Image.asset(
-                        CustomIcons.passwordIcon,
-                        width: 42,
-                        height: 42,
-                      ),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: obscureText,
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            obscureText = !obscureText;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      alignment: Alignment.centerRight,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Text('Forgot password?'),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Click here',
-                              style: TextStyle(
-                                // make it underline
-                                decoration: TextDecoration.underline,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   margin: const EdgeInsets.only(left: 60),
+                    //   child: const Text('Enter your password'),
+                    // ),
+                    // CustomTextField(
+                    //   emailController: passwordController,
+                    //   leadingIcon: Image.asset(
+                    //     CustomIcons.passwordIcon,
+                    //     width: 42,
+                    //     height: 42,
+                    //   ),
+                    //   keyboardType: TextInputType.visiblePassword,
+                    //   obscureText: obscureText,
+                    //   width: MediaQuery.of(context).size.width * 0.7,
+                    //   suffixIcon: IconButton(
+                    //     icon: const Icon(Icons.remove_red_eye),
+                    //     onPressed: () {
+                    //       setState(() {
+                    //         obscureText = !obscureText;
+                    //       });
+                    //     },
+                    //   ),
+                    // ),
+                    // Container(
+                    //   width: double.infinity,
+                    //   alignment: Alignment.centerRight,
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.end,
+                    //     children: [
+                    //       const Text('Forgot password?'),
+                    //       TextButton(
+                    //         onPressed: () {},
+                    //         child: const Text(
+                    //           'Click here',
+                    //           style: TextStyle(
+                    //             // make it underline
+                    //             decoration: TextDecoration.underline,
+                    //             color: Colors.black,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     const SizedBox(height: 20),
                   ],
                 ),
