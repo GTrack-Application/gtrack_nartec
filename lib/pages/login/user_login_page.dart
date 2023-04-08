@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
+import 'package:gtrack_mobile_app/pages/gtrack-menu/menu_page.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -130,7 +132,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
               ),
               Center(
                   child: CustomElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.toNamed(
+                    MenuPage.pageName,
+                    preventDuplicates: true,
+                  );
+                },
                 text: "Log in",
               )),
             ],
