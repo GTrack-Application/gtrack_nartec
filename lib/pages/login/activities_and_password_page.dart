@@ -155,7 +155,8 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                                   child: DropdownButton(
                                       value: activityValue,
                                       items: activities
-                                          .where((element) => element != null)
+                                          .where(
+                                              (element) => element.isNotEmpty)
                                           .map<DropdownMenuItem<String>>(
                                             (String v) =>
                                                 DropdownMenuItem<String>(

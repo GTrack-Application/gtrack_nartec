@@ -65,7 +65,7 @@ class _OtpPageState extends State<OtpPage> {
       final password =
           Provider.of<LoginProvider>(context, listen: false).password;
       try {
-        final response = await LoginServices.confirmation(
+        await LoginServices.confirmation(
           email.toString(),
           activity.toString(),
           password.toString(),

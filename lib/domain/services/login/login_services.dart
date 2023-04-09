@@ -32,9 +32,9 @@ class LoginServices {
     ).then((response) {
       if (response.statusCode == 200) {
         // handle successful response
-        print('^^^^^ status code is fine');
-        print('body: ${json.decode(response.body)}');
-        final responseBody = json.decode(response.body) as Map<String, dynamic>;
+        // print('^^^^^ status code is fine');
+        // print('body: ${json.decode(response.body)}');
+        // final responseBody = json.decode(response.body) as Map<String, dynamic>;
       } else {
         throw Exception('Error happended while sending OTP');
       }
@@ -63,8 +63,8 @@ class LoginServices {
     ).then((response) {
       if (response.statusCode == 200) {
         // handle successful response
-        print('******* status code is fine');
-        print('body: ${json.decode(response.body)}');
+        // print('******* status code is fine');
+        // print('body: ${json.decode(response.body)}');
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
         return responseBody;
       } else {
@@ -128,17 +128,17 @@ class LoginServices {
       if (response.statusCode == 200) {
         // handle successful response
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
-        print('responseBody: $responseBody');
+        // print('responseBody: $responseBody');
         return responseBody;
       } else if (response.statusCode == 404) {
-        print('responseBody: ${json.decode(response.body)}');
+        // print('responseBody: ${json.decode(response.body)}');
 
         // return {
         //   "message": "Email doesn't exist",
         // };
         throw Exception('Email doesn\'t exist');
       } else {
-        print('responseBody: ${json.decode(response.body)}');
+        // print('responseBody: ${json.decode(response.body)}');
 
         // handle error response
         throw Exception('Error happended while loading data');
