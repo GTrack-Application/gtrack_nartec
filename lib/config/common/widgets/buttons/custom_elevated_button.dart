@@ -30,17 +30,15 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      height: 50,
       margin: widget.margin ??
           EdgeInsets.only(
             left: MediaQuery.of(context).size.width * 0.20,
             right: MediaQuery.of(context).size.width * 0.23,
           ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).primaryColor,
-      ),
       child: ElevatedButton(
         onPressed: () {
+          if (_isLoading == true) return;
           toggleLoading();
           widget.onPressed?.call();
           toggleLoading();
