@@ -128,13 +128,18 @@ class LoginServices {
       if (response.statusCode == 200) {
         // handle successful response
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
+        print('responseBody: $responseBody');
         return responseBody;
       } else if (response.statusCode == 404) {
+        print('responseBody: ${json.decode(response.body)}');
+
         // return {
         //   "message": "Email doesn't exist",
         // };
         throw Exception('Email doesn\'t exist');
       } else {
+        print('responseBody: ${json.decode(response.body)}');
+
         // handle error response
         throw Exception('Error happended while loading data');
       }

@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/custom_elevated_button.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
@@ -7,6 +8,9 @@ import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
 import 'package:gtrack_mobile_app/domain/services/login/login_services.dart';
 import 'package:gtrack_mobile_app/pages/gtrack-menu/menu_page.dart';
+import 'package:gtrack_mobile_app/pages/login/activities_and_password_page.dart';
+import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
+import 'package:provider/provider.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -36,16 +40,29 @@ class _UserLoginPageState extends State<UserLoginPage> {
   }
 
   login() {
-    if (formKey.currentState!.validate()) {
+    if (formKey.currentState?.validate() ?? false) {
+      Fluttertoast.showToast(msg: 'Login in progress...');
       LoginServices.login(email: emailController.text).then((response) {
-        Get.toNamed(MenuPage.pageName);
-      }).catchError(
-        (error) {
-          Get.snackbar('Error', error.toString());
-        },
-      );
-    } else {
-      Get.snackbar('Error', 'Please check your email and password');
+        final activities = response['activities'] as List<dynamic>;
+
+        // add email and activities to login provider
+        Provider.of<LoginProvider>(context, listen: false)
+            .setEmail(emailController.text);
+        Provider.of<LoginProvider>(context, listen: false)
+            .setActivities(activities);
+
+        Get.toNamed(
+          ActivitiesAndPasswordPage.pageName,
+          arguments: activities,
+          parameters: {
+            'email': emailController.text,
+          },
+        );
+      }).catchError((error) {
+        Fluttertoast.showToast(msg: error.toString());
+      }).onError((error, stackTrace) {
+        Fluttertoast.showToast(msg: error.toString());
+      });
     }
   }
 
@@ -158,10 +175,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
                 ),
               ),
               Center(
-                  child: CustomElevatedButton(
-                onPressed: login,
-                text: "Log in",
-              )),
+                child: CustomElevatedButton(
+                  onPressed: login,
+                  text: "Log in",
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
