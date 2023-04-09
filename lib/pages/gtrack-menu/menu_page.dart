@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/icon_elevated_button.dart';
+import 'package:gtrack_mobile_app/config/common/widgets/buttons/icon_elevated_button.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
 

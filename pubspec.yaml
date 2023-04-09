@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.5
   flutter_native_splash: ^2.2.19
   loading_animation_widget: ^1.2.0+4
+  email_validator: ^2.1.17
 
 flutter_native_splash:
   color: "#FFFFFF"

@@ -10,6 +10,9 @@ class CustomTextField extends StatelessWidget {
     this.width,
     this.leadingIcon,
     this.suffixIcon,
+    this.textInputAction,
+    this.focusNode,
+    this.onFieldSubmitted,
   });
 
   final TextEditingController emailController;
@@ -19,16 +22,23 @@ class CustomTextField extends StatelessWidget {
   final double? width;
   final Widget? leadingIcon;
   final Widget? suffixIcon;
+  final TextInputAction? textInputAction;
+  final FocusNode? focusNode;
+  final Function(String)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width ?? MediaQuery.of(context).size.width,
-      height: 42,
+      // height: 4
       child: TextFormField(
         controller: emailController,
         keyboardType: keyboardType ?? TextInputType.text,
         obscureText: obscureText ?? false,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        textInputAction: textInputAction ?? TextInputAction.done,
+        focusNode: focusNode ?? FocusNode(),
+        onFieldSubmitted: onFieldSubmitted ?? (value) {},
         validator: validator ??
             (String? value) {
               if (value == null || value.isEmpty) {
@@ -51,12 +61,13 @@ class CustomTextField extends StatelessWidget {
               width: 1.0,
             ),
           ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.grey,
-              width: 2.0,
-            ),
-          ),
+
+          // enabledBorder: const OutlineInputBorder(
+          //   borderSide: BorderSide(
+          //     color: Colors.grey,
+          //     width: 2.0,
+          //   ),
+          // ),
         ),
       ),
     );

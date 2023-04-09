@@ -105,7 +105,7 @@ class LoginServices {
     });
   }
 
-  static Future<Map<String, dynamic>> getActivities({String? email}) async {
+  static Future<Map<String, dynamic>> login({String? email}) async {
     const baseUrl = 'https://gs1ksa.org/api/email/verification';
 
     final uri = Uri.parse(baseUrl);

@@ -1,8 +1,11 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gtrack_mobile_app/config/common/widgets/buttons/custom_elevated_button.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
+import 'package:gtrack_mobile_app/domain/services/login/login_services.dart';
 import 'package:gtrack_mobile_app/pages/gtrack-menu/menu_page.dart';
 
 class UserLoginPage extends StatefulWidget {
@@ -30,6 +33,20 @@ class _UserLoginPageState extends State<UserLoginPage> {
     passwordController.dispose();
     formKey.currentState?.dispose();
     super.dispose();
+  }
+
+  login() {
+    if (formKey.currentState!.validate()) {
+      LoginServices.login(email: emailController.text).then((response) {
+        Get.toNamed(MenuPage.pageName);
+      }).catchError(
+        (error) {
+          Get.snackbar('Error', error.toString());
+        },
+      );
+    } else {
+      Get.snackbar('Error', 'Please check your email and password');
+    }
   }
 
   @override
@@ -80,6 +97,16 @@ class _UserLoginPageState extends State<UserLoginPage> {
                         width: 42,
                         height: 42,
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your login ID';
+                        }
+                        if (EmailValidator.validate(value)) {
+                          return null;
+                        } else {
+                          return 'Please enter a valid email';
+                        }
+                      },
                     ),
                     const SizedBox(height: 20),
                     // Container(
@@ -126,57 +153,17 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     //     ],
                     //   ),
                     // ),
-                    const SizedBox(height: 20),
+                    // const SizedBox(height: 20),
                   ],
                 ),
               ),
               Center(
                   child: CustomElevatedButton(
-                onPressed: () {
-                  Get.toNamed(
-                    MenuPage.pageName,
-                    preventDuplicates: true,
-                  );
-                },
+                onPressed: login,
                 text: "Log in",
               )),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton({
-    super.key,
-    this.onPressed,
-    this.text,
-    this.margin,
-  });
-
-  final VoidCallback? onPressed;
-  final String? text;
-  final EdgeInsetsGeometry? margin;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: margin ??
-          EdgeInsets.only(
-            left: MediaQuery.of(context).size.width * 0.23,
-            right: MediaQuery.of(context).size.width * 0.23,
-          ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).primaryColor,
-      ),
-      child: ElevatedButton(
-        onPressed: onPressed ?? () {},
-        child: Text(
-          text ?? "Text",
         ),
       ),
     );
