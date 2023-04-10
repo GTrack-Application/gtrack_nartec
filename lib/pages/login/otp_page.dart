@@ -44,7 +44,7 @@ class _OtpPageState extends State<OtpPage> {
         otpController.text = response["otp"];
       } catch (e) {
         Fluttertoast.showToast(
-          msg: e.toString(),
+          msg: e.toString().replaceAll("Exception: ", ""),
           backgroundColor: Colors.red,
         );
         Future.delayed(const Duration(seconds: 2)).then((_) {

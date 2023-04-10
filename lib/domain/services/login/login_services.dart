@@ -36,9 +36,13 @@ class LoginServices {
         // print('body: ${json.decode(response.body)}');
         // final responseBody = json.decode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Error happended while sending OTP');
+        throw Exception('Invalid OTP, Please try again');
       }
-    });
+    }).onError(
+      (error, stackTrace) => throw Exception(
+        'Invalid OTP, Please try again',
+      ),
+    );
   }
 
   static Future<Map<String, dynamic>> sendOTP(String email, String activity) {

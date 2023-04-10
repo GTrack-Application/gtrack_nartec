@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/custom_elevated_button.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
@@ -29,8 +28,12 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
   String? activityValue;
   String email = '';
 
-  showOtpPopup(String message,
-      {String? email, String? activity, String? password}) {
+  showOtpPopup(
+    String message, {
+    String? email,
+    String? activity,
+    String? password,
+  }) {
     CustomDialog.success(
       context,
       title: "OTP",

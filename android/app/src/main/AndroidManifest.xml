@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gtrack_mobile_app">
+    <!-- add internet permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="GTrack"
         android:name="${applicationName}"
