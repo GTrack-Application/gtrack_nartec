@@ -12,20 +12,15 @@ class CustomIcons {
   static const String work = 'assets/icons/work.png';
 
   // receipt management
-  static const String foreignPO =
-      'assets/icons/receipts-management/foreign.png';
-  static const String salesOrder = 'assets/icons/receipts-management/sales.png';
-  static const String directSalesReturn =
-      'assets/icons/receipts-management/direct.png';
-  static const String stockTransfer =
-      'assets/icons/receipts-management/stock.png';
-  static const String directInvoice =
-      'assets/icons/receipts-management/invoice.png';
-  static const String fgGoodsReceipt =
-      'assets/icons/receipts-management/goods.png';
+  static const String foreignPO = 'assets/icons/foreignPO.png';
+  static const String salesOrder = 'assets/icons/salesOrder.png';
+  static const String directSalesReturn = 'assets/icons/directSalesReturn.png';
+  static const String stockTransfer = 'assets/icons/stockTransfer.png';
+  static const String directInvoice = 'assets/icons/directInvoice.png';
+  static const String fgGoodsReceipt = 'assets/icons/fgGoodsReceipts.png';
   static const String salesReturnInvoice =
-      'assets/icons/receipts-management/return.png';
+      'assets/icons/salesReturnInvoice.png';
   static const String goodsIssuedProduction =
-      'assets/icons/receipts-management/production.png';
+      'assets/icons/goodsIssueProduction.png';
   /* -------------------------------------------------------------------------*/
 }
