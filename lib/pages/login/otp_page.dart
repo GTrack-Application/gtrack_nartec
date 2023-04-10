@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
-import 'package:gtrack_mobile_app/domain/services/login/login_services.dart';
+import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/pages/gtrack-menu/menu_page.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
 import 'package:provider/provider.dart';
@@ -101,38 +101,40 @@ class _OtpPageState extends State<OtpPage> {
         padding: const EdgeInsets.all(30.0),
         child: Form(
           key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Image.asset(Images.logo),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "Enter the OTP sent to you!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Image.asset(Images.logo),
                 ),
-              ),
-              CustomTextField(
-                emailController: otpController,
-                leadingIcon: Image.asset(CustomIcons.work),
-                width: double.infinity,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "The field is required";
-                  }
-                  return null;
-                },
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    await verifyOtp();
+                const SizedBox(height: 20),
+                const Text(
+                  "Enter the OTP sent to you!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                CustomTextField(
+                  emailController: otpController,
+                  leadingIcon: Image.asset(CustomIcons.work),
+                  width: double.infinity,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "The field is required";
+                    }
+                    return null;
                   },
-                  child: const Text('Verify Now')),
-            ],
+                ),
+                ElevatedButton(
+                    onPressed: () async {
+                      await verifyOtp();
+                    },
+                    child: const Text('Verify Now')),
+              ],
+            ),
           ),
         ),
       ),

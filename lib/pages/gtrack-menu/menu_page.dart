@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/icon_elevated_button.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
+import 'package:gtrack_mobile_app/pages/gtrack-menu/receipts-management/receipt_management_page.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -81,6 +82,9 @@ class _MenuPageState extends State<MenuPage> {
                   text: "Receipts Management",
                   backgroundColor: const Color.fromRGBO(66, 210, 132, 1),
                   textColor: Colors.white,
+                  onPressed: () {
+                    Get.toNamed(ReceiptManagementPage.pageName);
+                  },
                 ),
                 const SizedBox(height: 20),
                 IconElevatedButton(

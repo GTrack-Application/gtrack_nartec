@@ -84,6 +84,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/receipts-management
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

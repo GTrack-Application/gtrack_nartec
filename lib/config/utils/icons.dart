@@ -10,4 +10,22 @@ class CustomIcons {
   static const String receipt = 'assets/icons/receipt.png';
   static const String stock = 'assets/icons/stock.png';
   static const String work = 'assets/icons/work.png';
+
+  // receipt management
+  static const String foreignPO =
+      'assets/icons/receipts-management/foreign.png';
+  static const String salesOrder = 'assets/icons/receipts-management/sales.png';
+  static const String directSalesReturn =
+      'assets/icons/receipts-management/direct.png';
+  static const String stockTransfer =
+      'assets/icons/receipts-management/stock.png';
+  static const String directInvoice =
+      'assets/icons/receipts-management/invoice.png';
+  static const String fgGoodsReceipt =
+      'assets/icons/receipts-management/goods.png';
+  static const String salesReturnInvoice =
+      'assets/icons/receipts-management/return.png';
+  static const String goodsIssuedProduction =
+      'assets/icons/receipts-management/production.png';
+  /* -------------------------------------------------------------------------*/
 }

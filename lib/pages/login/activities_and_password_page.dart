@@ -5,7 +5,7 @@ import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
 import 'package:gtrack_mobile_app/config/utils/custom_dialog.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
-import 'package:gtrack_mobile_app/domain/services/login/login_services.dart';
+import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/pages/login/otp_page.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
 import 'package:provider/provider.dart';
