@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/icon_elevated_button.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
+import 'package:gtrack_mobile_app/pages/gtrack-menu/dispatch_management/dispatch_management_one_page.dart';
 import 'package:gtrack_mobile_app/pages/gtrack-menu/receipts-management/receipt_management_page.dart';
 
 class MenuPage extends StatefulWidget {
@@ -64,6 +65,9 @@ class _MenuPageState extends State<MenuPage> {
                         text: "Raw Materials Issuance",
                         backgroundColor: const Color.fromRGBO(75, 0, 130, 1),
                         textColor: Colors.white,
+                        onPressed: () => Get.toNamed(
+                          DispatchManagementOnePage.pageName,
+                        ),
                       )
                     : IconElevatedButton(
                         leadingIcon: Image.asset(CustomIcons.dispatch),

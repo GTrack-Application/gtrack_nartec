@@ -5,7 +5,7 @@ import 'package:gtrack_mobile_app/config/common/colors/my_colors.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/search_button.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/secondary_button.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/counter_widget.dart';
+import 'package:gtrack_mobile_app/config/components/counter_widget.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/text/title_text_widget.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/text_field/custom_text_field.dart';
@@ -41,6 +41,7 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
           .toSet()
           .toList();
       glnid = glnidList[0];
+      scanController.text = glnid;
       setState(() {});
     });
     super.initState();
@@ -106,6 +107,11 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
                 DropDownWidget(
                   items: glnidList,
                   value: glnid,
+                  onChanged: (value) {
+                    glnid = value!;
+                    scanController.text = glnid;
+                    setState(() {});
+                  },
                 ),
                 const SizedBox(height: 20),
                 const TitleTextWidget(title: "Scan GTIN"),
@@ -139,7 +145,7 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
                     children: [
                       TwoTextWidget(
                         text1: 'Product Name:',
-                        text2: '',
+                        text2: jobDetailsModel?.itemDescription ?? '',
                       ),
                       TwoTextWidget(
                         text1: 'Batch:',
