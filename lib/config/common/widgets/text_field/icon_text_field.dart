@@ -13,6 +13,7 @@ class IconTextField extends StatelessWidget {
     this.textInputAction,
     this.focusNode,
     this.onFieldSubmitted,
+    this.enabled,
   });
 
   final TextEditingController controller;
@@ -25,6 +26,7 @@ class IconTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final Function(String)? onFieldSubmitted;
+  final bool? enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class IconTextField extends StatelessWidget {
       // height: 4
       child: TextFormField(
         controller: controller,
+        enabled: enabled ?? true,
         keyboardType: keyboardType ?? TextInputType.text,
         obscureText: obscureText ?? false,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -47,12 +50,10 @@ class IconTextField extends StatelessWidget {
               return null;
             },
         decoration: InputDecoration(
-          icon: leadingIcon ?? const SizedBox.shrink(),
-
           fillColor: const Color.fromRGBO(236, 244, 249, 1),
           filled: true,
           suffixIcon: suffixIcon ?? const SizedBox.shrink(),
-
+          icon: leadingIcon ?? const SizedBox.shrink(),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 10,
             vertical: 10,

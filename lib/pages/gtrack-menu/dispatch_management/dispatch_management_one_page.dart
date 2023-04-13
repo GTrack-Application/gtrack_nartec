@@ -36,13 +36,17 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
   List<JobOrderDetailsModel> jobOrderDetails = [];
   List<GlnModel> glnList = [];
 
+  // button first clicks
+  bool isClicked = false;
+
   @override
   void initState() {
     super.initState();
   }
 
   searchJobOrderDetails() {
-    if (jobOrderRequestNumberController.text.isNotEmpty) {
+    if (jobOrderRequestNumberController.text.isNotEmpty && !isClicked) {
+      isClicked = true;
       PrettyToast.success(context, 'Loading');
       DispatchManagementServices.getJobOrderDetails(
         jobOrderRequestNumberController.text,
@@ -55,27 +59,46 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
           trxDateController.text = "";
         });
         PrettyToast.success(context, 'Job Order Details Loaded');
+        isClicked = false;
       }).catchError((e) {
         PrettyToast.error(context, e.toString());
+        isClicked = false;
+      });
+    } else if (isClicked) {
+      Future.delayed(const Duration(seconds: 1), () {
+        isClicked = false;
       });
     } else {
       PrettyToast.error(context, 'Please enter Job Order Request Number');
+      isClicked = false;
     }
   }
 
   Future<void> startTracking() async {
-    if (jobOrderRequestNumberController.text.isNotEmpty) {
+    if (jobOrderRequestNumberController.text.isNotEmpty && !isClicked) {
+      isClicked = true;
       PrettyToast.success(context, 'Loading');
       DispatchManagementServices.getGlnByMemberId(
         memberIDController.text,
       ).then((response) {
-        Provider.of<GlnProvider>(context, listen: false).setGlnList(response);
+        final List<String> glnisList = [];
+        for (var element in response) {
+          glnisList.add(element.gLNBarcodeNumber.toString());
+        }
+        Provider.of<GlnProvider>(context, listen: false).setGlnList(glnisList);
         Get.toNamed(DispatchManagementTwoPage.pageName);
+        isClicked = false;
       }).catchError((e) {
         PrettyToast.error(context, e.toString());
+        isClicked = false;
+      });
+    } else if (isClicked) {
+      Future.delayed(const Duration(seconds: 1), () {
+        isClicked = false;
       });
     } else {
       PrettyToast.error(context, 'Get Job Order Details first');
+      isClicked = false;
     }
   }
 

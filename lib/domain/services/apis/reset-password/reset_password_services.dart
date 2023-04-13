@@ -58,7 +58,6 @@ class ResetPasswordServices {
     ).then((response) {
       if (response.statusCode == 200) {
         // handle successful response
-        print("response: ${json.decode(response.body)}");
       } else {
         throw Exception('Could not verify code, please try again later');
       }
@@ -95,7 +94,6 @@ class ResetPasswordServices {
     ).then((response) {
       if (response.statusCode == 200) {
         // handle successful response
-        print("response: ${json.decode(response.body)}");
       } else {
         throw Exception('Could not reset password, please try again later');
       }
