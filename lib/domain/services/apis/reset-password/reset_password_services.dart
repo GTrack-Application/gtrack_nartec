@@ -26,7 +26,6 @@ class ResetPasswordServices {
     ).then((response) {
       if (response.statusCode == 200) {
         // handle successful response
-        print("response: ${json.decode(response.body)}");
       } else {
         throw Exception('Could not send code, please try again later');
       }
