@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/config/themes/themes.dart';
 import 'package:gtrack_mobile_app/domain/navigation/routes.dart';
+import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/gln_model.dart';
+import 'package:gtrack_mobile_app/providers/dispatch_management/gln_provider.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => LoginProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GlnProvider(),
         ),
       ],
       child: GetMaterialApp(

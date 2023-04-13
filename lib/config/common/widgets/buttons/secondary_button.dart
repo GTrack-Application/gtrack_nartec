@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/config/common/colors/my_colors.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class CustomElevatedButton extends StatefulWidget {
-  const CustomElevatedButton({
+class SecondaryButton extends StatefulWidget {
+  const SecondaryButton({
     super.key,
     this.onPressed,
     this.text,
     this.margin,
+    this.width,
   });
 
   final VoidCallback? onPressed;
   final String? text;
   final EdgeInsetsGeometry? margin;
+  final double? width;
 
   @override
-  State<CustomElevatedButton> createState() => _CustomElevatedButtonState();
+  State<SecondaryButton> createState() => _SecondaryButtonState();
 }
 
-class _CustomElevatedButtonState extends State<CustomElevatedButton> {
+class _SecondaryButtonState extends State<SecondaryButton> {
   bool _isLoading = false;
 
   void toggleLoading() {
@@ -29,13 +32,10 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: widget.width ?? MediaQuery.of(context).size.width,
       height: 50,
       margin: widget.margin ??
-          EdgeInsets.only(
-            left: MediaQuery.of(context).size.width * 0.20,
-            right: MediaQuery.of(context).size.width * 0.23,
-          ),
+          const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: ElevatedButton(
         onPressed: () {
           if (_isLoading == true) return;
@@ -43,6 +43,9 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
           widget.onPressed?.call();
           toggleLoading();
         },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: MyColors.secondary,
+        ),
         child: _isLoading == true
             ? Center(
                 child: LoadingAnimationWidget.prograssiveDots(

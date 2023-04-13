@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
+class IconTextField extends StatelessWidget {
+  const IconTextField({
     super.key,
-    required this.emailController,
+    required this.controller,
     this.keyboardType,
     this.validator,
     this.obscureText,
@@ -15,7 +15,7 @@ class CustomTextField extends StatelessWidget {
     this.onFieldSubmitted,
   });
 
-  final TextEditingController emailController;
+  final TextEditingController controller;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final bool? obscureText;
@@ -32,7 +32,7 @@ class CustomTextField extends StatelessWidget {
       width: width ?? MediaQuery.of(context).size.width,
       // height: 4
       child: TextFormField(
-        controller: emailController,
+        controller: controller,
         keyboardType: keyboardType ?? TextInputType.text,
         obscureText: obscureText ?? false,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -48,11 +48,13 @@ class CustomTextField extends StatelessWidget {
             },
         decoration: InputDecoration(
           icon: leadingIcon ?? const SizedBox.shrink(),
+
           fillColor: const Color.fromRGBO(236, 244, 249, 1),
           filled: true,
           suffixIcon: suffixIcon ?? const SizedBox.shrink(),
+
           contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
+            horizontal: 10,
             vertical: 10,
           ),
           border: const OutlineInputBorder(

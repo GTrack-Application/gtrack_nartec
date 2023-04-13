@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/buttons/custom_elevated_button.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
+import 'package:gtrack_mobile_app/config/common/widgets/buttons/primary_button.dart';
+import 'package:gtrack_mobile_app/config/common/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/config/utils/custom_dialog.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
@@ -186,8 +186,8 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                       margin: const EdgeInsets.only(left: 60),
                       child: const Text('Enter your password'),
                     ),
-                    CustomTextField(
-                      emailController: passwordController,
+                    IconTextField(
+                      controller: passwordController,
                       leadingIcon: Image.asset(
                         CustomIcons.passwordIcon,
                         width: 42,
@@ -230,7 +230,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                 ),
               ),
               Center(
-                child: CustomElevatedButton(
+                child: PrimaryButton(
                   onPressed: login,
                   text: "Log in",
                   margin: const EdgeInsets.symmetric(horizontal: 30),

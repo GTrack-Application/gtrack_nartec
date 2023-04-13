@@ -43,6 +43,7 @@ class Themes {
       appBarTheme: AppBarTheme(
         color: const Color(0xFF0D117F),
         elevation: 0,
+        centerTitle: true,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),

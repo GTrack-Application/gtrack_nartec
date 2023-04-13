@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
+import 'package:gtrack_mobile_app/config/common/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
@@ -117,8 +117,8 @@ class _OtpPageState extends State<OtpPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                CustomTextField(
-                  emailController: otpController,
+                IconTextField(
+                  controller: otpController,
                   leadingIcon: Image.asset(CustomIcons.work),
                   width: double.infinity,
                   validator: (value) {

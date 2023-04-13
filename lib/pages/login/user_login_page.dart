@@ -2,8 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/buttons/custom_elevated_button.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/custom_text_field.dart';
+import 'package:gtrack_mobile_app/config/common/widgets/buttons/primary_button.dart';
+import 'package:gtrack_mobile_app/config/common/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/config/utils/icons.dart';
 import 'package:gtrack_mobile_app/config/utils/images.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
@@ -119,8 +119,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       margin: const EdgeInsets.only(left: 60),
                       child: const Text('Enter your login ID'),
                     ),
-                    CustomTextField(
-                      emailController: emailController,
+                    IconTextField(
+                      controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       width: MediaQuery.of(context).size.width * 0.7,
                       leadingIcon: Image.asset(
@@ -144,7 +144,11 @@ class _UserLoginPageState extends State<UserLoginPage> {
                 ),
               ),
               Center(
-                child: CustomElevatedButton(
+                child: PrimaryButton(
+                  margin: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.20,
+                    right: MediaQuery.of(context).size.width * 0.23,
+                  ),
                   onPressed: login,
                   text: "Log in",
                 ),
