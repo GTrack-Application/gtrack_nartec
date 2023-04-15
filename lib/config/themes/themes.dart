@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gtrack_mobile_app/config/common/colors/my_colors.dart';
 
 class Themes {
   static ThemeData? lightTheme() {
@@ -79,6 +80,23 @@ class Themes {
           fontSize: 14.0,
           fontFamily: 'Inter',
         ),
+        bodySmall: TextStyle(
+          fontSize: 12.0,
+          fontFamily: 'Inter',
+        ),
+      ),
+
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: MyColors.primary,
+          textStyle: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
       ),
     );
   }
@@ -155,6 +173,20 @@ class Themes {
         buttonColor: Color(0xFF0D117F),
         textTheme: ButtonTextTheme.primary,
         padding: EdgeInsets.all(5),
+      ),
+
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.white,
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w700,
+            decoration: TextDecoration.underline,
+            fontSize: 16,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
       ),
     );
   }

@@ -215,11 +215,6 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                             onPressed: () {},
                             child: const Text(
                               'Click here',
-                              style: TextStyle(
-                                // make it underline
-                                decoration: TextDecoration.underline,
-                                color: Colors.black,
-                              ),
                             ),
                           ),
                         ],

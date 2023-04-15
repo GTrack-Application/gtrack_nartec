@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/gln_model.dart';
 
 class GlnProvider with ChangeNotifier {
   final List<String> _glnList = [];

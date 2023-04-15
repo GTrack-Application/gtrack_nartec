@@ -14,6 +14,7 @@ class IconTextField extends StatelessWidget {
     this.focusNode,
     this.onFieldSubmitted,
     this.enabled,
+    this.margin,
   });
 
   final TextEditingController controller;
@@ -27,10 +28,11 @@ class IconTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final Function(String)? onFieldSubmitted;
   final bool? enabled;
-
+  final EdgeInsetsGeometry? margin;
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: margin ?? const EdgeInsets.all(0),
       width: width ?? MediaQuery.of(context).size.width,
       // height: 4
       child: TextFormField(

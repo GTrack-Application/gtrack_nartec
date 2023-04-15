@@ -11,7 +11,7 @@ class AppPages {
   static List<GetPage> pages = [
     GetPage(
       name: '/',
-      page: () => const DispatchManagementOnePage(),
+      page: () => const UserLoginPage(),
     ),
     GetPage(
       name: MenuPage.pageName,

@@ -1,15 +1,16 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+
+import 'package:gtrack_mobile_app/pages/login/activities_and_password_page.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/text_field/icon_text_field.dart';
-import 'package:gtrack_mobile_app/config/utils/icons.dart';
-import 'package:gtrack_mobile_app/config/utils/images.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
-import 'package:gtrack_mobile_app/pages/login/activities_and_password_page.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:gtrack_mobile_app/config/utils/images.dart';
+import 'package:gtrack_mobile_app/config/utils/icons.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -91,71 +92,79 @@ class _UserLoginPageState extends State<UserLoginPage> {
         key: formKey,
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 50),
-                  child: Image.asset(
-                    Images.logo,
-                    width: 189,
-                    height: 189,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
+              const AppLogo(),
               Padding(
-                padding: EdgeInsets.only(
-                  left: 22,
-                  right: MediaQuery.of(context).size.width * 0.23,
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: double.infinity,
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 60),
+                          child: const Text('Enter your login ID'),
+                        ),
+                        IconTextField(
+                          controller: emailController,
+                          margin: const EdgeInsets.only(right: 60),
+                          keyboardType: TextInputType.emailAddress,
+                          leadingIcon: Image.asset(
+                            CustomIcons.usernameIcon,
+                            width: 42,
+                            height: 42,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your login ID';
+                            }
+                            if (EmailValidator.validate(value)) {
+                              return null;
+                            } else {
+                              return 'Please enter a valid email';
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 60),
-                      child: const Text('Enter your login ID'),
-                    ),
-                    IconTextField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      leadingIcon: Image.asset(
-                        CustomIcons.usernameIcon,
-                        width: 42,
-                        height: 42,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your login ID';
-                        }
-                        if (EmailValidator.validate(value)) {
-                          return null;
-                        } else {
-                          return 'Please enter a valid email';
-                        }
-                      },
+                    PrimaryButton(
+                      onPressed: login,
+                      margin: const EdgeInsets.only(left: 60, right: 60),
+                      text: "Log in",
                     ),
                     const SizedBox(height: 20),
                   ],
                 ),
               ),
-              Center(
-                child: PrimaryButton(
-                  margin: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.20,
-                    right: MediaQuery.of(context).size.width * 0.23,
-                  ),
-                  onPressed: login,
-                  text: "Log in",
-                ),
-              ),
-              const SizedBox(height: 20),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class AppLogo extends StatelessWidget {
+  const AppLogo({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.only(top: 20),
+        child: Image.asset(
+          Images.logo,
+          width: 256,
+          height: 256,
         ),
       ),
     );

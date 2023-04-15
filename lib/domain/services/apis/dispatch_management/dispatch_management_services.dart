@@ -26,8 +26,8 @@ class DispatchManagementServices {
 
   static Future<List<GlnModel>> getGlnByMemberId(String memberId) async {
     try {
-      final response = await http
-          .get(Uri.parse('http://gs1ksa.org:9000/api/getGlinIdByMemberId/386'));
+      final response = await http.get(Uri.parse(
+          'http://gs1ksa.org:9000/api/getGlinIdByMemberId/$memberId'));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as List;
         return responseBody.map((e) => GlnModel.fromJson(e)).toList();

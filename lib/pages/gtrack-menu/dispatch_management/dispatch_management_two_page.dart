@@ -1,9 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/config/common/colors/my_colors.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/primary_button.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/buttons/search_button.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/buttons/secondary_button.dart';
 import 'package:gtrack_mobile_app/config/components/counter_widget.dart';
 import 'package:gtrack_mobile_app/config/common/widgets/drop_down/drop_down_widget.dart';
@@ -40,8 +38,8 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
           .glnList
           .toSet()
           .toList();
+      glnidList = glnidList.map((e) => "(414)$e").toList();
       glnid = glnidList[0];
-      scanController.text = glnid;
       setState(() {});
     });
     super.initState();
@@ -54,6 +52,7 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
       DispatchManagementServices.getJobDetailsByReferenceNo(scanController.text)
           .then((response) {
         jobDetailsModel = response[0];
+
         PrettyToast.success(context, 'Data Loaded');
         setState(() {});
         isClicked = false;
@@ -109,7 +108,6 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
                   value: glnid,
                   onChanged: (value) {
                     glnid = value!;
-                    scanController.text = glnid;
                     setState(() {});
                   },
                 ),
@@ -151,7 +149,7 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
                         text1: 'Batch:',
                         text2: jobDetailsModel?.itemBatchNo ?? '',
                       ),
-                      TwoTextWidget(
+                      const TwoTextWidget(
                         text1: 'Expiry:',
                         text2: '',
                       ),
