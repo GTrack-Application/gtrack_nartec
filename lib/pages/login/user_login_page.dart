@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -158,13 +159,20 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.only(top: 20),
-        child: Image.asset(
-          Images.logo,
-          width: 256,
-          height: 256,
+    return Animate(
+      effects: const [
+        ScaleEffect(
+          duration: Duration(seconds: 3),
+        )
+      ],
+      child: Center(
+        child: Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: Image.asset(
+            Images.logo,
+            width: 256,
+            height: 256,
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:gtrack_mobile_app/config/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
 class ResetPasswordServices {
@@ -7,7 +8,7 @@ class ResetPasswordServices {
     String email,
     String activity,
   ) async {
-    const baseUrl = 'https://gs1ksa.org/api/member/forgot/password';
+    const baseUrl = '${URLs.withoutPort}/api/member/forgot/password';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -38,7 +39,8 @@ class ResetPasswordServices {
     String activity,
     String code,
   ) async {
-    const baseUrl = 'https://gs1ksa.org/api/member/verify/forgot/password/code';
+    const baseUrl =
+        '${URLs.withoutPort}/api/member/verify/forgot/password/code';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -73,7 +75,7 @@ class ResetPasswordServices {
     String password,
     String confirmPassword,
   ) async {
-    const baseUrl = 'https://gs1ksa.org/api/member/password/reset';
+    const baseUrl = '${URLs.withoutPort}/api/member/password/reset';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
