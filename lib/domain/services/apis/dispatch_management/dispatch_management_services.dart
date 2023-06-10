@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:gtrack_mobile_app/config/utils/urls.dart';
+import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/gln_model.dart';
 import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/job_details_model.dart';
 import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/job_order_details_model.dart';
@@ -10,8 +10,8 @@ class DispatchManagementServices {
   static Future<List<JobOrderDetailsModel>> getJobOrderDetails(
       String jobOrder) async {
     try {
-      final response = await http
-          .get(Uri.parse('${URLs.withPort}/api/getJobOrderDetails/$jobOrder'));
+      final response = await http.get(Uri.parse(
+          '${AppUrls.baseUrlWithPort}/api/getJobOrderDetails/$jobOrder'));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as List;
         return responseBody
@@ -27,8 +27,8 @@ class DispatchManagementServices {
 
   static Future<List<GlnModel>> getGlnByMemberId(String memberId) async {
     try {
-      final response = await http
-          .get(Uri.parse('${URLs.withPort}/api/getGlinIdByMemberId/$memberId'));
+      final response = await http.get(Uri.parse(
+          '${AppUrls.baseUrlWithPort}/api/getGlinIdByMemberId/$memberId'));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as List;
         return responseBody.map((e) => GlnModel.fromJson(e)).toList();
@@ -46,7 +46,7 @@ class DispatchManagementServices {
       String refNo) async {
     try {
       final response = await http.get(Uri.parse(
-          '${URLs.withPort}/api/getJobOrderDetailsByItemRefNo/$refNo'));
+          '${AppUrls.baseUrlWithPort}/api/getJobOrderDetailsByItemRefNo/$refNo'));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as List;
         return responseBody.map((e) => JobDetailsModel.fromJson(e)).toList();
@@ -66,7 +66,7 @@ class DispatchManagementServices {
     String? gpc,
     String? qty,
   }) async {
-    const String url = "${URLs.withPort}/api/postTblGLNTagIDEvents";
+    const String url = "${AppUrls.baseUrlWithPort}/api/postTblGLNTagIDEvents";
     try {
       final response = await http.post(Uri.parse(url),
           body: json.encode({

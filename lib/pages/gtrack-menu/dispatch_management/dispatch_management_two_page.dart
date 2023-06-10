@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/config/common/colors/my_colors.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/buttons/primary_button.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/buttons/secondary_button.dart';
-import 'package:gtrack_mobile_app/config/components/counter_widget.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/drop_down/drop_down_widget.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/text/title_text_widget.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/text_field/custom_text_field.dart';
-import 'package:gtrack_mobile_app/config/utils/toast.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/dispatch_management/dispatch_management_services.dart';
 import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/job_details_model.dart';
+import 'package:gtrack_mobile_app/global/common/colors/my_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/toast.dart';
+import 'package:gtrack_mobile_app/global/components/counter_widget.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/secondary_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
+import 'package:gtrack_mobile_app/global/widgets/text/title_text_widget.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/custom_text_field.dart';
 import 'package:gtrack_mobile_app/providers/dispatch_management/gln_provider.dart';
 import 'package:provider/provider.dart';
 

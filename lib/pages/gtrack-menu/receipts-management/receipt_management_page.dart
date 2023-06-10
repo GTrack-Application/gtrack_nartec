@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/config/utils/icons.dart';
-import 'package:gtrack_mobile_app/config/utils/images.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/buttons/image_button.dart';
+import 'package:gtrack_mobile_app/constants/app_icons.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/image_button.dart';
 
 class ReceiptManagementPage extends StatelessWidget {
   const ReceiptManagementPage({super.key});
@@ -14,56 +14,56 @@ class ReceiptManagementPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset(Images.receiptPageBG),
+            Image.asset(AppImages.receiptPageBG),
             AppBar(
               title: const Text('WPS PRO'),
               centerTitle: true,
               automaticallyImplyLeading: true,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
               child: Column(
-                children: const [
+                children: [
                   CustomImageButtonRow(
                     buttonOne: ImageButton(
-                      icon: CustomIcons.foreignPO,
+                      icon: AppIcons.foreignPO,
                       text: 'Foreign PO',
                     ),
                     buttonTwo: ImageButton(
-                      icon: CustomIcons.salesOrder,
+                      icon: AppIcons.salesOrder,
                       text: 'Sales Order',
                     ),
                   ),
                   // SizedBox(height: 10),
                   CustomImageButtonRow(
                     buttonOne: ImageButton(
-                      icon: CustomIcons.directSalesReturn,
+                      icon: AppIcons.directSalesReturn,
                       text: 'Direct Sales Return',
                     ),
                     buttonTwo: ImageButton(
-                      icon: CustomIcons.stockTransfer,
+                      icon: AppIcons.stockTransfer,
                       text: 'Stock Transfer',
                     ),
                   ),
                   // SizedBox(height: 10),
                   CustomImageButtonRow(
                     buttonOne: ImageButton(
-                      icon: CustomIcons.directInvoice,
+                      icon: AppIcons.directInvoice,
                       text: 'Direct Invoice',
                     ),
                     buttonTwo: ImageButton(
-                      icon: CustomIcons.fgGoodsReceipt,
+                      icon: AppIcons.fgGoodsReceipt,
                       text: 'FG Goods Receipts',
                     ),
                   ),
                   // SizedBox(height: 10),
                   CustomImageButtonRow(
                     buttonOne: ImageButton(
-                      icon: CustomIcons.salesReturnInvoice,
+                      icon: AppIcons.salesReturnInvoice,
                       text: 'Sales Return Invoice',
                     ),
                     buttonTwo: ImageButton(
-                      icon: CustomIcons.goodsIssuedProduction,
+                      icon: AppIcons.goodsIssuedProduction,
                       text: 'Goods Issued (Production)',
                     ),
                   ),

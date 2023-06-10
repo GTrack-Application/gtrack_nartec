@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:gtrack_mobile_app/config/utils/urls.dart';
+import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 
 class LoginServices {
@@ -11,7 +11,7 @@ class LoginServices {
     String generatedOTP,
     String memberOtp,
   ) async {
-    const baseUrl = '${URLs.withoutPort}/api/otp/confirmation';
+    const baseUrl = '${AppUrls.baseUrl}/api/otp/confirmation';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -47,7 +47,7 @@ class LoginServices {
   }
 
   static Future<Map<String, dynamic>> sendOTP(String email, String activity) {
-    const baseUrl = '${URLs.withoutPort}/api/send/otp';
+    const baseUrl = '${AppUrls.baseUrl}/api/send/otp';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -80,7 +80,7 @@ class LoginServices {
 
   static Future<Map<String, dynamic>> loginWithPassword(
       String email, String activity, String password) {
-    const baseUrl = '${URLs.withoutPort}/api/member/login';
+    const baseUrl = '${AppUrls.baseUrl}/api/member/login';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -111,7 +111,7 @@ class LoginServices {
   }
 
   static Future<Map<String, dynamic>> login({String? email}) async {
-    const baseUrl = '${URLs.withoutPort}/api/email/verification';
+    const baseUrl = '${AppUrls.baseUrl}/api/email/verification';
 
     final uri = Uri.parse(baseUrl);
     try {

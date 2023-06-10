@@ -1,17 +1,15 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
-
-import 'package:gtrack_mobile_app/pages/login/activities_and_password_page.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/buttons/primary_button.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/text_field/icon_text_field.dart';
+import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
+import 'package:gtrack_mobile_app/global/components/app_logo.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
+import 'package:gtrack_mobile_app/pages/login/activities_and_password_page.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
-import 'package:gtrack_mobile_app/config/utils/images.dart';
-import 'package:gtrack_mobile_app/config/utils/icons.dart';
+import 'package:provider/provider.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -117,7 +115,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           margin: const EdgeInsets.only(right: 60),
                           keyboardType: TextInputType.emailAddress,
                           leadingIcon: Image.asset(
-                            CustomIcons.usernameIcon,
+                            AppIcons.usernameIcon,
                             width: 42,
                             height: 42,
                           ),
@@ -145,33 +143,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class AppLogo extends StatelessWidget {
-  const AppLogo({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Animate(
-      effects: const [
-        ScaleEffect(
-          duration: Duration(seconds: 3),
-        )
-      ],
-      child: Center(
-        child: Container(
-          margin: const EdgeInsets.only(top: 20),
-          child: Image.asset(
-            Images.logo,
-            width: 256,
-            height: 256,
           ),
         ),
       ),

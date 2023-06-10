@@ -1,15 +1,15 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/buttons/primary_button.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/text_field/icon_text_field.dart';
-import 'package:gtrack_mobile_app/config/utils/custom_dialog.dart';
-import 'package:gtrack_mobile_app/config/utils/icons.dart';
-import 'package:gtrack_mobile_app/config/utils/images.dart';
+import 'package:gtrack_mobile_app/constants/app_icons.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
+import 'package:gtrack_mobile_app/global/common/utils/custom_dialog.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/pages/login/otp_page.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 
 class ActivitiesAndPasswordPage extends StatefulWidget {
   const ActivitiesAndPasswordPage({super.key});
@@ -122,7 +122,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                 child: Container(
                   margin: const EdgeInsets.only(top: 50),
                   child: Image.asset(
-                    Images.logo,
+                    AppImages.logo,
                     width: 189,
                     height: 189,
                   ),
@@ -148,7 +148,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                       width: double.infinity,
                       child: Row(
                         children: [
-                          Image.asset(CustomIcons.work, width: 42, height: 42),
+                          Image.asset(AppIcons.work, width: 42, height: 42),
                           const SizedBox(width: 10),
                           Expanded(
                             child: FittedBox(
@@ -189,7 +189,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                     IconTextField(
                       controller: passwordController,
                       leadingIcon: Image.asset(
-                        CustomIcons.passwordIcon,
+                        AppIcons.passwordIcon,
                         width: 42,
                         height: 42,
                       ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/config/common/widgets/text_field/icon_text_field.dart';
-import 'package:gtrack_mobile_app/config/utils/icons.dart';
-import 'package:gtrack_mobile_app/config/utils/images.dart';
+import 'package:gtrack_mobile_app/constants/app_icons.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/pages/gtrack-menu/menu_page.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
 import 'package:provider/provider.dart';
@@ -106,7 +106,7 @@ class _OtpPageState extends State<OtpPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Image.asset(Images.logo),
+                  child: Image.asset(AppImages.logo),
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -119,7 +119,7 @@ class _OtpPageState extends State<OtpPage> {
                 ),
                 IconTextField(
                   controller: otpController,
-                  leadingIcon: Image.asset(CustomIcons.work),
+                  leadingIcon: Image.asset(AppIcons.work),
                   width: double.infinity,
                   validator: (value) {
                     if (value!.isEmpty) {
