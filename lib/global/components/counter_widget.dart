@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/my_colors.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
 class CounterWidget extends StatelessWidget {
   const CounterWidget({
@@ -17,7 +17,7 @@ class CounterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: MyColors.green,
+        color: AppColors.success,
         border: Border.all(width: 1),
         borderRadius: BorderRadius.circular(10),
       ),

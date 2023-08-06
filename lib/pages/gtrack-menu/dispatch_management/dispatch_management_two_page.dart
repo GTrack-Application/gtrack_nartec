@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/dispatch_management/dispatch_management_services.dart';
 import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/job_details_model.dart';
-import 'package:gtrack_mobile_app/global/common/colors/my_colors.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/toast.dart';
 import 'package:gtrack_mobile_app/global/components/counter_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
@@ -134,7 +134,7 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
                   height: MediaQuery.of(context).size.height * 0.4,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: MyColors.lightBlue,
+                    color: AppColors.lightBlue,
                     border: Border.all(width: 1),
                     borderRadius: BorderRadius.circular(10),
                   ),

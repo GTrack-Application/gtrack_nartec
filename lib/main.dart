@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/domain/routes/routes.dart';
 import 'package:gtrack_mobile_app/providers/dispatch_management/gln_provider.dart';
@@ -24,14 +25,17 @@ class MyApp extends StatelessWidget {
           create: (context) => GlnProvider(),
         ),
       ],
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Gtrack',
-        theme: Themes.lightTheme(),
-        darkTheme: Themes.darkTheme(),
-        themeMode: ThemeMode.system,
-        initialRoute: '/',
-        getPages: AppPages.pages,
+      child: ScreenUtilInit(
+        designSize: Size(context.width, context.height),
+        builder: (context, child) => GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Gtrack',
+          theme: Themes.lightTheme(),
+          darkTheme: Themes.darkTheme(),
+          themeMode: ThemeMode.system,
+          initialRoute: '/',
+          getPages: AppPages.pages,
+        ),
       ),
     );
   }

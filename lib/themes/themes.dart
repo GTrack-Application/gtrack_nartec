@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gtrack_mobile_app/global/common/colors/my_colors.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
 class Themes {
   static ThemeData? lightTheme() {
@@ -88,7 +88,7 @@ class Themes {
 
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: MyColors.primary,
+          foregroundColor: AppColors.primary,
           textStyle: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,

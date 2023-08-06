@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/my_colors.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SecondaryButton extends StatefulWidget {
@@ -44,7 +44,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
           toggleLoading();
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.secondary,
+          backgroundColor: AppColors.secondary,
         ),
         child: _isLoading == true
             ? Center(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/my_colors.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
 class DropDownWidget extends StatelessWidget {
   const DropDownWidget({super.key, this.items, this.value, this.onChanged});
@@ -13,7 +13,7 @@ class DropDownWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        color: MyColors.fields,
+        color: AppColors.fields,
         border: Border.all(width: 1),
       ),
       child: DropdownButton(
