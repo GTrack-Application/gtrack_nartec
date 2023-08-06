@@ -4,12 +4,15 @@ import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/custom_dialog.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/pages/login/otp_page.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class ActivitiesAndPasswordPage extends StatefulWidget {
   const ActivitiesAndPasswordPage({super.key});
@@ -50,6 +53,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState?.save();
       if (activityValue != null && passwordController.text.isNotEmpty) {
+        AppDialogs.loadingDialog(context);
         Provider.of<LoginProvider>(context, listen: false)
             .setActivity(activityValue.toString());
         Provider.of<LoginProvider>(context, listen: false)
@@ -65,6 +69,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
           activity.toString(),
           passwordController.text,
         ).then((value) {
+          AppDialogs.closeDialog();
           final message = value['message'] as String;
 
           showOtpPopup(
@@ -74,6 +79,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
             password: passwordController.text,
           );
         }).onError((error, stackTrace) {
+          AppDialogs.closeDialog();
           if (error.toString() == 'Exception: Please Wait For Admin Approval') {
             AwesomeDialog(
               context: context,
@@ -144,42 +150,22 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                       margin: const EdgeInsets.only(left: 60),
                       child: const Text('Select your activity'),
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          Image.asset(AppIcons.work, width: 42, height: 42),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: FittedBox(
-                              child: SizedBox(
-                                height: 100,
-                                child: Card(
-                                  elevation: 5,
-                                  child: DropdownButton(
-                                      value: activityValue,
-                                      items: activities
-                                          .where(
-                                              (element) => element.isNotEmpty)
-                                          .map<DropdownMenuItem<String>>(
-                                            (String v) =>
-                                                DropdownMenuItem<String>(
-                                              value: v,
-                                              child: FittedBox(child: Text(v)),
-                                            ),
-                                          )
-                                          .toList(),
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          activityValue = newValue!;
-                                        });
-                                      }),
-                                ),
-                              ),
-                            ),
+                    Row(
+                      children: [
+                        Image.asset(AppIcons.work, width: 42, height: 42),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: DropDownWidget(
+                            items: activities,
+                            value: activityValue ?? activities[0],
+                            onChanged: (value) {
+                              setState(() {
+                                activityValue = value.toString();
+                              });
+                            },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 20),
                     Container(
@@ -195,6 +181,12 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                       ),
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: obscureText,
+                      validator: (p0) {
+                        if (p0!.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.remove_red_eye),
                         onPressed: () {
@@ -224,13 +216,10 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                   ],
                 ),
               ),
-              Center(
-                child: PrimaryButton(
-                  onPressed: login,
-                  text: "Log in",
-                  margin: const EdgeInsets.symmetric(horizontal: 30),
-                ),
-              ),
+              PrimaryButtonWidget(
+                onPressed: login,
+                text: "Log in",
+              ).box.width(context.width * 0.85).makeCentered(),
               const SizedBox(height: 20),
             ],
           ),

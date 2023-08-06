@@ -307,7 +307,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
                       ),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: PrimaryButton(
+                        child: PrimaryButtonWidget(
                           text: "Start Picking",
                           onPressed: () async {
                             if (memberIDController.text.isNotEmpty) {

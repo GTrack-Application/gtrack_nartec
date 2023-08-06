@@ -1,32 +1,51 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
 class DropDownWidget extends StatelessWidget {
-  const DropDownWidget({super.key, this.items, this.value, this.onChanged});
+  const DropDownWidget({
+    super.key,
+    required this.items,
+    required this.value,
+    this.onChanged,
+  });
 
-  final List<String>? items;
-  final String? value;
+  final List<String> items;
+  final String value;
   final Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
+        border: Border.all(
+          color: AppColors.fields,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(5),
         color: AppColors.fields,
-        border: Border.all(width: 1),
       ),
       child: DropdownButton(
-        isExpanded: true,
-        elevation: 0,
         value: value,
-        items: items?.map((value) {
-          return DropdownMenuItem(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-        onChanged: onChanged ?? (_) {},
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        underline: const SizedBox(),
+        isExpanded: true,
+        icon: const Icon(Icons.arrow_drop_down),
+        items: items
+            .map((e) => DropdownMenuItem(
+                  value: e,
+                  child: AutoSizeText(
+                    e,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 15,
+                    ),
+                  ),
+                ))
+            .toList(),
+        onChanged: onChanged,
       ),
     );
   }

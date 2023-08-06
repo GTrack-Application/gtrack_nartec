@@ -14,7 +14,6 @@ class IconTextField extends StatelessWidget {
     this.focusNode,
     this.onFieldSubmitted,
     this.enabled,
-    this.margin,
   });
 
   final TextEditingController controller;
@@ -28,52 +27,46 @@ class IconTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final Function(String)? onFieldSubmitted;
   final bool? enabled;
-  final EdgeInsetsGeometry? margin;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: margin ?? const EdgeInsets.all(0),
-      width: width ?? MediaQuery.of(context).size.width,
-      // height: 4
-      child: TextFormField(
-        controller: controller,
-        enabled: enabled ?? true,
-        keyboardType: keyboardType ?? TextInputType.text,
-        obscureText: obscureText ?? false,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        textInputAction: textInputAction ?? TextInputAction.done,
-        focusNode: focusNode ?? FocusNode(),
-        onFieldSubmitted: onFieldSubmitted ?? (value) {},
-        validator: validator ??
-            (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-        decoration: InputDecoration(
-          fillColor: const Color.fromRGBO(236, 244, 249, 1),
-          filled: true,
-          suffixIcon: suffixIcon ?? const SizedBox.shrink(),
-          icon: leadingIcon ?? const SizedBox.shrink(),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 10,
-          ),
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.grey,
-              width: 1.0,
-            ),
-          ),
-
-          // enabledBorder: const OutlineInputBorder(
-          //   borderSide: BorderSide(
-          //     color: Colors.grey,
-          //     width: 2.0,
-          //   ),
-          // ),
+    return TextFormField(
+      controller: controller,
+      enabled: enabled ?? true,
+      keyboardType: keyboardType ?? TextInputType.text,
+      obscureText: obscureText ?? false,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      textInputAction: textInputAction ?? TextInputAction.done,
+      focusNode: focusNode ?? FocusNode(),
+      onFieldSubmitted: onFieldSubmitted ?? (value) {},
+      validator: validator ??
+          (String? value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+      decoration: InputDecoration(
+        fillColor: const Color.fromRGBO(236, 244, 249, 1),
+        filled: true,
+        suffixIcon: suffixIcon ?? const SizedBox.shrink(),
+        icon: leadingIcon ?? const SizedBox.shrink(),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 10,
         ),
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey,
+            width: 1.0,
+          ),
+        ),
+
+        // enabledBorder: const OutlineInputBorder(
+        //   borderSide: BorderSide(
+        //     color: Colors.grey,
+        //     width: 2.0,
+        //   ),
+        // ),
       ),
     );
   }

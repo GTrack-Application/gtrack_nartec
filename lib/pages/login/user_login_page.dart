@@ -1,15 +1,17 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/components/app_logo.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/pages/login/activities_and_password_page.dart';
 import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -40,13 +42,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   login() {
     if (formKey.currentState?.validate() ?? false) {
-      Fluttertoast.showToast(
-        msg: 'Login in progress...',
-        gravity: ToastGravity.SNACKBAR,
-        timeInSecForIosWeb: 5,
-        backgroundColor: Theme.of(context).primaryColor,
-      );
+      AppDialogs.loadingDialog(context);
       LoginServices.login(email: emailController.text).then((response) {
+        AppDialogs.closeDialog();
         final activities = response['activities'] as List<dynamic>;
 
         // add email and activities to login provider
@@ -63,19 +61,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
           },
         );
       }).catchError((error) {
-        Fluttertoast.showToast(
-          msg: error.toString(),
-          gravity: ToastGravity.SNACKBAR,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.redAccent,
-        );
-      }).onError((error, stackTrace) {
-        Fluttertoast.showToast(
-          msg: error.toString(),
-          gravity: ToastGravity.SNACKBAR,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.redAccent,
-        );
+        AppDialogs.closeDialog();
+        AppSnackbars.danger(context, error.toString());
       });
     }
   }
@@ -112,7 +99,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
                         ),
                         IconTextField(
                           controller: emailController,
-                          margin: const EdgeInsets.only(right: 60),
                           keyboardType: TextInputType.emailAddress,
                           leadingIcon: Image.asset(
                             AppIcons.usernameIcon,
@@ -129,15 +115,14 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               return 'Please enter a valid email';
                             }
                           },
-                        ),
+                        ).box.width(context.width * 0.8).make(),
                         const SizedBox(height: 20),
                       ],
                     ),
-                    PrimaryButton(
+                    PrimaryButtonWidget(
                       onPressed: login,
-                      margin: const EdgeInsets.only(left: 60, right: 60),
                       text: "Log in",
-                    ),
+                    ).box.width(context.width * 0.65).makeCentered(),
                     const SizedBox(height: 20),
                   ],
                 ),

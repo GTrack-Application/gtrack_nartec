@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 
 class AppDialogs {
@@ -10,12 +9,7 @@ class AppDialogs {
       barrierDismissible: false,
       builder: (ctx) {
         dialogueContext = ctx;
-        return Container(
-          color: AppColors.white,
-          child: const Center(
-            child: LoadingWidget(),
-          ),
-        );
+        return const LoadingWidget();
       },
     );
   }

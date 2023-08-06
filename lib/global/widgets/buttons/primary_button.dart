@@ -1,57 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:get/get.dart';
 
-class PrimaryButton extends StatefulWidget {
-  const PrimaryButton({
-    super.key,
-    this.onPressed,
-    this.text,
-    this.margin,
-    this.width,
-  });
-
-  final VoidCallback? onPressed;
-  final String? text;
-  final EdgeInsetsGeometry? margin;
-  final double? width;
-
-  @override
-  State<PrimaryButton> createState() => _PrimaryButtonState();
-}
-
-class _PrimaryButtonState extends State<PrimaryButton> {
-  bool _isLoading = false;
-
-  void toggleLoading() {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
-  }
-
+class PrimaryButtonWidget extends StatelessWidget {
+  const PrimaryButtonWidget(
+      {Key? key, required this.text, required this.onPressed})
+      : super(key: key);
+  final String text;
+  final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widget.width ?? MediaQuery.of(context).size.width,
-      height: 50,
-      margin: widget.margin ??
-          const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+    return SizedBox(
+      width: context.width,
+      height: 45,
       child: ElevatedButton(
-        onPressed: () {
-          if (_isLoading == true) return;
-          toggleLoading();
-          widget.onPressed?.call();
-          toggleLoading();
-        },
-        child: _isLoading == true
-            ? Center(
-                child: LoadingAnimationWidget.prograssiveDots(
-                  color: Colors.white,
-                  size: 20,
-                ),
-              )
-            : Text(
-                widget.text ?? "Text",
-              ),
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }

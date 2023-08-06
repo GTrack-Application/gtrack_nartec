@@ -206,7 +206,7 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                        child: PrimaryButton(
+                        child: PrimaryButtonWidget(
                       text: "Scan Next Item",
                       onPressed: scanNextItem,
                     )),

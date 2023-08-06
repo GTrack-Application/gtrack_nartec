@@ -6,6 +6,7 @@ class Themes {
   static ThemeData? lightTheme() {
     return ThemeData(
       useMaterial3: true,
+      scaffoldBackgroundColor: AppColors.background,
       primaryColor: const Color(0xFF0D117F),
       primarySwatch: const MaterialColor(
         0xFF0D117F, // The primary color value in hexadecimal
@@ -90,7 +91,7 @@ class Themes {
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primary,
           textStyle: const TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
           shape: RoundedRectangleBorder(
