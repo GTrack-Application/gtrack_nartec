@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/dispatch_management/dispatch_management_services.dart';
 import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/job_details_model.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/toast.dart';
 import 'package:gtrack_mobile_app/global/components/counter_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/secondary_button.dart';
@@ -48,16 +47,16 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
   scanGTIN() {
     isClicked = true;
     if (scanController.text.isNotEmpty && isClicked) {
-      PrettyToast.success(context, "Loading");
+      // PrettyToast.success(context, "Loading");
       DispatchManagementServices.getJobDetailsByReferenceNo(scanController.text)
           .then((response) {
         jobDetailsModel = response[0];
 
-        PrettyToast.success(context, 'Data Loaded');
+        // PrettyToast.success(context, 'Data Loaded');
         setState(() {});
         isClicked = false;
       }).catchError((e) {
-        PrettyToast.error(context, e.toString());
+        // PrettyToast.error(context, e.toString());
         isClicked = false;
       });
     }
@@ -66,15 +65,15 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
   scanNextItem() {
     isClicked = true;
     if (jobDetailsModel != null && isClicked) {
-      PrettyToast.success(context, "Loading");
+      // PrettyToast.success(context, "Loading");
       DispatchManagementServices.postTable().then((message) {
-        PrettyToast.success(context, message);
+        // PrettyToast.success(context, message);
         scanController.clear();
         FocusScope.of(context).requestFocus(scanGtinFocusNode);
         setState(() {});
         isClicked = false;
       }).catchError((e) {
-        PrettyToast.error(context, e.toString());
+        // PrettyToast.error(context, e.toString());
         isClicked = false;
       });
 

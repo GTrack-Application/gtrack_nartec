@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/dispatch_management/dispatch_management_services.dart';
 import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/gln_model.dart';
 import 'package:gtrack_mobile_app/domain/services/models/dispatch_management/job_order_details_model.dart';
-import 'package:gtrack_mobile_app/global/common/utils/toast.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_toast.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/search_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/secondary_button.dart';
@@ -47,7 +47,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
   searchJobOrderDetails() {
     if (jobOrderRequestNumberController.text.isNotEmpty && !isClicked) {
       isClicked = true;
-      PrettyToast.success(context, 'Loading');
+      // PrettyToast.success(context, 'Loading');
       DispatchManagementServices.getJobOrderDetails(
         jobOrderRequestNumberController.text,
       ).then((response) {
@@ -58,10 +58,10 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
           glnidController.text = jobOrderDetails[0].gLNIDMember.toString();
           trxDateController.text = "";
         });
-        PrettyToast.success(context, 'Job Order Details Loaded');
+        AppToast.success('Job Order Details Loaded');
         isClicked = false;
       }).catchError((e) {
-        PrettyToast.error(context, e.toString());
+        AppToast.danger(e.toString());
         isClicked = false;
       });
     } else if (isClicked) {
@@ -69,7 +69,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
         isClicked = false;
       });
     } else {
-      PrettyToast.error(context, 'Please enter Job Order Request Number');
+      AppToast.danger('Enter Job Order Request #');
       isClicked = false;
     }
   }
@@ -77,7 +77,6 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
   Future<void> startTracking() async {
     if (jobOrderRequestNumberController.text.isNotEmpty && !isClicked) {
       isClicked = true;
-      PrettyToast.success(context, 'Loading');
       DispatchManagementServices.getGlnByMemberId(
         memberIDController.text,
       ).then((response) {
@@ -89,7 +88,8 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
         Get.toNamed(DispatchManagementTwoPage.pageName);
         isClicked = false;
       }).catchError((e) {
-        PrettyToast.error(context, e.toString());
+        AppToast.danger(e.toString());
+        // PrettyToast.error(context, e.toString());
         isClicked = false;
       });
     } else if (isClicked) {
@@ -97,7 +97,8 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
         isClicked = false;
       });
     } else {
-      PrettyToast.error(context, 'Get Job Order Details first');
+      AppToast.danger("Get Job Order Details first");
+      // PrettyToast.error(context, 'Get Job Order Details first');
       isClicked = false;
     }
   }

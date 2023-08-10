@@ -12,18 +12,11 @@ class AppLogo extends StatelessWidget {
     return Animate(
       effects: const [
         ScaleEffect(
-          duration: Duration(seconds: 3),
+          duration: Duration(seconds: 2),
         )
       ],
       child: Center(
-        child: Container(
-          margin: const EdgeInsets.only(top: 20),
-          child: Image.asset(
-            AppImages.logo,
-            width: 256,
-            height: 256,
-          ),
-        ),
+        child: Image.asset(AppImages.logo),
       ),
     );
   }

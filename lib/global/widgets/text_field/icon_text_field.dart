@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
 class IconTextField extends StatelessWidget {
   const IconTextField({
@@ -6,27 +7,23 @@ class IconTextField extends StatelessWidget {
     required this.controller,
     this.keyboardType,
     this.validator,
-    this.obscureText,
-    this.width,
     this.leadingIcon,
-    this.suffixIcon,
     this.textInputAction,
     this.focusNode,
-    this.onFieldSubmitted,
     this.enabled,
+    this.obscureText,
+    this.suffixIcon,
   });
 
   final TextEditingController controller;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
-  final bool? obscureText;
-  final double? width;
   final Widget? leadingIcon;
   final Widget? suffixIcon;
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
-  final Function(String)? onFieldSubmitted;
   final bool? enabled;
+  final bool? obscureText;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -37,7 +34,13 @@ class IconTextField extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       textInputAction: textInputAction ?? TextInputAction.done,
       focusNode: focusNode ?? FocusNode(),
-      onFieldSubmitted: onFieldSubmitted ?? (value) {},
+      onFieldSubmitted: (value) {
+        if (textInputAction == TextInputAction.next) {
+          FocusScope.of(context).nextFocus();
+        } else if (textInputAction == TextInputAction.done) {
+          FocusScope.of(context).unfocus();
+        }
+      },
       validator: validator ??
           (String? value) {
             if (value == null || value.isEmpty) {
@@ -46,27 +49,27 @@ class IconTextField extends StatelessWidget {
             return null;
           },
       decoration: InputDecoration(
-        fillColor: const Color.fromRGBO(236, 244, 249, 1),
+        fillColor: AppColors.fields,
         filled: true,
+        prefixIcon: leadingIcon ?? const SizedBox.shrink(),
         suffixIcon: suffixIcon ?? const SizedBox.shrink(),
-        icon: leadingIcon ?? const SizedBox.shrink(),
+        // icon: leadingIcon ?? const SizedBox.shrink(),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 10,
           vertical: 10,
         ),
-        border: const OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.grey,
+            color: AppColors.grey,
             width: 1.0,
           ),
         ),
-
-        // enabledBorder: const OutlineInputBorder(
-        //   borderSide: BorderSide(
-        //     color: Colors.grey,
-        //     width: 2.0,
-        //   ),
-        // ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: AppColors.black,
+            width: 1.0,
+          ),
+        ),
       ),
     );
   }

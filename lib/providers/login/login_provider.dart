@@ -4,13 +4,13 @@ class LoginProvider with ChangeNotifier {
   String? _email;
   String? _password;
   String? _otp;
-  String? _activity;
+  Map? _activity;
   List? _activities;
 
   String? get email => _email;
   String? get password => _password;
   String? get otp => _otp;
-  String? get activity => _activity;
+  Map? get activity => _activity;
   List? get activities => _activities;
 
   void setEmail(String? email) {
@@ -33,7 +33,7 @@ class LoginProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setActivity(String? activity) {
+  void setActivity(Map? activity) {
     _activity = activity;
     notifyListeners();
   }

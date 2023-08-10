@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
+import 'package:gtrack_mobile_app/constants/app_text_styles.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/custom_dialog.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
+import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
 import 'package:gtrack_mobile_app/pages/login/otp_page.dart';
-import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ActivitiesAndPasswordPage extends StatefulWidget {
-  const ActivitiesAndPasswordPage({super.key});
+  final String email;
+  final List<EmailActivitiesModel>? activities;
+  const ActivitiesAndPasswordPage(
+      {super.key, required this.email, this.activities});
   static const String pageName = '/activitiesAndPassword';
 
   @override
@@ -29,22 +33,39 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
   bool obscureText = true;
   List<String> activities = [];
   String? activityValue;
-  String email = '';
+
+  @override
+  void initState() {
+    super.initState();
+    widget.activities?.forEach((element) {
+      if (element.activity != "null" || element.activity != null) {
+        activities.add(element.activity!);
+      }
+    });
+    activityValue = activities[0];
+  }
 
   showOtpPopup(
     String message, {
     String? email,
     String? activity,
     String? password,
+    String? generatedOtp,
   }) {
     CustomDialog.success(
       context,
       title: "OTP",
       desc: message,
       btnOkOnPress: () {
-        email = Provider.of<LoginProvider>(context, listen: false).email;
-        activity = Provider.of<LoginProvider>(context, listen: false).activity;
-        Get.toNamed(OtpPage.pageName);
+        AppNavigator.goToPage(
+          context: context,
+          screen: OtpPage(
+            email: email.toString(),
+            activity: activity.toString(),
+            password: password.toString(),
+            generatedOtp: generatedOtp.toString(),
+          ),
+        );
       },
     );
   }
@@ -54,29 +75,22 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
       formKey.currentState?.save();
       if (activityValue != null && passwordController.text.isNotEmpty) {
         AppDialogs.loadingDialog(context);
-        Provider.of<LoginProvider>(context, listen: false)
-            .setActivity(activityValue.toString());
-        Provider.of<LoginProvider>(context, listen: false)
-            .setPassword(passwordController.text);
-        email =
-            Provider.of<LoginProvider>(context, listen: false).email.toString();
-        final activity = Provider.of<LoginProvider>(context, listen: false)
-            .activity
-            .toString();
 
         LoginServices.loginWithPassword(
-          email,
-          activity.toString(),
-          passwordController.text,
+          widget.email,
+          activityValue!,
+          passwordController.text.trim(),
         ).then((value) {
           AppDialogs.closeDialog();
           final message = value['message'] as String;
+          final generatedOtp = value['otp'] as String;
 
           showOtpPopup(
             message,
-            email: email,
+            email: widget.email,
             activity: activityValue,
             password: passwordController.text,
+            generatedOtp: generatedOtp,
           );
         }).onError((error, stackTrace) {
           AppDialogs.closeDialog();
@@ -106,13 +120,6 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final listOfAcitivies =
-        Provider.of<LoginProvider>(context, listen: false).activities;
-
-    final activities = listOfAcitivies!
-        .where((activity) => activity != null)
-        .map((e) => e.toString())
-        .toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Login'),
@@ -143,12 +150,13 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: double.infinity,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 60),
-                      child: const Text('Select your activity'),
+                    // Container(
+                    //   margin: const EdgeInsets.only(left: 60),
+                    //   child: const Text('Select your activity'),
+                    // ),
+                    Text(
+                      "Select your activity",
+                      style: AppTextStyle.titleStyle,
                     ),
                     Row(
                       children: [
@@ -158,9 +166,9 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                           child: DropDownWidget(
                             items: activities,
                             value: activityValue ?? activities[0],
-                            onChanged: (value) {
+                            onChanged: (activity) {
                               setState(() {
-                                activityValue = value.toString();
+                                activityValue = activity.toString();
                               });
                             },
                           ),
@@ -168,9 +176,13 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Container(
-                      margin: const EdgeInsets.only(left: 60),
-                      child: const Text('Enter your password'),
+                    // Container(
+                    //   margin: const EdgeInsets.only(left: 60),
+                    //   child: const Text('Enter your password'),
+                    // ),
+                    Text(
+                      "Enter your password",
+                      style: AppTextStyle.titleStyle,
                     ),
                     IconTextField(
                       controller: passwordController,

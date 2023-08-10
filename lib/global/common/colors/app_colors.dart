@@ -14,4 +14,5 @@ abstract class AppColors {
   static const Color transparentColor = Color.fromRGBO(0, 0, 0, 0.5);
 
   static const Color transparent = Colors.transparent;
+  static const Color grey = Colors.grey;
 }

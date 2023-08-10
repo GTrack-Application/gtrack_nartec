@@ -1,16 +1,24 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_toast.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
-import 'package:gtrack_mobile_app/pages/gtrack-menu/menu_page.dart';
-import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:gtrack_mobile_app/screens/home/home_screen.dart';
 
 class OtpPage extends StatefulWidget {
-  const OtpPage({super.key});
+  final String email, activity, password, generatedOtp;
+  const OtpPage({
+    super.key,
+    required this.email,
+    required this.activity,
+    required this.password,
+    required this.generatedOtp,
+  });
   static const String pageName = '/otp';
 
   @override
@@ -20,36 +28,15 @@ class OtpPage extends StatefulWidget {
 class _OtpPageState extends State<OtpPage> {
   final formKey = GlobalKey<FormState>();
   final otpController = TextEditingController();
-  String? generatedOtp;
 
   @override
   void initState() {
     formKey.currentState?.save();
     Future.delayed(const Duration(microseconds: 500), () async {
-      final email = Provider.of<LoginProvider>(context, listen: false).email;
-      final activity =
-          Provider.of<LoginProvider>(context, listen: false).activity;
-
       try {
-        final response = await LoginServices.sendOTP(
-          email.toString(),
-          activity.toString(),
-        );
-
-        Fluttertoast.showToast(
-          msg: response["message"],
-          backgroundColor: Colors.blue,
-        );
-        generatedOtp = response["otp"];
-        otpController.text = response["otp"];
+        otpController.text = widget.generatedOtp;
       } catch (e) {
-        Fluttertoast.showToast(
-          msg: e.toString().replaceAll("Exception: ", ""),
-          backgroundColor: Colors.red,
-        );
-        Future.delayed(const Duration(seconds: 2)).then((_) {
-          Navigator.pop(context);
-        });
+        AppToast.danger(e.toString());
       }
     });
     super.initState();
@@ -59,26 +46,22 @@ class _OtpPageState extends State<OtpPage> {
     if (formKey.currentState!.validate()) {
       formKey.currentState?.save();
 
-      final email = Provider.of<LoginProvider>(context, listen: false).email;
-      final activity =
-          Provider.of<LoginProvider>(context, listen: false).activity;
-      final password =
-          Provider.of<LoginProvider>(context, listen: false).password;
       try {
+        AppDialogs.loadingDialog(context);
         await LoginServices.confirmation(
-          email.toString(),
-          activity.toString(),
-          password.toString(),
-          generatedOtp.toString(),
+          widget.email.toString(),
+          widget.activity.toString(),
+          widget.password.toString(),
+          widget.generatedOtp.toString(),
           otpController.text,
         );
+        AppDialogs.closeDialog();
 
-        Get.toNamed(MenuPage.pageName);
+        // Get.toNamed(MenuPage.pageName);
+        AppNavigator.replaceTo(context: context, screen: const HomeScreen());
       } catch (e) {
-        Fluttertoast.showToast(
-          msg: e.toString(),
-          backgroundColor: Colors.red,
-        );
+        AppDialogs.closeDialog();
+        AppToast.danger(e.toString());
       }
     }
   }
@@ -120,7 +103,6 @@ class _OtpPageState extends State<OtpPage> {
                 IconTextField(
                   controller: otpController,
                   leadingIcon: Image.asset(AppIcons.work),
-                  width: double.infinity,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "The field is required";

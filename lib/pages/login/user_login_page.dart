@@ -2,8 +2,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
+import 'package:gtrack_mobile_app/constants/app_text_styles.dart';
 import 'package:gtrack_mobile_app/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/components/app_logo.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
@@ -45,7 +47,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
       AppDialogs.loadingDialog(context);
       LoginServices.login(email: emailController.text).then((response) {
         AppDialogs.closeDialog();
-        final activities = response['activities'] as List<dynamic>;
+        final activities = response;
 
         // add email and activities to login provider
         Provider.of<LoginProvider>(context, listen: false)
@@ -53,13 +55,20 @@ class _UserLoginPageState extends State<UserLoginPage> {
         Provider.of<LoginProvider>(context, listen: false)
             .setActivities(activities);
 
-        Get.toNamed(
-          ActivitiesAndPasswordPage.pageName,
-          arguments: activities,
-          parameters: {
-            'email': emailController.text,
-          },
+        AppNavigator.goToPage(
+          context: context,
+          screen: ActivitiesAndPasswordPage(
+            email: emailController.text.trim(),
+            activities: activities,
+          ),
         );
+        // Get.toNamed(
+        //   ActivitiesAndPasswordPage.pageName,
+        //   arguments: activities,
+        //   parameters: {
+        //     'email': emailController.text,
+        //   },
+        // );
       }).catchError((error) {
         AppDialogs.closeDialog();
         AppSnackbars.danger(context, error.toString());
@@ -81,8 +90,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
             children: [
               const AppLogo(),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -90,20 +98,15 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: double.infinity,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(left: 60),
-                          child: const Text('Enter your login ID'),
+                        Text(
+                          'Enter your login ID',
+                          style: AppTextStyle.titleStyle,
                         ),
                         IconTextField(
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
                           leadingIcon: Image.asset(
                             AppIcons.usernameIcon,
-                            width: 42,
-                            height: 42,
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -115,14 +118,14 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               return 'Please enter a valid email';
                             }
                           },
-                        ).box.width(context.width * 0.8).make(),
+                        ).box.width(context.width * 0.9).make(),
                         const SizedBox(height: 20),
                       ],
                     ),
                     PrimaryButtonWidget(
                       onPressed: login,
                       text: "Log in",
-                    ).box.width(context.width * 0.65).makeCentered(),
+                    ).box.width(context.width * 0.85).makeCentered(),
                     const SizedBox(height: 20),
                   ],
                 ),

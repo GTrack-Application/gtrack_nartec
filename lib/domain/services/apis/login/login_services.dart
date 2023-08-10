@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
 import 'package:http/http.dart' as http;
 
 class LoginServices {
@@ -110,31 +111,28 @@ class LoginServices {
     });
   }
 
-  static Future<Map<String, dynamic>> login({String? email}) async {
+  static Future<List<EmailActivitiesModel>> login({String? email}) async {
     const baseUrl = '${AppUrls.baseUrl}/api/email/verification';
 
     final uri = Uri.parse(baseUrl);
     try {
-      final response = await http.post(
-        uri,
-        body: json.encode(
-          {
-            // body should include email
-            'email': email,
-          },
-        ),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Host': 'gs1ksa.org',
-        },
-      );
+      final response =
+          await http.post(uri, body: json.encode({'email': email}), headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Host': AppUrls.host,
+      });
 
+      print('responseBody: ${response.body}');
       if (response.statusCode == 200) {
         // handle successful response
-        final responseBody = json.decode(response.body) as Map<String, dynamic>;
-        // print('responseBody: $responseBody');
-        return responseBody;
+        final responseBody = json.decode(response.body);
+        final data = responseBody['activities'] as List;
+        final List<EmailActivitiesModel> emailActivities = [];
+        for (final item in data) {
+          emailActivities.add(EmailActivitiesModel.fromJson(item));
+        }
+        return emailActivities;
       } else if (response.statusCode == 404) {
         // print('responseBody: ${json.decode(response.body)}');
 
