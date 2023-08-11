@@ -23,4 +23,15 @@ class AppIcons {
   static const String goodsIssuedProduction =
       'assets/icons/goodsIssueProduction.png';
   /* -------------------------------------------------------------------------*/
+
+  /* ----------------------------- New Icons ----------------------------*/
+
+  static const String aggregation = 'assets/icons/aggregation.png';
+  static const String barcodeUtility = 'assets/icons/barcode_utility.png';
+  static const String delivery = 'assets/icons/delivery.png';
+  static const String receiving = 'assets/icons/receiving.png';
+  static const String rfidUtility = 'assets/icons/RFID_utility.png';
+  static const String salesTransaction = 'assets/icons/sales_transaction.png';
+  static const String shipping = 'assets/icons/shipping.png';
+  static const String transformation = 'assets/icons/transformation.png';
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/domain/routes/routes.dart';
 import 'package:gtrack_mobile_app/global/themes/themes.dart';
-import 'package:gtrack_mobile_app/providers/dispatch_management/gln_provider.dart';
-import 'package:gtrack_mobile_app/providers/login/login_provider.dart';
+import 'package:gtrack_mobile_app/old/domain/routes/routes.dart';
+import 'package:gtrack_mobile_app/old/providers/dispatch_management/gln_provider.dart';
+import 'package:gtrack_mobile_app/old/providers/login/login_provider.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Gtrack',
             theme: Themes.lightTheme(),
-            darkTheme: Themes.darkTheme(),
-            themeMode: ThemeMode.system,
+            // darkTheme: Themes.darkTheme(),
+            // themeMode: ThemeMode.system,
             initialRoute: '/',
             getPages: AppPages.pages,
           ),
