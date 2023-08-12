@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/old/domain/services/apis/dispatch_management/dispatch_management_services.dart';
-import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/gln_model.dart';
-import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/job_order_details_model.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_toast.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/search_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/secondary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/table_header_text.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/title_text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/custom_text_field.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
+import 'package:gtrack_mobile_app/old/domain/services/apis/dispatch_management/dispatch_management_services.dart';
+import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/gln_model.dart';
+import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/job_order_details_model.dart';
 import 'package:gtrack_mobile_app/old/pages/gtrack-menu/dispatch_management/dispatch_management_two_page.dart';
 import 'package:gtrack_mobile_app/old/providers/dispatch_management/gln_provider.dart';
 import 'package:provider/provider.dart';
@@ -132,7 +132,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
                     children: [
                       Expanded(
                         flex: 4,
-                        child: CustomTextField(
+                        child: TextFieldWidget(
                           controller: jobOrderRequestNumberController,
                           keyboardType: TextInputType.text,
                           validator: (_) {
@@ -160,7 +160,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const TitleTextWidget(title: "Member ID"),
-                            CustomTextField(
+                            TextFieldWidget(
                               controller: memberIDController,
                               enabled: false,
                               validator: (_) {
@@ -176,7 +176,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const TitleTextWidget(title: "Job Order #"),
-                            CustomTextField(
+                            TextFieldWidget(
                               enabled: false,
                               controller: jobOrderController,
                               validator: (_) {
@@ -196,7 +196,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const TitleTextWidget(title: "GLNID"),
-                          CustomTextField(
+                          TextFieldWidget(
                             enabled: false,
                             controller: glnidController,
                             validator: (_) {
@@ -211,7 +211,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const TitleTextWidget(title: "Trx Date"),
-                            CustomTextField(
+                            TextFieldWidget(
                               enabled: false,
                               controller: trxDateController,
                               validator: (_) {

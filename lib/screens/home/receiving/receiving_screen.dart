@@ -3,9 +3,8 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/image_button.dart';
 
-class ReceiptManagementPage extends StatelessWidget {
-  const ReceiptManagementPage({super.key});
-  static const String pageName = '/receiptManagement-page';
+class ReceivingScreen extends StatelessWidget {
+  const ReceivingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +14,7 @@ class ReceiptManagementPage extends StatelessWidget {
         child: Column(
           children: [
             Image.asset(AppImages.receiptPageBG),
-            AppBar(
-              title: const Text('WPS PRO'),
-              centerTitle: true,
-              automaticallyImplyLeading: true,
-            ),
+            AppBar(title: const Text('WPS PRO')),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
               child: Column(

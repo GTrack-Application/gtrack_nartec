@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
 class CardIconButton extends StatelessWidget {
-  const CardIconButton(
-      {Key? key,
-      required this.text,
-      required this.icon,
-      required this.onPressed})
-      : super(key: key);
+  const CardIconButton({
+    Key? key,
+    required this.text,
+    required this.icon,
+    required this.onPressed,
+  }) : super(key: key);
 
   final String text;
   final String icon;

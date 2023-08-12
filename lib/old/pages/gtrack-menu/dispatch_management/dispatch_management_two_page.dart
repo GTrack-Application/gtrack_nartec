@@ -6,7 +6,7 @@ import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/secondary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/title_text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/custom_text_field.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_mobile_app/old/domain/services/apis/dispatch_management/dispatch_management_services.dart';
 import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/job_details_model.dart';
 import 'package:gtrack_mobile_app/old/providers/dispatch_management/gln_provider.dart';
@@ -113,7 +113,7 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
                 const SizedBox(height: 20),
                 const TitleTextWidget(title: "Scan GTIN"),
                 const SizedBox(height: 8),
-                CustomTextField(
+                TextFieldWidget(
                   controller: scanController,
                   focusNode: scanGtinFocusNode,
                   validator: (_) => null,

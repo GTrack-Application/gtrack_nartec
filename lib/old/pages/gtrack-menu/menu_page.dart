@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/icon_elevated_button.dart';
 import 'package:gtrack_mobile_app/old/pages/gtrack-menu/dispatch_management/dispatch_management_one_page.dart';
-import 'package:gtrack_mobile_app/old/pages/gtrack-menu/receipts-management/receipt_management_page.dart';
+import 'package:gtrack_mobile_app/screens/home/receiving/receiving_screen.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -87,7 +88,11 @@ class _MenuPageState extends State<MenuPage> {
                   backgroundColor: const Color.fromRGBO(66, 210, 132, 1),
                   textColor: Colors.white,
                   onPressed: () {
-                    Get.toNamed(ReceiptManagementPage.pageName);
+                    // Get.toNamed(ReceivingScreen.pageName);
+                    AppNavigator.goToPage(
+                      context: context,
+                      screen: const ReceivingScreen(),
+                    );
                   },
                 ),
                 const SizedBox(height: 20),

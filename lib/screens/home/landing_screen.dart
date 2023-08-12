@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/screens/home/receiving/receiving_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class LandingScreen extends StatefulWidget {
+  const LandingScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<LandingScreen> createState() => _LandingScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final List<Map> buttons = [
+class _LandingScreenState extends State<LandingScreen> {
+  List<Map> buttons = [
     {
       "text": "Receiving",
       "image": AppIcons.receiving,
@@ -55,6 +57,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // scaffold key
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // assign the receivingOnClick function to the receiving button
+    buttons[0]['onPressed'] = receivingOnClick;
+  }
+
+  receivingOnClick() {
+    AppNavigator.goToPage(
+      context: context,
+      screen: const ReceivingScreen(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -71,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 1.2,
-            crossAxisSpacing: 10,
+            crossAxisSpacing: 30,
             mainAxisSpacing: 10,
           ),
           padding: const EdgeInsets.all(10),

@@ -9,7 +9,7 @@ import 'package:gtrack_mobile_app/global/common/utils/app_toast.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
-import 'package:gtrack_mobile_app/screens/home/home_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/landing_screen.dart';
 
 class OtpPage extends StatefulWidget {
   final String email, activity, password, generatedOtp;
@@ -59,7 +59,7 @@ class _OtpPageState extends State<OtpPage> {
         AppDialogs.closeDialog();
 
         // Get.toNamed(MenuPage.pageName);
-        AppNavigator.replaceTo(context: context, screen: const HomeScreen());
+        AppNavigator.replaceTo(context: context, screen: const LandingScreen());
       } catch (e) {
         AppDialogs.closeDialog();
         AppToast.danger(e.toString());
