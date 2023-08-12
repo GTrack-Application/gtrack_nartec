@@ -3,11 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_toast.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
+import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/screens/home/home_screen.dart';
 
 class OtpPage extends StatefulWidget {
@@ -110,11 +111,8 @@ class _OtpPageState extends State<OtpPage> {
                     return null;
                   },
                 ),
-                ElevatedButton(
-                    onPressed: () async {
-                      await verifyOtp();
-                    },
-                    child: const Text('Verify Now')),
+                const SizedBox(height: 20),
+                PrimaryButtonWidget(text: "Verify OTP", onPressed: verifyOtp),
               ],
             ),
           ),

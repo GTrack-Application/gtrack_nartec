@@ -123,7 +123,6 @@ class LoginServices {
         'Host': AppUrls.host,
       });
 
-      print('responseBody: ${response.body}');
       if (response.statusCode == 200) {
         // handle successful response
         final responseBody = json.decode(response.body);

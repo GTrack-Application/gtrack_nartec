@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class IconTextField extends StatelessWidget {
   const IconTextField({
@@ -39,6 +40,7 @@ class IconTextField extends StatelessWidget {
           FocusScope.of(context).nextFocus();
         } else if (textInputAction == TextInputAction.done) {
           FocusScope.of(context).unfocus();
+          hideKeyboard(context);
         }
       },
       validator: validator ??
@@ -51,9 +53,9 @@ class IconTextField extends StatelessWidget {
       decoration: InputDecoration(
         fillColor: AppColors.fields,
         filled: true,
-        prefixIcon: leadingIcon ?? const SizedBox.shrink(),
+        // prefixIcon: leadingIcon ?? const SizedBox.shrink(),
         suffixIcon: suffixIcon ?? const SizedBox.shrink(),
-        // icon: leadingIcon ?? const SizedBox.shrink(),
+        icon: leadingIcon ?? const SizedBox.shrink(),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 10,
           vertical: 10,

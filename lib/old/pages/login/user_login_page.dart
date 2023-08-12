@@ -105,9 +105,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                         IconTextField(
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
-                          leadingIcon: Image.asset(
-                            AppIcons.usernameIcon,
-                          ),
+                          leadingIcon: Image.asset(AppIcons.usernameIcon),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your login ID';
