@@ -35,9 +35,11 @@ class ImageButton extends StatelessWidget {
           child: Text(
             text,
             softWrap: true,
-            maxLines: 10,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: const TextStyle(
+              fontSize: 10,
               color: AppColors.black,
               fontWeight: FontWeight.w700,
               fontFamily: 'Inter',

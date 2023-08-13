@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
@@ -40,9 +41,9 @@ class CardIconButton extends StatelessWidget {
             ),
             const Spacer(),
             Flexible(
-              child: Text(
+              child: AutoSizeText(
                 text,
-                maxLines: 1,
+                maxLines: 2,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(

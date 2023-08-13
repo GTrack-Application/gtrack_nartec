@@ -34,4 +34,5 @@ class AppIcons {
   static const String salesTransaction = 'assets/icons/sales_transaction.png';
   static const String shipping = 'assets/icons/shipping.png';
   static const String transformation = 'assets/icons/transformation.png';
+  static const String sockTransfer = 'assets/icons/sock_transfer.png';
 }
