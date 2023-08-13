@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetShipmentDataController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/DummyModel.dart';
@@ -55,25 +57,7 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                         controller: _shipmentIdController,
                         width: MediaQuery.of(context).size.width * 0.73,
                         onEditingComplete: () {
-                          // hide keyboard
-                          FocusScope.of(context).unfocus();
-                          const LoadingWidget();
-                          GetShipmentDataController.getShipmentData(
-                                  _shipmentIdController.text.trim())
-                              .then((value) {
-                            setState(() {
-                              table = value;
-                              total = table.length.toString();
-                              isMarked = List<bool>.filled(table.length, false);
-                            });
-                            Navigator.pop(context);
-                          }).onError((error, stackTrace) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(error
-                                    .toString()
-                                    .replaceAll("Exception:", ""))));
-                          });
+                          onSearch();
                         },
                       ),
                     ),
@@ -85,26 +69,9 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          FocusScope.of(context).unfocus();
-                          const LoadingWidget();
-                          GetShipmentDataController.getShipmentData(
-                                  _shipmentIdController.text.trim())
-                              .then((value) {
-                            setState(() {
-                              table = value;
-                              total = table.length.toString();
-                              isMarked = List<bool>.filled(table.length, false);
-                              Navigator.pop(context);
-                            });
-                          }).onError((error, stackTrace) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(error
-                                    .toString()
-                                    .replaceAll("Exception:", ""))));
-                          });
+                          onSearch();
                         },
-                        child: Image.asset('assets/finder.png',
+                        child: Image.asset(AppImages.finder,
                             width: MediaQuery.of(context).size.width * 0.15,
                             height: 60,
                             fit: BoxFit.cover),
@@ -264,19 +231,18 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                             onSelectChanged: (value) {
                               // keybord hide
                               FocusScope.of(context).requestFocus(FocusNode());
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return ScanSerialNumberScreen(
-                                  containerId: e.cONTAINERID ?? "",
-                                  itemId: e.iTEMID ?? "",
-                                  qty: e.qTY ?? 0,
-                                  shipmentId: e.sHIPMENTID ?? "",
-                                  shipmentStatus:
-                                      int.parse(e.sHIPMENTSTATUS.toString()),
-                                  purchId: e.pURCHID ?? "",
-                                  createdDateTime: e.cREATEDDATETIME ?? "",
-                                );
-                              }));
+                              AppNavigator.goToPage(
+                                  context: context,
+                                  screen: ScanSerialNumberScreen(
+                                    containerId: e.cONTAINERID ?? "",
+                                    itemId: e.iTEMID ?? "",
+                                    qty: e.qTY ?? 0,
+                                    shipmentId: e.sHIPMENTID ?? "",
+                                    shipmentStatus:
+                                        int.parse(e.sHIPMENTSTATUS.toString()),
+                                    purchId: e.pURCHID ?? "",
+                                    createdDateTime: e.cREATEDDATETIME ?? "",
+                                  ));
                             },
                             cells: [
                               DataCell(Text((table.indexOf(e) + 1).toString())),
@@ -299,5 +265,23 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
         ),
       ),
     );
+  }
+
+  void onSearch() async {
+    FocusScope.of(context).unfocus();
+    AppDialogs.loadingDialog(context);
+    GetShipmentDataController.getShipmentData(_shipmentIdController.text.trim())
+        .then((value) {
+      setState(() {
+        table = value;
+        total = table.length.toString();
+        isMarked = List<bool>.filled(table.length, false);
+      });
+      AppDialogs.closeDialog();
+    }).onError((error, stackTrace) {
+      AppDialogs.closeDialog();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error.toString().replaceAll("Exception:", ""))));
+    });
   }
 }

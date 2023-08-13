@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GenerateSerialNumberforRecevingController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/InsertShipmentReceivedDataController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/UpdateStockMasterDataController.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
@@ -146,7 +149,7 @@ class _SaveScreenState extends State<SaveScreen> {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.only(bottom: 20),
                 decoration: const BoxDecoration(
-                  color: Colors.orange,
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
@@ -165,7 +168,7 @@ class _SaveScreenState extends State<SaveScreen> {
                           width: MediaQuery.of(context).size.width * 0.9,
                           alignment: Alignment.centerRight,
                           child: Image.asset(
-                            "assets/delete.png",
+                            AppImages.delete,
                             width: 30,
                             height: 30,
                           ),
@@ -370,7 +373,7 @@ class _SaveScreenState extends State<SaveScreen> {
                       return;
                     }
 
-                    const LoadingWidget();
+                    AppDialogs.loadingDialog(context);
                     FocusScope.of(context).unfocus();
                     InsertShipmentReceivedDataController.insertShipmentData(
                       widget.shipmentId,
@@ -413,7 +416,7 @@ class _SaveScreenState extends State<SaveScreen> {
                           widget.weight);
 
                       FocusScope.of(context).requestFocus(secondFocusNode);
-                      Navigator.pop(context);
+                      AppDialogs.closeDialog();
                     }).onError((error, stackTrace) {
                       _serialNoController.clear();
                       FocusScope.of(context).requestFocus(secondFocusNode);
@@ -422,7 +425,7 @@ class _SaveScreenState extends State<SaveScreen> {
                           content: Text("Serial Number already exists!"),
                         ),
                       );
-                      Navigator.pop(context);
+                      AppDialogs.closeDialog();
                     });
                   },
                 ),
@@ -433,7 +436,7 @@ class _SaveScreenState extends State<SaveScreen> {
                 child: ElevatedButtonWidget(
                   title: "Generate Serial No.",
                   fontSize: 18,
-                  color: Colors.orange[100],
+                  color: AppColors.primary.withOpacity(0.3),
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: 50,
                   onPressed: () {
@@ -441,7 +444,8 @@ class _SaveScreenState extends State<SaveScreen> {
                             widget.itemId)
                         .then(
                       (value) {
-                        const LoadingWidget();
+                        AppDialogs.loadingDialog(context);
+
                         FocusScope.of(context).unfocus();
                         InsertShipmentReceivedDataController.insertShipmentData(
                           widget.shipmentId,
@@ -480,14 +484,14 @@ class _SaveScreenState extends State<SaveScreen> {
                               widget.height,
                               widget.weight);
 
-                          Navigator.pop(context);
+                          AppDialogs.closeDialog();
                         }).onError((error, stackTrace) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text("Serial No. not generated!"),
                             ),
                           );
-                          Navigator.pop(context);
+                          AppDialogs.closeDialog();
                         });
                       },
                     );
@@ -515,7 +519,7 @@ class _SaveScreenState extends State<SaveScreen> {
                       dataRowColor: MaterialStateColor.resolveWith(
                           (states) => Colors.grey.withOpacity(0.2)),
                       headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.orange),
+                          (states) => AppColors.primary),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey,

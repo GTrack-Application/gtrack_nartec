@@ -1,14 +1,18 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetAllTableZoneController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetAllTblShipmentReceivedCLController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetItemNameByItemIdController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetTblStockMasterByItemIdController.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'save_screen.dart';
 import 'shipment_dispatching_screen.dart';
@@ -66,7 +70,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
     _weightController.text = "0";
 
     Future.delayed(Duration.zero, () {
-      const LoadingWidget();
+      AppDialogs.loadingDialog(context);
       GetAllTableZoneController.getAllTableZone().then((value) {
         dropdownValue = dropdownList[0];
         for (int i = 0; i < value.length; i++) {
@@ -87,7 +91,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
           setState(() {
             rCQTY = 0;
           });
-          Navigator.pop(context);
+          AppDialogs.closeDialog();
         });
 
         GetItemNameByItemIdController.getName(widget.itemId).then((value) {
@@ -108,9 +112,10 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
               _weightController.text =
                   double.parse(value[0].weight.toString()).toString();
             });
-            Navigator.of(context).pop();
+            AppDialogs.closeDialog();
           }).onError((error, stackTrace) {
-            Navigator.of(context).pop();
+            AppDialogs.closeDialog();
+
             setState(() {
               _widthController.text = "";
               _heightController.text = "";
@@ -135,14 +140,14 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
               _weightController.text =
                   double.parse(value[0].weight.toString()).toString();
             });
-            Navigator.of(context).pop();
+            AppDialogs.closeDialog();
           }).onError((error, stackTrace) {
-            Navigator.of(context).pop();
             setState(() {
               _widthController.text = "";
               _heightController.text = "";
               _lengthController.text = "";
             });
+            AppDialogs.closeDialog();
           });
         });
       }).onError((error, stackTrace) {
@@ -171,7 +176,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.only(bottom: 20),
                 decoration: const BoxDecoration(
-                  color: Colors.orange,
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
@@ -190,7 +195,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                           width: MediaQuery.of(context).size.width * 0.9,
                           alignment: Alignment.centerRight,
                           child: Image.asset(
-                            "assets/delete.png",
+                            AppImages.delete,
                             width: 30,
                             height: 30,
                           ),
@@ -413,8 +418,8 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
               ),
               const SizedBox(height: 30),
               Center(
-                child: ElevatedButtonWidget(
-                  title: "Scan Serial Number",
+                child: PrimaryButtonWidget(
+                  text: "Scan Serial Number",
                   onPressed: () {
                     if (_gtinNoController.text.trim().isEmpty ||
                         _lengthController.text.trim().isEmpty ||
@@ -427,7 +432,9 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                       );
                       return;
                     }
-                    Get.to(() => SaveScreen(
+                    AppNavigator.goToPage(
+                        context: context,
+                        screen: SaveScreen(
                           gtin: _gtinNoController.text.trim(),
                           rZone: dropdownValue,
                           containerId: widget.containerId,
@@ -448,12 +455,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                               _weightController.text.trim().toString()),
                         ));
                   },
-                  textColor: Colors.white,
-                  fontSize: 18,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 50,
-                  color: Colors.orange,
-                ),
+                ).box.width(context.width * 0.9).make(),
               ),
               const SizedBox(height: 20),
             ],
