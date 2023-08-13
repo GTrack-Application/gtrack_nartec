@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: file_names
 
 import 'dart:convert';
 
@@ -32,21 +32,15 @@ class UpdateStockMasterDataController {
       "Weight": weight,
     };
 
-    print(jsonEncode(body));
-    print("url: $url");
-
     try {
       var response =
           await http.put(uri, headers: headers, body: jsonEncode(body));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("Status Code: ${response.statusCode}");
       } else {
-        print("Status Code: ${response.statusCode}");
         throw Exception('Failed to load Data');
       }
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, non_constant_identifier_names, file_names
 
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
@@ -12,12 +12,12 @@ class InsertShipmentReceivedDataController {
     String iTEMID,
     String pURCHID,
     int cLASSIFICATION,
-    String SERIALNUM,
+    String serialNum,
     String RCVDCONFIGID,
-    String RCVD_DATE,
+    String rcvdDate,
     String GTIN,
     String RZONE,
-    String PALLET_DATE,
+    String palletDate,
     String PALLETCODE,
     String BIN,
     String REMARKS,
@@ -28,7 +28,7 @@ class InsertShipmentReceivedDataController {
     double weight,
   ) async {
     String url =
-        "${AppUrls.base}insertShipmentRecievedDataCL?SHIPMENTID=$sHIPMENTID&CONTAINERID=$cONTAINERID&ARRIVALWAREHOUSE=$aRRIVALWAREHOUSE&ITEMNAME=$iTEMNAME&ITEMID=$iTEMID&PURCHID=$pURCHID&CLASSIFICATION=$cLASSIFICATION&SERIALNUM=$SERIALNUM&RCVDCONFIGID=$RCVDCONFIGID&RCVD_DATE=$RCVD_DATE&GTIN=$GTIN&RZONE=$RZONE&PALLET_DATE=$PALLET_DATE&PALLETCODE=$PALLETCODE&BIN=$BIN&REMARKS=$REMARKS&POQTY=$POQTY&LENGTH=$length&WIDTH=$width&HEIGHT=$height&WEIGHT=$weight";
+        "${AppUrls.base}insertShipmentRecievedDataCL?SHIPMENTID=$sHIPMENTID&CONTAINERID=$cONTAINERID&ARRIVALWAREHOUSE=$aRRIVALWAREHOUSE&ITEMNAME=$iTEMNAME&ITEMID=$iTEMID&PURCHID=$pURCHID&CLASSIFICATION=$cLASSIFICATION&SERIALNUM=$serialNum&RCVDCONFIGID=$RCVDCONFIGID&RCVD_DATE=$rcvdDate&GTIN=$GTIN&RZONE=$RZONE&PALLET_DATE=$palletDate&PALLETCODE=$PALLETCODE&BIN=$BIN&REMARKS=$REMARKS&POQTY=$POQTY&LENGTH=$length&WIDTH=$width&HEIGHT=$height&WEIGHT=$weight";
 
     final uri = Uri.parse(url);
 

@@ -1,5 +1,6 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
 class AppBarWidget extends StatefulWidget {
@@ -36,10 +37,6 @@ class _AppBarWidgetState extends State<AppBarWidget> {
 
       // change the back button color
 
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Colors.orange,
-        statusBarIconBrightness: Brightness.light,
-      ),
       leading: GestureDetector(
         onTap: widget.onPressed,
         child: const Icon(

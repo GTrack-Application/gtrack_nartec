@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetShipmentDataController.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/DummyModel.dart';
 
-import 'ScanSerialNumberScreen.dart';
+import 'scan_serial_number_screen.dart';
 
 int rCQTY = 0;
 
@@ -29,33 +28,8 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: AppBarWidget(
-          autoImplyLeading: true,
-          onPressed: () {
-            Get.back();
-          },
-          title: "Supplier Receipt".toUpperCase(),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Container(
-                padding: const EdgeInsets.only(right: 10),
-                child: Image.asset(
-                  "assets/delete.png",
-                  width: 30,
-                  height: 30,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Container(
+      appBar: AppBar(title: Text("Supplier Receipt".toUpperCase())),
+      body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
@@ -83,7 +57,7 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                         onEditingComplete: () {
                           // hide keyboard
                           FocusScope.of(context).unfocus();
-                          LoadingWidget();
+                          const LoadingWidget();
                           GetShipmentDataController.getShipmentData(
                                   _shipmentIdController.text.trim())
                               .then((value) {
@@ -224,7 +198,7 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                       dataRowColor: MaterialStateColor.resolveWith(
                           (states) => Colors.grey.withOpacity(0.2)),
                       headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.orange),
+                          (states) => AppColors.primary),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey,

@@ -7,7 +7,7 @@ import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 
-import 'ShipmentDispatchingScreen.dart';
+import 'shipment_dispatching_screen.dart';
 
 // ignore: must_be_immutable
 class SaveScreen extends StatefulWidget {
@@ -27,6 +27,7 @@ class SaveScreen extends StatefulWidget {
   double weight;
 
   SaveScreen({
+    super.key,
     required this.gtin,
     required this.itemName,
     required this.createdDateTime,

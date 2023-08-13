@@ -1,6 +1,9 @@
+// ignore_for_file: file_names
+
+import 'dart:convert';
+
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GenerateSerialNumberforRecevingController {
   static Future<String> generateSerialNo(String itemId) async {
@@ -9,9 +12,6 @@ class GenerateSerialNumberforRecevingController {
     final body = {
       "ITEMID": itemId,
     };
-
-    print("URL: $url");
-    print("Body: $body");
 
     final uri = Uri.parse(url);
 
