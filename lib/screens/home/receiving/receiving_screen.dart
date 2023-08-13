@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/screens/home/receiving/SupplierReceipt/ShipmentDispatchingScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
 
 class ReceivingScreen extends StatefulWidget {
@@ -42,6 +44,19 @@ class _ReceivingScreenState extends State<ReceivingScreen> {
       "onPressed": () {},
     },
   ];
+
+  supplierReceipt() {
+    AppNavigator.goToPage(
+      context: context,
+      screen: const ShipmentDispatchingScreen(),
+    );
+  }
+
+  @override
+  void initState() {
+    buttons[3]['onPressed'] = supplierReceipt;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
