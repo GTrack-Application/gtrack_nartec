@@ -10,8 +10,8 @@ import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 
-import 'SaveScreen.dart';
-import 'ShipmentDispatchingScreen.dart';
+import 'save_screen.dart';
+import 'shipment_dispatching_screen.dart';
 
 // ignore: must_be_immutable
 class ScanSerialNumberScreen extends StatefulWidget {
@@ -24,6 +24,7 @@ class ScanSerialNumberScreen extends StatefulWidget {
   int qty;
 
   ScanSerialNumberScreen({
+    super.key,
     required this.createdDateTime,
     required this.purchId,
     required this.shipmentId,
@@ -107,9 +108,6 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
               _weightController.text =
                   double.parse(value[0].weight.toString()).toString();
             });
-            print("width: ${value[0].width}");
-            print("height: ${value[0].height}");
-            print("length: ${value[0].length}");
             Navigator.of(context).pop();
           }).onError((error, stackTrace) {
             Navigator.of(context).pop();
