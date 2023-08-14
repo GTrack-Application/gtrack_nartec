@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -113,57 +113,67 @@ class NavigateIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.background,
-      elevation: 7,
+    return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            // Leading Image
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: color),
-                  image: DecorationImage(
-                    image: AssetImage(icon),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Material(
+          color: AppColors.background,
+          elevation: 7,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppColors.background,
               ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AutoSizeText(
-                      caption,
-                      minFontSize: 12,
-                      maxFontSize: 12,
-                    ),
-                    const SizedBox(height: 5),
-                    AutoSizeText(
-                      title,
-                      maxFontSize: 25,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      minFontSize: 20,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: color,
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                // Leading Image
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: color),
+                      image: DecorationImage(
+                        image: AssetImage(icon),
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ],
-          )),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AutoSizeText(
+                          caption,
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                        const SizedBox(height: 5),
+                        AutoSizeText(
+                          title,
+                          maxFontSize: 25,
+                          minFontSize: 20,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: color,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+        ),
+      ),
     );
   }
 }
