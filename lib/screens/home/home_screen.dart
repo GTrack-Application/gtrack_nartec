@@ -115,66 +115,66 @@ class NavigateIconWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      margin: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      width: MediaQuery.of(context).size.width * 0.9,
-      height: context.height * 0.17,
-      decoration: BoxDecoration(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Material(
+        elevation: 10,
+        borderRadius: BorderRadius.circular(10),
         color: AppColors.background,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color),
-      ),
-      child: Stack(
-        children: [
-          ListTile(
-            onTap: onTap,
-            dense: true,
-            leading: Image.asset(
-              icon,
-              width: 60,
-              fit: BoxFit.cover,
-            ),
-            title: SizedBox(
-              child: AutoSizeText(
-                caption,
-                maxFontSize: 12,
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            subtitle: AutoSizeText(
-              title,
-              maxFontSize: 25,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              minFontSize: 20,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: Container(
-              padding: const EdgeInsets.all(5),
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-                border: Border.all(color: color),
-                image: DecorationImage(
-                  image: AssetImage(icon),
+        child: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: context.height * 0.17,
+          child: Stack(
+            children: [
+              ListTile(
+                onTap: onTap,
+                dense: true,
+                leading: Image.asset(
+                  icon,
+                  width: 50,
                   fit: BoxFit.cover,
                 ),
+                title: AutoSizeText(
+                  caption,
+                  minFontSize: 10,
+                  maxFontSize: 10,
+                ),
+                subtitle: AutoSizeText(
+                  title,
+                  maxFontSize: 25,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  minFontSize: 20,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: color),
+                    image: DecorationImage(
+                      image: AssetImage(icon),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
