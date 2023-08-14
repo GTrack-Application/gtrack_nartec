@@ -44,8 +44,8 @@ class Themes {
       ),
       appBarTheme: AppBarTheme(
         color: AppColors.primary,
-        // change icon
-        //
+        // change icon of the back button
+
         elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(
