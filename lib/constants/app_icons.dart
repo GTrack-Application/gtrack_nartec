@@ -52,4 +52,14 @@ class AppIcons {
   static const String gsin = 'assets/icons/gsin.png';
 
   // Capture Screen
+
+  // Share Screen
+  static const String digital = 'assets/icons/digital.png';
+  static const String productCatalogue = 'assets/icons/product-catalogue.png';
+  static const String productCertificate =
+      'assets/icons/product-certificate.png';
+  static const String epcis = 'assets/icons/epcis.png';
+  static const String cvb = 'assets/icons/cvb.png';
+  static const String productOrigin = 'assets/icons/product-origin.png';
+  static const String tracibility = 'assets/icons/tracibility.png';
 }
