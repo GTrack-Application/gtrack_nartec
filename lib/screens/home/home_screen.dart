@@ -26,9 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
       "SHARE",
     ],
     "caption": [
-      "GTIN|GLN|SSCC|GIAI|GRAI GMN|GSRN|GSIN",
+      "GTIN|GLN|SSCC|GIAI|\nGRAI GMN|GSRN|GSIN",
       "ASSOCIATION|TRANSFORMATION AGGREGATION|SERIALIZATION|MAPPING BARCODE AND RFID",
-      "DIGITAL LINKS|PRODUCT CATALOGUE|PRODUCT CERTIFICATES|EPCIS|CBV PRODUCT ORIGIN|TRACEABILITY"
+      "DIGITAL LINKS|PRODUCT CATALOGUE|PRODUCT CERTIFICATES|EPCIS|CBV\nPRODUCT ORIGIN|TRACEABILITY"
     ],
     "color": [
       AppColors.skyBlue,
@@ -129,7 +129,8 @@ class NavigateIconWidget extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
-                // Leading Image
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(5),
@@ -147,27 +148,33 @@ class NavigateIconWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 20),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AutoSizeText(
-                          caption,
-                          style: const TextStyle(fontSize: 13),
-                        ),
-                        const SizedBox(height: 5),
-                        AutoSizeText(
-                          title,
-                          maxFontSize: 25,
-                          minFontSize: 20,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: color,
-                            fontSize: 20,
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            height: 70,
+                            alignment: Alignment.centerLeft,
+                            child: AutoSizeText(
+                              caption,
+                              style: const TextStyle(fontSize: 12),
+                              textAlign: TextAlign.left,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 5),
+                          AutoSizeText(
+                            title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: color,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
