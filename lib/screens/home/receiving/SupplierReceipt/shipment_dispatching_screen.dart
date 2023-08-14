@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetShipmentDataController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/DummyModel.dart';
@@ -55,25 +58,7 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                         controller: _shipmentIdController,
                         width: MediaQuery.of(context).size.width * 0.73,
                         onEditingComplete: () {
-                          // hide keyboard
-                          FocusScope.of(context).unfocus();
-                          const LoadingWidget();
-                          GetShipmentDataController.getShipmentData(
-                                  _shipmentIdController.text.trim())
-                              .then((value) {
-                            setState(() {
-                              table = value;
-                              total = table.length.toString();
-                              isMarked = List<bool>.filled(table.length, false);
-                            });
-                            Navigator.pop(context);
-                          }).onError((error, stackTrace) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(error
-                                    .toString()
-                                    .replaceAll("Exception:", ""))));
-                          });
+                          onSearch();
                         },
                       ),
                     ),
@@ -85,26 +70,9 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          FocusScope.of(context).unfocus();
-                          const LoadingWidget();
-                          GetShipmentDataController.getShipmentData(
-                                  _shipmentIdController.text.trim())
-                              .then((value) {
-                            setState(() {
-                              table = value;
-                              total = table.length.toString();
-                              isMarked = List<bool>.filled(table.length, false);
-                              Navigator.pop(context);
-                            });
-                          }).onError((error, stackTrace) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(error
-                                    .toString()
-                                    .replaceAll("Exception:", ""))));
-                          });
+                          onSearch();
                         },
-                        child: Image.asset('assets/finder.png',
+                        child: Image.asset(AppImages.finder,
                             width: MediaQuery.of(context).size.width * 0.15,
                             height: 60,
                             fit: BoxFit.cover),
@@ -182,122 +150,142 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
               ),
               const SizedBox(height: 10),
               Container(
-                height: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.6,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.grey,
                     width: 1,
                   ),
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      showCheckboxColumn: false,
-                      dataRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.grey.withOpacity(0.2)),
-                      headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => AppColors.primary),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1,
-                        ),
-                      ),
-                      border: TableBorder.all(
-                        color: Colors.black,
-                        width: 1,
-                      ),
-                      columns: const [
-                        DataColumn(
-                            label: Text(
-                          'ID',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'PURCH ID',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'CREATED DATE TIME',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'SHIPMENT ID',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'SHIPMENT STATUS',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'CONTAINER ID',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'ITEM ID',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'QTY',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                      ],
-                      rows: table.map((e) {
-                        return DataRow(
-                            onSelectChanged: (value) {
-                              // keybord hide
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return ScanSerialNumberScreen(
-                                  containerId: e.cONTAINERID ?? "",
-                                  itemId: e.iTEMID ?? "",
-                                  qty: e.qTY ?? 0,
-                                  shipmentId: e.sHIPMENTID ?? "",
-                                  shipmentStatus:
-                                      int.parse(e.sHIPMENTSTATUS.toString()),
-                                  purchId: e.pURCHID ?? "",
-                                  createdDateTime: e.cREATEDDATETIME ?? "",
-                                );
-                              }));
-                            },
-                            cells: [
-                              DataCell(Text((table.indexOf(e) + 1).toString())),
-                              DataCell(Text(e.pURCHID ?? "")),
-                              DataCell(Text(e.cREATEDDATETIME ?? "")),
-                              DataCell(Text(e.sHIPMENTID ?? "")),
-                              DataCell(Text(e.sHIPMENTSTATUS.toString())),
-                              DataCell(Text(e.cONTAINERID ?? "")),
-                              DataCell(Text(e.iTEMID ?? "")),
-                              DataCell(Text(e.qTY.toString())),
-                            ]);
-                      }).toList(),
-                    ),
-                  ),
+                child: PaginatedDataTable(
+                  rowsPerPage: 5,
+                  columns: const [
+                    DataColumn(
+                        label: Text(
+                      'PURCH ID',
+                      style: TextStyle(color: AppColors.primary),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'CREATED DATE TIME',
+                      style: TextStyle(color: AppColors.primary),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'SHIPMENT ID',
+                      style: TextStyle(color: AppColors.primary),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'SHIPMENT STATUS',
+                      style: TextStyle(color: AppColors.primary),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'CONTAINER ID',
+                      style: TextStyle(color: AppColors.primary),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'ITEM ID',
+                      style: TextStyle(color: AppColors.primary),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'QTY',
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    )),
+                  ],
+                  source: TableDataSource(table, context),
+                  showCheckboxColumn: false,
+                  showFirstLastButtons: true,
+                  arrowHeadColor: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
             ],
           ),
         ),
       ),
     );
   }
+
+  void onSearch() async {
+    FocusScope.of(context).unfocus();
+    AppDialogs.loadingDialog(context);
+    GetShipmentDataController.getShipmentData(_shipmentIdController.text.trim())
+        .then((value) {
+      setState(() {
+        table = value;
+        total = table.length.toString();
+        isMarked = List<bool>.filled(table.length, false);
+      });
+      AppDialogs.closeDialog();
+    }).onError((error, stackTrace) {
+      AppDialogs.closeDialog();
+      AppSnackbars.danger(context, error.toString());
+    });
+  }
+}
+
+class TableDataSource extends DataTableSource {
+  List<DummyModel> data;
+  BuildContext ctx;
+
+  TableDataSource(
+    this.data,
+    this.ctx,
+  );
+
+  @override
+  DataRow? getRow(int index) {
+    if (index >= data.length) {
+      return null;
+    }
+
+    final instance = data[index];
+
+    return DataRow.byIndex(
+      index: index,
+      onSelectChanged: (value) {
+        FocusScope.of(ctx).requestFocus(FocusNode());
+        AppNavigator.goToPage(
+            context: ctx,
+            screen: ScanSerialNumberScreen(
+              containerId: instance.cONTAINERID ?? "",
+              itemId: instance.iTEMID ?? "",
+              qty: instance.qTY ?? 0,
+              shipmentId: instance.sHIPMENTID ?? "",
+              shipmentStatus: int.parse(instance.sHIPMENTSTATUS.toString()),
+              purchId: instance.pURCHID ?? "",
+              createdDateTime: instance.cREATEDDATETIME ?? "",
+            ));
+      },
+      cells: [
+        DataCell(Text(instance.pURCHID ?? "")),
+        DataCell(Text(instance.cREATEDDATETIME ?? "")),
+        DataCell(Text(instance.sHIPMENTID ?? "")),
+        DataCell(Text(instance.sHIPMENTSTATUS.toString())),
+        DataCell(Text(instance.cONTAINERID ?? "")),
+        DataCell(Text(instance.iTEMID ?? "")),
+        DataCell(Text(instance.qTY.toString())),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
 }

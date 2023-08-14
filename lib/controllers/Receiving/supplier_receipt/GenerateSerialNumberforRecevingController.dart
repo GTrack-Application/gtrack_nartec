@@ -27,18 +27,13 @@ class GenerateSerialNumberforRecevingController {
           await http.post(uri, headers: headers, body: jsonEncode(body));
 
       if (response.statusCode == 200) {
-        print("Status Code: ${response.statusCode}");
-        print("Response Body: ${response.body}");
-
         var data = json.decode(response.body);
         var serialNo = data['SERIALNO'];
         return serialNo;
       } else {
-        print("Status Code: ${response.statusCode}");
         throw Exception();
       }
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }

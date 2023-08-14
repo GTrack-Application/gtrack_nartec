@@ -1,9 +1,10 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, file_names
+
+import 'dart:convert';
 
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/GetAllTableZoneModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GetAllTableZoneController {
   static Future<List<GetAllTableZoneModel>> getAllTableZone() async {

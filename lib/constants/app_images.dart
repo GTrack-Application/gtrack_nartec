@@ -5,4 +5,5 @@ class AppImages {
   static const String identify = 'assets/icons/identify_icon.png';
   static const String capture = 'assets/icons/capture_icon.png';
   static const String share = 'assets/icons/share-icon.png';
+  static const String finder = 'assets/images/finder.png';
 }
