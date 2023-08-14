@@ -3,7 +3,7 @@ class AppIcons {
   static const String passwordIcon = 'assets/icons/password_icon.png';
   static const String dispatch = 'assets/icons/dispatch.png';
   static const String barcode = 'assets/icons/barcode.png';
-  static const String gtin = 'assets/icons/gtin.png';
+  // static const String gtin = 'assets/icons/gtin.png';
   static const String inventory = 'assets/icons/inventory.png';
   static const String rawMaterial = 'assets/icons/raw-material.png';
   static const String settings = 'assets/icons/settings.png';
@@ -40,4 +40,16 @@ class AppIcons {
   static const String identify = 'assets/icons/identify_icon.png';
   static const String capture = 'assets/icons/capture_icon.png';
   static const String share = 'assets/icons/share-icon.png';
+
+  // Identify Screen
+  static const String gtin = 'assets/icons/gtin.png';
+  static const String gln = 'assets/icons/gln.png';
+  static const String sscc = 'assets/icons/sscc.png';
+  static const String giai = 'assets/icons/giai.png';
+  static const String grai = 'assets/icons/grai.png';
+  static const String gmn = 'assets/icons/gmn.png';
+  static const String gsrn = 'assets/icons/gsrn.png';
+  static const String gsin = 'assets/icons/gsin.png';
+
+  // Capture Screen
 }
