@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class IconTextField extends StatelessWidget {
   const IconTextField({
@@ -29,20 +28,19 @@ class IconTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      enabled: enabled ?? true,
       keyboardType: keyboardType ?? TextInputType.text,
       obscureText: obscureText ?? false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       textInputAction: textInputAction ?? TextInputAction.done,
-      focusNode: focusNode ?? FocusNode(),
-      onFieldSubmitted: (value) {
-        if (textInputAction == TextInputAction.next) {
-          FocusScope.of(context).nextFocus();
-        } else if (textInputAction == TextInputAction.done) {
-          FocusScope.of(context).unfocus();
-          hideKeyboard(context);
-        }
-      },
+      // focusNode: focusNode ?? FocusNode(),
+      // onFieldSubmitted: (value) {
+      //   if (textInputAction == TextInputAction.next) {
+      //     FocusScope.of(context).nextFocus();
+      //   } else if (textInputAction == TextInputAction.done) {
+      //     FocusScope.of(context).unfocus();
+      //     hideKeyboard(context);
+      //   }
+      // },
       validator: validator ??
           (String? value) {
             if (value == null || value.isEmpty) {
