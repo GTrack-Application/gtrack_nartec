@@ -62,13 +62,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
             activities: activities,
           ),
         );
-        // Get.toNamed(
-        //   ActivitiesAndPasswordPage.pageName,
-        //   arguments: activities,
-        //   parameters: {
-        //     'email': emailController.text,
-        //   },
-        // );
       }).catchError((error) {
         AppDialogs.closeDialog();
         AppSnackbars.danger(context, error.toString());
