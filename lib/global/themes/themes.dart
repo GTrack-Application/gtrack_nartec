@@ -7,7 +7,7 @@ class Themes {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: AppColors.background,
-      primaryColor: const Color(0xFF0D117F),
+      primaryColor: AppColors.primary,
       primarySwatch: const MaterialColor(
         0xFF0D117F, // The primary color value in hexadecimal
         <int, Color>{
@@ -26,8 +26,8 @@ class Themes {
       brightness: Brightness.light,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: const Color(0xFF0D117F),
+          foregroundColor: AppColors.white,
+          backgroundColor: AppColors.primary,
           textStyle: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -38,12 +38,12 @@ class Themes {
         ),
       ),
       buttonTheme: const ButtonThemeData(
-        buttonColor: Color(0xFF0D117F),
+        buttonColor: AppColors.primary,
         textTheme: ButtonTextTheme.primary,
         padding: EdgeInsets.all(5),
       ),
       appBarTheme: AppBarTheme(
-        color: const Color(0xFF0D117F),
+        color: AppColors.primary,
         elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(
@@ -105,7 +105,7 @@ class Themes {
   static ThemeData? darkTheme() {
     return ThemeData(
       useMaterial3: true,
-      primaryColor: const Color(0xFF0D117F),
+      primaryColor: AppColors.primary,
       primarySwatch: const MaterialColor(
         0xFF0D117F, // The primary color value in hexadecimal
         <int, Color>{

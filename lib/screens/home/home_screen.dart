@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
@@ -27,12 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
     "caption": [
       "GTIN|GLN|SSCC|GIAI|GRAI GMN|GSRN|GSIN",
       "ASSOCIATION|TRANSFORMATION AGGREGATION|SERIALIZATION|MAPPING BARCODE AND RFID",
-      "DIGITAL LINKS|PRODUCT CATALOGUE|PRODUCTS CERTIFICATES|EPCIS|CBV PRODUCTS ORIGIN|TRACEABILITY"
+      "DIGITAL LINKS|PRODUCT CATALOGUE|PRODUCT CERTIFICATES|EPCIS|CBV PRODUCT ORIGIN|TRACEABILITY"
     ],
     "color": [
-      AppColors.identify,
-      AppColors.capture,
-      AppColors.share,
+      AppColors.skyBlue,
+      AppColors.red,
+      AppColors.green,
     ],
     "onTap": [
       () {},
@@ -111,51 +112,57 @@ class NavigateIconWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.background,
-      margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      margin: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
       padding: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width * 0.9,
-      height: 120,
-      child: Material(
+      height: context.height * 0.15,
+      decoration: BoxDecoration(
         color: AppColors.background,
-        elevation: 10,
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          children: [
-            ListTile(
-              onTap: onTap,
-              leading: Image.asset(
-                icon,
-                width: 80,
-                fit: BoxFit.cover,
-              ),
-              title: AutoSizeText(
-                caption,
-                style: const TextStyle(fontSize: 12),
-                maxLines: 3,
-              ),
-              subtitle: Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: color,
-                ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color),
+      ),
+      child: Stack(
+        children: [
+          ListTile(
+            onTap: onTap,
+            leading: Image.asset(
+              icon,
+              width: 80,
+              fit: BoxFit.cover,
+            ),
+            title: AutoSizeText(
+              caption,
+              maxLines: 3,
+            ),
+            subtitle: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: color,
               ),
             ),
-            Positioned(
-              left: 0,
-              child: Container(
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  icon,
+          ),
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              width: 90,
+              height: 90,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+                border: Border.all(color: color),
+                image: DecorationImage(
+                  image: AssetImage(icon),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

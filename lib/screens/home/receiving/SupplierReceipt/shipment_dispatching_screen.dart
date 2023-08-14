@@ -32,186 +32,183 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Supplier Receipt".toUpperCase())),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 20, top: 10),
-                child: const TextWidget(
-                  text: "Shipment ID*",
-                  fontSize: 16,
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 20, top: 10),
+              child: const TextWidget(
+                text: "Shipment ID*",
+                fontSize: 16,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: TextFormFieldWidget(
-                        controller: _shipmentIdController,
-                        width: MediaQuery.of(context).size.width * 0.73,
-                        onEditingComplete: () {
-                          onSearch();
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          onSearch();
-                        },
-                        child: Image.asset(AppImages.finder,
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            height: 60,
-                            fit: BoxFit.cover),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              total != "0"
-                  ? Container(
-                      margin: const EdgeInsets.only(left: 20, top: 10),
-                      child: const TextWidget(
-                        text: " Filter By Container ID*",
-                        fontSize: 16,
-                      ),
-                    )
-                  : Container(),
-              total != "0"
-                  ? Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: TextFormFieldWidget(
-                        controller: _filterController,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        onEditingComplete: () {
-                          FocusScope.of(context).unfocus();
-                          // Filter by Container Id
-                          setState(() {
-                            table = table
-                                .where((element) => element.cONTAINERID!
-                                    .contains(_filterController.text.trim()))
-                                .toList();
-                            total = table.length.toString();
-                            isMarked = List<bool>.filled(table.length, false);
-                          });
-                        },
-                      ),
-                    )
-                  : Container(),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left: 10, top: 10),
-                    child: const TextWidget(
-                      text: "Shipment Details*",
-                      fontSize: 16,
+                    margin: const EdgeInsets.only(left: 20),
+                    child: TextFormFieldWidget(
+                      controller: _shipmentIdController,
+                      width: MediaQuery.of(context).size.width * 0.73,
+                      onEditingComplete: () {
+                        onSearch();
+                      },
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      const TextWidget(
-                        text: "TOTAL",
-                        fontSize: 16,
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                        width: 50,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.blue,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: TextWidget(text: total),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                    ],
+                  const SizedBox(width: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        onSearch();
+                      },
+                      child: Image.asset(AppImages.finder,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          height: 60,
+                          fit: BoxFit.cover),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1,
+            ),
+            total != "0"
+                ? Container(
+                    margin: const EdgeInsets.only(left: 20, top: 10),
+                    child: const TextWidget(
+                      text: " Filter By Container ID*",
+                      fontSize: 16,
+                    ),
+                  )
+                : Container(),
+            total != "0"
+                ? Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: TextFormFieldWidget(
+                      controller: _filterController,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      onEditingComplete: () {
+                        FocusScope.of(context).unfocus();
+                        // Filter by Container Id
+                        setState(() {
+                          table = table
+                              .where((element) => element.cONTAINERID!
+                                  .contains(_filterController.text.trim()))
+                              .toList();
+                          total = table.length.toString();
+                          isMarked = List<bool>.filled(table.length, false);
+                        });
+                      },
+                    ),
+                  )
+                : Container(),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 10, top: 10),
+                  child: const TextWidget(
+                    text: "Shipment Details*",
+                    fontSize: 16,
                   ),
                 ),
-                child: PaginatedDataTable(
-                  rowsPerPage: 5,
-                  columns: const [
-                    DataColumn(
-                        label: Text(
-                      'PURCH ID',
-                      style: TextStyle(color: AppColors.primary),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'CREATED DATE TIME',
-                      style: TextStyle(color: AppColors.primary),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'SHIPMENT ID',
-                      style: TextStyle(color: AppColors.primary),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'SHIPMENT STATUS',
-                      style: TextStyle(color: AppColors.primary),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'CONTAINER ID',
-                      style: TextStyle(color: AppColors.primary),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'ITEM ID',
-                      style: TextStyle(color: AppColors.primary),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'QTY',
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center,
-                    )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    const TextWidget(
+                      text: "TOTAL",
+                      fontSize: 16,
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 50,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.blue,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: TextWidget(text: total),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
                   ],
-                  source: TableDataSource(table, context),
-                  showCheckboxColumn: false,
-                  showFirstLastButtons: true,
-                  arrowHeadColor: AppColors.primary,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              margin: const EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppColors.grey,
+                  width: 1,
                 ),
               ),
-              const SizedBox(height: 10),
-            ],
-          ),
+              child: PaginatedDataTable(
+                rowsPerPage: 5,
+                columns: const [
+                  DataColumn(
+                      label: Text(
+                    'PURCH ID',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'CREATED DATE TIME',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'SHIPMENT ID',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'SHIPMENT STATUS',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'CONTAINER ID',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'ITEM ID',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'QTY',
+                    style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  )),
+                ],
+                source: TableDataSource(table, context),
+                showCheckboxColumn: false,
+                showFirstLastButtons: true,
+                arrowHeadColor: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
         ),
       ),
     );
