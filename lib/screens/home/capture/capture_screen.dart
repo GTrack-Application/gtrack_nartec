@@ -14,23 +14,23 @@ class _CaptureScreenState extends State<CaptureScreen> {
   final List<Map> data = [
     {
       "text": "ASSOCIATION",
-      "icon": AppIcons.gtin,
+      "icon": AppIcons.association,
     },
     {
       "text": "TRANSFORMATION",
-      "icon": AppIcons.gln,
+      "icon": AppIcons.transformation,
     },
     {
       "text": "AGGREGATION",
-      "icon": AppIcons.sscc,
+      "icon": AppIcons.aggregation,
     },
     {
       "text": "SERIALIZATION",
-      "icon": AppIcons.giai,
+      "icon": AppIcons.serialization,
     },
     {
       "text": "MAPPING BARCODE",
-      "icon": AppIcons.grai,
+      "icon": AppIcons.mapping,
     },
   ];
 
