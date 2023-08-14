@@ -120,26 +120,41 @@ class NavigateIconWidget extends StatelessWidget {
         color: AppColors.background,
         elevation: 10,
         borderRadius: BorderRadius.circular(10),
-        child: ListTile(
-          onTap: onTap,
-          leading: Image.asset(
-            icon,
-            height: 100,
-            fit: BoxFit.contain,
-          ),
-          title: AutoSizeText(
-            caption,
-            style: const TextStyle(fontSize: 12),
-            maxLines: 3,
-          ),
-          subtitle: Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: color,
+        child: Stack(
+          children: [
+            ListTile(
+              onTap: onTap,
+              leading: Image.asset(
+                icon,
+                width: 80,
+                fit: BoxFit.cover,
+              ),
+              title: AutoSizeText(
+                caption,
+                style: const TextStyle(fontSize: 12),
+                maxLines: 3,
+              ),
+              subtitle: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: color,
+                ),
+              ),
             ),
-          ),
+            Positioned(
+              left: 0,
+              child: Container(
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  icon,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
