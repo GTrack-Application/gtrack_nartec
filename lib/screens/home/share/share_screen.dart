@@ -43,8 +43,8 @@ class _ShareScreenState extends State<ShareScreen> {
   ];
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
-    childAspectRatio: 1,
     crossAxisCount: 3,
+    childAspectRatio: 0.8,
   );
 
   @override
@@ -56,15 +56,16 @@ class _ShareScreenState extends State<ShareScreen> {
       ),
       body: GridView.builder(
         gridDelegate: gridDelegate,
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         itemBuilder: (context, index) {
           return IconButtonWidget(
             icon: data[index]["icon"] as String,
             onPressed: () {},
             text: data[index]['text'] as String,
+            fontSize: 12,
           );
         },
         itemCount: data.length,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
       ),
     );
   }

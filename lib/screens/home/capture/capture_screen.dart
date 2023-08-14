@@ -35,8 +35,8 @@ class _CaptureScreenState extends State<CaptureScreen> {
   ];
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
-    childAspectRatio: 1,
     crossAxisCount: 3,
+    childAspectRatio: 0.8,
   );
 
   @override
@@ -53,10 +53,11 @@ class _CaptureScreenState extends State<CaptureScreen> {
             icon: data[index]["icon"] as String,
             onPressed: () {},
             text: data[index]['text'] as String,
+            fontSize: 12,
           );
         },
         itemCount: data.length,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       ),
     );
   }

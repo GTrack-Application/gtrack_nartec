@@ -48,7 +48,7 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 3,
-    childAspectRatio: 1.0,
+    childAspectRatio: 0.8,
   );
 
   @override
@@ -66,6 +66,7 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
             icon: data[index]["icon"] as String,
             onPressed: () {},
             text: data[index]['text'] as String,
+            fontSize: 12,
           );
         },
         itemCount: data.length,

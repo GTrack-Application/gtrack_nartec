@@ -65,6 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("GTIN Tracker v. 2.0"),
         automaticallyImplyLeading: true,
       ),
+      // make drawer from right side that contains the identity, capture and share screens
+      endDrawer: const MyDrawerWidget(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -102,6 +104,98 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+class MyDrawerWidget extends StatelessWidget {
+  const MyDrawerWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: AppColors.white,
+      child: ListView(
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+            ),
+            curve: Curves.linear,
+            child: Text(
+              'GTIN Tracker v. 2.0',
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(5),
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage(AppIcons.identify),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            title: const Text('Indentify'),
+            onTap: () {
+              Navigator.pop(context);
+              AppNavigator.goToPage(
+                  context: context, screen: const IdentifyScreen());
+            },
+          ),
+          const SizedBox(height: 10),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(5),
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage(AppIcons.capture),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            title: const Text('Capture'),
+            onTap: () {
+              Navigator.pop(context);
+              AppNavigator.goToPage(
+                  context: context, screen: const CaptureScreen());
+            },
+          ),
+          const SizedBox(height: 10),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(5),
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage(AppIcons.share),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            title: const Text('Share'),
+            onTap: () {
+              Navigator.pop(context);
+              AppNavigator.goToPage(
+                  context: context, screen: const ShareScreen());
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ignore: must_be_immutable
 class NavigateIconWidget extends StatelessWidget {
   String icon;
@@ -130,63 +224,64 @@ class NavigateIconWidget extends StatelessWidget {
           elevation: 7,
           borderRadius: BorderRadius.circular(10),
           child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: AppColors.background,
-              ),
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: color),
-                      image: DecorationImage(
-                        image: AssetImage(icon),
-                        fit: BoxFit.cover,
-                      ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.background,
+            ),
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: color),
+                    image: DecorationImage(
+                      image: AssetImage(icon),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            height: 70,
-                            alignment: Alignment.centerLeft,
-                            child: AutoSizeText(
-                              caption,
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.left,
-                            ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          height: 70,
+                          alignment: Alignment.centerLeft,
+                          child: AutoSizeText(
+                            caption,
+                            style: const TextStyle(fontSize: 12),
+                            textAlign: TextAlign.left,
                           ),
-                          const SizedBox(height: 5),
-                          AutoSizeText(
-                            title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: color,
-                              fontSize: 20,
-                            ),
+                        ),
+                        const SizedBox(height: 5),
+                        AutoSizeText(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: color,
+                            fontSize: 20,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
