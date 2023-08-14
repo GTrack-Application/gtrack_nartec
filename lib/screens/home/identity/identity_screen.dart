@@ -46,11 +46,11 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
     }
   ];
 
-  final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
-    childAspectRatio: 1.5,
+  final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 3,
-    mainAxisSpacing: 10,
-    crossAxisSpacing: 10,
+    crossAxisSpacing: 20,
+    mainAxisSpacing: 50,
+    childAspectRatio: 1.0,
   );
 
   @override
@@ -60,19 +60,16 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
         title: const Text('Identity'),
         backgroundColor: AppColors.skyBlue,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: GridView.builder(
-          gridDelegate: gridDelegate,
-          itemBuilder: (context, index) {
-            return IconButtonWidget(
-              icon: data[index]["icon"] as String,
-              onPressed: () {},
-              text: data[index]['text'] as String,
-            );
-          },
-          itemCount: data.length,
-        ),
+      body: GridView.builder(
+        gridDelegate: gridDelegate,
+        itemBuilder: (context, index) {
+          return IconButtonWidget(
+            icon: data[index]["icon"] as String,
+            onPressed: () {},
+            text: data[index]['text'] as String,
+          );
+        },
+        itemCount: data.length,
       ),
     );
   }
