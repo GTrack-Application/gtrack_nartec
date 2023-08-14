@@ -26,14 +26,14 @@ class AppIcons {
 
   /* ----------------------------- New Icons ----------------------------*/
 
-  static const String aggregation = 'assets/icons/aggregation.png';
+  // static const String aggregation = 'assets/icons/aggregation.png';
   static const String barcodeUtility = 'assets/icons/barcode_utility.png';
   static const String delivery = 'assets/icons/delivery.png';
   static const String receiving = 'assets/icons/receiving.png';
   static const String rfidUtility = 'assets/icons/RFID_utility.png';
   static const String salesTransaction = 'assets/icons/sales_transaction.png';
   static const String shipping = 'assets/icons/shipping.png';
-  static const String transformation = 'assets/icons/transformation.png';
+  // static const String transformation = 'assets/icons/transformation.png';
   static const String sockTransfer = 'assets/icons/sock_transfer.png';
 
   // Home Screen
@@ -53,6 +53,12 @@ class AppIcons {
 
   // Capture Screen
 
+  static const String association = 'assets/icons/association.png';
+  static const String transformation = 'assets/icons/transformation.png';
+  static const String aggregation = 'assets/icons/aggregation.png';
+  static const String serialization = 'assets/icons/serialization.png';
+  static const String mapping = 'assets/icons/mapping.png';
+
   // Share Screen
   static const String digital = 'assets/icons/digital.png';
   static const String productCatalogue = 'assets/icons/product-catalogue.png';
@@ -61,5 +67,5 @@ class AppIcons {
   static const String epcis = 'assets/icons/epcis.png';
   static const String cvb = 'assets/icons/cvb.png';
   static const String productOrigin = 'assets/icons/product-origin.png';
-  static const String tracibility = 'assets/icons/tracibility.png';
+  static const String traceability = 'assets/icons/traceability.png';
 }

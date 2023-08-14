@@ -38,7 +38,7 @@ class _ShareScreenState extends State<ShareScreen> {
     },
     {
       "text": "TRACEABILITY",
-      "icon": AppIcons.tracibility,
+      "icon": AppIcons.traceability,
     },
   ];
 
