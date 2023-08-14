@@ -88,7 +88,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const AppLogo(),
+              const AppLogo(width: 200, height: 200),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
