@@ -37,8 +37,6 @@ class _CaptureScreenState extends State<CaptureScreen> {
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     childAspectRatio: 1,
     crossAxisCount: 3,
-    mainAxisSpacing: 30,
-    crossAxisSpacing: 30,
   );
 
   @override
@@ -48,19 +46,17 @@ class _CaptureScreenState extends State<CaptureScreen> {
         title: const Text('Capture'),
         backgroundColor: AppColors.pink,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: GridView.builder(
-          gridDelegate: gridDelegate,
-          itemBuilder: (context, index) {
-            return IconButtonWidget(
-              icon: data[index]["icon"] as String,
-              onPressed: () {},
-              text: data[index]['text'] as String,
-            );
-          },
-          itemCount: data.length,
-        ),
+      body: GridView.builder(
+        gridDelegate: gridDelegate,
+        itemBuilder: (context, index) {
+          return IconButtonWidget(
+            icon: data[index]["icon"] as String,
+            onPressed: () {},
+            text: data[index]['text'] as String,
+          );
+        },
+        itemCount: data.length,
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
       ),
     );
   }

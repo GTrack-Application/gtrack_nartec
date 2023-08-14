@@ -48,7 +48,7 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     childAspectRatio: 1.5,
-    crossAxisCount: 2,
+    crossAxisCount: 3,
     mainAxisSpacing: 10,
     crossAxisSpacing: 10,
   );
