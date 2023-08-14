@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class IconButtonWidget extends StatelessWidget {
@@ -21,13 +20,17 @@ class IconButtonWidget extends StatelessWidget {
           radius: 30,
           child: Image.asset(icon),
         ),
-        SizedBox(
-          height: 200,
-          child: AutoSizeText(
+        Flexible(
+          child: Text(
             text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        if (description != null) Text(description!),
+        // if (description != null) Text(description!),
       ],
     );
   }

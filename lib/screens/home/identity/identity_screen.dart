@@ -46,10 +46,8 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
     }
   ];
 
-  final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+  final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 3,
-    crossAxisSpacing: 20,
-    mainAxisSpacing: 50,
     childAspectRatio: 1.0,
   );
 
@@ -62,6 +60,7 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
       ),
       body: GridView.builder(
         gridDelegate: gridDelegate,
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         itemBuilder: (context, index) {
           return IconButtonWidget(
             icon: data[index]["icon"] as String,
