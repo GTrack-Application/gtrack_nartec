@@ -363,13 +363,7 @@ class _SaveScreenState extends State<SaveScreen> {
                     }
 
                     if (_serialNoController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please Enter/Scan Serial No."),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                      FocusScope.of(context).unfocus();
                       return;
                     }
 

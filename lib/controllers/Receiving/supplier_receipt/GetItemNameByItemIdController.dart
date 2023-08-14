@@ -1,9 +1,10 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: file_names
+
+import 'dart:convert';
 
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/BinToBinInternalModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GetItemNameByItemIdController {
   static Future<List<BinToBinInternalModel>> getName(String itemId) async {
@@ -22,7 +23,6 @@ class GetItemNameByItemIdController {
       var response = await http.post(uri, headers: headers);
 
       if (response.statusCode == 200) {
-        print("Status Code: ${response.statusCode}");
         var data = json.decode(response.body) as List;
         List<BinToBinInternalModel> allData =
             data.map((e) => BinToBinInternalModel.fromJson(e)).toList();
@@ -31,7 +31,6 @@ class GetItemNameByItemIdController {
         throw Exception("No Data Found");
       }
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }
