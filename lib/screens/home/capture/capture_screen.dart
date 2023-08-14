@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/components/app_logo.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/icon_button_widget.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class CaptureScreen extends StatefulWidget {
   const CaptureScreen({super.key});
@@ -35,8 +37,8 @@ class _CaptureScreenState extends State<CaptureScreen> {
   ];
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
-    childAspectRatio: 1,
     crossAxisCount: 3,
+    childAspectRatio: 0.8,
   );
 
   @override
@@ -46,17 +48,33 @@ class _CaptureScreenState extends State<CaptureScreen> {
         title: const Text('Capture'),
         backgroundColor: AppColors.pink,
       ),
-      body: GridView.builder(
-        gridDelegate: gridDelegate,
-        itemBuilder: (context, index) {
-          return IconButtonWidget(
-            icon: data[index]["icon"] as String,
-            onPressed: () {},
-            text: data[index]['text'] as String,
-          );
-        },
-        itemCount: data.length,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            10.height,
+            const AppLogo(
+              height: 150,
+              width: 150,
+            ),
+            20.height,
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: gridDelegate,
+              itemBuilder: (context, index) {
+                return IconButtonWidget(
+                  icon: data[index]["icon"] as String,
+                  onPressed: () {},
+                  text: data[index]['text'] as String,
+                  fontSize: 12,
+                );
+              },
+              itemCount: data.length,
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            ),
+          ],
+        ),
       ),
     );
   }
