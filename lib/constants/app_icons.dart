@@ -35,4 +35,9 @@ class AppIcons {
   static const String shipping = 'assets/icons/shipping.png';
   static const String transformation = 'assets/icons/transformation.png';
   static const String sockTransfer = 'assets/icons/sock_transfer.png';
+
+  // Home Screen
+  static const String identify = 'assets/icons/identify_icon.png';
+  static const String capture = 'assets/icons/capture_icon.png';
+  static const String share = 'assets/icons/share-icon.png';
 }

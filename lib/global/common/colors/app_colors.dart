@@ -20,7 +20,7 @@ abstract class AppColors {
   static const Color skyBlue = Color.fromRGBO(15, 181, 218, 1);
 
   //background: rgba(224, 34, 102, 1);
-  static const Color red = Color.fromRGBO(224, 34, 102, 1);
+  static const Color pink = Color.fromRGBO(224, 34, 102, 1);
 
   //background: rgba(29, 174, 17, 1);
   static const Color green = Color.fromRGBO(29, 174, 17, 1);

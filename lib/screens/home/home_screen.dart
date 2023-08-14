@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
@@ -16,9 +17,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var data = {
     "icon": [
-      AppImages.identify,
-      AppImages.capture,
-      AppImages.share,
+      AppIcons.identify,
+      AppIcons.capture,
+      AppIcons.share,
     ],
     "title": [
       "IDENTIFY",
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ],
     "color": [
       AppColors.skyBlue,
-      AppColors.red,
+      AppColors.pink,
       AppColors.green,
     ],
     "onTap": [
