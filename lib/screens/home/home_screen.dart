@@ -58,36 +58,38 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("GTIN Tracker v. 2.0"),
         automaticallyImplyLeading: true,
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Image.asset(
-                AppImages.logo,
-                width: 200,
-                height: 150,
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return NavigateIconWidget(
-                icon: data['icon']?[index] as String,
-                title: data['title']?[index] as String,
-                caption: data['caption']?[index] as String,
-                color: data['color']?[index] as Color,
-                onTap: data['onTap']?[index] as VoidCallback,
-              );
-            },
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Image.asset(
+                  AppImages.logo,
+                  width: 200,
+                  height: 150,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return NavigateIconWidget(
+                  icon: data['icon']?[index] as String,
+                  title: data['title']?[index] as String,
+                  caption: data['caption']?[index] as String,
+                  color: data['color']?[index] as Color,
+                  onTap: data['onTap']?[index] as VoidCallback,
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -113,10 +115,11 @@ class NavigateIconWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       margin: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       width: MediaQuery.of(context).size.width * 0.9,
-      height: context.height * 0.15,
+      height: context.height * 0.17,
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(20),
@@ -126,20 +129,28 @@ class NavigateIconWidget extends StatelessWidget {
         children: [
           ListTile(
             onTap: onTap,
+            dense: true,
             leading: Image.asset(
               icon,
-              width: 80,
+              width: 60,
               fit: BoxFit.cover,
             ),
-            title: AutoSizeText(
-              caption,
-              maxLines: 3,
+            title: SizedBox(
+              child: AutoSizeText(
+                caption,
+                maxFontSize: 12,
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            subtitle: Text(
+            subtitle: AutoSizeText(
               title,
+              maxFontSize: 25,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              minFontSize: 20,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 25,
                 color: color,
               ),
             ),
@@ -150,8 +161,8 @@ class NavigateIconWidget extends StatelessWidget {
             bottom: 0,
             child: Container(
               padding: const EdgeInsets.all(5),
-              width: 90,
-              height: 90,
+              width: 80,
+              height: 80,
               decoration: BoxDecoration(
                 color: color,
                 shape: BoxShape.circle,

@@ -133,7 +133,7 @@ class _DispatchManagementTwoPageState extends State<DispatchManagementTwoPage> {
                   height: MediaQuery.of(context).size.height * 0.4,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: AppColors.lightBlue,
+                    color: AppColors.white,
                     border: Border.all(width: 1),
                     borderRadius: BorderRadius.circular(10),
                   ),
