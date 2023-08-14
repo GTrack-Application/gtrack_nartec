@@ -1,13 +1,13 @@
+import 'dart:convert';
+
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/GetTblStockMasterByItemIdModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GetTblStockMasterByItemIdController {
   static Future<List<GetTblStockMasterByItemIdModel>> getData(
       String itemId) async {
     String url = "${AppUrls.base}getTblStockMasterByItemId?itemid=$itemId";
-    print("url: $url");
 
     final uri = Uri.parse(url);
 

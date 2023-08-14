@@ -5,7 +5,7 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/screens/home/receiving/receiving_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/identity/identity_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,8 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    data['onTap']?[1] = () {
-      AppNavigator.goToPage(context: context, screen: const ReceivingScreen());
+    data['onTap']?[0] = () {
+      AppNavigator.goToPage(context: context, screen: const IdentityScreen());
     };
   }
 

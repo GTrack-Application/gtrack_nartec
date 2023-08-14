@@ -44,10 +44,13 @@ class Themes {
       ),
       appBarTheme: AppBarTheme(
         color: AppColors.primary,
+        // change icon
+        //
         elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(
           color: Colors.white,
+          size: 30,
         ),
         systemOverlayStyle: SystemUiOverlayStyle.light,
         toolbarTextStyle: const TextTheme(
