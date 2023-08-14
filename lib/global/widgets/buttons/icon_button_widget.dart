@@ -20,12 +20,14 @@ class IconButtonWidget extends StatelessWidget {
           radius: 30,
           child: Image.asset(icon),
         ),
-        Text(
-          text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
+        Flexible(
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         // if (description != null) Text(description!),
