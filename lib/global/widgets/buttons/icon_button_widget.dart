@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
 class IconButtonWidget extends StatelessWidget {
   final String icon;
@@ -40,7 +41,17 @@ class IconButtonWidget extends StatelessWidget {
             ),
           ),
         ),
-        // if (description != null) Text(description!),
+        if (description != null)
+          Flexible(
+            child: Text(
+              description!,
+              style: const TextStyle(
+                fontSize: 10,
+                color: AppColors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
       ],
     );
   }
