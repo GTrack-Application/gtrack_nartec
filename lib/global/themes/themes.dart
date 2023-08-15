@@ -50,7 +50,10 @@ class Themes {
           color: Colors.white,
           size: 30,
         ),
-        systemOverlayStyle: SystemUiOverlayStyle.light,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
         toolbarTextStyle: const TextTheme(
           titleLarge: TextStyle(
             color: Colors.white,

@@ -86,8 +86,8 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
         LoginServices.loginWithPassword(
           widget.email,
           activityValue!,
-          activityId.toString(),
           passwordController.text.trim(),
+          activityId.toString(),
         ).then((value) {
           AppDialogs.closeDialog();
           final message = value['message'] as String;

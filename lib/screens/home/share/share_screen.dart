@@ -44,7 +44,7 @@ class _ShareScreenState extends State<ShareScreen> {
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 2,
-    childAspectRatio: 1.8,
+    childAspectRatio: 1.6,
     crossAxisSpacing: 20,
     mainAxisSpacing: 50,
   );
