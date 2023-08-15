@@ -68,4 +68,32 @@ class AppIcons {
   static const String cvb = 'assets/icons/cvb.png';
   static const String productOrigin = 'assets/icons/product_origin.png';
   static const String traceability = 'assets/icons/traceability.png';
+
+  // Association screen
+
+  static const String assoReceiving = 'assets/icons/asso_receiving.png';
+  static const String assoHandover = 'assets/icons/asso_handover.png';
+  static const String assoAcceptance = 'assets/icons/asso_acceptance.png';
+  static const String assoConsignment = 'assets/icons/asso_consignment.png';
+  static const String assoTransfer = 'assets/icons/asso_transfer.png';
+  static const String assoMapping = 'assets/icons/asso_mapping.png';
+  static const String assoShipping = 'assets/icons/asso_shipping.png';
+  static const String assoOwnershipTransfer =
+      'assets/icons/asso_ownership_transfer.png';
+  static const String assoHandoff = 'assets/icons/asso_handoff.png';
+  static const String assoReceipt = 'assets/icons/asso_receipt.png';
+  static const String assoAllocation = 'assets/icons/asso_allocation.png';
+
+  // Aggregation screen
+  static const String aggPackaging = 'assets/icons/agg_packaging.png';
+  static const String aggCombining = 'assets/icons/agg_combining.png';
+  static const String aggGrouping = 'assets/icons/agg_grouping.png';
+  static const String aggBatching = 'assets/icons/agg_batching.png';
+  static const String aggCompiling = 'assets/icons/agg_compiling.png';
+  static const String aggPacking = 'assets/icons/agg_packing.png';
+  static const String aggAssembling = 'assets/icons/agg_assembling.png';
+  static const String aggBundling = 'assets/icons/agg_bundling.png';
+  static const String aggConsolidating = 'assets/icons/agg_consolidating.png';
+  static const String aggContainerization =
+      'assets/icons/agg_containerization.png';
 }
