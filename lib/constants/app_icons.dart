@@ -96,4 +96,12 @@ class AppIcons {
   static const String aggConsolidating = 'assets/icons/agg_consolidating.png';
   static const String aggContainerization =
       'assets/icons/agg_containerization.png';
+
+  // Transformation Screen
+  static const String transManufacturing =
+      'assets/icons/trans_manufacturing.png';
+  static const String transRepackaging = 'assets/icons/trans_repackaging.png';
+  static const String transReprocessing = 'assets/icons/trans_reprocessing.png';
+  static const String transConverting = 'assets/icons/trans_converting.png';
+  static const String transModifying = 'assets/icons/trans_modifying.png';
 }
