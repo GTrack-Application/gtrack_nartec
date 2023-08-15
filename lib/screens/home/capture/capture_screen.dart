@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/aggregation_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/association_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Transformation/transformation_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
 
 class CaptureScreen extends StatefulWidget {
@@ -15,28 +19,44 @@ class _CaptureScreenState extends State<CaptureScreen> {
     {
       "text": "ASSOCIATION",
       "icon": AppIcons.association,
+      "onTap": () {},
     },
     {
       "text": "TRANSFORMATION",
       "icon": AppIcons.transformation,
+      "onTap": () {},
     },
     {
       "text": "AGGREGATION",
       "icon": AppIcons.aggregation,
+      "onTap": () {},
     },
     {
       "text": "SERIALIZATION",
       "icon": AppIcons.serialization,
+      "onTap": () {},
     },
     {
       "text": "MAPPING BARCODE",
       "icon": AppIcons.mapping,
+      "onTap": () {},
     },
   ];
 
+  @override
+  void initState() {
+    data[0]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const AssociationScreen());
+    data[1]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const TransformationScreen());
+    data[2]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const AggregationScreen());
+    super.initState();
+  }
+
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 2,
-    childAspectRatio: 1.8,
+    childAspectRatio: 1.6,
     crossAxisSpacing: 20,
     mainAxisSpacing: 50,
   );
@@ -59,7 +79,7 @@ class _CaptureScreenState extends State<CaptureScreen> {
               itemBuilder: (context, index) {
                 return CardIconButton(
                   icon: data[index]["icon"] as String,
-                  onPressed: () {},
+                  onPressed: data[index]["onTap"],
                   text: data[index]['text'] as String,
                 );
               },
