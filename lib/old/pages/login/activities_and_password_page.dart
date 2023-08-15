@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,6 +35,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
   bool obscureText = true;
   List<String> activities = [];
   String? activityValue;
+  String? activityId;
 
   @override
   void initState() {
@@ -43,6 +46,9 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
       }
     });
     activityValue = activities[0];
+    activityId = widget.activities!
+        .firstWhere((element) => element.activity == activityValue)
+        .activityID;
   }
 
   showOtpPopup(
@@ -62,6 +68,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
           screen: OtpPage(
             email: email.toString(),
             activity: activity.toString(),
+            activityId: activityId.toString(),
             password: password.toString(),
             generatedOtp: generatedOtp.toString(),
           ),
@@ -79,6 +86,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
         LoginServices.loginWithPassword(
           widget.email,
           activityValue!,
+          activityId.toString(),
           passwordController.text.trim(),
         ).then((value) {
           AppDialogs.closeDialog();
@@ -169,7 +177,12 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                             onChanged: (activity) {
                               setState(() {
                                 activityValue = activity.toString();
+                                activityId = widget.activities!
+                                    .firstWhere((element) =>
+                                        element.activity == activityValue)
+                                    .activityID;
                               });
+                              print("activityId: $activityId");
                             },
                           ),
                         ),

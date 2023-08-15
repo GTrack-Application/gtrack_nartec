@@ -8,6 +8,7 @@ class LoginServices {
   static Future<void> confirmation(
     String email,
     String activity,
+    String activityId,
     String password,
     String generatedOTP,
     String memberOtp,
@@ -21,6 +22,7 @@ class LoginServices {
           // body should include email
           'email': email,
           'activity': activity,
+          'activityID': activityId,
           'password': password,
           'generated_otp': generatedOTP,
           'member_otp': memberOtp,
@@ -54,7 +56,6 @@ class LoginServices {
       uri,
       body: json.encode(
         {
-          // body should include email
           'email': email,
           'activity': activity,
         },
@@ -80,7 +81,11 @@ class LoginServices {
   }
 
   static Future<Map<String, dynamic>> loginWithPassword(
-      String email, String activity, String password) {
+    String email,
+    String activity,
+    String password,
+    String activityId,
+  ) {
     const baseUrl = '${AppUrls.baseUrl}/api/member/login';
     final uri = Uri.parse(baseUrl);
     return http.post(
@@ -90,6 +95,7 @@ class LoginServices {
           // body should include email
           'email': email,
           'activity': activity,
+          'activityID': activityId,
           'password': password,
         },
       ),

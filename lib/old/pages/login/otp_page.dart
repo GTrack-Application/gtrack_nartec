@@ -12,13 +12,14 @@ import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.
 import 'package:gtrack_mobile_app/screens/home/Home_screen.dart';
 
 class OtpPage extends StatefulWidget {
-  final String email, activity, password, generatedOtp;
+  final String email, activity, password, generatedOtp, activityId;
   const OtpPage({
     super.key,
     required this.email,
     required this.activity,
     required this.password,
     required this.generatedOtp,
+    required this.activityId,
   });
   static const String pageName = '/otp';
 
@@ -52,6 +53,7 @@ class _OtpPageState extends State<OtpPage> {
         await LoginServices.confirmation(
           widget.email.toString(),
           widget.activity.toString(),
+          widget.activityId,
           widget.password.toString(),
           widget.generatedOtp.toString(),
           otpController.text,
