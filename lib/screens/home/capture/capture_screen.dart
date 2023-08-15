@@ -64,7 +64,7 @@ class _CaptureScreenState extends State<CaptureScreen> {
                 );
               },
               itemCount: data.length,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
             ),
           ],
         ),

@@ -78,7 +78,7 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
                 shrinkWrap: true,
                 gridDelegate: gridDelegate,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 50),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
                 itemBuilder: (context, index) {
                   return CardIconButton(
                     icon: data[index]["icon"] as String,

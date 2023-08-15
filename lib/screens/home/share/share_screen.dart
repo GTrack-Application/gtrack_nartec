@@ -63,7 +63,7 @@ class _ShareScreenState extends State<ShareScreen> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: gridDelegate,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               itemBuilder: (context, index) {
                 return CardIconButton(
                   icon: data[index]["icon"] as String,
