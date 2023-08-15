@@ -14,43 +14,43 @@ class _AggregationScreenState extends State<AggregationScreen> {
   final List<Map> data = [
     {
       "text": "Packaging",
-      "icon": AppIcons.association,
+      "icon": AppIcons.aggPackaging,
     },
     {
       "text": "Packing",
-      "icon": AppIcons.transformation,
+      "icon": AppIcons.aggPacking,
     },
     {
       "text": "Combining",
-      "icon": AppIcons.aggregation,
+      "icon": AppIcons.aggCombining,
     },
     {
       "text": "Assembling",
-      "icon": AppIcons.serialization,
+      "icon": AppIcons.aggAssembling,
     },
     {
       "text": "Grouping",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.aggGrouping,
     },
     {
       "text": "Bundling",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.aggBundling,
     },
     {
       "text": "Batching",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.aggBatching,
     },
     {
       "text": "Consolidating",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.aggConsolidating,
     },
     {
       "text": "Compiling",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.aggCompiling,
     },
     {
       "text": "Containerization",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.aggContainerization,
     },
   ];
 
@@ -65,7 +65,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Association'),
+        title: const Text('AGGREGRATION'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(

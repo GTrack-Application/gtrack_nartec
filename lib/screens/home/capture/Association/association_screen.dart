@@ -14,47 +14,47 @@ class _AssociationScreenState extends State<AssociationScreen> {
   final List<Map> data = [
     {
       "text": "Receiving",
-      "icon": AppIcons.association,
+      "icon": AppIcons.assoReceiving,
     },
     {
       "text": "Shipping",
-      "icon": AppIcons.transformation,
+      "icon": AppIcons.assoShipping,
     },
     {
       "text": "Handover",
-      "icon": AppIcons.aggregation,
+      "icon": AppIcons.assoHandover,
     },
     {
       "text": "Ownership Transfer",
-      "icon": AppIcons.serialization,
+      "icon": AppIcons.assoOwnershipTransfer,
     },
     {
       "text": "Acceptance",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.assoAcceptance,
     },
     {
       "text": "Handoff",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.assoHandoff,
     },
     {
       "text": "Consignment",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.assoConsignment,
     },
     {
       "text": "Receipt",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.assoReceipt,
     },
     {
       "text": "Transfer",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.assoTransfer,
     },
     {
       "text": "Allocation",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.assoAllocation,
     },
     {
       "text": "Mapping",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.assoMapping,
     },
   ];
 
@@ -69,7 +69,7 @@ class _AssociationScreenState extends State<AssociationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Association'),
+        title: const Text('ACCOCIATION'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(

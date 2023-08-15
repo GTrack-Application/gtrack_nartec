@@ -65,7 +65,7 @@ class _TransformationScreenState extends State<TransformationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Association'),
+        title: const Text('TRANSFORMATION'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(
