@@ -14,43 +14,43 @@ class _TransformationScreenState extends State<TransformationScreen> {
   final List<Map> data = [
     {
       "text": "Manufacturing",
-      "icon": AppIcons.association,
+      "icon": AppIcons.transManufacturing,
     },
     {
       "text": "Processing",
-      "icon": AppIcons.transformation,
+      "icon": AppIcons.transProcessing,
     },
     {
-      "text": "Packaging",
-      "icon": AppIcons.aggregation,
+      "text": "Repackaging",
+      "icon": AppIcons.transRepackaging,
     },
     {
       "text": "Refurbishing",
-      "icon": AppIcons.serialization,
+      "icon": AppIcons.transRefining,
     },
     {
       "text": "Reprocessing",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.transReprocessing,
     },
     {
       "text": "Repurposing",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.transRepurposing,
     },
     {
       "text": "Converting",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.transConverting,
     },
     {
       "text": "Refining",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.transRefining,
     },
     {
       "text": "Modifying",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.transModifying,
     },
     {
       "text": "Customizing",
-      "icon": AppIcons.mapping,
+      "icon": AppIcons.transCustomizing,
     },
   ];
 
