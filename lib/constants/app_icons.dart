@@ -60,12 +60,12 @@ class AppIcons {
   static const String mapping = 'assets/icons/mapping.png';
 
   // Share Screen
-  static const String digital = 'assets/icons/digital.png';
-  static const String productCatalogue = 'assets/icons/product-catalogue.png';
+  static const String digital = 'assets/icons/digital_links.png';
+  static const String productCatalogue = 'assets/icons/product_catalogue.png';
   static const String productCertificate =
-      'assets/icons/product-certificate.png';
+      'assets/icons/product_certificates.png';
   static const String epcis = 'assets/icons/epcis.png';
   static const String cvb = 'assets/icons/cvb.png';
-  static const String productOrigin = 'assets/icons/product-origin.png';
+  static const String productOrigin = 'assets/icons/product_origin.png';
   static const String traceability = 'assets/icons/traceability.png';
 }

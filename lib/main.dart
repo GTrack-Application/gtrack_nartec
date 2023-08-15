@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/global/themes/themes.dart';
-import 'package:gtrack_mobile_app/old/pages/login/user_login_page.dart';
 import 'package:gtrack_mobile_app/old/providers/dispatch_management/gln_provider.dart';
 import 'package:gtrack_mobile_app/old/providers/login/login_provider.dart';
+import 'package:gtrack_mobile_app/screens/home/home_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
             theme: Themes.lightTheme(),
             // darkTheme: Themes.darkTheme(),
             // themeMode: ThemeMode.system,
-            home: const UserLoginPage(),
+            home: const HomeScreen(),
           ),
         ),
       ),

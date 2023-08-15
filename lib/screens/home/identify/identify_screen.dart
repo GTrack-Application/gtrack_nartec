@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/components/app_logo.dart';
-import 'package:gtrack_mobile_app/global/widgets/buttons/icon_button_widget.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
 
 class IdentifyScreen extends StatefulWidget {
   const IdentifyScreen({super.key});
@@ -57,8 +55,10 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
   ];
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 3,
-    childAspectRatio: 0.8,
+    crossAxisCount: 2,
+    childAspectRatio: 1.8,
+    crossAxisSpacing: 20,
+    mainAxisSpacing: 50,
   );
 
   @override
@@ -73,25 +73,17 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
         child: Center(
           child: Column(
             children: [
-              10.height,
-              const AppLogo(
-                height: 150,
-                width: 150,
-              ),
-              20.height,
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 gridDelegate: gridDelegate,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 50),
                 itemBuilder: (context, index) {
-                  return IconButtonWidget(
+                  return CardIconButton(
                     icon: data[index]["icon"] as String,
                     onPressed: () {},
                     text: data[index]['text'] as String,
-                    description: data[index]["desctiption"] as String,
-                    fontSize: 12,
                   );
                 },
                 itemCount: data.length,

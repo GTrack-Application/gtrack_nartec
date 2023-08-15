@@ -8,11 +8,13 @@ class CardIconButton extends StatelessWidget {
     required this.text,
     required this.icon,
     required this.onPressed,
+    this.fontSize,
   }) : super(key: key);
 
   final String text;
   final String icon;
   final VoidCallback onPressed;
+  final double? fontSize;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -22,34 +24,26 @@ class CardIconButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: AppColors.background,
-          border: Border.all(
-            color: AppColors.black,
-            width: 1,
-          ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.25),
-              blurRadius: 4,
+              color: AppColors.black.withOpacity(0.5),
+              blurRadius: 10,
               offset: const Offset(0, 4),
             ),
           ],
         ),
         child: Column(
           children: [
-            Image.asset(
-              icon,
-            ),
+            Image.asset(icon),
             const Spacer(),
-            Flexible(
-              child: AutoSizeText(
-                text,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
+            AutoSizeText(
+              text,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: fontSize ?? 13,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],

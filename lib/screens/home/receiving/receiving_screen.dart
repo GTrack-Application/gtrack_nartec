@@ -65,9 +65,9 @@ class _ReceivingScreenState extends State<ReceivingScreen> {
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 1.2,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 10,
+          childAspectRatio: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 30,
         ),
         padding: const EdgeInsets.all(10),
         itemBuilder: (context, index) {
