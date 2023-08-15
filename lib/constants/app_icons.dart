@@ -104,4 +104,9 @@ class AppIcons {
   static const String transReprocessing = 'assets/icons/trans_reprocessing.png';
   static const String transConverting = 'assets/icons/trans_converting.png';
   static const String transModifying = 'assets/icons/trans_modifying.png';
+  static const String transProcessing = 'assets/icons/trans_processing.png';
+  static const String transRefurbishing = 'assets/icons/trans_refurbishing.png';
+  static const String transRepurposing = 'assets/icons/trans_repurposing.png';
+  static const String transRefining = 'assets/icons/trans_refining.png';
+  static const String transCustomizing = 'assets/icons/trans_customizing.png';
 }
