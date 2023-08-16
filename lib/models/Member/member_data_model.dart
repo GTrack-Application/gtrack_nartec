@@ -21,9 +21,9 @@ class MemberDataModel {
       this.issuedSSCC});
 
   MemberDataModel.fromJson(Map<String, dynamic> json) {
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     memberCategory = json['memberCategory'] != null
-        ? new MemberCategory.fromJson(json['memberCategory'])
+        ? MemberCategory.fromJson(json['memberCategory'])
         : null;
     gtinRange = json['gtinRange'];
     issuedGTIN = json['issuedGTIN'];
@@ -35,7 +35,7 @@ class MemberDataModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (user != null) {
       data['user'] = user!.toJson();
     }
@@ -213,7 +213,7 @@ class User {
     mobile = json['mobile'];
     image = json['image'];
     address =
-        json['address'] != null ? new Address.fromJson(json['address']) : null;
+        json['address'] != null ? Address.fromJson(json['address']) : null;
     address1 = json['address1'];
     address2 = json['address2'];
     poBox = json['po_box'];
@@ -275,7 +275,7 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['user_type'] = userType;
     data['slug'] = slug;
@@ -359,7 +359,7 @@ class Address {
   String? cityName;
   String? stateName;
   String? zip;
-  Null? address;
+  String? address;
 
   Address(
       {this.countryName,
@@ -379,7 +379,7 @@ class Address {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['countryName'] = countryName;
     data['country_shortName'] = countryShortName;
     data['cityName'] = cityName;

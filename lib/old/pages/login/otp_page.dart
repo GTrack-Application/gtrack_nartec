@@ -51,6 +51,7 @@ class _OtpPageState extends State<OtpPage> {
       try {
         AppDialogs.loadingDialog(context);
         await LoginServices.confirmation(
+          context,
           widget.email.toString(),
           widget.activity.toString(),
           widget.activityId,

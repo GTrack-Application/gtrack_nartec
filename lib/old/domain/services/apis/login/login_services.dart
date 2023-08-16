@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/Member/member_data_model.dart';
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 class LoginServices {
   static Future<void> confirmation(
+    BuildContext context,
     String email,
     String activity,
     String activityId,
@@ -37,19 +39,16 @@ class LoginServices {
         'Host': 'gs1ksa.org',
       },
     ).then((response) {
-      final data = json.decode(response.body);
-      member = MemberDataModel.fromJson(data['memberData']);
-
       if (response.statusCode == 200) {
-        AppPreferences.setUserId(member.user!.id.toString()).then((_) {
-          AppPreferences.getUserId().then((value) {
-            print('userId: $value');
-          });
-        });
-        // handle successful response
-        // print('^^^^^ status code is fine');
-        // print('body: ${json.decode(response.body)}');
-        // final responseBody = json.decode(response.body) as Map<String, dynamic>;
+        // Setting preferences
+        final data = json.decode(response.body);
+        member = MemberDataModel.fromJson(data['memberData']);
+
+        AppPreferences.setUserId(member.user!.id.toString()).then((_) {});
+        AppPreferences.setGcp(member.user!.gcpGLNID.toString()).then((_) {});
+        AppPreferences.setMemberCategoryDescription(
+                member.memberCategory!.memberCategoryDescription.toString())
+            .then((_) {});
       } else {
         throw Exception('Invalid OTP, Please try again');
       }
@@ -79,12 +78,7 @@ class LoginServices {
             'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IklyZmFuIiwiaWF0IjoxNTE2MjM5MDIyfQ.vx1SEIP27zyDm9NoNbJRrKo-r6kRaVHNagsMVTToU6A',
       },
     ).then((response) {
-      print("Response: ${response.body}");
-
       if (response.statusCode == 200) {
-        // handle successful response
-        // print('******* status code is fine');
-        // print('body: ${json.decode(response.body)}');
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
         return responseBody;
       } else {
@@ -118,8 +112,6 @@ class LoginServices {
         'Host': 'gs1ksa.org',
       },
     ).then((response) {
-      print("Response: ${response.body}");
-
       if (response.statusCode == 200) {
         // handle successful response
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
@@ -143,8 +135,6 @@ class LoginServices {
         'Accept': 'application/json',
         'Host': AppUrls.host,
       });
-
-      print("Response: ${response.body}");
 
       if (response.statusCode == 200) {
         // handle successful response
