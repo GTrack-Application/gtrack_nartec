@@ -22,8 +22,13 @@ class _GLNScreenState extends State<GLNScreen> {
   List<double> longitude = [];
   List<double> latitude = [];
 
+  double currentLat = 0;
+  double currentLong = 0;
+
   // markers
   Set<Marker> markers = {};
+
+  bool isLoaded = false;
 
   @override
   void initState() {
@@ -40,6 +45,9 @@ class _GLNScreenState extends State<GLNScreen> {
                 value.map((e) => double.parse(e.latitude.toString())).toList();
             longitude =
                 value.map((e) => double.parse(e.longitude.toString())).toList();
+
+            currentLat = latitude[0];
+            currentLong = longitude[0];
 
             // setting up markers
             markers = table.map((data) {
@@ -71,6 +79,8 @@ class _GLNScreenState extends State<GLNScreen> {
                 },
               );
             }).toSet();
+
+            isLoaded = true;
           });
           AppDialogs.closeDialog();
         }).onError((error, stackTrace) {
@@ -255,7 +265,7 @@ class _GLNScreenState extends State<GLNScreen> {
                     width: 1,
                   ),
                 ),
-                child: markers.isEmpty
+                child: isLoaded == false
                     ? SizedBox.shrink()
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(20),
@@ -265,10 +275,12 @@ class _GLNScreenState extends State<GLNScreen> {
                           },
                           initialCameraPosition: CameraPosition(
                             // with current position using geolocator
-                            target: LatLng(
-                              latitude[0],
-                              longitude[0],
-                            ),
+                            target: latitude.isEmpty
+                                ? LatLng(currentLat, currentLong)
+                                : LatLng(
+                                    latitude[0],
+                                    longitude[0],
+                                  ),
                             zoom: -14,
                           ),
                           polylines: {
