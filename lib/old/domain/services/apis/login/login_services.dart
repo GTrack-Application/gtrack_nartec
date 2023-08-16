@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/models/Member/member_data_model.dart';
 import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,6 +15,7 @@ class LoginServices {
     String generatedOTP,
     String memberOtp,
   ) async {
+    MemberDataModel member = MemberDataModel();
     const baseUrl = '${AppUrls.baseUrl}/api/otp/confirmation';
     final uri = Uri.parse(baseUrl);
     return http.post(
@@ -34,7 +37,15 @@ class LoginServices {
         'Host': 'gs1ksa.org',
       },
     ).then((response) {
+      final data = json.decode(response.body);
+      member = MemberDataModel.fromJson(data['memberData']);
+
       if (response.statusCode == 200) {
+        AppPreferences.setUserId(member.user!.id.toString()).then((_) {
+          AppPreferences.getUserId().then((value) {
+            print('userId: $value');
+          });
+        });
         // handle successful response
         // print('^^^^^ status code is fine');
         // print('body: ${json.decode(response.body)}');
@@ -68,6 +79,8 @@ class LoginServices {
             'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IklyZmFuIiwiaWF0IjoxNTE2MjM5MDIyfQ.vx1SEIP27zyDm9NoNbJRrKo-r6kRaVHNagsMVTToU6A',
       },
     ).then((response) {
+      print("Response: ${response.body}");
+
       if (response.statusCode == 200) {
         // handle successful response
         // print('******* status code is fine');
@@ -105,6 +118,8 @@ class LoginServices {
         'Host': 'gs1ksa.org',
       },
     ).then((response) {
+      print("Response: ${response.body}");
+
       if (response.statusCode == 200) {
         // handle successful response
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
@@ -128,6 +143,8 @@ class LoginServices {
         'Accept': 'application/json',
         'Host': AppUrls.host,
       });
+
+      print("Response: ${response.body}");
 
       if (response.statusCode == 200) {
         // handle successful response
