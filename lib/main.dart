@@ -37,8 +37,6 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Gtrack',
             theme: Themes.lightTheme(),
-            // darkTheme: Themes.darkTheme(),
-            // themeMode: ThemeMode.system,
             home: const UserLoginPage(),
           ),
         ),

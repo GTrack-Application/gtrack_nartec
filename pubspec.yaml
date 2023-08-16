@@ -55,6 +55,7 @@ dependencies:
   auto_size_text: ^3.0.0 
   dropdown_search: ^5.0.6
   google_maps_flutter: ^2.4.0
+  geolocator: ^9.0.2
 
 flutter_native_splash:
   color: "#FFFFFF"
