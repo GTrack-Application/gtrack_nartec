@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/models/Member/member_data_model.dart';
 import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
 import 'package:http/http.dart' as http;
 
 class LoginServices {
   static Future<void> confirmation(
+    BuildContext context,
     String email,
     String activity,
     String activityId,
@@ -13,6 +17,7 @@ class LoginServices {
     String generatedOTP,
     String memberOtp,
   ) async {
+    MemberDataModel member = MemberDataModel();
     const baseUrl = '${AppUrls.baseUrl}/api/otp/confirmation';
     final uri = Uri.parse(baseUrl);
     return http.post(
@@ -35,10 +40,15 @@ class LoginServices {
       },
     ).then((response) {
       if (response.statusCode == 200) {
-        // handle successful response
-        // print('^^^^^ status code is fine');
-        // print('body: ${json.decode(response.body)}');
-        // final responseBody = json.decode(response.body) as Map<String, dynamic>;
+        // Setting preferences
+        final data = json.decode(response.body);
+        member = MemberDataModel.fromJson(data['memberData']);
+
+        AppPreferences.setUserId(member.user!.id.toString()).then((_) {});
+        AppPreferences.setGcp(member.user!.gcpGLNID.toString()).then((_) {});
+        AppPreferences.setMemberCategoryDescription(
+                member.memberCategory!.memberCategoryDescription.toString())
+            .then((_) {});
       } else {
         throw Exception('Invalid OTP, Please try again');
       }
@@ -69,9 +79,6 @@ class LoginServices {
       },
     ).then((response) {
       if (response.statusCode == 200) {
-        // handle successful response
-        // print('******* status code is fine');
-        // print('body: ${json.decode(response.body)}');
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
         return responseBody;
       } else {

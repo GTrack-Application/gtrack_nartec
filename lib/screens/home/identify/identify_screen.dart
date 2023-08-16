@@ -3,6 +3,7 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/GTIN/gtin_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
 
 class IdentifyScreen extends StatefulWidget {
@@ -67,6 +68,8 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
   @override
   void initState() {
     super.initState();
+    data[0]["onTap"] = () =>
+        AppNavigator.goToPage(context: context, screen: const GTINScreen());
     data[1]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const GLNScreen());
   }
