@@ -70,7 +70,6 @@ class AppIcons {
   static const String traceability = 'assets/icons/traceability.png';
 
   // Association screen
-
   static const String assoReceiving = 'assets/icons/asso_receiving.png';
   static const String assoHandover = 'assets/icons/asso_handover.png';
   static const String assoAcceptance = 'assets/icons/asso_acceptance.png';
@@ -109,4 +108,26 @@ class AppIcons {
   static const String transRepurposing = 'assets/icons/trans_repurposing.png';
   static const String transRefining = 'assets/icons/trans_refining.png';
   static const String transCustomizing = 'assets/icons/trans_customizing.png';
+
+  // Transfer Screen
+  static const String transferBinToBin = 'assets/icons/transfer_bin.png';
+  static const String transferItem = 'assets/icons/transfer_item.png';
+  static const String transferPallet = 'assets/icons/transfer_pallet.png';
+  static const String transferRaw = 'assets/icons/transfer_raw.png';
+  static const String transferWarehouse = 'assets/icons/transfer_warehouse.png';
+
+  // Shipping Screen
+  static const String shippingSales = 'assets/icons/shipping_sales.png';
+  static const String shippingWarehouse = 'assets/icons/shipping_warehouse.png';
+
+  // Receiving Screen
+  static const String recCustomer = 'assets/icons/rec_customer.png';
+  static const String recRaw = 'assets/icons/rec_raw.png';
+  static const String recStock = 'assets/icons/rec_stock.png';
+  static const String recSupplier = 'assets/icons/rec_supplier.png';
+  static const String recVendor = 'assets/icons/rec_vendor.png';
+
+  // Mapping Screen
+  static const String mappingBarcode = 'assets/icons/mapping_barcode.png';
+  static const String mappingRfid = 'assets/icons/mapping_rfid.png';
 }

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Mapping/mapping_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/receiving_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/shipping_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/transfer_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
 
 class AssociationScreen extends StatefulWidget {
@@ -15,48 +20,72 @@ class _AssociationScreenState extends State<AssociationScreen> {
     {
       "text": "Receiving",
       "icon": AppIcons.assoReceiving,
+      "onTap": () {},
     },
     {
       "text": "Shipping",
       "icon": AppIcons.assoShipping,
+      "onTap": () {},
     },
     {
       "text": "Handover",
       "icon": AppIcons.assoHandover,
+      "onTap": () {},
     },
     {
       "text": "Ownership Transfer",
       "icon": AppIcons.assoOwnershipTransfer,
+      "onTap": () {},
     },
     {
       "text": "Acceptance",
       "icon": AppIcons.assoAcceptance,
+      "onTap": () {},
     },
     {
       "text": "Handoff",
       "icon": AppIcons.assoHandoff,
+      "onTap": () {},
     },
     {
       "text": "Consignment",
       "icon": AppIcons.assoConsignment,
+      "onTap": () {},
     },
     {
       "text": "Receipt",
       "icon": AppIcons.assoReceipt,
+      "onTap": () {},
     },
     {
       "text": "Transfer",
       "icon": AppIcons.assoTransfer,
+      "onTap": () {},
     },
     {
       "text": "Allocation",
       "icon": AppIcons.assoAllocation,
+      "onTap": () {},
     },
     {
       "text": "Mapping",
       "icon": AppIcons.assoMapping,
+      "onTap": () {},
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    data[0]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const ReceivingScreen());
+    data[1]["onTap"] = () =>
+        AppNavigator.goToPage(context: context, screen: const ShippingScreen());
+    data[8]["onTap"] = () =>
+        AppNavigator.goToPage(context: context, screen: const TransferScreen());
+    data[10]["onTap"] = () =>
+        AppNavigator.goToPage(context: context, screen: const MappingScreen());
+  }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 2,
@@ -69,7 +98,7 @@ class _AssociationScreenState extends State<AssociationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ACCOCIATION'),
+        title: const Text('ASSOCIATION'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(
@@ -83,7 +112,7 @@ class _AssociationScreenState extends State<AssociationScreen> {
               itemBuilder: (context, index) {
                 return CardIconButton(
                   icon: data[index]["icon"] as String,
-                  onPressed: () {},
+                  onPressed: data[index]["onTap"],
                   text: data[index]['text'] as String,
                 );
               },
