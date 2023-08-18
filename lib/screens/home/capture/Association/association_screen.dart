@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Consignmnet/consignment_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Mapping/mapping_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/receiving_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/shipping_screen.dart';
@@ -81,6 +82,8 @@ class _AssociationScreenState extends State<AssociationScreen> {
         context: context, screen: const ReceivingScreen());
     data[1]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const ShippingScreen());
+    data[6]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const ConsignmentScreen());
     data[8]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const TransferScreen());
     data[10]["onTap"] = () =>

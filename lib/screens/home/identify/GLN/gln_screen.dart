@@ -128,8 +128,14 @@ class _GLNScreenState extends State<GLNScreen> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: <Widget>[
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
+              Container(
+                height: MediaQuery.of(context).size.height * 0.35,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppColors.grey,
+                    width: 1,
+                  ),
+                ),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: SingleChildScrollView(
@@ -253,11 +259,10 @@ class _GLNScreenState extends State<GLNScreen> {
                   ),
                 ),
               ),
-              20.height,
               Container(
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.of(context).size.height * 0.5,
                 width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
@@ -283,17 +288,30 @@ class _GLNScreenState extends State<GLNScreen> {
                                   ),
                             zoom: -14,
                           ),
+                          // each marker will connect to each other and will show the route to the next marker
                           polylines: {
                             Polyline(
-                              polylineId: PolylineId('route1'),
-                              color: AppColors.green,
+                              polylineId: PolylineId('route'),
+                              color: AppColors.skyBlue,
                               width: 5,
-                              points: [
-                                for (int i = 0; i < latitude.length; i++)
-                                  LatLng(latitude[i], longitude[i]),
-                              ],
+                              points: latitude.isEmpty
+                                  ? [
+                                      LatLng(currentLat, currentLong),
+                                      LatLng(currentLat, currentLong),
+                                    ]
+                                  : latitude
+                                      .asMap()
+                                      .map((index, value) => MapEntry(
+                                          index,
+                                          LatLng(
+                                            latitude[index],
+                                            longitude[index],
+                                          )))
+                                      .values
+                                      .toList(),
                             ),
                           },
+
                           markers: markers,
                           buildingsEnabled: true,
                           compassEnabled: true,
