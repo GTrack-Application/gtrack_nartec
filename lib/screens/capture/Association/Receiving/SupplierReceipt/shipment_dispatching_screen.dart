@@ -31,7 +31,12 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Supplier Receipt".toUpperCase())),
+      appBar: AppBar(
+        title: Text(
+          "Supplier Receipt".toUpperCase(),
+        ),
+        backgroundColor: AppColors.pink,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

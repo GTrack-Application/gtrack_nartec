@@ -149,7 +149,7 @@ class _SaveScreenState extends State<SaveScreen> {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.only(bottom: 20),
                 decoration: const BoxDecoration(
-                  color: AppColors.primary,
+                  color: AppColors.pink,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
@@ -430,7 +430,7 @@ class _SaveScreenState extends State<SaveScreen> {
                 child: ElevatedButtonWidget(
                   title: "Generate Serial No.",
                   fontSize: 18,
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.pink.withOpacity(0.3),
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: 50,
                   onPressed: () {
@@ -513,7 +513,7 @@ class _SaveScreenState extends State<SaveScreen> {
                       dataRowColor: MaterialStateColor.resolveWith(
                           (states) => Colors.grey.withOpacity(0.2)),
                       headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => AppColors.primary),
+                          (states) => AppColors.pink),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey,
