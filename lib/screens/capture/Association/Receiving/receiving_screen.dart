@@ -1,56 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 
-class TransformationScreen extends StatefulWidget {
-  const TransformationScreen({super.key});
+class ReceivingScreen extends StatefulWidget {
+  const ReceivingScreen({super.key});
 
   @override
-  State<TransformationScreen> createState() => _TransformationScreenState();
+  State<ReceivingScreen> createState() => _ReceivingScreenState();
 }
 
-class _TransformationScreenState extends State<TransformationScreen> {
+class _ReceivingScreenState extends State<ReceivingScreen> {
   final List<Map> data = [
     {
-      "text": "Manufacturing",
-      "icon": AppIcons.transManufacturing,
+      "text": "Raw Materials",
+      "icon": AppIcons.recRaw,
     },
     {
-      "text": "Processing",
-      "icon": AppIcons.transProcessing,
+      "text": "Stock Transfer",
+      "icon": AppIcons.recStock,
     },
     {
-      "text": "Repackaging",
-      "icon": AppIcons.transRepackaging,
+      "text": "Customer Returns",
+      "icon": AppIcons.recCustomer,
     },
     {
-      "text": "Refurbishing",
-      "icon": AppIcons.transRefining,
+      "text": "Supplier Receipt",
+      "icon": AppIcons.recSupplier,
     },
     {
-      "text": "Reprocessing",
-      "icon": AppIcons.transReprocessing,
-    },
-    {
-      "text": "Repurposing",
-      "icon": AppIcons.transRepurposing,
-    },
-    {
-      "text": "Converting",
-      "icon": AppIcons.transConverting,
-    },
-    {
-      "text": "Refining",
-      "icon": AppIcons.transRefining,
-    },
-    {
-      "text": "Modifying",
-      "icon": AppIcons.transModifying,
-    },
-    {
-      "text": "Customizing",
-      "icon": AppIcons.transCustomizing,
+      "text": "Vendor Returns",
+      "icon": AppIcons.recVendor,
     },
   ];
 
@@ -65,7 +45,7 @@ class _TransformationScreenState extends State<TransformationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TRANSFORMATION'),
+        title: const Text('Receiving'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/screens/home/receiving/SupplierReceipt/shipment_dispatching_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
+import 'package:gtrack_mobile_app/screens/receiving/SupplierReceipt/shipment_dispatching_screen.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 
 class ReceivingScreen extends StatefulWidget {
   const ReceivingScreen({Key? key}) : super(key: key);

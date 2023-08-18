@@ -1,36 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 
-class TransferScreen extends StatefulWidget {
-  const TransferScreen({super.key});
+class MappingScreen extends StatefulWidget {
+  const MappingScreen({super.key});
 
   @override
-  State<TransferScreen> createState() => _TransferScreenState();
+  State<MappingScreen> createState() => _MappingScreenState();
 }
 
-class _TransferScreenState extends State<TransferScreen> {
+class _MappingScreenState extends State<MappingScreen> {
   final List<Map> data = [
     {
-      "text": "Raw Materials to WIP",
-      "icon": AppIcons.transferRaw,
+      "text": "Barcode Mapping",
+      "icon": AppIcons.mappingBarcode,
     },
     {
-      "text": "Warehouse Transfer",
-      "icon": AppIcons.transferWarehouse,
-    },
-    {
-      "text": "Bin to Bin Transfer",
-      "icon": AppIcons.transferBinToBin,
-    },
-    {
-      "text": "Pallet Transfer",
-      "icon": AppIcons.transferPallet,
-    },
-    {
-      "text": "Item Re-Allocation",
-      "icon": AppIcons.transferItem,
+      "text": "RFID Mapping",
+      "icon": AppIcons.mappingRfid,
     },
   ];
 
@@ -45,7 +33,7 @@ class _TransferScreenState extends State<TransferScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transfer'),
+        title: const Text('Mapping'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(

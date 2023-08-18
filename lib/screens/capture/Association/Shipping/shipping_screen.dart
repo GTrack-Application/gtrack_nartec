@@ -1,56 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 
-class AggregationScreen extends StatefulWidget {
-  const AggregationScreen({super.key});
+class ShippingScreen extends StatefulWidget {
+  const ShippingScreen({super.key});
 
   @override
-  State<AggregationScreen> createState() => _AggregationScreenState();
+  State<ShippingScreen> createState() => _ShippingScreenState();
 }
 
-class _AggregationScreenState extends State<AggregationScreen> {
+class _ShippingScreenState extends State<ShippingScreen> {
   final List<Map> data = [
     {
-      "text": "Packaging",
-      "icon": AppIcons.aggPackaging,
+      "text": "Sales Order",
+      "icon": AppIcons.shippingSales,
     },
     {
-      "text": "Packing",
-      "icon": AppIcons.aggPacking,
-    },
-    {
-      "text": "Combining",
-      "icon": AppIcons.aggCombining,
-    },
-    {
-      "text": "Assembling",
-      "icon": AppIcons.aggAssembling,
-    },
-    {
-      "text": "Grouping",
-      "icon": AppIcons.aggGrouping,
-    },
-    {
-      "text": "Bundling",
-      "icon": AppIcons.aggBundling,
-    },
-    {
-      "text": "Batching",
-      "icon": AppIcons.aggBatching,
-    },
-    {
-      "text": "Consolidating",
-      "icon": AppIcons.aggConsolidating,
-    },
-    {
-      "text": "Compiling",
-      "icon": AppIcons.aggCompiling,
-    },
-    {
-      "text": "Containerization",
-      "icon": AppIcons.aggContainerization,
+      "text": "Warehouse Transfer",
+      "icon": AppIcons.shippingWarehouse,
     },
   ];
 
@@ -65,7 +33,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AGGREGRATION'),
+        title: const Text('Shipping'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(

@@ -1,24 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/screens/home/widgets/card_icon_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 
-class MappingScreen extends StatefulWidget {
-  const MappingScreen({super.key});
+class AggregationScreen extends StatefulWidget {
+  const AggregationScreen({super.key});
 
   @override
-  State<MappingScreen> createState() => _MappingScreenState();
+  State<AggregationScreen> createState() => _AggregationScreenState();
 }
 
-class _MappingScreenState extends State<MappingScreen> {
+class _AggregationScreenState extends State<AggregationScreen> {
   final List<Map> data = [
     {
-      "text": "Barcode Mapping",
-      "icon": AppIcons.mappingBarcode,
+      "text": "Packaging",
+      "icon": AppIcons.aggPackaging,
     },
     {
-      "text": "RFID Mapping",
-      "icon": AppIcons.mappingRfid,
+      "text": "Packing",
+      "icon": AppIcons.aggPacking,
+    },
+    {
+      "text": "Combining",
+      "icon": AppIcons.aggCombining,
+    },
+    {
+      "text": "Assembling",
+      "icon": AppIcons.aggAssembling,
+    },
+    {
+      "text": "Grouping",
+      "icon": AppIcons.aggGrouping,
+    },
+    {
+      "text": "Bundling",
+      "icon": AppIcons.aggBundling,
+    },
+    {
+      "text": "Batching",
+      "icon": AppIcons.aggBatching,
+    },
+    {
+      "text": "Consolidating",
+      "icon": AppIcons.aggConsolidating,
+    },
+    {
+      "text": "Compiling",
+      "icon": AppIcons.aggCompiling,
+    },
+    {
+      "text": "Containerization",
+      "icon": AppIcons.aggContainerization,
     },
   ];
 
@@ -33,7 +65,7 @@ class _MappingScreenState extends State<MappingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mapping'),
+        title: const Text('AGGREGRATION'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(
