@@ -92,9 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
-            const Spacer(),
             Row(
-              children: [],
+              children: <Widget>[],
             ),
           ],
         ),

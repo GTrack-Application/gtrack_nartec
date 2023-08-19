@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
-import 'package:gtrack_mobile_app/screens/capture/Association/Receiving/receiving_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/receiving_screen.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({Key? key}) : super(key: key);
