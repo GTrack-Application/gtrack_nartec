@@ -8,19 +8,19 @@ import 'package:http/http.dart' as http;
 
 class GetItemNameByItemIdController {
   static Future<List<BinToBinInternalModel>> getName(String itemId) async {
-    String url = "${AppUrls.base}getOneMapBarcodeDataByItemCode";
+    String url =
+        "${AppUrls.baseUrlWithPort}getOneMapBarcodeDataByItemCode?ItemCode=$itemId";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
-      "itemcode": itemId,
     };
 
     try {
-      var response = await http.post(uri, headers: headers);
+      var response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List;

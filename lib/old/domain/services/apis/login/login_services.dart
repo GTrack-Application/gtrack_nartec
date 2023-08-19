@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -157,6 +159,39 @@ class LoginServices {
 
         // handle error response
         throw Exception('Error happended while loading data');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future<void> normalUserLogin(String email, String pass) async {
+    const baseUrl = '${AppUrls.baseUrlWithPort}loginUser';
+    final uri = Uri.parse(baseUrl);
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Host': AppUrls.host,
+    };
+
+    final body = jsonEncode(
+      {
+        'Email': email,
+        'UserPassword': pass,
+      },
+    );
+
+    try {
+      final response = await http.post(uri, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        print("Status Code: ${response.statusCode}");
+      } else {
+        print("Status Code: ${response.statusCode}");
+        var data = json.decode(response.body);
+        String msg = data['message'];
+        throw Exception(msg);
       }
     } catch (e) {
       throw Exception(e.toString());
