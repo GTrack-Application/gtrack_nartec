@@ -130,4 +130,8 @@ class AppIcons {
   // Mapping Screen
   static const String mappingBarcode = 'assets/icons/mapping_barcode.png';
   static const String mappingRfid = 'assets/icons/mapping_rfid.png';
+
+  // Consignment Screen
+  static const String consignShipper = 'assets/icons/consign_shipper.png';
+  static const String consignReceiver = 'assets/icons/consign_receiver.png';
 }

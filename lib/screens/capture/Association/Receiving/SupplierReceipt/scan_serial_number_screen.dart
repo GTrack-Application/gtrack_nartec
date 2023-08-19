@@ -156,7 +156,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
             content: Text(error.toString().replaceAll("Exception:", "")),
           ),
         );
-        Navigator.pop(context);
+        AppDialogs.closeDialog();
       });
     });
   }
@@ -176,7 +176,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.only(bottom: 20),
                 decoration: const BoxDecoration(
-                  color: AppColors.primary,
+                  color: AppColors.pink,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
@@ -419,6 +419,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
               const SizedBox(height: 30),
               Center(
                 child: PrimaryButtonWidget(
+                  backgroungColor: AppColors.pink,
                   text: "Scan Serial Number",
                   onPressed: () {
                     if (_gtinNoController.text.trim().isEmpty ||

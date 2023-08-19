@@ -69,6 +69,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
     }
   }
 
+  String dropdownValue = "Admin User";
+  List<String> dropdownList = [
+    "Admin User",
+    "Normal User",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +97,20 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Text(
+                        //   'User Type',
+                        //   style: AppTextStyle.titleStyle,
+                        // ),
+                        // DropDownWidget(
+                        //   items: dropdownList,
+                        //   value: dropdownValue,
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       dropdownValue = value!;
+                        //     });
+                        //   },
+                        // ),
+                        // const SizedBox(height: 20),
                         Text(
                           'Enter your login ID',
                           style: AppTextStyle.titleStyle,
@@ -111,6 +131,41 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           },
                         ).box.width(context.width * 0.9).make(),
                         const SizedBox(height: 20),
+                        // Visibility(
+                        //   visible: dropdownValue == "Admin User" ? false : true,
+                        //   child: Text(
+                        //     "Enter your password",
+                        //     style: AppTextStyle.titleStyle,
+                        //   ),
+                        // ),
+                        // Visibility(
+                        //   visible: dropdownValue == "Admin User" ? false : true,
+                        //   child: IconTextField(
+                        //     controller: passwordController,
+                        //     leadingIcon: Image.asset(
+                        //       AppIcons.passwordIcon,
+                        //       width: 42,
+                        //       height: 42,
+                        //     ),
+                        //     keyboardType: TextInputType.visiblePassword,
+                        //     obscureText: obscureText,
+                        //     validator: (p0) {
+                        //       if (p0!.isEmpty) {
+                        //         return 'Please enter your password';
+                        //       }
+                        //       return null;
+                        //     },
+                        //     suffixIcon: IconButton(
+                        //       icon: const Icon(Icons.remove_red_eye),
+                        //       onPressed: () {
+                        //         setState(() {
+                        //           obscureText = !obscureText;
+                        //         });
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
+                        // const SizedBox(height: 20),
                       ],
                     ),
                     PrimaryButtonWidget(

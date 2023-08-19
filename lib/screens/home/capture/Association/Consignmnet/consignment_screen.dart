@@ -1,54 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
-import 'package:gtrack_mobile_app/screens/capture/Association/Receiving/SupplierReceipt/shipment_dispatching_screen.dart';
 
-class ReceivingScreen extends StatefulWidget {
-  const ReceivingScreen({super.key});
+class ConsignmentScreen extends StatefulWidget {
+  const ConsignmentScreen({super.key});
 
   @override
-  State<ReceivingScreen> createState() => _ReceivingScreenState();
+  State<ConsignmentScreen> createState() => _ConsignmentScreenState();
 }
 
-class _ReceivingScreenState extends State<ReceivingScreen> {
+class _ConsignmentScreenState extends State<ConsignmentScreen> {
   final List<Map> data = [
     {
-      "text": "Raw Materials",
-      "icon": AppIcons.recRaw,
+      "text": "Shipper",
+      "icon": AppIcons.consignShipper,
       "onTap": () {},
     },
     {
-      "text": "Stock Transfer",
-      "icon": AppIcons.recStock,
-      "onTap": () {},
-    },
-    {
-      "text": "Customer Returns",
-      "icon": AppIcons.recCustomer,
-      "onTap": () {},
-    },
-    {
-      "text": "Supplier Receipt",
-      "icon": AppIcons.recSupplier,
-      "onTap": () {},
-    },
-    {
-      "text": "Vendor Returns",
-      "icon": AppIcons.recVendor,
+      "text": "Receiver",
+      "icon": AppIcons.consignReceiver,
       "onTap": () {},
     },
   ];
-
-  @override
-  void initState() {
-    data[3]['onTap'] = () {
-      AppNavigator.goToPage(
-          context: context, screen: const ShipmentDispatchingScreen());
-    };
-    super.initState();
-  }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 2,
@@ -61,7 +35,7 @@ class _ReceivingScreenState extends State<ReceivingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Receiving'),
+        title: const Text('Consignment'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(
@@ -75,7 +49,7 @@ class _ReceivingScreenState extends State<ReceivingScreen> {
               itemBuilder: (context, index) {
                 return CardIconButton(
                   icon: data[index]["icon"] as String,
-                  onPressed: data[index]["onTap"],
+                  onPressed: () {},
                   text: data[index]['text'] as String,
                 );
               },
