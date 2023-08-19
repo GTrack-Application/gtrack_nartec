@@ -9,9 +9,7 @@ class GenerateSerialNumberforRecevingController {
   static Future<String> generateSerialNo(String itemId) async {
     String url = "${AppUrls.baseUrlWithPort}generateSerialNumberforReceving";
 
-    final body = {
-      "ITEMID": itemId,
-    };
+    final body = {"ITEMID": itemId};
 
     final uri = Uri.parse(url);
 

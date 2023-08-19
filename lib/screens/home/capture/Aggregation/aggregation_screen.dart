@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization/ShipmentPalletizingScreen.dart';
 
 class AggregationScreen extends StatefulWidget {
   const AggregationScreen({super.key});
@@ -15,44 +17,61 @@ class _AggregationScreenState extends State<AggregationScreen> {
     {
       "text": "Packaging",
       "icon": AppIcons.aggPackaging,
+      "onTap": () {},
     },
     {
       "text": "Packing",
       "icon": AppIcons.aggPacking,
+      "onTap": () {},
     },
     {
       "text": "Combining",
       "icon": AppIcons.aggCombining,
+      "onTap": () {},
     },
     {
       "text": "Assembling",
       "icon": AppIcons.aggAssembling,
+      "onTap": () {},
     },
     {
       "text": "Grouping",
       "icon": AppIcons.aggGrouping,
+      "onTap": () {},
     },
     {
       "text": "Bundling",
       "icon": AppIcons.aggBundling,
+      "onTap": () {},
     },
     {
       "text": "Batching",
       "icon": AppIcons.aggBatching,
+      "onTap": () {},
     },
     {
       "text": "Consolidating",
       "icon": AppIcons.aggConsolidating,
+      "onTap": () {},
     },
     {
       "text": "Palletization",
       "icon": AppIcons.aggCompiling,
+      "onTap": () {},
     },
     {
       "text": "Containerization",
       "icon": AppIcons.aggContainerization,
+      "onTap": () {},
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    data[8]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const ShipmentPalletizingScreen());
+  }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 2,
@@ -79,7 +98,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
               itemBuilder: (context, index) {
                 return CardIconButton(
                   icon: data[index]["icon"] as String,
-                  onPressed: () {},
+                  onPressed: data[index]["onTap"],
                   text: data[index]['text'] as String,
                 );
               },

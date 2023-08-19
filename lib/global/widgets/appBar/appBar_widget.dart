@@ -8,12 +8,15 @@ class AppBarWidget extends StatefulWidget {
   final String title;
   final bool? autoImplyLeading;
   List<Widget>? actions;
+  final Color? backgroundColor;
+
   AppBarWidget({
     super.key,
     this.onPressed,
     required this.title,
     this.actions = const [],
     this.autoImplyLeading,
+    this.backgroundColor,
   });
 
   @override
@@ -24,6 +27,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: widget.backgroundColor,
       title: Text(
         widget.title,
         style: const TextStyle(

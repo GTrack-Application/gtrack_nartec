@@ -90,7 +90,7 @@ class _SaveScreenState extends State<SaveScreen> {
       widget.iTEMNAME,
       widget.iTEMID,
       widget.pURCHID,
-      0,
+      widget.cLASSIFICATION,
       _serialNoController.text,
       dropdownValue,
       DateTime.now().toString(),
@@ -394,7 +394,7 @@ class _SaveScreenState extends State<SaveScreen> {
                       widget.iTEMNAME,
                       widget.iTEMID,
                       widget.pURCHID,
-                      0,
+                      widget.cLASSIFICATION,
                       _serialNoController.text,
                       dropdownValue,
                       DateTime.now().toString(),
@@ -466,7 +466,7 @@ class _SaveScreenState extends State<SaveScreen> {
                           widget.iTEMNAME,
                           widget.iTEMID,
                           widget.pURCHID,
-                          0,
+                          widget.cLASSIFICATION,
                           value,
                           dropdownValue,
                           DateTime.now().toString(),
@@ -490,11 +490,12 @@ class _SaveScreenState extends State<SaveScreen> {
                             rCQTY = rCQTY + 1;
                           });
                           UpdateStockMasterDataController.insertShipmentData(
-                              widget.iTEMID,
-                              widget.length,
-                              widget.width,
-                              widget.height,
-                              widget.weight);
+                            widget.iTEMID,
+                            widget.length,
+                            widget.width,
+                            widget.height,
+                            widget.weight,
+                          );
 
                           AppDialogs.closeDialog();
                         }).onError((error, stackTrace) {

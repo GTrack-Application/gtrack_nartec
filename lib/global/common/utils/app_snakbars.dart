@@ -35,12 +35,16 @@ class AppSnackbars {
     );
   }
 
-  static void success(BuildContext context, String message) {
+  static void success(
+    BuildContext context,
+    String message,
+    int? duration,
+  ) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: const Duration(seconds: 5),
+        duration: Duration(seconds: duration ?? 5),
         backgroundColor: AppColors.success,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(

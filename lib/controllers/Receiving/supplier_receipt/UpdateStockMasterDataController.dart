@@ -29,7 +29,7 @@ class UpdateStockMasterDataController {
       "Length": length,
       "Width": width,
       "Height": height,
-      "Weight": weight,
+      "Weight": weight
     };
 
     try {

@@ -40,6 +40,8 @@ class AppIcons {
   static const String identify = 'assets/icons/identify_icon.png';
   static const String capture = 'assets/icons/capture_icon.png';
   static const String share = 'assets/icons/share-icon.png';
+  static const String iosLogo = 'assets/icons/iso_logo.png';
+  static const String gs1Logo = 'assets/icons/gs1_logo.jpeg';
 
   // Identify Screen
   static const String gtin = 'assets/icons/gtin.png';
@@ -54,7 +56,6 @@ class AppIcons {
   static const String ginc = 'assets/icons/identify_ginc.png';
 
   // Capture Screen
-
   static const String association = 'assets/icons/association.png';
   static const String transformation = 'assets/icons/transformation.png';
   static const String aggregation = 'assets/icons/aggregation.png';
