@@ -167,7 +167,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -241,13 +241,13 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                                 const TextWidget(
                                   text: "Item Code:",
                                   fontSize: 16,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                                 const SizedBox(height: 10),
                                 TextWidget(
                                   text: "PO QTY*\n${widget.qty.toString()}",
                                   fontSize: 15,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   textAlign: TextAlign.center,
                                 ),
                               ],
@@ -257,13 +257,13 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                                 TextWidget(
                                   text: widget.itemId,
                                   fontSize: 16,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                                 const SizedBox(height: 10),
                                 TextWidget(
                                   text: "Received*\n$rCQTY",
                                   fontSize: 15,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   textAlign: TextAlign.center,
                                 ),
                               ],
@@ -273,13 +273,13 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                                 const TextWidget(
                                   text: "CON",
                                   fontSize: 16,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                                 const SizedBox(height: 10),
                                 TextWidget(
                                   text: cond,
                                   fontSize: 15,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                               ],
                             ),
@@ -436,7 +436,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                       );
                       return;
                     }
-                    AppNavigator.goToPage(
+                    AppNavigator.replaceTo(
                         context: context,
                         screen: SaveScreen(
                           gtin: _gtinNoController.text.trim(),

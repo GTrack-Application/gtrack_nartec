@@ -9,6 +9,8 @@ import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 import 'shipment_dispatching_screen.dart';
 
@@ -597,7 +599,21 @@ class _SaveScreenState extends State<SaveScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  icon: const Icon(Ionicons.arrow_back),
+                  label: (const Text("Back")),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.pink,
+                  ),
+                ),
+              ),
+              30.height,
             ],
           ),
         ),
