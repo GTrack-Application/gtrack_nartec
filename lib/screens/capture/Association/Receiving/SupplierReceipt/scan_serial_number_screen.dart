@@ -67,7 +67,10 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
     _jobOrderNoController.text = widget.shipmentId;
     _containerNoController.text = widget.containerId;
     _itemNameController.text = itemName;
-    _weightController.text = "0";
+    _weightController.text = "13";
+    _heightController.text = "310";
+    _widthController.text = "335";
+    _lengthController.text = "500";
 
     Future.delayed(Duration.zero, () {
       AppDialogs.loadingDialog(context);
@@ -100,28 +103,28 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
             _itemNameController.text = value[0].itemDesc ?? "";
             cond = value[0].classification ?? "";
           });
-          GetTblStockMasterByItemIdController.getData(widget.itemId)
-              .then((value) {
-            setState(() {
-              _widthController.text =
-                  double.parse(value[0].width.toString()).toString();
-              _heightController.text =
-                  double.parse(value[0].height.toString()).toString();
-              _lengthController.text =
-                  double.parse(value[0].length.toString()).toString();
-              _weightController.text =
-                  double.parse(value[0].weight.toString()).toString();
-            });
-            AppDialogs.closeDialog();
-          }).onError((error, stackTrace) {
-            AppDialogs.closeDialog();
+          // GetTblStockMasterByItemIdController.getData(widget.itemId)
+          //     .then((value) {
+          //   setState(() {
+          //     _widthController.text =
+          //         double.parse(value[0].width.toString()).toString();
+          //     _heightController.text =
+          //         double.parse(value[0].height.toString()).toString();
+          //     _lengthController.text =
+          //         double.parse(value[0].length.toString()).toString();
+          //     _weightController.text =
+          //         double.parse(value[0].weight.toString()).toString();
+          //   });
+          //   AppDialogs.closeDialog();
+          // }).onError((error, stackTrace) {
+          //   AppDialogs.closeDialog();
 
-            setState(() {
-              _widthController.text = "";
-              _heightController.text = "";
-              _lengthController.text = "";
-            });
-          });
+          //   setState(() {
+          //     _widthController.text = "";
+          //     _heightController.text = "";
+          //     _lengthController.text = "";
+          //   });
+          // });
         }).onError((error, stackTrace) {
           setState(() {
             itemName = "";

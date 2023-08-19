@@ -8,10 +8,12 @@ import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/components/app_logo.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/old/pages/login/activities_and_password_page.dart';
 import 'package:gtrack_mobile_app/old/providers/login/login_provider.dart';
+import 'package:gtrack_mobile_app/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -69,6 +71,20 @@ class _UserLoginPageState extends State<UserLoginPage> {
     }
   }
 
+  normalUserLogin() {
+    AppDialogs.loadingDialog(context);
+    LoginServices.normalUserLogin(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+    ).then((value) {
+      AppDialogs.closeDialog();
+      AppNavigator.replaceTo(context: context, screen: const HomeScreen());
+    }).onError((error, stackTrace) {
+      AppDialogs.closeDialog();
+      AppSnackbars.danger(context, error.toString());
+    });
+  }
+
   String dropdownValue = "Admin User";
   List<String> dropdownList = [
     "Admin User",
@@ -97,20 +113,20 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Text(
-                        //   'User Type',
-                        //   style: AppTextStyle.titleStyle,
-                        // ),
-                        // DropDownWidget(
-                        //   items: dropdownList,
-                        //   value: dropdownValue,
-                        //   onChanged: (value) {
-                        //     setState(() {
-                        //       dropdownValue = value!;
-                        //     });
-                        //   },
-                        // ),
-                        // const SizedBox(height: 20),
+                        Text(
+                          'User Type',
+                          style: AppTextStyle.titleStyle,
+                        ),
+                        DropDownWidget(
+                          items: dropdownList,
+                          value: dropdownValue,
+                          onChanged: (value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 20),
                         Text(
                           'Enter your login ID',
                           style: AppTextStyle.titleStyle,
@@ -131,45 +147,52 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           },
                         ).box.width(context.width * 0.9).make(),
                         const SizedBox(height: 20),
-                        // Visibility(
-                        //   visible: dropdownValue == "Admin User" ? false : true,
-                        //   child: Text(
-                        //     "Enter your password",
-                        //     style: AppTextStyle.titleStyle,
-                        //   ),
-                        // ),
-                        // Visibility(
-                        //   visible: dropdownValue == "Admin User" ? false : true,
-                        //   child: IconTextField(
-                        //     controller: passwordController,
-                        //     leadingIcon: Image.asset(
-                        //       AppIcons.passwordIcon,
-                        //       width: 42,
-                        //       height: 42,
-                        //     ),
-                        //     keyboardType: TextInputType.visiblePassword,
-                        //     obscureText: obscureText,
-                        //     validator: (p0) {
-                        //       if (p0!.isEmpty) {
-                        //         return 'Please enter your password';
-                        //       }
-                        //       return null;
-                        //     },
-                        //     suffixIcon: IconButton(
-                        //       icon: const Icon(Icons.remove_red_eye),
-                        //       onPressed: () {
-                        //         setState(() {
-                        //           obscureText = !obscureText;
-                        //         });
-                        //       },
-                        //     ),
-                        //   ),
-                        // ),
-                        // const SizedBox(height: 20),
+                        Visibility(
+                          visible: dropdownValue == "Admin User" ? false : true,
+                          child: Text(
+                            "Enter your password",
+                            style: AppTextStyle.titleStyle,
+                          ),
+                        ),
+                        Visibility(
+                          visible: dropdownValue == "Admin User" ? false : true,
+                          child: IconTextField(
+                            controller: passwordController,
+                            leadingIcon: Image.asset(
+                              AppIcons.passwordIcon,
+                              width: 42,
+                              height: 42,
+                            ),
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: obscureText,
+                            validator: (p0) {
+                              if (p0!.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.remove_red_eye),
+                              onPressed: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     ),
                     PrimaryButtonWidget(
-                      onPressed: login,
+                      onPressed: () {
+                        if (dropdownValue.toString() == "Normal User") {
+                          normalUserLogin();
+                        }
+                        if (dropdownValue.toString() == "Admin User") {
+                          login();
+                        }
+                      },
                       text: "Log in",
                     ).box.width(context.width * 0.85).makeCentered(),
                     const SizedBox(height: 20),
