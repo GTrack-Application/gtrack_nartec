@@ -78,6 +78,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
       passwordController.text.trim(),
     ).then((value) {
       AppDialogs.closeDialog();
+      AppSnackbars.success(context, "Login Successful");
       AppNavigator.replaceTo(context: context, screen: const HomeScreen());
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();

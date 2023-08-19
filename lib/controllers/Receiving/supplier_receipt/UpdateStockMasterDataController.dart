@@ -13,12 +13,12 @@ class UpdateStockMasterDataController {
     double height,
     double weight,
   ) async {
-    String url = "${AppUrls.base}updateStockMasterData";
+    String url = "${AppUrls.baseUrlWithPort}updateStockMasterData";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "Content-Type": "application/json"

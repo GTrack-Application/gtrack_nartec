@@ -5,7 +5,6 @@ import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetAllTableZoneController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetAllTblShipmentReceivedCLController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetItemNameByItemIdController.dart';
-import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetTblStockMasterByItemIdController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
@@ -19,24 +18,46 @@ import 'shipment_dispatching_screen.dart';
 
 // ignore: must_be_immutable
 class ScanSerialNumberScreen extends StatefulWidget {
+  String sHIPMENTID;
+  String cONTAINERID;
+  String aRRIVALWAREHOUSE;
+  String iTEMNAME;
+  String iTEMID;
+  String pURCHID;
+  String cLASSIFICATION;
+  String sERIALNUM;
+  String rCVDCONFIGID;
+  String gTIN;
+  String rZONE;
+  String pALLETCODE;
+  String bIN;
+  String rEMARKS;
+  num pOQTY;
+  num rCVQTY;
+  num rEMAININGQTY;
   String createdDateTime;
-  String purchId;
-  String shipmentId;
-  int shipmentStatus;
-  String containerId;
-  String itemId;
-  int qty;
 
   ScanSerialNumberScreen({
-    super.key,
+    Key? key,
+    required this.sHIPMENTID,
+    required this.cONTAINERID,
+    required this.aRRIVALWAREHOUSE,
+    required this.iTEMNAME,
+    required this.iTEMID,
+    required this.pURCHID,
+    required this.cLASSIFICATION,
+    required this.sERIALNUM,
+    required this.rCVDCONFIGID,
+    required this.gTIN,
+    required this.rZONE,
+    required this.pALLETCODE,
+    required this.bIN,
+    required this.rEMARKS,
+    required this.pOQTY,
+    required this.rCVQTY,
+    required this.rEMAININGQTY,
     required this.createdDateTime,
-    required this.purchId,
-    required this.shipmentId,
-    required this.shipmentStatus,
-    required this.containerId,
-    required this.itemId,
-    required this.qty,
-  });
+  }) : super(key: key);
 
   @override
   State<ScanSerialNumberScreen> createState() => _ScanSerialNumberScreenState();
@@ -64,8 +85,8 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
   void initState() {
     super.initState();
 
-    _jobOrderNoController.text = widget.shipmentId;
-    _containerNoController.text = widget.containerId;
+    _jobOrderNoController.text = widget.sHIPMENTID;
+    _containerNoController.text = widget.cONTAINERID;
     _itemNameController.text = itemName;
     _weightController.text = "13";
     _heightController.text = "310";
@@ -83,9 +104,9 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
         }
 
         GetAllTblShipmentReceivedCLController.getAllTableZone(
-          widget.containerId,
-          widget.shipmentId,
-          widget.itemId,
+          widget.cONTAINERID,
+          widget.sHIPMENTID,
+          widget.iTEMID,
         ).then((value) {
           setState(() {
             rCQTY = value;
@@ -97,12 +118,14 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
           AppDialogs.closeDialog();
         });
 
-        GetItemNameByItemIdController.getName(widget.itemId).then((value) {
+        GetItemNameByItemIdController.getName(widget.iTEMID).then((value) {
           setState(() {
             itemName = value[0].itemDesc ?? "";
             _itemNameController.text = value[0].itemDesc ?? "";
             cond = value[0].classification ?? "";
           });
+          AppDialogs.closeDialog();
+
           // GetTblStockMasterByItemIdController.getData(widget.itemId)
           //     .then((value) {
           //   setState(() {
@@ -115,7 +138,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
           //     _weightController.text =
           //         double.parse(value[0].weight.toString()).toString();
           //   });
-          //   AppDialogs.closeDialog();
+          // AppDialogs.closeDialog();
           // }).onError((error, stackTrace) {
           //   AppDialogs.closeDialog();
 
@@ -131,27 +154,29 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
             _itemNameController.text = "";
             cond = "";
           });
-          GetTblStockMasterByItemIdController.getData(widget.itemId)
-              .then((value) {
-            setState(() {
-              _widthController.text =
-                  double.parse(value[0].width.toString()).toString();
-              _heightController.text =
-                  double.parse(value[0].height.toString()).toString();
-              _lengthController.text =
-                  double.parse(value[0].length.toString()).toString();
-              _weightController.text =
-                  double.parse(value[0].weight.toString()).toString();
-            });
-            AppDialogs.closeDialog();
-          }).onError((error, stackTrace) {
-            setState(() {
-              _widthController.text = "";
-              _heightController.text = "";
-              _lengthController.text = "";
-            });
-            AppDialogs.closeDialog();
-          });
+          AppDialogs.closeDialog();
+
+          // GetTblStockMasterByItemIdController.getData(widget.iTEMID)
+          //     .then((value) {
+          //   setState(() {
+          //     _widthController.text =
+          //         double.parse(value[0].width.toString()).toString();
+          //     _heightController.text =
+          //         double.parse(value[0].height.toString()).toString();
+          //     _lengthController.text =
+          //         double.parse(value[0].length.toString()).toString();
+          //     _weightController.text =
+          //         double.parse(value[0].weight.toString()).toString();
+          //   });
+          //   AppDialogs.closeDialog();
+          // }).onError((error, stackTrace) {
+          //   setState(() {
+          //     _widthController.text = "";
+          //     _heightController.text = "";
+          //     _lengthController.text = "";
+          //   });
+          //   AppDialogs.closeDialog();
+          // });
         });
       }).onError((error, stackTrace) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -245,7 +270,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                                 ),
                                 const SizedBox(height: 10),
                                 TextWidget(
-                                  text: "PO QTY*\n${widget.qty.toString()}",
+                                  text: "PO QTY*\n${widget.pOQTY.toString()}",
                                   fontSize: 15,
                                   color: AppColors.white,
                                   textAlign: TextAlign.center,
@@ -255,7 +280,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                             Column(
                               children: [
                                 TextWidget(
-                                  text: widget.itemId,
+                                  text: widget.iTEMID,
                                   fontSize: 16,
                                   color: AppColors.white,
                                 ),
@@ -437,27 +462,36 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                       return;
                     }
                     AppNavigator.replaceTo(
-                        context: context,
-                        screen: SaveScreen(
-                          gtin: _gtinNoController.text.trim(),
-                          rZone: dropdownValue,
-                          containerId: widget.containerId,
-                          itemId: widget.itemId,
-                          createdDateTime: widget.createdDateTime,
-                          itemName: itemName,
-                          purchId: widget.purchId,
-                          qty: widget.qty,
-                          shipmentId: widget.shipmentId,
-                          shipmentStatus: widget.shipmentStatus,
-                          length: double.parse(
-                              _lengthController.text.trim().toString()),
-                          width: double.parse(
-                              _widthController.text.trim().toString()),
-                          height: double.parse(
-                              _heightController.text.trim().toString()),
-                          weight: double.parse(
-                              _weightController.text.trim().toString()),
-                        ));
+                      context: context,
+                      screen: SaveScreen(
+                        aRRIVALWAREHOUSE: widget.aRRIVALWAREHOUSE,
+                        bIN: widget.bIN,
+                        cLASSIFICATION: widget.cLASSIFICATION,
+                        cONTAINERID: widget.cONTAINERID,
+                        createdDateTime: widget.createdDateTime,
+                        gTIN: widget.gTIN,
+                        iTEMID: widget.iTEMID,
+                        iTEMNAME: widget.iTEMNAME,
+                        pALLETCODE: widget.pALLETCODE,
+                        pOQTY: widget.pOQTY,
+                        pURCHID: widget.pURCHID,
+                        rCVDCONFIGID: widget.rCVDCONFIGID,
+                        rCVQTY: widget.rCVQTY,
+                        rEMAININGQTY: widget.rEMAININGQTY,
+                        rEMARKS: widget.rEMARKS,
+                        rZONE: widget.rZONE,
+                        sERIALNUM: widget.sERIALNUM,
+                        sHIPMENTID: widget.sHIPMENTID,
+                        length: double.parse(
+                            _lengthController.text.trim().toString()),
+                        width: double.parse(
+                            _widthController.text.trim().toString()),
+                        height: double.parse(
+                            _heightController.text.trim().toString()),
+                        weight: double.parse(
+                            _weightController.text.trim().toString()),
+                      ),
+                    );
                   },
                 ).box.width(context.width * 0.9).make(),
               ),

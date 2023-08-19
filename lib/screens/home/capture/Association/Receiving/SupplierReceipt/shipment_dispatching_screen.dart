@@ -7,7 +7,7 @@ import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/DummyModel.dart';
+import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/GetShipmentDataFromShipmentExpectedRModel.dart';
 
 import 'scan_serial_number_screen.dart';
 
@@ -26,7 +26,7 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
   final TextEditingController _filterController = TextEditingController();
   String total = "0";
   List<bool> isMarked = [];
-  List<DummyModel> table = [];
+  List<GetShipmentDataFromShipmentExpectedRModel> table = [];
 
   @override
   Widget build(BuildContext context) {
@@ -165,25 +165,7 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                 columns: const [
                   DataColumn(
                       label: Text(
-                    'PURCH ID',
-                    style: TextStyle(color: AppColors.primary),
-                    textAlign: TextAlign.center,
-                  )),
-                  DataColumn(
-                      label: Text(
-                    'CREATED DATE TIME',
-                    style: TextStyle(color: AppColors.primary),
-                    textAlign: TextAlign.center,
-                  )),
-                  DataColumn(
-                      label: Text(
                     'SHIPMENT ID',
-                    style: TextStyle(color: AppColors.primary),
-                    textAlign: TextAlign.center,
-                  )),
-                  DataColumn(
-                      label: Text(
-                    'SHIPMENT STATUS',
                     style: TextStyle(color: AppColors.primary),
                     textAlign: TextAlign.center,
                   )),
@@ -195,14 +177,98 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                   )),
                   DataColumn(
                       label: Text(
+                    'ARRIVAL WAREHOUSE',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'ITEM NAME',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
                     'ITEM ID',
                     style: TextStyle(color: AppColors.primary),
                     textAlign: TextAlign.center,
                   )),
                   DataColumn(
                       label: Text(
-                    'QTY',
-                    style: TextStyle(color: Colors.white),
+                    'PURCH ID',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'CLASSIFICATION',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'SERIAL NUM',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'RCVD CONFIG ID',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'GTIN',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'RZONE',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'PALLET CODE',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'BIN',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'REMARKS',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'PO QTY',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'RCV QTY',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'REMAINING QTY',
+                    style: TextStyle(color: AppColors.primary),
+                    textAlign: TextAlign.center,
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'TRX DATE TIME',
+                    style: TextStyle(color: AppColors.primary),
                     textAlign: TextAlign.center,
                   )),
                 ],
@@ -238,7 +304,7 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
 }
 
 class TableDataSource extends DataTableSource {
-  List<DummyModel> data;
+  List<GetShipmentDataFromShipmentExpectedRModel> data;
   BuildContext ctx;
 
   TableDataSource(
@@ -259,25 +325,54 @@ class TableDataSource extends DataTableSource {
       onSelectChanged: (value) {
         FocusScope.of(ctx).requestFocus(FocusNode());
         AppNavigator.goToPage(
-            context: ctx,
-            screen: ScanSerialNumberScreen(
-              containerId: instance.cONTAINERID ?? "",
-              itemId: instance.iTEMID ?? "",
-              qty: instance.qTY ?? 0,
-              shipmentId: instance.sHIPMENTID ?? "",
-              shipmentStatus: int.parse(instance.sHIPMENTSTATUS.toString()),
-              purchId: instance.pURCHID ?? "",
-              createdDateTime: instance.cREATEDDATETIME ?? "",
-            ));
+          context: ctx,
+          screen: ScanSerialNumberScreen(
+            aRRIVALWAREHOUSE: instance.aRRIVALWAREHOUSE ?? "",
+            bIN: instance.bIN ?? "",
+            cLASSIFICATION: instance.cLASSIFICATION ?? "",
+            cONTAINERID: instance.cONTAINERID ?? "",
+            gTIN: instance.gTIN ?? "",
+            iTEMID: instance.iTEMID ?? "",
+            iTEMNAME: instance.iTEMNAME ?? "",
+            pALLETCODE: instance.pALLETCODE ?? "",
+            pOQTY: instance.pOQTY ?? 0,
+            pURCHID: instance.pURCHID ?? "",
+            rCVDCONFIGID: instance.rCVDCONFIGID ?? "",
+            rCVQTY: instance.rCVQTY ?? 0,
+            rEMAININGQTY: instance.rEMAININGQTY ?? 0,
+            rEMARKS: instance.rEMARKS ?? "",
+            rZONE: instance.rZONE ?? "",
+            sERIALNUM: instance.sERIALNUM ?? "",
+            sHIPMENTID: instance.sHIPMENTID ?? "",
+            createdDateTime: instance.tRXDATETIME ?? "",
+          ),
+        );
       },
       cells: [
-        DataCell(Text(instance.pURCHID ?? "")),
-        DataCell(Text(instance.cREATEDDATETIME ?? "")),
         DataCell(Text(instance.sHIPMENTID ?? "")),
-        DataCell(Text(instance.sHIPMENTSTATUS.toString())),
         DataCell(Text(instance.cONTAINERID ?? "")),
+        DataCell(Text(instance.aRRIVALWAREHOUSE ?? "")),
+        DataCell(Text(instance.iTEMNAME ?? "")),
         DataCell(Text(instance.iTEMID ?? "")),
-        DataCell(Text(instance.qTY.toString())),
+        DataCell(Text(instance.pURCHID ?? "")),
+        DataCell(Text(instance.cLASSIFICATION ?? "")),
+        DataCell(Text(instance.sERIALNUM ?? "")),
+        DataCell(Text(instance.rCVDCONFIGID ?? "")),
+        DataCell(Text(instance.gTIN ?? "")),
+        DataCell(Text(instance.rZONE ?? "")),
+        DataCell(Text(instance.pALLETCODE ?? "")),
+        DataCell(Text(instance.bIN ?? "")),
+        DataCell(Text(instance.rEMARKS ?? "")),
+        DataCell(Text(instance.pOQTY.toString() == "null"
+            ? "0"
+            : instance.pOQTY.toString())),
+        DataCell(Text(instance.rCVQTY.toString() == "null"
+            ? "0"
+            : instance.rCVQTY.toString())),
+        DataCell(Text(instance.rEMAININGQTY.toString() == "null"
+            ? "0"
+            : instance.rEMAININGQTY.toString())),
+        DataCell(Text(instance.tRXDATETIME ?? "")),
       ],
     );
   }

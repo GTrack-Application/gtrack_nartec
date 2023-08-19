@@ -8,12 +8,12 @@ import 'package:http/http.dart' as http;
 
 class GetAllTableZoneController {
   static Future<List<GetAllTableZoneModel>> getAllTableZone() async {
-    String url = "${AppUrls.base}getAllTblRZones";
+    String url = "${AppUrls.baseUrlWithPort}getAllTblRZones";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };
