@@ -5,13 +5,12 @@ import 'dart:convert';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
-
 import 'package:http/http.dart' as http;
 
 class GLNController {
   static Future<List<GLNProductsModel>> getData() async {
     String? userId = await AppPreferences.getUserId();
-    String url = "https://gs1ksa.org/api/member/gln/list";
+    String url = "${AppUrls.baseUrl}/api/member/gln/list";
 
     final uri = Uri.parse(url);
 
