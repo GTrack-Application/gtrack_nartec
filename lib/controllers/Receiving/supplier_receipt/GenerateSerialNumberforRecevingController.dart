@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 class GenerateSerialNumberforRecevingController {
   static Future<String> generateSerialNo(String itemId) async {
-    String url = "${AppUrls.base}generateSerialNumberforReceving";
+    String url = "${AppUrls.baseUrlWithPort}generateSerialNumberforReceving";
 
     final body = {
       "ITEMID": itemId,
@@ -16,7 +16,7 @@ class GenerateSerialNumberforRecevingController {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "Content-Type": "application/json"

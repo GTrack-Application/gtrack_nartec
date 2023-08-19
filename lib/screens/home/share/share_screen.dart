@@ -3,54 +3,42 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 
-class AggregationScreen extends StatefulWidget {
-  const AggregationScreen({super.key});
+class ShareScreen extends StatefulWidget {
+  const ShareScreen({super.key});
 
   @override
-  State<AggregationScreen> createState() => _AggregationScreenState();
+  State<ShareScreen> createState() => _ShareScreenState();
 }
 
-class _AggregationScreenState extends State<AggregationScreen> {
+class _ShareScreenState extends State<ShareScreen> {
   final List<Map> data = [
     {
-      "text": "Packaging",
-      "icon": AppIcons.aggPackaging,
+      "text": "DIGITAL LINKS",
+      "icon": AppIcons.digital,
     },
     {
-      "text": "Packing",
-      "icon": AppIcons.aggPacking,
+      "text": "PRODUCT CATALOGUE",
+      "icon": AppIcons.productCatalogue,
     },
     {
-      "text": "Combining",
-      "icon": AppIcons.aggCombining,
+      "text": "PRODUCT CERTIFATES",
+      "icon": AppIcons.productCertificate,
     },
     {
-      "text": "Assembling",
-      "icon": AppIcons.aggAssembling,
+      "text": "EPCIS",
+      "icon": AppIcons.epcis,
     },
     {
-      "text": "Grouping",
-      "icon": AppIcons.aggGrouping,
+      "text": "CVB",
+      "icon": AppIcons.cvb,
     },
     {
-      "text": "Bundling",
-      "icon": AppIcons.aggBundling,
+      "text": "PRODUCT ORIGIN",
+      "icon": AppIcons.productOrigin,
     },
     {
-      "text": "Batching",
-      "icon": AppIcons.aggBatching,
-    },
-    {
-      "text": "Consolidating",
-      "icon": AppIcons.aggConsolidating,
-    },
-    {
-      "text": "Compiling",
-      "icon": AppIcons.aggCompiling,
-    },
-    {
-      "text": "Containerization",
-      "icon": AppIcons.aggContainerization,
+      "text": "TRACEABILITY",
+      "icon": AppIcons.traceability,
     },
   ];
 
@@ -65,17 +53,17 @@ class _AggregationScreenState extends State<AggregationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AGGREGRATION'),
-        backgroundColor: AppColors.pink,
+        title: const Text('Share'),
+        backgroundColor: AppColors.green,
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               gridDelegate: gridDelegate,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               itemBuilder: (context, index) {
                 return CardIconButton(
                   icon: data[index]["icon"] as String,
@@ -84,7 +72,6 @@ class _AggregationScreenState extends State<AggregationScreen> {
                 );
               },
               itemCount: data.length,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
             ),
           ],
         ),

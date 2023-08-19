@@ -6,9 +6,9 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/screens/capture/capture_screen.dart';
-import 'package:gtrack_mobile_app/screens/identify/identify_screen.dart';
-import 'package:gtrack_mobile_app/screens/share/share_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/capture_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/identify_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/share/share_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -73,18 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Image.asset(
-                  AppImages.logo,
-                  width: 200,
-                  height: 150,
-                ),
-              ],
+            Image.asset(
+              AppImages.logo,
+              width: 200,
+              height: 150,
             ),
-            const SizedBox(height: 10),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

@@ -12,12 +12,12 @@ class GetAllTblShipmentReceivedCLController {
     String itemId,
   ) async {
     String url =
-        "${AppUrls.base}getRemainingQtyFromShipmentCounter?CONTAINERID=$containerId&SHIPMENTID=$shipmentId&ITEMID=$itemId";
+        "${AppUrls.baseUrlWithPort}getRemainingQtyFromShipmentCounter?CONTAINERID=$containerId&SHIPMENTID=$shipmentId&ITEMID=$itemId";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };

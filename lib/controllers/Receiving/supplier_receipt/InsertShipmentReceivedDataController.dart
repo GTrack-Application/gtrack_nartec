@@ -28,12 +28,12 @@ class InsertShipmentReceivedDataController {
     double weight,
   ) async {
     String url =
-        "${AppUrls.base}insertShipmentRecievedDataCL?SHIPMENTID=$sHIPMENTID&CONTAINERID=$cONTAINERID&ARRIVALWAREHOUSE=$aRRIVALWAREHOUSE&ITEMNAME=$iTEMNAME&ITEMID=$iTEMID&PURCHID=$pURCHID&CLASSIFICATION=$cLASSIFICATION&SERIALNUM=$serialNum&RCVDCONFIGID=$RCVDCONFIGID&RCVD_DATE=$rcvdDate&GTIN=$GTIN&RZONE=$RZONE&PALLET_DATE=$palletDate&PALLETCODE=$PALLETCODE&BIN=$BIN&REMARKS=$REMARKS&POQTY=$POQTY&LENGTH=$length&WIDTH=$width&HEIGHT=$height&WEIGHT=$weight";
+        "${AppUrls.baseUrl}insertShipmentRecievedDataCL?SHIPMENTID=$sHIPMENTID&CONTAINERID=$cONTAINERID&ARRIVALWAREHOUSE=$aRRIVALWAREHOUSE&ITEMNAME=$iTEMNAME&ITEMID=$iTEMID&PURCHID=$pURCHID&CLASSIFICATION=$cLASSIFICATION&SERIALNUM=$serialNum&RCVDCONFIGID=$RCVDCONFIGID&RCVD_DATE=$rcvdDate&GTIN=$GTIN&RZONE=$RZONE&PALLET_DATE=$palletDate&PALLETCODE=$PALLETCODE&BIN=$BIN&REMARKS=$REMARKS&POQTY=$POQTY&LENGTH=$length&WIDTH=$width&HEIGHT=$height&WEIGHT=$weight";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };

@@ -50,6 +50,8 @@ class AppIcons {
   static const String gmn = 'assets/icons/gmn.png';
   static const String gsrn = 'assets/icons/gsrn.png';
   static const String gsin = 'assets/icons/gsin.png';
+  static const String gdti = 'assets/icons/identify_gdti.png';
+  static const String ginc = 'assets/icons/identify_ginc.png';
 
   // Capture Screen
 

@@ -16,38 +16,54 @@ import 'shipment_dispatching_screen.dart';
 
 // ignore: must_be_immutable
 class SaveScreen extends StatefulWidget {
-  String gtin;
-  String rZone;
-  String itemName;
+  String sHIPMENTID;
+  String cONTAINERID;
+  String aRRIVALWAREHOUSE;
+  String iTEMNAME;
+  String iTEMID;
+  String pURCHID;
+  String cLASSIFICATION;
+  String sERIALNUM;
+  String rCVDCONFIGID;
+  String gTIN;
+  String rZONE;
+  String pALLETCODE;
+  String bIN;
+  String rEMARKS;
+  num pOQTY;
+  num rCVQTY;
+  num rEMAININGQTY;
   String createdDateTime;
-  String purchId;
-  String shipmentId;
-  int shipmentStatus;
-  String containerId;
-  String itemId;
-  int qty;
   double length;
   double width;
   double height;
   double weight;
 
   SaveScreen({
-    super.key,
-    required this.gtin,
-    required this.itemName,
+    Key? key,
+    required this.sHIPMENTID,
+    required this.cONTAINERID,
+    required this.aRRIVALWAREHOUSE,
+    required this.iTEMNAME,
+    required this.iTEMID,
+    required this.pURCHID,
+    required this.cLASSIFICATION,
+    required this.sERIALNUM,
+    required this.rCVDCONFIGID,
+    required this.gTIN,
+    required this.rZONE,
+    required this.pALLETCODE,
+    required this.bIN,
+    required this.rEMARKS,
+    required this.pOQTY,
+    required this.rCVQTY,
+    required this.rEMAININGQTY,
     required this.createdDateTime,
-    required this.purchId,
-    required this.shipmentId,
-    required this.shipmentStatus,
-    required this.containerId,
-    required this.itemId,
-    required this.qty,
-    required this.rZone,
     required this.length,
     required this.width,
     required this.height,
     required this.weight,
-  });
+  }) : super(key: key);
 
   @override
   State<SaveScreen> createState() => _SaveScreenState();
@@ -68,23 +84,23 @@ class _SaveScreenState extends State<SaveScreen> {
     FocusScope.of(context).unfocus();
 
     InsertShipmentReceivedDataController.insertShipmentData(
-      widget.shipmentId,
-      widget.containerId,
+      widget.sHIPMENTID,
+      widget.cONTAINERID,
       "",
-      widget.itemName,
-      widget.itemId,
-      widget.purchId,
+      widget.iTEMNAME,
+      widget.iTEMID,
+      widget.pURCHID,
       0,
       _serialNoController.text,
       dropdownValue,
       DateTime.now().toString(),
-      widget.gtin,
-      widget.rZone,
+      widget.gTIN,
+      widget.rZONE,
       DateTime.now().toString(),
       "",
       "",
       _remarksController.text,
-      int.parse(widget.qty.toString()),
+      int.parse(widget.pOQTY.toString()),
       widget.length,
       widget.width,
       widget.height,
@@ -111,9 +127,9 @@ class _SaveScreenState extends State<SaveScreen> {
   @override
   void initState() {
     super.initState();
-    _jobOrderNoController.text = widget.shipmentId;
-    _containerNoController.text = widget.containerId;
-    _itemNameController.text = widget.itemName;
+    _jobOrderNoController.text = widget.sHIPMENTID;
+    _containerNoController.text = widget.cONTAINERID;
+    _itemNameController.text = widget.iTEMNAME;
   }
 
   @override
@@ -212,7 +228,7 @@ class _SaveScreenState extends State<SaveScreen> {
                           ),
                           const SizedBox(width: 10),
                           TextWidget(
-                            text: widget.itemId,
+                            text: widget.iTEMID,
                             fontSize: 16,
                             color: Colors.white,
                           ),
@@ -228,7 +244,7 @@ class _SaveScreenState extends State<SaveScreen> {
                             Column(
                               children: [
                                 TextWidget(
-                                  text: "PO QTY*\n${widget.qty}",
+                                  text: "PO QTY*\n${widget.pOQTY}",
                                   fontSize: 15,
                                   color: Colors.white,
                                   textAlign: TextAlign.center,
@@ -352,7 +368,7 @@ class _SaveScreenState extends State<SaveScreen> {
                   autofocus: false,
                   controller: _serialNoController,
                   onFieldSubmitted: (p0) {
-                    if (rCQTY >= widget.qty) {
+                    if (rCQTY >= widget.pOQTY) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content:
@@ -372,23 +388,23 @@ class _SaveScreenState extends State<SaveScreen> {
                     AppDialogs.loadingDialog(context);
                     FocusScope.of(context).unfocus();
                     InsertShipmentReceivedDataController.insertShipmentData(
-                      widget.shipmentId,
-                      widget.containerId,
+                      widget.sHIPMENTID,
+                      widget.cONTAINERID,
                       '',
-                      widget.itemName,
-                      widget.itemId,
-                      widget.purchId,
+                      widget.iTEMNAME,
+                      widget.iTEMID,
+                      widget.pURCHID,
                       0,
                       _serialNoController.text,
                       dropdownValue,
                       DateTime.now().toString(),
-                      widget.gtin,
-                      widget.rZone,
+                      widget.gTIN,
+                      widget.rZONE,
                       DateTime.now().toString(),
                       "",
                       "",
                       _remarksController.text,
-                      int.parse(widget.qty.toString()),
+                      int.parse(widget.pOQTY.toString()),
                       widget.length,
                       widget.width,
                       widget.height,
@@ -405,7 +421,7 @@ class _SaveScreenState extends State<SaveScreen> {
                         // focus back to serial no field
                       });
                       UpdateStockMasterDataController.insertShipmentData(
-                          widget.itemId,
+                          widget.iTEMID,
                           widget.length,
                           widget.width,
                           widget.height,
@@ -437,30 +453,30 @@ class _SaveScreenState extends State<SaveScreen> {
                   height: 50,
                   onPressed: () {
                     GenerateSerialNumberforRecevingController.generateSerialNo(
-                            widget.itemId)
+                            widget.iTEMID)
                         .then(
                       (value) {
                         AppDialogs.loadingDialog(context);
 
                         FocusScope.of(context).unfocus();
                         InsertShipmentReceivedDataController.insertShipmentData(
-                          widget.shipmentId,
-                          widget.containerId,
+                          widget.sHIPMENTID,
+                          widget.cONTAINERID,
                           '',
-                          widget.itemName,
-                          widget.itemId,
-                          widget.purchId,
+                          widget.iTEMNAME,
+                          widget.iTEMID,
+                          widget.pURCHID,
                           0,
                           value,
                           dropdownValue,
                           DateTime.now().toString(),
-                          widget.gtin,
-                          widget.rZone,
+                          widget.gTIN,
+                          widget.rZONE,
                           DateTime.now().toString(),
                           "",
                           "",
                           _remarksController.text,
-                          int.parse(widget.qty.toString()),
+                          int.parse(widget.pOQTY.toString()),
                           widget.length,
                           widget.width,
                           widget.height,
@@ -474,7 +490,7 @@ class _SaveScreenState extends State<SaveScreen> {
                             rCQTY = rCQTY + 1;
                           });
                           UpdateStockMasterDataController.insertShipmentData(
-                              widget.itemId,
+                              widget.iTEMID,
                               widget.length,
                               widget.width,
                               widget.height,
