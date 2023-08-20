@@ -10,7 +10,7 @@ class GetPickingListModel {
   String? tRANSREFID;
   int? eXPEDITIONSTATUS;
   String? dATETIMEASSIGNED;
-  String? aSSIGNEDTOUSERID;
+  int? aSSIGNEDTOUSERID;
   String? pICKSTATUS;
   int? qTYPICKED;
 

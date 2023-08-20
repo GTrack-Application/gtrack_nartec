@@ -27,6 +27,7 @@ class GetPickingListController {
 
       if (response.statusCode == 200) {
         print("Status Code: ${response.statusCode}");
+        print("response: ${response.body}");
 
         var data = json.decode(response.body) as List;
         List<GetPickingListModel> shipmentData =

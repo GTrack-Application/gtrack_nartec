@@ -341,13 +341,21 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
                                 DataCell(Text(e.cONFIGID ?? "")),
                                 DataCell(Text(e.iTEMID ?? "")),
                                 DataCell(Text(e.iTEMNAME ?? "")),
-                                DataCell(Text(e.qTY.toString())),
+                                DataCell(Text(e.qTY.toString() == "null"
+                                    ? "0"
+                                    : e.qTY.toString())),
                                 DataCell(Text(e.cUSTOMER ?? "")),
                                 DataCell(Text(e.dLVDATE ?? "")),
                                 DataCell(Text(e.tRANSREFID ?? "")),
-                                DataCell(Text(e.eXPEDITIONSTATUS.toString())),
+                                DataCell(Text(
+                                    e.eXPEDITIONSTATUS.toString() == "null"
+                                        ? "0"
+                                        : e.eXPEDITIONSTATUS.toString())),
                                 DataCell(Text(e.dATETIMEASSIGNED ?? "")),
-                                DataCell(Text(e.aSSIGNEDTOUSERID ?? "")),
+                                DataCell(Text(
+                                    e.aSSIGNEDTOUSERID.toString() == "null"
+                                        ? "0"
+                                        : e.aSSIGNEDTOUSERID.toString())),
                                 DataCell(Text(e.pICKSTATUS ?? "")),
                                 DataCell(Text(e.qTYPICKED == null
                                     ? "0"

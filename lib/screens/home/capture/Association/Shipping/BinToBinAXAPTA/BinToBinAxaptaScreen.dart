@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, non_constant_identifier_names, prefer_final_fields, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/GetQtyReceivedController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getAxaptaTableData.dart';
