@@ -39,7 +39,7 @@ class _BinToBinAxaptaScreenState extends State<BinToBinAxaptaScreen> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          title: "Bin to Bin Transfer".toUpperCase(),
+          title: "Internal Transfer".toUpperCase(),
           actions: [
             GestureDetector(
               onTap: () {
@@ -65,19 +65,6 @@ class _BinToBinAxaptaScreenState extends State<BinToBinAxaptaScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width,
-                child: Text(
-                  "Internal AXAPTA*",
-                  style: TextStyle(
-                    color: Colors.blue[900]!,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
               Container(
                 margin: const EdgeInsets.only(left: 20, top: 10),
                 child: const TextWidget(
