@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
-import 'package:gtrack_mobile_app/constants/app_text_styles.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
@@ -114,9 +114,13 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'User Type',
-                          style: AppTextStyle.titleStyle,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.grey,
+                          ),
                         ),
                         DropDownWidget(
                           items: dropdownList,
@@ -130,9 +134,13 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'Enter your login ID',
-                          style: AppTextStyle.titleStyle,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.grey,
+                          ),
                         ),
                         IconTextField(
                           controller: emailController,
@@ -152,9 +160,13 @@ class _UserLoginPageState extends State<UserLoginPage> {
                         const SizedBox(height: 20),
                         Visibility(
                           visible: dropdownValue == "Admin User" ? false : true,
-                          child: Text(
+                          child: const Text(
                             "Enter your password",
-                            style: AppTextStyle.titleStyle,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.grey,
+                            ),
                           ),
                         ),
                         Visibility(
