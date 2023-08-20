@@ -5,6 +5,7 @@ import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/
 import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/ValidateShipmentIdFromShipmentReveivedClController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
@@ -434,20 +435,23 @@ class StudentDataSource extends DataTableSource {
           ));
           return;
         }
-        Get.to(() => PalletProceedScreen(
-              iNVENTLOCATIONIDFROM: tble.iNVENTLOCATIONIDFROM ?? "",
-              iNVENTLOCATIONIDTO: tble.iNVENTLOCATIONIDTO ?? "",
-              iTEMID: tble.iTEMID ?? "",
-              tRANSFERID: tble.tRANSFERID ?? "",
-              shipmentId: shipmentId!,
-              ALS_PACKINGSLIPREF: tble.aLSPACKINGSLIPREF ?? "",
-              ALS_TRANSFERORDERTYPE:
-                  int.parse(tble.aLSTRANSFERORDERTYPE.toString()),
-              QTYTRANSFER: int.parse(tble.qTYTRANSFER.toString()),
-              ITEMNAME: tble.iTEMNAME ?? "",
-              CONFIGID: tble.cONFIGID ?? "",
-              WMSLOCATIONID: tble.wMSLOCATIONID ?? "",
-            ));
+        AppNavigator.goToPage(
+          context: ctx,
+          screen: PalletProceedScreen(
+            iNVENTLOCATIONIDFROM: tble.iNVENTLOCATIONIDFROM ?? "",
+            iNVENTLOCATIONIDTO: tble.iNVENTLOCATIONIDTO ?? "",
+            iTEMID: tble.iTEMID ?? "",
+            tRANSFERID: tble.tRANSFERID ?? "",
+            shipmentId: shipmentId!,
+            ALS_PACKINGSLIPREF: tble.aLSPACKINGSLIPREF ?? "",
+            ALS_TRANSFERORDERTYPE:
+                int.parse(tble.aLSTRANSFERORDERTYPE.toString()),
+            QTYTRANSFER: int.parse(tble.qTYTRANSFER.toString()),
+            ITEMNAME: tble.iTEMNAME ?? "",
+            CONFIGID: tble.cONFIGID ?? "",
+            WMSLOCATIONID: tble.wMSLOCATIONID ?? "",
+          ),
+        );
       },
       cells: [
         DataCell(Text(tble.aLSPACKINGSLIPREF ?? "")),

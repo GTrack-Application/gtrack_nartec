@@ -7,6 +7,7 @@ import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetAllTableZoneController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization/PalletGenerateScreen.dart';
@@ -247,8 +248,9 @@ class _PalletProceedScreenState extends State<PalletProceedScreen> {
                       );
                       return;
                     }
-                    Get.to(
-                      () => PalletGenerateScreen(
+                    AppNavigator.goToPage(
+                      context: context,
+                      screen: PalletGenerateScreen(
                         iNVENTLOCATIONIDFROM: widget.iNVENTLOCATIONIDFROM,
                         iNVENTLOCATIONIDTO: widget.iNVENTLOCATIONIDTO,
                         iTEMID: widget.iTEMID,

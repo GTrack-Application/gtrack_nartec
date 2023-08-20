@@ -461,7 +461,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                       );
                       return;
                     }
-                    AppNavigator.replaceTo(
+                    AppNavigator.goToPage(
                       context: context,
                       screen: SaveScreen(
                         aRRIVALWAREHOUSE: widget.aRRIVALWAREHOUSE,

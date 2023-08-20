@@ -7,6 +7,7 @@ import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Wareh
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getAxaptaTableData.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
@@ -236,8 +237,9 @@ class _BinToBinAxaptaScreenState extends State<BinToBinAxaptaScreen> {
                                   isMarked[GetShipmentPalletizingList.indexOf(
                                       e)] = value!;
                                 });
-                                Get.to(
-                                  () => BinToBinAxapta2Screen(
+                                AppNavigator.goToPage(
+                                  context: context,
+                                  screen: BinToBinAxapta2Screen(
                                     TRANSFERID: e.tRANSFERID ?? "",
                                     TRANSFERSTATUS:
                                         int.parse(e.tRANSFERSTATUS.toString()),
