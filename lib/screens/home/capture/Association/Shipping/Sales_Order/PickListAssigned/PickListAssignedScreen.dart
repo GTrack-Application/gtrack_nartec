@@ -294,8 +294,9 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
                             textAlign: TextAlign.center,
                           )),
                         ],
-                        rows: BinToBinJournalTableList.map((e) {
-                          return DataRow(
+                        rows: BinToBinJournalTableList.map(
+                          (e) {
+                            return DataRow(
                               onSelectChanged: (value) {
                                 if (e.qTY == 0 ||
                                     e.qTY == null ||
@@ -360,8 +361,10 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
                                 DataCell(Text(e.qTYPICKED == null
                                     ? "0"
                                     : e.qTYPICKED.toString())),
-                              ]);
-                        }).toList(),
+                              ],
+                            );
+                          },
+                        ).toList(),
                       ),
                     ),
                   ),
