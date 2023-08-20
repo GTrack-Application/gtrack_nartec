@@ -8,13 +8,14 @@ import 'dart:convert';
 class getAllTblMappedBarcodesController {
   static Future<List<getInventTableWMSDataByItemIdOrItemNameModel>> getData(
       String searchText) async {
-    String url = "${AppUrls.base}getInventTableWMSDataByItemIdOrItemName";
+    String url =
+        "${AppUrls.baseUrlWithPort}getInventTableWMSDataByItemIdOrItemName";
     print("url: $url");
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "serachtext": searchText,

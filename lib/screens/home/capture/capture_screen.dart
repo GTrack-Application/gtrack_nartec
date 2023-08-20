@@ -44,7 +44,7 @@ class _CaptureScreenState extends State<CaptureScreen> {
     },
     {
       "text": "MAPPING RFID",
-      "icon": AppIcons.assoHandover,
+      "icon": AppIcons.mappingRFID,
       "onTap": () {},
     },
   ];

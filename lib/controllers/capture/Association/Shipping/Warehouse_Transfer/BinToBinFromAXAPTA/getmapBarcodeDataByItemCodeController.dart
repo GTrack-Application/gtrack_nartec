@@ -1,15 +1,14 @@
 // ignore_for_file: avoid_print
 
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/GetTblStockMasterByItemIdModel.dart';
+import 'package:gtrack_mobile_app/models/capture/Association/Mapping/BinToBinAxapta/GetAllTblLocationsCLModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class GetTblStockMasterByItemIdController {
-  static Future<List<GetTblStockMasterByItemIdModel>> getData(
-      String itemId) async {
-    String url =
-        "${AppUrls.baseUrlWithPort}getTblStockMasterByItemId?itemid=$itemId";
+class GetMapBarcodeDataByItemCodeController {
+  static Future<List<GetAllTblLocationsCLModel>> getData() async {
+    String url = "${AppUrls.baseUrlWithPort}getAllTblLocationsCL";
+    print("url: $url");
 
     final uri = Uri.parse(url);
 
@@ -26,9 +25,8 @@ class GetTblStockMasterByItemIdController {
         print("Status Code: ${response.statusCode}");
 
         var data = json.decode(response.body) as List;
-        List<GetTblStockMasterByItemIdModel> shipmentData = data
-            .map((e) => GetTblStockMasterByItemIdModel.fromJson(e))
-            .toList();
+        List<GetAllTblLocationsCLModel> shipmentData =
+            data.map((e) => GetAllTblLocationsCLModel.fromJson(e)).toList();
         return shipmentData;
       } else {
         print("Status Code: ${response.statusCode}");

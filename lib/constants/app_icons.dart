@@ -61,6 +61,7 @@ class AppIcons {
   static const String aggregation = 'assets/icons/aggregation.png';
   static const String serialization = 'assets/icons/serialization.png';
   static const String mapping = 'assets/icons/mapping.png';
+  static const String mappingRFID = 'assets/icons/capture_mapping_rfid.png';
 
   // Share Screen
   static const String digital = 'assets/icons/digital_links.png';

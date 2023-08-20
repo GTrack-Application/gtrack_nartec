@@ -5,12 +5,12 @@ import 'package:http/http.dart' as http;
 
 class GetItemInfoByItemSerialNoController {
   static Future<int> getData(String itemserialno) async {
-    String url = "${AppUrls.base}getItemInfoByItemSerialNo";
+    String url = "${AppUrls.baseUrlWithPort}getItemInfoByItemSerialNo";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "itemserialno": itemserialno,

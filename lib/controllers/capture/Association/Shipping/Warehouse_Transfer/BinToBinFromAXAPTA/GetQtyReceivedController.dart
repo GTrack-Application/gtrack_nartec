@@ -1,15 +1,14 @@
 // ignore_for_file: avoid_print
 
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/GetTblStockMasterByItemIdModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class GetTblStockMasterByItemIdController {
-  static Future<List<GetTblStockMasterByItemIdModel>> getData(
-      String itemId) async {
+class GetQtyReceivedController {
+  static Future<num> getAllTable(String transferID, String itemID) async {
     String url =
-        "${AppUrls.baseUrlWithPort}getTblStockMasterByItemId?itemid=$itemId";
+        "${AppUrls.baseUrlWithPort}getQtyReceivedFromTransferBinToBinCl?TRANSFERID=$transferID&ITEMID=$itemID";
+    print("url: $url");
 
     final uri = Uri.parse(url);
 
@@ -25,11 +24,9 @@ class GetTblStockMasterByItemIdController {
       if (response.statusCode == 200) {
         print("Status Code: ${response.statusCode}");
 
-        var data = json.decode(response.body) as List;
-        List<GetTblStockMasterByItemIdModel> shipmentData = data
-            .map((e) => GetTblStockMasterByItemIdModel.fromJson(e))
-            .toList();
-        return shipmentData;
+        var data = json.decode(response.body);
+        var qtyReceived = data['qunaityReceived'];
+        return qtyReceived;
       } else {
         print("Status Code: ${response.statusCode}");
         var data = json.decode(response.body);

@@ -20,12 +20,13 @@ class insertIntoMappedBarcodeOrUpdateBySerialNoController {
     double weight,
     String manufacturingDate,
   ) async {
-    String url = "${AppUrls.base}insertIntoMappedBarcodeOrUpdateBySerialNo";
+    String url =
+        "${AppUrls.baseUrlWithPort}insertIntoMappedBarcodeOrUpdateBySerialNo";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": AppUrls.tokenNew,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "Content-Type": "application/json",
