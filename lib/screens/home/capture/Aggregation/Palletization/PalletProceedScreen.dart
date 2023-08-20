@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_key_in_widget_constructors, avoid_print
+// ignore_for_file: non_constant_identifier_names, use_key_in_widget_constructors, avoid_print, file_names
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';

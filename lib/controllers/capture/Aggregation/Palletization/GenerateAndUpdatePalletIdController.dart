@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, non_constant_identifier_names, file_names
+
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
