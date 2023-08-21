@@ -2,9 +2,9 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/capture_screen.dart';
@@ -71,36 +71,45 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       // make drawer from right side that contains the identity, capture and share screens
       endDrawer: const MyDrawerWidget(),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                const SizedBox(height: 10),
-                Image.asset(
-                  AppImages.logo,
-                  width: 200,
-                  height: 150,
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return NavigateIconWidget(
-                      icon: data['icon']?[index] as String,
-                      title: data['title']?[index] as String,
-                      caption: data['caption']?[index] as String,
-                      color: data['color']?[index] as Color,
-                      onTap: data['onTap']?[index] as VoidCallback,
-                    );
-                  },
-                ),
-              ],
+      body: Stack(
+        children: [
+          Container(
+            width: context.width,
+            height: context.height,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(height: 10),
+                  Image.asset(
+                    AppImages.logo,
+                    width: 200,
+                    height: 150,
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return NavigateIconWidget(
+                        icon: data['icon']?[index] as String,
+                        title: data['title']?[index] as String,
+                        caption: data['caption']?[index] as String,
+                        color: data['color']?[index] as Color,
+                        onTap: data['onTap']?[index] as VoidCallback,
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-            Row(
+          ),
+          Positioned(
+            bottom: 5,
+            left: 0,
+            right: 0,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
@@ -117,8 +126,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ).pOnly(right: 20),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
