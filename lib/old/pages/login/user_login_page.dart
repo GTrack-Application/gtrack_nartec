@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
@@ -71,12 +72,15 @@ class _UserLoginPageState extends State<UserLoginPage> {
     }
   }
 
-  normalUserLogin() {
+  normalUserLogin() async {
     AppDialogs.loadingDialog(context);
     LoginServices.normalUserLogin(
       emailController.text.trim(),
       passwordController.text.trim(),
     ).then((value) {
+      AppPreferences.setToken(value.token.toString()).then((_) {});
+      AppPreferences.setUserId(value.data!.userID.toString()).then((_) {});
+
       AppDialogs.closeDialog();
       AppSnackbars.success(context, "Login Successful", 2);
       AppNavigator.replaceTo(context: context, screen: const HomeScreen());

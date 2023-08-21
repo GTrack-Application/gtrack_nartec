@@ -22,6 +22,12 @@ class AppPreferences {
     prefs.setString('memberCategoryDescription', memberCategoryDescription);
   }
 
+  /* set token */
+  static Future<void> setToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', token);
+  }
+
   // Getters
 
   /*  Get user id  */
@@ -40,5 +46,11 @@ class AppPreferences {
   static Future<String?> getMemberCategoryDescription() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('memberCategoryDescription');
+  }
+
+  /* get token */
+  static Future<String?> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
   }
 }

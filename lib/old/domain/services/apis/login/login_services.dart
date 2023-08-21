@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/models/LoginUser/LoginUserModel.dart';
 import 'package:gtrack_mobile_app/models/Member/member_data_model.dart';
 import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,7 @@ class LoginServices {
           'activityID': activityId,
           'password': password,
           'generated_otp': generatedOTP,
-          'member_otp': memberOtp,
+          'member_otp': memberOtp
         },
       ),
       headers: {
@@ -44,6 +45,7 @@ class LoginServices {
       if (response.statusCode == 200) {
         // Setting preferences
         final data = json.decode(response.body);
+
         member = MemberDataModel.fromJson(data['memberData']);
 
         AppPreferences.setUserId(member.user!.id.toString()).then((_) {});
@@ -97,6 +99,14 @@ class LoginServices {
   ) {
     const baseUrl = '${AppUrls.baseUrl}/api/member/login';
     final uri = Uri.parse(baseUrl);
+
+    print(jsonEncode({
+      'email': email,
+      'activity': activity,
+      'activityID': activityId,
+      'password': password,
+    }));
+
     return http.post(
       uri,
       body: json.encode(
@@ -165,7 +175,8 @@ class LoginServices {
     }
   }
 
-  static Future<void> normalUserLogin(String email, String pass) async {
+  static Future<LoginUserModel> normalUserLogin(
+      String email, String pass) async {
     const baseUrl = '${AppUrls.baseUrlWithPort}loginUser';
     final uri = Uri.parse(baseUrl);
 
@@ -176,10 +187,7 @@ class LoginServices {
     };
 
     final body = jsonEncode(
-      {
-        'Email': email,
-        'UserPassword': pass,
-      },
+      {'Email': email, 'UserPassword': pass},
     );
 
     try {
@@ -188,9 +196,10 @@ class LoginServices {
       if (response.statusCode == 200) {
         print("Status Code: ${response.statusCode}");
         final responseBody = json.decode(response.body);
-        print("responseBody: $responseBody");
+        return LoginUserModel.fromJson(responseBody);
       } else {
         print("Status Code: ${response.statusCode}");
+
         var data = json.decode(response.body);
         String msg = data['message'];
         throw Exception(msg);

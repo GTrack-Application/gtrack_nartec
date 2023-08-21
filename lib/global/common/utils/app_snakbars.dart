@@ -44,7 +44,7 @@ class AppSnackbars {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: Duration(seconds: duration ?? 5),
+        duration: Duration(seconds: duration ?? 3),
         backgroundColor: AppColors.success,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
