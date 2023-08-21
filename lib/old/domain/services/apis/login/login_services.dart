@@ -187,6 +187,8 @@ class LoginServices {
 
       if (response.statusCode == 200) {
         print("Status Code: ${response.statusCode}");
+        final responseBody = json.decode(response.body);
+        print("responseBody: $responseBody");
       } else {
         print("Status Code: ${response.statusCode}");
         var data = json.decode(response.body);

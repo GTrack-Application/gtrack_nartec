@@ -71,27 +71,33 @@ class _HomeScreenState extends State<HomeScreen> {
       // make drawer from right side that contains the identity, capture and share screens
       endDrawer: const MyDrawerWidget(),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SizedBox(height: 10),
-            Image.asset(
-              AppImages.logo,
-              width: 200,
-              height: 150,
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return NavigateIconWidget(
-                  icon: data['icon']?[index] as String,
-                  title: data['title']?[index] as String,
-                  caption: data['caption']?[index] as String,
-                  color: data['color']?[index] as Color,
-                  onTap: data['onTap']?[index] as VoidCallback,
-                );
-              },
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                Image.asset(
+                  AppImages.logo,
+                  width: 200,
+                  height: 150,
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return NavigateIconWidget(
+                      icon: data['icon']?[index] as String,
+                      title: data['title']?[index] as String,
+                      caption: data['caption']?[index] as String,
+                      color: data['color']?[index] as Color,
+                      onTap: data['onTap']?[index] as VoidCallback,
+                    );
+                  },
+                ),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

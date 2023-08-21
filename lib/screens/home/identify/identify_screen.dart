@@ -5,6 +5,7 @@ import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/identify/GTIN/gtin_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/SSCC/SsccProductsScreen.dart';
 
 class IdentifyScreen extends StatefulWidget {
   const IdentifyScreen({super.key});
@@ -84,6 +85,8 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
         AppNavigator.goToPage(context: context, screen: const GTINScreen());
     data[1]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const GLNScreen());
+    data[2]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const SsccProductsScreen());
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
