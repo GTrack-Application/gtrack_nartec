@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/ItemReallocation/ItemReAllocationTableDataController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/ItemReallocation/SubmitItemReallocateController.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
@@ -38,6 +39,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBarWidget(
+          backgroundColor: AppColors.pink,
           autoImplyLeading: true,
           onPressed: () {
             Get.back();
@@ -69,7 +71,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                color: Colors.orange.withOpacity(0.1),
+                color: AppColors.pink.withOpacity(0.1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
@@ -141,10 +143,12 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                         onTap: () {
                           palletIdMethod();
                         },
-                        child: Image.asset('assets/finder.png',
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            height: 60,
-                            fit: BoxFit.cover),
+                        child: Image.asset(
+                          AppImages.finder,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ],
@@ -174,7 +178,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                       dataRowColor: MaterialStateColor.resolveWith(
                           (states) => Colors.grey.withOpacity(0.2)),
                       headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.orange),
+                          (states) => AppColors.pink),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey,
@@ -355,7 +359,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                         height: 50,
                         title: "Save",
                         textColor: Colors.white,
-                        color: Colors.orange,
+                        color: AppColors.pink,
                         onPressed: () {
                           if (_site.isEmpty ||
                               _scanSerialItemController.text.isEmpty ||

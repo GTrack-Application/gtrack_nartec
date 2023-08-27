@@ -4,10 +4,12 @@ import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/BinToBinInternalTableDataController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateByPalletController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateBySerialController.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
@@ -86,6 +88,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBarWidget(
+          backgroundColor: AppColors.pink,
           autoImplyLeading: true,
           onPressed: () {
             Get.back();
@@ -99,7 +102,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
               child: Container(
                 padding: const EdgeInsets.only(right: 10),
                 child: Image.asset(
-                  "assets/delete.png",
+                  AppImages.delete,
                   width: 30,
                   height: 30,
                 ),
@@ -162,10 +165,12 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                         onTap: () {
                           onSearch();
                         },
-                        child: Image.asset('assets/finder.png',
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            height: 60,
-                            fit: BoxFit.cover),
+                        child: Image.asset(
+                          AppImages.finder,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ],
@@ -213,7 +218,6 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                     margin: const EdgeInsets.only(left: 10),
                     child: IconButton(
                       onPressed: () {
-                        // show dialog box for search
                         showDialog(
                           context: context,
                           builder: (context) {
@@ -298,113 +302,113 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                     DataColumn(
                         label: Text(
                       'Item Code',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                     )),
                     DataColumn(
                         label: Text(
                       'Item Desc',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                     )),
                     DataColumn(
                         label: Text(
                       'GTIN',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Remarks',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'User',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Classification',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Main Location',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Bin Location',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Int Code',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Item Serial No.',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Map Date',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Pallet Code',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Reference',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'SID',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'CID',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'PO',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Trans',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                   ],
                   source: StudentDataSource(table, context),
                   showCheckboxColumn: false,
                   showFirstLastButtons: true,
-                  arrowHeadColor: Colors.orange,
+                  arrowHeadColor: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 10),
               Container(
-                color: Colors.orange.withOpacity(0.1),
+                color: AppColors.primary.withOpacity(0.1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
@@ -415,10 +419,12 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                           value: "By Pallet",
                           groupValue: _site,
                           onChanged: (String? value) {
-                            setState(() {
-                              _site = value!;
-                              print(_site);
-                            });
+                            setState(
+                              () {
+                                _site = value!;
+                                print(_site);
+                              },
+                            );
                           },
                         ),
                       ),
@@ -430,10 +436,12 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                           value: "By Serial",
                           groupValue: _site,
                           onChanged: (String? value) {
-                            setState(() {
-                              _site = value!;
-                              print(_site);
-                            });
+                            setState(
+                              () {
+                                _site = value!;
+                                print(_site);
+                              },
+                            );
                           },
                         ),
                       ),
@@ -492,10 +500,12 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                             AppDialogs.closeDialog();
                           });
                         },
-                        child: Image.asset('assets/finder.png',
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            height: 60,
-                            fit: BoxFit.cover),
+                        child: Image.asset(
+                          AppImages.finder,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ],
@@ -521,7 +531,8 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                       dataRowColor: MaterialStateColor.resolveWith(
                           (states) => Colors.grey.withOpacity(0.2)),
                       headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.orange),
+                        (states) => AppColors.pink,
+                      ),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey,
@@ -693,7 +704,6 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                     margin: const EdgeInsets.only(left: 10),
                     child: IconButton(
                       onPressed: () {
-                        // show dialog box for search
                         showDialog(
                           context: context,
                           builder: (context) {
@@ -774,7 +784,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                       height: 50,
                       title: "Save",
                       textColor: Colors.white,
-                      color: Colors.orange,
+                      color: AppColors.pink,
                       onPressed: () {
                         List<String> binLocationList = [];
                         for (int i = 0; i < filterTable.length; i++) {
@@ -885,7 +895,6 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 10),
             ],
           ),
