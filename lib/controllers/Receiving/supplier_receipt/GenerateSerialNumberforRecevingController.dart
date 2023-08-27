@@ -2,11 +2,14 @@
 
 import 'dart:convert';
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 
 class GenerateSerialNumberforRecevingController {
   static Future<String> generateSerialNo(String itemId) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url = "${AppUrls.baseUrlWithPort}generateSerialNumberforReceving";
 
     final body = {"ITEMID": itemId};
@@ -14,7 +17,7 @@ class GenerateSerialNumberforRecevingController {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "Content-Type": "application/json"

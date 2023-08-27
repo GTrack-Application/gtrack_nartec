@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/GetPickingListModel.dart';
 
@@ -9,6 +10,8 @@ import 'dart:convert';
 class GetPickingListController {
   static Future<List<GetPickingListModel>> getAllTable(
       String pickingRouteId) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url =
         "${AppUrls.baseUrlWithPort}getAllWmsSalesPickingListClFromWBSByPickingRouteId?PICKINGROUTEID=$pickingRouteId";
 
@@ -17,7 +20,7 @@ class GetPickingListController {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };

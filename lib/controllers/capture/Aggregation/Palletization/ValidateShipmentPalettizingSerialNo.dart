@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, avoid_print
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,13 +10,15 @@ class ValidateShipmentPalettizingSerialNoController {
     String serialNo,
     String shipmentId,
   ) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url =
         "${AppUrls.baseUrlWithPort}vaildatehipmentPalletizingSerialNumber?ItemSerialNo=$serialNo&SHIPMENTID=$shipmentId";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };

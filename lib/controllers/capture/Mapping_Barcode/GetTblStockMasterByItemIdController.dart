@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, file_names
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/GetTblStockMasterByItemIdModel.dart';
 import 'package:http/http.dart' as http;
@@ -8,13 +9,15 @@ import 'dart:convert';
 class GetTblStockMasterByItemIdController {
   static Future<List<GetTblStockMasterByItemIdModel>> getData(
       String itemId) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url =
         "${AppUrls.baseUrlWithPort}getTblStockMasterByItemId?itemid=$itemId";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };

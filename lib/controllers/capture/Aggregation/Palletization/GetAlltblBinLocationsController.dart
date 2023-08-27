@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, file_names
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetAlltblBinLocationsModel.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +9,8 @@ import 'dart:convert';
 class GetAlltblBinLocationsController {
   static Future<List<GetAlltblBinLocationsModel>>
       getShipmentPalletizing() async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url = "${AppUrls.baseUrlWithPort}getAlltblPalletMaster";
 
     print("url: $url");
@@ -15,7 +18,7 @@ class GetAlltblBinLocationsController {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };

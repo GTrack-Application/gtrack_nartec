@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/GetShipmentDataFromShipmentExpectedRModel.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,8 @@ import 'package:http/http.dart' as http;
 class GetShipmentDataController {
   static Future<List<GetShipmentDataFromShipmentExpectedRModel>>
       getShipmentData(String id) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url =
         "${AppUrls.baseUrlWithPort}getShipmentDataFromShipmentExpectedR?SHIPMENTID=$id";
 
@@ -17,7 +20,7 @@ class GetShipmentDataController {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };

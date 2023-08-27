@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,8 @@ class GetFirstTableData {
     String itemId,
     String binLocation,
   ) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url =
         "${AppUrls.baseUrlWithPort}getMappedBarcodedsByItemCodeAndBinLocation";
     print("url: $url");
@@ -17,7 +20,7 @@ class GetFirstTableData {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "itemcode": itemId,

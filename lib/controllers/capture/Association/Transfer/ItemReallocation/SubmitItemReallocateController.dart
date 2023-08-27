@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/capture/Transfer/ItemReAllocation/GetItemInfoByPalletCodeModel.dart';
 import 'package:http/http.dart' as http;
@@ -12,13 +13,15 @@ class SubmitItemReallocateControllerimport {
     String serialnum,
     String selectType,
   ) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url = "${AppUrls.baseUrlWithPort}manageItemsReallocation";
     print("url: $url");
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "Content-Type": "application/json"

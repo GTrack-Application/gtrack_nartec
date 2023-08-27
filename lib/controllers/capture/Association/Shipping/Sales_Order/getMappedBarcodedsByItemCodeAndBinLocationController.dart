@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
 
@@ -10,12 +11,14 @@ class getMappedBarcodedsByItemCodeAndBinLocationController {
   static Future<List<getMappedBarcodedsByItemCodeAndBinLocationModel>> getData(
     String itemCode,
   ) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url = "${AppUrls.baseUrlWithPort}getmapBarcodeDataByItemCode";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
       "itemcode": itemCode,

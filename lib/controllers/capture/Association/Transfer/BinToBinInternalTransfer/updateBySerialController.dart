@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, camel_case_types
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,6 +11,8 @@ class updateBySerialController {
     String newBin,
     String serialNo,
   ) async {
+    String? tokenNew = await AppPreferences.getToken();
+
     String url =
         '${AppUrls.baseUrlWithPort}updateMappedBarcodesBinLocationBySerialNo';
 
@@ -18,7 +21,7 @@ class updateBySerialController {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.baseUrlWithPort,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Content-Type": "application/json",
     };

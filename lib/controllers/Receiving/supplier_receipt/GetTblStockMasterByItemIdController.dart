@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/GetTblStockMasterByItemIdModel.dart';
 import 'package:http/http.dart' as http;
@@ -9,12 +10,15 @@ import 'package:http/http.dart' as http;
 class GetTblStockMasterByItemIdController {
   static Future<List<GetTblStockMasterByItemIdModel>> getData(
       String itemId) async {
-    String url = "${AppUrls.base}getTblStockMasterByItemId?itemid=$itemId";
+    String? tokenNew = await AppPreferences.getToken();
+
+    String url =
+        "${AppUrls.baseUrlWithPort}getTblStockMasterByItemId?itemid=$itemId";
 
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.token,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };

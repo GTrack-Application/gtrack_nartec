@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names, file_names
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,6 +10,7 @@ class GenerateAndUpdatePalletIdController {
     List<String> serialNoList,
     String dropdownValue,
   ) async {
+    String? tokenNew = await AppPreferences.getToken();
     // convert list to one string
     String serialNoListString = serialNoList.join("&serialNumberList[]=");
 
@@ -22,7 +24,7 @@ class GenerateAndUpdatePalletIdController {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Authorization": AppUrls.tokenNew,
+      "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
     };
