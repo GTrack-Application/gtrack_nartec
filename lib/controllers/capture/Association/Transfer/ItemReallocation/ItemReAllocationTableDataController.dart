@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/models/capture/Transfer/ItemReAllocation/GetItemInfoByPalletCodeModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
