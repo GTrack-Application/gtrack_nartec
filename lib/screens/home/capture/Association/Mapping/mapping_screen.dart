@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Mapping_Barcode/BarcodeMappingScreen.dart';
 
 class MappingScreen extends StatefulWidget {
   const MappingScreen({super.key});
@@ -15,12 +17,21 @@ class _MappingScreenState extends State<MappingScreen> {
     {
       "text": "Barcode Mapping",
       "icon": AppIcons.mappingBarcode,
+      "onTap": () {},
     },
     {
       "text": "RFID Mapping",
       "icon": AppIcons.mappingRfid,
+      "onTap": () {},
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    data[0]["onTap"] = () =>
+        AppNavigator.goToPage(context: context, screen: BarcodeMappingScreen());
+  }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 2,
@@ -47,7 +58,7 @@ class _MappingScreenState extends State<MappingScreen> {
               itemBuilder: (context, index) {
                 return CardIconButton(
                   icon: data[index]["icon"] as String,
-                  onPressed: () {},
+                  onPressed: data[index]["onTap"],
                   text: data[index]['text'] as String,
                 );
               },
