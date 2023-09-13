@@ -1031,6 +1031,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                 ],
               ),
               const SizedBox(height: 10),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

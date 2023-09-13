@@ -154,11 +154,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your login ID';
                             }
-                            if (EmailValidator.validate(value)) {
-                              return null;
-                            } else {
-                              return 'Please enter a valid email';
-                            }
+                            // if (EmailValidator.validate(value)) {
+                            //   return null;
+                            // } else {
+                            //   return 'Please enter a valid email';
+                            // }
+                            return null;
                           },
                         ).box.width(context.width * 0.9).make(),
                         const SizedBox(height: 20),
