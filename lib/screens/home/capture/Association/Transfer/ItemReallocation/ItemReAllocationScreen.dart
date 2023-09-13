@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +7,7 @@ import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/ItemR
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/ItemReallocation/SubmitItemReallocateController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
@@ -62,7 +63,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
           ],
         ),
       ),
-      body: SizedBox(
+      body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
@@ -77,24 +78,36 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                   children: <Widget>[
                     Flexible(
                       child: ListTile(
-                        title: const Text('Allocation'),
+                        title: const Text(
+                          'Allocation',
+                          style: TextStyle(
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
                         leading: Radio(
                           value: "Allocation",
                           groupValue: _site,
                           onChanged: (String? value) {
-                            setState(
-                              () {
-                                _site = value!;
-                                print(_site);
-                              },
-                            );
+                            setState(() {
+                              _site = value!;
+                              print(_site);
+                            });
                           },
                         ),
                       ),
                     ),
                     Flexible(
                       child: ListTile(
-                        title: const Text('Picking'),
+                        title: const Text(
+                          'Picking',
+                          style: TextStyle(
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
                         leading: Radio(
                           value: "Picking",
                           groupValue: _site,
@@ -186,7 +199,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                         ),
                       ),
                       border: TableBorder.all(
-                        color: Colors.black,
+                        color: Colors.white,
                         width: 1,
                       ),
                       columns: const [
@@ -382,32 +395,30 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                             _scanSerialItemController.text.trim(),
                             _site,
                           ).then((value) {
-                            AppDialogs.closeDialog();
                             setState(() {
                               getItemInfoByPalletCodeList.clear();
                               _scanSerialItemController.clear();
                               _site = "";
                               _palletIdController.clear();
                             });
+                            AppDialogs.closeDialog();
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text("Reallocation Successfully done"),
                                 backgroundColor: Colors.green,
                               ),
                             );
-                          }).onError(
-                            (error, stackTrace) {
-                              AppDialogs.closeDialog();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(error
-                                      .toString()
-                                      .replaceAll("Exception:", "")),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            },
-                          );
+                          }).onError((error, stackTrace) {
+                            AppDialogs.closeDialog();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error
+                                    .toString()
+                                    .replaceAll("Exception:", "")),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          });
                         },
                       ),
                     ],
@@ -446,11 +457,10 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
   void palletIdMethod() {
     FocusScope.of(context).requestFocus(FocusNode());
     AppDialogs.loadingDialog(context);
+
     ItemReAllocationTableDataController.getAllTable(
             _palletIdController.text.trim())
         .then((value) {
-      AppDialogs.closeDialog();
-
       setState(() {
         getItemInfoByPalletCodeList = value;
         isMarked = List<bool>.filled(
@@ -459,12 +469,12 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
         );
         total = getItemInfoByPalletCodeList.length.toString();
       });
+      AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("No data found."),
+        SnackBar(
+          content: Text(error.toString().replaceAll("Exception:", "")),
           backgroundColor: Colors.red,
         ),
       );

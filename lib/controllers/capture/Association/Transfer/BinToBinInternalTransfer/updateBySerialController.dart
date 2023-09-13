@@ -2,14 +2,14 @@
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class updateBySerialController {
   static Future<void> updateBin(
-    List<String> oldBin,
+    List<getMappedBarcodedsByItemCodeAndBinLocationModel> oldBin,
     String newBin,
-    String serialNo,
   ) async {
     String? tokenNew = await AppPreferences.getToken();
 
@@ -26,16 +26,24 @@ class updateBySerialController {
       "Content-Type": "application/json",
     };
 
-    final body = jsonEncode({
-      "oldBinLocation": oldBin[0],
-      "newBinLocation": newBin,
-      "serialNumber": serialNo
-    });
+    var body = oldBin.map((element) {
+      return {
+        "oldBinLocation": element.binLocation,
+        "newBinLocation": newBin,
+        "serialNumber": element.itemSerialNo
+      };
+    }).toList();
 
-    print("body : $body");
+    print(jsonEncode({"records": body}));
 
     try {
-      var response = await http.put(uri, headers: headers, body: body);
+      var response = await http.put(
+        uri,
+        headers: headers,
+        body: jsonEncode({
+          "records": [...body]
+        }),
+      );
 
       if (response.statusCode == 200) {
         print("Status Code: ${response.statusCode}");

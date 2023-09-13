@@ -1,19 +1,21 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: camel_case_types, depend_on_referenced_packages, avoid_print
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class BinToBinInternalTableDataController {
-  static Future<List<getMappedBarcodedsByItemCodeAndBinLocationModel>>
-      getAllTable(String location) async {
+class NewOne {
+  static Future<List<getMappedBarcodedsByItemCodeAndBinLocationModel>> getData(
+    String itemCode,
+    String binLocation,
+  ) async {
     String? tokenNew = await AppPreferences.getToken();
 
     String url =
-        "${AppUrls.baseUrlWithPort}getmapBarcodeDataByBinLocation?BinLocation=$location";
-    print("url: $url");
+        "${AppUrls.baseUrlWithPort}getMappedBarcodedsByItemCodeAndBinLocation";
 
     final uri = Uri.parse(url);
 
@@ -21,10 +23,14 @@ class BinToBinInternalTableDataController {
       "Authorization": tokenNew!,
       "Host": AppUrls.host,
       "Accept": "application/json",
+      "itemcode": itemCode,
+      "binlocation": binLocation,
     };
 
+    print(headers);
+
     try {
-      var response = await http.get(uri, headers: headers);
+      var response = await http.post(uri, headers: headers);
 
       if (response.statusCode == 200) {
         print("Status Code: ${response.statusCode}");
