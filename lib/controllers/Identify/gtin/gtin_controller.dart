@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 class GTINController {
   static Future<GTINModel> getProducts() async {
-    const String url = '${AppUrls.baseUrl}/api/member/products';
+    const String url = '${AppUrls.domain}/api/member/products';
 
     final userId = await AppPreferences.getUserId();
 

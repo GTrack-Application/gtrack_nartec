@@ -21,7 +21,7 @@ class LoginServices {
     String memberOtp,
   ) async {
     MemberDataModel member = MemberDataModel();
-    const baseUrl = '${AppUrls.baseUrl}/api/otp/confirmation';
+    const baseUrl = '${AppUrls.domain}/api/otp/confirmation';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -64,7 +64,7 @@ class LoginServices {
   }
 
   static Future<Map<String, dynamic>> sendOTP(String email, String activity) {
-    const baseUrl = '${AppUrls.baseUrl}/api/send/otp';
+    const baseUrl = '${AppUrls.domain}/api/send/otp';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -97,7 +97,7 @@ class LoginServices {
     String password,
     String activityId,
   ) {
-    const baseUrl = '${AppUrls.baseUrl}/api/member/login';
+    const baseUrl = '${AppUrls.domain}/api/member/login';
     final uri = Uri.parse(baseUrl);
 
     print(jsonEncode({
@@ -137,7 +137,7 @@ class LoginServices {
   }
 
   static Future<List<EmailActivitiesModel>> login({String? email}) async {
-    const baseUrl = '${AppUrls.baseUrl}/api/email/verification';
+    const baseUrl = '${AppUrls.domain}/api/email/verification';
 
     final uri = Uri.parse(baseUrl);
     try {

@@ -4,7 +4,7 @@ abstract class AppUrls {
   static const String tokenNew =
       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjEsIlVzZXJOYW1lIjoiQWJkdWwgTWFqaWQiLCJFbWFpbCI6IjU1IiwiQWRkZWRCeU1lbWJlcklEIjoiNiIsIklzU3VwZXJBZG1pbiI6ZmFsc2UsImlhdCI6MTY5MjQ1MDQ4MSwiZXhwIjoxNzAwMjI2NDgxfQ.N1OdcXGMU5GXBkFkwOc6j_XNGRRqtP6Yo-yf_H2wu3M';
 
-  static const String baseUrl = 'https://gs1ksa.org';
+  static const String domain = 'https://gs1ksa.org';
   static const String tokenIrfan =
       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IklyZmFuIiwiaWF0IjoxNTE2MjM5MDIyfQ.vx1SEIP27zyDm9NoNbJRrKo-r6kRaVHNagsMVTToU6A";
 

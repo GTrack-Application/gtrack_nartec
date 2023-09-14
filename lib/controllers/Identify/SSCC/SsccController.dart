@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 class SsccController {
   static Future<List<SsccProductsModel>> getProducts() async {
-    const String url = '${AppUrls.baseUrl}/api/member/sscc/list';
+    const String url = '${AppUrls.domain}/api/member/sscc/list';
 
     final userId = await AppPreferences.getUserId();
 

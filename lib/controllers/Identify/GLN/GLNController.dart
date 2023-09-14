@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 class GLNController {
   static Future<List<GLNProductsModel>> getData() async {
     String? userId = await AppPreferences.getUserId();
-    String url = "${AppUrls.baseUrl}/api/member/gln/list";
+    String url = "${AppUrls.domain}/api/member/gln/list";
 
     final uri = Uri.parse(url);
 

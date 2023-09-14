@@ -8,7 +8,7 @@ class ResetPasswordServices {
     String email,
     String activity,
   ) async {
-    const baseUrl = '${AppUrls.baseUrl}/api/member/forgot/password';
+    const baseUrl = '${AppUrls.domain}/api/member/forgot/password';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -39,7 +39,7 @@ class ResetPasswordServices {
     String activity,
     String code,
   ) async {
-    const baseUrl = '${AppUrls.baseUrl}/api/member/verify/forgot/password/code';
+    const baseUrl = '${AppUrls.domain}/api/member/verify/forgot/password/code';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,
@@ -74,7 +74,7 @@ class ResetPasswordServices {
     String password,
     String confirmPassword,
   ) async {
-    const baseUrl = '${AppUrls.baseUrl}/api/member/password/reset';
+    const baseUrl = '${AppUrls.domain}/api/member/password/reset';
     final uri = Uri.parse(baseUrl);
     return http.post(
       uri,

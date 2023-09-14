@@ -20,6 +20,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Scaffold key
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var data = {
     "icon": [
       AppIcons.identify,
@@ -64,70 +66,69 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("GTIN Tracker v. 2.0"),
-        automaticallyImplyLeading: true,
-      ),
-      // make drawer from right side that contains the identity, capture and share screens
-      endDrawer: const MyDrawerWidget(),
-      body: Stack(
-        children: [
-          Container(
-            width: context.width,
-            height: context.height,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(height: 10),
-                  Image.asset(
-                    AppImages.logo,
-                    width: 200,
-                    height: 150,
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return NavigateIconWidget(
-                        icon: data['icon']?[index] as String,
-                        title: data['title']?[index] as String,
-                        caption: data['caption']?[index] as String,
-                        color: data['color']?[index] as Color,
-                        onTap: data['onTap']?[index] as VoidCallback,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 5,
-            left: 0,
-            right: 0,
-            child: Row(
+    return WillPopScope(
+      onWillPop: () {
+        // do not go to the previous screen
+        return Future.value(false);
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+
+        appBar: AppBar(
+          title: const Text("GTIN Tracker v. 2.0"),
+          automaticallyImplyLeading: false,
+        ),
+        bottomNavigationBar: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              AppIcons.iosLogo,
+              width: 50,
+              height: 50,
+            ).pOnly(left: 20),
+            Image.asset(
+              AppIcons.gs1Logo,
+              width: 100,
+              height: 50,
+              fit: BoxFit.contain,
+            ).pOnly(right: 20),
+          ],
+        ),
+        // make drawer from right side that contains the identity, capture and share screens
+        endDrawer: const MyDrawerWidget(),
+        body: SizedBox(
+          width: context.width,
+          height: context.height,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
+              children: [
+                const SizedBox(height: 10),
                 Image.asset(
-                  AppIcons.iosLogo,
-                  width: 50,
-                  height: 50,
-                ).pOnly(left: 20),
-                Image.asset(
-                  AppIcons.gs1Logo,
-                  width: 100,
-                  height: 50,
-                  fit: BoxFit.contain,
-                ).pOnly(right: 20),
+                  AppImages.logo,
+                  width: 200,
+                  height: 150,
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return NavigateIconWidget(
+                      icon: data['icon']?[index] as String,
+                      title: data['title']?[index] as String,
+                      caption: data['caption']?[index] as String,
+                      color: data['color']?[index] as Color,
+                      onTap: data['onTap']?[index] as VoidCallback,
+                    );
+                  },
+                ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
