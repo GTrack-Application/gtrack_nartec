@@ -63,7 +63,7 @@ class _ScanningScreenState extends State<ScanningScreen> {
                           scanBarcodeNormal();
                         },
                         color: AppColors.green,
-                        child: const Text('Scan Barcode'),
+                        child: const Text('Scan 1D Barcode'),
                       ),
                       const SizedBox(height: 10),
                       AppButton(
@@ -72,7 +72,7 @@ class _ScanningScreenState extends State<ScanningScreen> {
                           scanQRCode();
                         },
                         color: AppColors.green,
-                        child: const Text('Scan QR Code'),
+                        child: const Text('Scan 2D Barcode'),
                       ),
                       const SizedBox(height: 50),
                       TextWidget(
