@@ -25,10 +25,11 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Product Information'),
+          backgroundColor: AppColors.green,
           bottom: TabBar(
             tabs: myTabs,
             automaticIndicatorColorAdjustment: true,
-            indicatorColor: AppColors.green,
+            indicatorColor: AppColors.primary,
             unselectedLabelColor: AppColors.white,
             labelColor: AppColors.white,
           ),
@@ -43,7 +44,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
               child: Text('This is Tab 2'),
             ),
 
-            EventsScreen(),
+            EventsScreen(gtin: ""),
           ],
         ),
       ),

@@ -132,16 +132,13 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                                   MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.selected)) {
-                                    return Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withOpacity(0.08);
+                                    return AppColors.green;
                                   }
                                   return AppColors.background;
                                 },
                               ),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
+                                color: AppColors.green,
                                 border:
                                     Border.all(color: AppColors.grey, width: 1),
                               ),
