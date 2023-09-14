@@ -32,7 +32,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
             labelColor: AppColors.white,
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: <Widget>[
             // Widget for Tab 1
             GtinInformationScreen(),

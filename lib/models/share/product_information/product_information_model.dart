@@ -3,7 +3,7 @@ class GtinInformationModel {
   String? companyName;
   String? licenceKey;
   String? website;
-  Null? address;
+  String? address;
   String? licenceType;
   String? gpcCategoryCode;
   String? brandName;
@@ -54,23 +54,23 @@ class GtinInformationModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['gtin'] = this.gtin;
-    data['companyName'] = this.companyName;
-    data['licenceKey'] = this.licenceKey;
-    data['website'] = this.website;
-    data['address'] = this.address;
-    data['licenceType'] = this.licenceType;
-    data['gpcCategoryCode'] = this.gpcCategoryCode;
-    data['brandName'] = this.brandName;
-    data['productDescription'] = this.productDescription;
-    data['productImageUrl'] = this.productImageUrl;
-    data['unitCode'] = this.unitCode;
-    data['unitValue'] = this.unitValue;
-    data['countryOfSaleCode'] = this.countryOfSaleCode;
-    data['productName'] = this.productName;
-    data['gcpGLNID'] = this.gcpGLNID;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['gtin'] = gtin;
+    data['companyName'] = companyName;
+    data['licenceKey'] = licenceKey;
+    data['website'] = website;
+    data['address'] = address;
+    data['licenceType'] = licenceType;
+    data['gpcCategoryCode'] = gpcCategoryCode;
+    data['brandName'] = brandName;
+    data['productDescription'] = productDescription;
+    data['productImageUrl'] = productImageUrl;
+    data['unitCode'] = unitCode;
+    data['unitValue'] = unitValue;
+    data['countryOfSaleCode'] = countryOfSaleCode;
+    data['productName'] = productName;
+    data['gcpGLNID'] = gcpGLNID;
+    data['status'] = status;
     return data;
   }
 }
