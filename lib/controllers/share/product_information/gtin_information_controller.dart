@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 
 class GtinInformationController {
   static Future<GtinInformationModel> getGtinInformation(String gtin) async {
-    final url = Uri.parse(
-        "${AppUrls.domain}/api/search/member/gtin?gtin=6287004290017");
+    final url =
+        Uri.parse("${AppUrls.domain}/api/search/member/gtin?gtin=$gtin");
 
     try {
       final response = await http.get(url);

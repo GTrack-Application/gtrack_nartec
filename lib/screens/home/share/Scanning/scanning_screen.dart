@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
+import 'package:gtrack_mobile_app/screens/home/share/product-information/product_information_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ScanningScreen extends StatefulWidget {
@@ -13,7 +15,9 @@ class ScanningScreen extends StatefulWidget {
 }
 
 class _ScanningScreenState extends State<ScanningScreen> {
-  String? _scanBarcodeResult;
+  String? _oneDBarcodeValue;
+
+  String? codeType;
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +41,10 @@ class _ScanningScreenState extends State<ScanningScreen> {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               color: AppColors.green.withOpacity(0.2),
               border: const Border(
-                top: BorderSide(width: 1.0, color: Colors.black),
-                left: BorderSide(width: 1.0, color: Colors.black),
-                right: BorderSide(width: 1.0, color: Colors.black),
-                bottom: BorderSide(width: 1.0, color: Colors.black),
+                top: BorderSide(width: 1.0, color: AppColors.black),
+                left: BorderSide(width: 1.0, color: AppColors.black),
+                right: BorderSide(width: 1.0, color: AppColors.black),
+                bottom: BorderSide(width: 1.0, color: AppColors.black),
               ),
             ),
             child: Builder(
@@ -59,7 +63,7 @@ class _ScanningScreenState extends State<ScanningScreen> {
                           scanBarcodeNormal();
                         },
                         color: AppColors.green,
-                        child: const Text('Scan Barcode'),
+                        child: const Text('Scan 1D Barcode'),
                       ),
                       const SizedBox(height: 10),
                       AppButton(
@@ -68,13 +72,42 @@ class _ScanningScreenState extends State<ScanningScreen> {
                           scanQRCode();
                         },
                         color: AppColors.green,
-                        child: const Text('Scan QR Code'),
+                        child: const Text('Scan 2D Barcode'),
                       ),
                       const SizedBox(height: 50),
                       TextWidget(
-                        text: _scanBarcodeResult ?? "No data",
+                        text: _oneDBarcodeValue ?? "No data",
                         fontSize: 15,
                       ),
+                      50.height,
+                      GestureDetector(
+                        onTap: () {
+                          AppNavigator.goToPage(
+                            context: context,
+                            screen: ProductInformationScreen(
+                              gtin: _oneDBarcodeValue!,
+                              codeType: codeType!,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: AppColors.green,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Text(
+                            "View Product Information",
+                            style: TextStyle(color: AppColors.green),
+                          ),
+                        ),
+                      ).visible(codeType != null),
                     ],
                   ),
                 );
@@ -103,7 +136,8 @@ class _ScanningScreenState extends State<ScanningScreen> {
 
     setState(() {
       barcodeScanResult = barcodeScanResult;
-      _scanBarcodeResult = barcodeScanResult;
+      _oneDBarcodeValue = barcodeScanResult;
+      codeType = "1D";
     });
   }
 
@@ -124,7 +158,8 @@ class _ScanningScreenState extends State<ScanningScreen> {
 
     setState(() {
       barcodeScanResult = barcodeScanResult;
-      _scanBarcodeResult = barcodeScanResult;
+      _oneDBarcodeValue = barcodeScanResult;
+      codeType = "2D";
     });
   }
 }
