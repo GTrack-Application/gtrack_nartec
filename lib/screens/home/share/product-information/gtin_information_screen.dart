@@ -111,7 +111,9 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                               .gtinArr!.countryOfSaleCode
                               .toString(),
                         ),
-                        20.height,
+                        10.height,
+                        const Divider(thickness: 2),
+                        10.height,
                         // Create a horizontal scrollable table with the following columns:
                         // - Allergen Info
                         // - Nutrients Info
