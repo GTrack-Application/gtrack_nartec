@@ -1,18 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:nb_utils/nb_utils.dart';
 
-class GtinInformationScreen extends StatefulWidget {
+class GtinInformationScreen extends StatelessWidget {
   const GtinInformationScreen({super.key});
-
-  @override
-  State<GtinInformationScreen> createState() => _GtinInformationScreenState();
-}
-
-class _GtinInformationScreenState extends State<GtinInformationScreen> {
-  String? _scanBarcodeResult;
 
   @override
   Widget build(BuildContext context) {
@@ -24,35 +15,6 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
-                  Builder(
-                    builder: (context) {
-                      return Container(
-                        alignment: Alignment.center,
-                        child: Flex(
-                          direction: Axis.vertical,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AppButton(
-                              child: const Text('Start Barcode Scan'),
-                              onTap: () async {
-                                scanBarcodeNormal();
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            AppButton(
-                              child: const Text('Start QR Scan'),
-                              onTap: () async {
-                                scanQRCode();
-                              },
-                            ),
-
-                            // text widget to display the text
-                            TextWidget(text: _scanBarcodeResult ?? "No data"),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
                   Container(
                     height: 200,
                     width: double.infinity,
@@ -88,48 +50,6 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
       ),
     );
   }
-
-  Future<void> scanBarcodeNormal() async {
-    String barcodeScanResult;
-    try {
-      barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.BARCODE,
-      );
-      debugPrint(barcodeScanResult);
-    } on PlatformException {
-      barcodeScanResult = 'Failed to get platform version.';
-    }
-    if (!mounted) return;
-
-    setState(() {
-      barcodeScanResult = barcodeScanResult;
-      _scanBarcodeResult = barcodeScanResult;
-    });
-  }
-
-  Future<void> scanQRCode() async {
-    String barcodeScanResult;
-    try {
-      barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.QR,
-      );
-      debugPrint(barcodeScanResult);
-    } on PlatformException {
-      barcodeScanResult = 'Failed to get platform version.';
-    }
-    if (!mounted) return;
-
-    setState(() {
-      barcodeScanResult = barcodeScanResult;
-      _scanBarcodeResult = barcodeScanResult;
-    });
-  }
 }
 
 class BorderedRowWidget extends StatelessWidget {
@@ -158,15 +78,17 @@ class BorderedRowWidget extends StatelessWidget {
               child: Text(
                 value1,
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: 15,
                 ),
               ),
             ),
-            Text(
-              value2,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: AutoSizeText(
+                value2,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],

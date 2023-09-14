@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/screens/home/share/product-information/events_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_information_screen.dart';
 
 class ProductInformationScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
   final List<Tab> myTabs = const <Tab>[
     Tab(text: 'GTIN Information'),
     Tab(text: 'Tab 2'),
-    Tab(text: 'Tab 3'),
+    Tab(text: 'Events'),
   ];
 
   @override
@@ -42,10 +43,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
               child: Text('This is Tab 2'),
             ),
 
-            // Widget for Tab 3
-            Center(
-              child: Text('This is Tab 3'),
-            ),
+            EventsScreen(),
           ],
         ),
       ),
