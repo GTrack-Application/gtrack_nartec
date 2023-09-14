@@ -392,6 +392,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: 50,
                 child: ElevatedButtonWidget(
+                  color: AppColors.pink.withOpacity(0.2),
                   textColor: AppColors.pink,
                   title: "Search",
                   onPressed: () {
@@ -529,6 +530,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
               //     ),
               //   ],
               // ),
+
               const SizedBox(height: 10),
               Container(
                 height: MediaQuery.of(context).size.height * 0.45,

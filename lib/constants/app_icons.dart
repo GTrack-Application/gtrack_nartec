@@ -72,6 +72,8 @@ class AppIcons {
   static const String cvb = 'assets/icons/cvb.png';
   static const String productOrigin = 'assets/icons/product_origin.png';
   static const String traceability = 'assets/icons/traceability.png';
+  static const String productInformation =
+      'assets/icons/productInformation.png';
 
   // Association screen
   static const String assoReceiving = 'assets/icons/asso_receiving.png';

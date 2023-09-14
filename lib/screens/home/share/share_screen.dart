@@ -88,9 +88,9 @@ class _ShareScreenState extends State<ShareScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               itemBuilder: (context, index) {
                 return CardIconButton(
-                  icon: data[index]["icon"] as String,
+                  icon: data[index]["icon"],
                   onPressed: data[index]["onPressed"],
-                  text: data[index]['text'] as String,
+                  text: data[index]['text'],
                   fontSize: 10,
                 );
               },

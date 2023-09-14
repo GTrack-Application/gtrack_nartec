@@ -8,9 +8,8 @@ import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/BinToBinInternalTableDataController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/GetAllDistinctItemCodesFromTblMappedBarcodesController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/NewOne.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateByPalletController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateBySerialController.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/PalletTransfer/GetMappedBarcodedsByItemCodeAndPalletCodeController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
@@ -28,8 +27,10 @@ class PalletTransferScreen extends StatefulWidget {
 }
 
 class _PalletTransferScreenState extends State<PalletTransferScreen> {
-  final TextEditingController _palletIdController = TextEditingController();
+  final TextEditingController _binController = TextEditingController();
   final TextEditingController _serialNumberController = TextEditingController();
+  final TextEditingController _palletController = TextEditingController();
+  final TextEditingController _newPalletController = TextEditingController();
 
   String total = "0";
   String total2 = "0";
@@ -41,20 +42,20 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
 
   String _site = "By Serial";
 
-  final TextEditingController _searchController = TextEditingController();
-  String? dropDownValue;
-  List<String> dropDownList = [];
-  List<String> filterList = [];
+  // final TextEditingController _searchController = TextEditingController();
+  // String? dropDownValue;
+  // List<String> dropDownList = [];
+  // List<String> filterList = [];
 
   final TextEditingController _searchController2 = TextEditingController();
   String? dropDownValue2;
   List<String> dropDownList2 = [];
   List<String> filterList2 = [];
 
-  final TextEditingController _searchController3 = TextEditingController();
-  String? dropDownValue3;
-  List<String> dropDownList3 = [];
-  List<String> filterList3 = [];
+  // final TextEditingController _searchController3 = TextEditingController();
+  // String? dropDownValue3;
+  // List<String> dropDownList3 = [];
+  // List<String> filterList3 = [];
 
   // ScrollController
   final ScrollController _scrollController = ScrollController();
@@ -65,30 +66,30 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
     Future.delayed(Duration.zero, () {
       AppDialogs.loadingDialog(context);
       GetMapBarcodeDataByItemCodeController.getData().then((value) {
-        for (int i = 0; i < value.length; i++) {
-          setState(() {
-            dropDownList.add(value[i].bIN ?? "");
-            Set<String> set = dropDownList.toSet();
-            dropDownList = set.toList();
-          });
-        }
+        // for (int i = 0; i < value.length; i++) {
+        //   setState(() {
+        //     dropDownList.add(value[i].bIN ?? "");
+        //     Set<String> set = dropDownList.toSet();
+        //     dropDownList = set.toList();
+        //   });
+        // }
 
-        for (int i = 0; i < value.length; i++) {
-          setState(() {
-            dropDownList3.add(value[i].bIN ?? "");
-            Set<String> set = dropDownList3.toSet();
-            dropDownList3 = set.toList();
-          });
-        }
+        // for (int i = 0; i < value.length; i++) {
+        //   setState(() {
+        //     dropDownList3.add(value[i].bIN ?? "");
+        //     Set<String> set = dropDownList3.toSet();
+        //     dropDownList3 = set.toList();
+        //   });
+        // }
 
-        setState(() {
-          dropDownList.removeWhere((element) => element == "");
-          dropDownList3.removeWhere((element) => element == "");
-          dropDownValue = dropDownList[0];
-          dropDownValue3 = dropDownList3[0];
-          filterList = dropDownList;
-          filterList3 = dropDownList3;
-        });
+        // setState(() {
+        // dropDownList.removeWhere((element) => element == "");
+        // dropDownValue = dropDownList[0];
+        // filterList = dropDownList;
+        // dropDownList3.removeWhere((element) => element == "");
+        // dropDownValue3 = dropDownList3[0];
+        // filterList3 = dropDownList3;
+        // });
 
         GetAllDistinctItemCodesFromTblMappedBarcodesController.getAllTable()
             .then((value) {
@@ -111,8 +112,8 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
         });
       }).onError((error, stackTrace) {
         setState(() {
-          dropDownValue = "";
-          filterList = [];
+          // dropDownValue = "";
+          // filterList = [];
         });
         AppDialogs.closeDialog();
       });
@@ -272,117 +273,135 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
               ),
               const SizedBox(height: 10),
 
+              // Container(
+              //   margin: const EdgeInsets.only(left: 20),
+              //   child: const TextWidget(
+              //     text: "Scan Bin (FROM)*",
+              //     fontSize: 13,
+              //   ),
+              // ),
+              // Row(
+              //   children: [
+              //     Container(
+              //       decoration: const BoxDecoration(
+              //         borderRadius: BorderRadius.all(Radius.circular(10)),
+              //         color: Colors.white,
+              //       ),
+              //       width: MediaQuery.of(context).size.width * 0.73,
+              //       margin: const EdgeInsets.only(left: 20),
+              //       child: DropdownSearch<String>(
+              //         filterFn: (item, filter) {
+              //           return item
+              //               .toLowerCase()
+              //               .contains(filter.toLowerCase());
+              //         },
+              //         enabled: true,
+              //         dropdownButtonProps: const DropdownButtonProps(
+              //           icon: Icon(
+              //             Icons.arrow_drop_down,
+              //             color: Colors.black,
+              //           ),
+              //         ),
+              //         items: filterList3,
+              //         onChanged: (value) {
+              //           setState(() {
+              //             dropDownValue3 = value!;
+              //           });
+              //         },
+              //         selectedItem: dropDownValue3,
+              //       ),
+              //     ),
+              //     Container(
+              //       margin: const EdgeInsets.only(left: 10),
+              //       child: IconButton(
+              //         onPressed: () {
+              //           // show dialog box for search
+              //           showDialog(
+              //             context: context,
+              //             builder: (context) {
+              //               return AlertDialog(
+              //                 title: TextWidget(
+              //                   text: "Search",
+              //                   color: Colors.blue[900]!,
+              //                   fontSize: 15,
+              //                 ),
+              //                 content: TextFormFieldWidget(
+              //                   controller: _searchController3,
+              //                   readOnly: false,
+              //                   hintText: "Enter/Scan Location",
+              //                   width: MediaQuery.of(context).size.width * 0.9,
+              //                   onEditingComplete: () {
+              //                     setState(() {
+              //                       dropDownList3 = dropDownList3
+              //                           .where((element) => element
+              //                               .toLowerCase()
+              //                               .contains(_searchController3.text
+              //                                   .toLowerCase()))
+              //                           .toList();
+              //                       dropDownValue3 = dropDownList3[0];
+              //                     });
+              //                     Navigator.pop(context);
+              //                   },
+              //                 ),
+              //                 actions: [
+              //                   TextButton(
+              //                     onPressed: () {
+              //                       Navigator.pop(context);
+              //                     },
+              //                     child: TextWidget(
+              //                       text: "Cancel",
+              //                       color: Colors.blue[900]!,
+              //                       fontSize: 15,
+              //                     ),
+              //                   ),
+              //                   TextButton(
+              //                     onPressed: () {
+              //                       // filter list based on search
+              //                       setState(() {
+              //                         filterList3 = dropDownList3
+              //                             .where((element) => element
+              //                                 .toLowerCase()
+              //                                 .contains(_searchController3.text
+              //                                     .toLowerCase()))
+              //                             .toList();
+              //                         dropDownValue3 = filterList3[0];
+              //                       });
+
+              //                       Navigator.pop(context);
+              //                     },
+              //                     child: TextWidget(
+              //                       text: "Search",
+              //                       color: Colors.blue[900]!,
+              //                       fontSize: 15,
+              //                     ),
+              //                   ),
+              //                 ],
+              //               );
+              //             },
+              //           );
+              //         },
+              //         icon: const Icon(Icons.search),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+
               Container(
                 margin: const EdgeInsets.only(left: 20),
                 child: const TextWidget(
-                  text: "Scan Bin (FROM)*",
+                  text: "Scan Pallet (FROM)*",
                   fontSize: 13,
                 ),
               ),
-              Row(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.73,
-                    margin: const EdgeInsets.only(left: 20),
-                    child: DropdownSearch<String>(
-                      filterFn: (item, filter) {
-                        return item
-                            .toLowerCase()
-                            .contains(filter.toLowerCase());
-                      },
-                      enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList3,
-                      onChanged: (value) {
-                        setState(() {
-                          dropDownValue3 = value!;
-                        });
-                      },
-                      selectedItem: dropDownValue3,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: IconButton(
-                      onPressed: () {
-                        // show dialog box for search
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: TextWidget(
-                                text: "Search",
-                                color: Colors.blue[900]!,
-                                fontSize: 15,
-                              ),
-                              content: TextFormFieldWidget(
-                                controller: _searchController3,
-                                readOnly: false,
-                                hintText: "Enter/Scan Location",
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                onEditingComplete: () {
-                                  setState(() {
-                                    dropDownList3 = dropDownList3
-                                        .where((element) => element
-                                            .toLowerCase()
-                                            .contains(_searchController3.text
-                                                .toLowerCase()))
-                                        .toList();
-                                    dropDownValue3 = dropDownList3[0];
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Cancel",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // filter list based on search
-                                    setState(() {
-                                      filterList3 = dropDownList3
-                                          .where((element) => element
-                                              .toLowerCase()
-                                              .contains(_searchController3.text
-                                                  .toLowerCase()))
-                                          .toList();
-                                      dropDownValue3 = filterList3[0];
-                                    });
 
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Search",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.search),
-                    ),
-                  ),
-                ],
+              Container(
+                margin: const EdgeInsets.only(left: 20),
+                child: TextFormFieldWidget(
+                  controller: _palletController,
+                  hintText: "Enter/Scan Pallet Code",
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  onEditingComplete: () {},
+                ),
               ),
 
               const SizedBox(height: 10),
@@ -392,10 +411,12 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: 50,
                 child: ElevatedButtonWidget(
+                  color: AppColors.pink.withOpacity(0.2),
                   textColor: AppColors.pink,
                   title: "Search",
                   onPressed: () {
-                    if (dropDownList2.isEmpty || dropDownList3.isEmpty) {
+                    if (dropDownList2.isEmpty ||
+                        _palletController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -531,6 +552,13 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
               // ),
               const SizedBox(height: 10),
               Container(
+                margin: const EdgeInsets.only(left: 20),
+                child: const TextWidget(
+                  text: "Items on Bin",
+                  fontSize: 13,
+                ),
+              ),
+              Container(
                 height: MediaQuery.of(context).size.height * 0.45,
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -657,20 +685,17 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                     Flexible(
                       child: ListTile(
                         title: const Text(
-                          'By Pallet',
+                          'By Bin',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         leading: Radio(
-                          value: "By Pallet",
+                          value: "By Bin",
                           groupValue: _site,
                           onChanged: (String? value) {
-                            setState(() {
-                              _site = value!;
-                              print(_site);
-                            });
+                            setState(() {});
                           },
                         ),
                       ),
@@ -703,7 +728,8 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
               Container(
                   margin: const EdgeInsets.only(left: 20),
                   child: TextWidget(
-                      text: _site == "By Pallet" ? "Pallet ID" : "Serial No.")),
+                      text:
+                          _site == "By Bin" ? "Scan Bin" : "Scan Serial No.")),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -712,11 +738,11 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: TextFormFieldWidget(
-                        controller: _site == "By Pallet"
-                            ? _palletIdController
+                        controller: _site == "By Bin"
+                            ? _binController
                             : _serialNumberController,
-                        hintText: _site == "By Pallet"
-                            ? "Enter/Scan Pallet ID"
+                        hintText: _site == "By Bin"
+                            ? "Enter/Scan Bin"
                             : "Enter/Scan Serial No.",
                         width: MediaQuery.of(context).size.width * 0.73,
                         onEditingComplete: () {
@@ -733,12 +759,7 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                       child: GestureDetector(
                         onTap: () {
                           FocusScope.of(context).unfocus();
-                          AppDialogs.loadingDialog(context);
-                          filterMethod().then((value) {
-                            AppDialogs.closeDialog();
-                          }).onError((error, stackTrace) {
-                            AppDialogs.closeDialog();
-                          });
+                          filterMethod();
                         },
                         child: Image.asset(AppImages.finder,
                             width: MediaQuery.of(context).size.width * 0.15,
@@ -749,9 +770,6 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                   ],
                 ),
               ),
-              // Container(
-              //     margin: const EdgeInsets.only(left: 10, top: 10),
-              //     child: const TextWidget(text: "List of items on Pallets*")),
               Container(
                 height: MediaQuery.of(context).size.height * 0.4,
                 decoration: BoxDecoration(
@@ -917,119 +935,143 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                   ),
                 ),
               ),
+              // Container(
+              //   margin: const EdgeInsets.only(left: 20, top: 10),
+              //   child: TextWidget(
+              //     text: "Scan Location To:",
+              //     color: Colors.blue[900]!,
+              //     fontSize: 15,
+              //   ),
+              // ),
+              // Row(
+              //   children: [
+              //     Container(
+              //       decoration: const BoxDecoration(
+              //         borderRadius: BorderRadius.all(Radius.circular(10)),
+              //         color: Colors.white,
+              //       ),
+              //       width: MediaQuery.of(context).size.width * 0.73,
+              //       margin: const EdgeInsets.only(left: 20),
+              //       child: DropdownSearch<String>(
+              //         filterFn: (item, filter) {
+              //           return item
+              //               .toLowerCase()
+              //               .contains(filter.toLowerCase());
+              //         },
+              //         enabled: true,
+              //         dropdownButtonProps: const DropdownButtonProps(
+              //           icon: Icon(
+              //             Icons.arrow_drop_down,
+              //             color: Colors.black,
+              //           ),
+              //         ),
+              //         items: filterList,
+              //         onChanged: (value) {
+              //           setState(() {
+              //             dropDownValue = value!;
+              //           });
+              //         },
+              //         selectedItem: dropDownValue,
+              //       ),
+              //     ),
+              //     Container(
+              //       margin: const EdgeInsets.only(left: 10),
+              //       child: IconButton(
+              //         onPressed: () {
+              //           // show dialog box for search
+              //           showDialog(
+              //             context: context,
+              //             builder: (context) {
+              //               return AlertDialog(
+              //                 title: TextWidget(
+              //                   text: "Search",
+              //                   color: Colors.blue[900]!,
+              //                   fontSize: 15,
+              //                 ),
+              //                 content: TextFormFieldWidget(
+              //                   controller: _searchController,
+              //                   readOnly: false,
+              //                   hintText: "Enter/Scan Location",
+              //                   width: MediaQuery.of(context).size.width * 0.9,
+              //                   onEditingComplete: () {
+              //                     setState(() {
+              //                       dropDownList = dropDownList
+              //                           .where((element) => element
+              //                               .toLowerCase()
+              //                               .contains(_searchController.text
+              //                                   .toLowerCase()))
+              //                           .toList();
+              //                       dropDownValue = dropDownList[0];
+              //                     });
+              //                     Navigator.pop(context);
+              //                   },
+              //                 ),
+              //                 actions: [
+              //                   TextButton(
+              //                     onPressed: () {
+              //                       Navigator.pop(context);
+              //                     },
+              //                     child: TextWidget(
+              //                       text: "Cancel",
+              //                       color: Colors.blue[900]!,
+              //                       fontSize: 15,
+              //                     ),
+              //                   ),
+              //                   TextButton(
+              //                     onPressed: () {
+              //                       // filter list based on search
+              //                       setState(() {
+              //                         filterList = dropDownList
+              //                             .where((element) => element
+              //                                 .toLowerCase()
+              //                                 .contains(_searchController.text
+              //                                     .toLowerCase()))
+              //                             .toList();
+              //                         dropDownValue = filterList[0];
+              //                       });
+
+              //                       Navigator.pop(context);
+              //                     },
+              //                     child: TextWidget(
+              //                       text: "Search",
+              //                       color: Colors.blue[900]!,
+              //                       fontSize: 15,
+              //                     ),
+              //                   ),
+              //                 ],
+              //               );
+              //             },
+              //           );
+              //         },
+              //         icon: const Icon(Icons.search),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+
               Container(
-                margin: const EdgeInsets.only(left: 20, top: 10),
-                child: TextWidget(
-                  text: "Scan Location To:",
-                  color: Colors.blue[900]!,
-                  fontSize: 15,
+                margin: const EdgeInsets.only(
+                  left: 20,
+                  top: 10,
+                ),
+                child: const TextWidget(
+                  text: "Scan New Pallet*",
+                  fontSize: 13,
                 ),
               ),
-              Row(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.73,
-                    margin: const EdgeInsets.only(left: 20),
-                    child: DropdownSearch<String>(
-                      filterFn: (item, filter) {
-                        return item
-                            .toLowerCase()
-                            .contains(filter.toLowerCase());
-                      },
-                      enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList,
-                      onChanged: (value) {
-                        setState(() {
-                          dropDownValue = value!;
-                        });
-                      },
-                      selectedItem: dropDownValue,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: IconButton(
-                      onPressed: () {
-                        // show dialog box for search
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: TextWidget(
-                                text: "Search",
-                                color: Colors.blue[900]!,
-                                fontSize: 15,
-                              ),
-                              content: TextFormFieldWidget(
-                                controller: _searchController,
-                                readOnly: false,
-                                hintText: "Enter/Scan Location",
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                onEditingComplete: () {
-                                  setState(() {
-                                    dropDownList = dropDownList
-                                        .where((element) => element
-                                            .toLowerCase()
-                                            .contains(_searchController.text
-                                                .toLowerCase()))
-                                        .toList();
-                                    dropDownValue = dropDownList[0];
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Cancel",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // filter list based on search
-                                    setState(() {
-                                      filterList = dropDownList
-                                          .where((element) => element
-                                              .toLowerCase()
-                                              .contains(_searchController.text
-                                                  .toLowerCase()))
-                                          .toList();
-                                      dropDownValue = filterList[0];
-                                    });
 
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Search",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.search),
-                    ),
-                  ),
-                ],
+              Container(
+                margin: const EdgeInsets.only(left: 20),
+                child: TextFormFieldWidget(
+                  controller: _newPalletController,
+                  hintText: "Enter/Scan New Pallet",
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  onEditingComplete: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                ),
               ),
+
               const SizedBox(height: 10),
 
               Row(
@@ -1061,48 +1103,11 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                         FocusScope.of(context).requestFocus(FocusNode());
                         AppDialogs.loadingDialog(context);
 
-                        if (_site == "By Pallet") {
-                          updateByPalletController
-                              .updateBin(
-                            filterTable,
-                            dropDownValue.toString(),
-                          )
-                              .then((value) {
-                            setState(() {
-                              filterTable.clear();
-                              table.clear();
-                              _palletIdController.clear();
-                              total2 = "0";
-
-                              _scrollController.animateTo(
-                                0.0,
-                                curve: Curves.easeOut,
-                                duration: const Duration(milliseconds: 300),
-                              );
-                            });
-                            AppDialogs.closeDialog();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Updated Successfully"),
-                              ),
-                            );
-                          }).onError((error, stackTrace) {
-                            AppDialogs.closeDialog();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(error
-                                    .toString()
-                                    .replaceAll("Exception:", "")),
-                              ),
-                            );
-                          });
-                          return;
-                        }
                         if (_site == "By Serial") {
                           updateBySerialController
                               .updateBin(
                             filterTable,
-                            dropDownValue.toString(),
+                            _newPalletController.text.trim(),
                           )
                               .then((value) {
                             setState(() {
@@ -1179,91 +1184,61 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
     );
   }
 
-  Future searchMethod() async {
-    AppDialogs.loadingDialog(context);
-    BinToBinInternalTableDataController.getAllTable(dropDownValue.toString())
-        .then((value) {
-      setState(() {
-        table = value;
-        isMarked = List<bool>.filled(
-          table.length,
-          false,
-        );
-        total = table.length.toString();
-
-        _serialNumberController.clear();
-        _palletIdController.clear();
-
-        FocusScope.of(context).requestFocus(FocusNode());
-      });
-      AppDialogs.closeDialog();
-    }).onError((error, stackTrace) {
-      AppDialogs.closeDialog();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.toString().replaceAll("Exception:", "")),
-          backgroundColor: Colors.red,
-        ),
-      );
-    });
-  }
-
   Future filterMethod() async {
-    if (_site == "By Pallet") {
-      // if pallet id is empty
-      if (_palletIdController.text.toString().trim().isEmpty) {
-        FocusScope.of(context).requestFocus(FocusNode());
-      }
+    // if (_site == "By Bin") {
+    //   // if pallet id is empty
+    //   if (_binController.text.toString().trim().isEmpty) {
+    //     FocusScope.of(context).requestFocus(FocusNode());
+    //   }
 
-      // if pallet code is already exists on filterTable then show an error message
-      if (filterTable
-          .map((e) => e.palletCode.toString())
-          .toList()
-          .contains(_palletIdController.text.trim())) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Pallet ID already exists on the table."),
-            backgroundColor: Colors.red,
-          ),
-        );
-        FocusScope.of(context).requestFocus(FocusNode());
+    //   // if pallet code is already exists on filterTable then show an error message
+    //   if (filterTable
+    //       .map((e) => e.palletCode.toString())
+    //       .toList()
+    //       .contains(_binController.text.trim())) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(
+    //         content: Text("Pallet ID already exists on the table."),
+    //         backgroundColor: Colors.red,
+    //       ),
+    //     );
+    //     FocusScope.of(context).requestFocus(FocusNode());
 
-        return;
-      }
+    //     return;
+    //   }
 
-      // if pallet id is not contain in the list
-      if (!table
-          .map((e) => e.palletCode.toString())
-          .toList()
-          .contains(_palletIdController.text.trim())) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Pallet ID not found."),
-            backgroundColor: Colors.red,
-          ),
-        );
-        FocusScope.of(context).requestFocus(FocusNode());
+    //   // if pallet id is not contain in the list
+    //   if (!table
+    //       .map((e) => e.palletCode.toString())
+    //       .toList()
+    //       .contains(_binController.text.trim())) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(
+    //         content: Text("Pallet ID not found."),
+    //         backgroundColor: Colors.red,
+    //       ),
+    //     );
+    //     FocusScope.of(context).requestFocus(FocusNode());
 
-        return;
-      }
+    //     return;
+    //   }
 
-      setState(() {
-        // add data in filter table which contains the same pallet id
-        for (var data in table) {
-          if (data.palletCode.toString().trim() ==
-              _palletIdController.text.toString().trim()) {
-            filterTable.add(data);
-          }
-        }
+    //   setState(() {
+    //     // add data in filter table which contains the same pallet id
+    //     for (var data in table) {
+    //       if (data.palletCode.toString().trim() ==
+    //           _binController.text.toString().trim()) {
+    //         filterTable.add(data);
+    //       }
+    //     }
 
-        total2 = filterTable.length.toString();
-        _palletIdController.clear();
-        FocusScope.of(context).requestFocus(FocusNode());
-      });
+    //     total2 = filterTable.length.toString();
+    //     _binController.clear();
+    //     FocusScope.of(context).requestFocus(FocusNode());
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
     if (_site == "By Serial") {
       // if serial number is empty
       if (_serialNumberController.text.toString().trim().isEmpty) {
@@ -1324,9 +1299,9 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
   void onSearch() async {
     FocusScope.of(context).requestFocus(FocusNode());
     AppDialogs.loadingDialog(context);
-    NewOne.getData(
+    GetMappedBarcodedsByItemCodeAndPalletCodeController.getData(
       dropDownValue2.toString().trim(),
-      dropDownValue3.toString().trim(),
+      _palletController.text.trim(),
     ).then((value) {
       setState(() {
         // filterList2 = value.map((e) => e.itemCode.toString()).toSet().toList();
@@ -1350,6 +1325,8 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
       setState(() {
         table = [];
         total = "0";
+
+        _palletController.clear();
       });
 
       AppDialogs.closeDialog();
