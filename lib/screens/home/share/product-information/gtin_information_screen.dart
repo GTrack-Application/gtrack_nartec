@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class GtinInformationScreen extends StatefulWidget {
   const GtinInformationScreen({super.key});
@@ -12,8 +8,6 @@ class GtinInformationScreen extends StatefulWidget {
 }
 
 class _GtinInformationScreenState extends State<GtinInformationScreen> {
-  String? _scanBarcodeResult;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,35 +18,6 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
-                  Builder(
-                    builder: (context) {
-                      return Container(
-                        alignment: Alignment.center,
-                        child: Flex(
-                          direction: Axis.vertical,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AppButton(
-                              child: const Text('Start Barcode Scan'),
-                              onTap: () async {
-                                scanBarcodeNormal();
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            AppButton(
-                              child: const Text('Start QR Scan'),
-                              onTap: () async {
-                                scanQRCode();
-                              },
-                            ),
-
-                            // text widget to display the text
-                            TextWidget(text: _scanBarcodeResult ?? "No data"),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
                   Container(
                     height: 200,
                     width: double.infinity,
@@ -87,48 +52,6 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> scanBarcodeNormal() async {
-    String barcodeScanResult;
-    try {
-      barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.BARCODE,
-      );
-      debugPrint(barcodeScanResult);
-    } on PlatformException {
-      barcodeScanResult = 'Failed to get platform version.';
-    }
-    if (!mounted) return;
-
-    setState(() {
-      barcodeScanResult = barcodeScanResult;
-      _scanBarcodeResult = barcodeScanResult;
-    });
-  }
-
-  Future<void> scanQRCode() async {
-    String barcodeScanResult;
-    try {
-      barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.QR,
-      );
-      debugPrint(barcodeScanResult);
-    } on PlatformException {
-      barcodeScanResult = 'Failed to get platform version.';
-    }
-    if (!mounted) return;
-
-    setState(() {
-      barcodeScanResult = barcodeScanResult;
-      _scanBarcodeResult = barcodeScanResult;
-    });
   }
 }
 

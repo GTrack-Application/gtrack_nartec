@@ -3,6 +3,7 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
+import 'package:gtrack_mobile_app/screens/home/share/Scanning/scanning_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/product_information_screen.dart';
 
 class ShareScreen extends StatefulWidget {
@@ -66,8 +67,7 @@ class _ShareScreenState extends State<ShareScreen> {
   @override
   void initState() {
     data[0]["onPressed"] = () {
-      AppNavigator.goToPage(
-          context: context, screen: ProductInformationScreen());
+      AppNavigator.goToPage(context: context, screen: const ScanningScreen());
     };
     super.initState();
   }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/global/themes/themes.dart';
 import 'package:gtrack_mobile_app/old/providers/dispatch_management/gln_provider.dart';
 import 'package:gtrack_mobile_app/old/providers/login/login_provider.dart';
+import 'package:gtrack_mobile_app/screens/home/share/Scanning/scanning_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/product_information_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
             title: 'Gtrack',
             theme: Themes.lightTheme(),
             // home: const UserLoginPage(),
-            home: const ProductInformationScreen(),
+            home: const ScanningScreen(),
           ),
         ),
       ),
