@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
             // home: const UserLoginPage(),
             // home: const ScanningScreen(),
             home: ProductInformationScreen(),
+            home: const ScanningScreen(),
           ),
         ),
       ),

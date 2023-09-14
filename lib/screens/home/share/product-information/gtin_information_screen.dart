@@ -111,6 +111,7 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                               .gtinArr!.countryOfSaleCode
                               .toString(),
                         ),
+                        20.height,
                         10.height,
                         const Divider(thickness: 2),
                         10.height,
@@ -132,13 +133,16 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                                   MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.selected)) {
-                                    return AppColors.green;
+                                    return Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(0.08);
                                   }
                                   return AppColors.background;
                                 },
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.green,
+                                color: Theme.of(context).primaryColor,
                                 border:
                                     Border.all(color: AppColors.grey, width: 1),
                               ),
