@@ -6,6 +6,7 @@ import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/ItemReallocation/ItemReAllocationScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/PalletTransfer/PalletTransferScreen.dart';
 
 class TransferScreen extends StatefulWidget {
   const TransferScreen({super.key});
@@ -50,6 +51,8 @@ class _TransferScreenState extends State<TransferScreen> {
         context: context, screen: const BinToBinAxaptaScreen());
     data[2]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const BinToBinInternalScreen());
+    data[3]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const PalletTransferScreen());
     data[4]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const ItemReAllocationScreen());
   }

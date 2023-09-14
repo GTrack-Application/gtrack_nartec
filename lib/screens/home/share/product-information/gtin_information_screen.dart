@@ -12,7 +12,10 @@ import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class GtinInformationScreen extends StatefulWidget {
-  const GtinInformationScreen({super.key});
+  final String gtin;
+  final String codeType;
+  const GtinInformationScreen(
+      {super.key, required this.gtin, required this.codeType});
 
   @override
   State<GtinInformationScreen> createState() => _GtinInformationScreenState();
@@ -26,7 +29,9 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
 
   @override
   void initState() {
-    gtinInformationBloc = gtinInformationBloc..add(GlobalInitEvent());
+    final gtin =
+        widget.codeType == "1D" ? widget.gtin : widget.gtin.substring(1, 14);
+    gtinInformationBloc = gtinInformationBloc..add(GlobalDataEvent(gtin));
     super.initState();
   }
 

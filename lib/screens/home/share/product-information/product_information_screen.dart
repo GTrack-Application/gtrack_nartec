@@ -43,7 +43,6 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
             Center(
               child: Text('This is Tab 2'),
             ),
-
             EventsScreen(gtin: ""),
           ],
         ),
