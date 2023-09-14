@@ -5,12 +5,13 @@ import 'package:nb_utils/nb_utils.dart';
 
 class GtinInformationBloc extends Bloc<GlobalEvent, GlobalState> {
   GtinInformationBloc() : super(GlobalInitState()) {
-    on<GlobalInitEvent>((event, emit) async {
+    on<GlobalDataEvent>((event, emit) async {
       emit(GlobalLoadingState());
       bool networkStatus = await isNetworkAvailable();
       if (networkStatus) {
         try {
-          final data = await GtinInformationController.getGtinInformation("");
+          final data = await GtinInformationController.getGtinInformation(
+              event.data as String);
           emit(GlobalLoadedState(data: data));
         } catch (error) {
           emit(GlobalErrorState(message: error.toString()));

@@ -8,7 +8,9 @@ import 'package:nb_utils/nb_utils.dart';
 
 class EventsScreen extends StatefulWidget {
   final String gtin;
-  const EventsScreen({Key? key, required this.gtin}) : super(key: key);
+  final String codeType;
+  const EventsScreen({Key? key, required this.gtin, required this.codeType})
+      : super(key: key);
 
   @override
   State<EventsScreen> createState() => _EventsScreenState();
@@ -36,7 +38,10 @@ class _EventsScreenState extends State<EventsScreen> {
       Duration.zero,
       () {
         AppDialogs.loadingDialog(context);
-        EventsScreenController.getEventsData(widget.gtin).then((value) {
+        final gtin = (widget.codeType == "1D")
+            ? widget.gtin
+            : widget.gtin.substring(1, 14);
+        EventsScreenController.getEventsData(gtin).then((value) {
           setState(() {
             isMarked = List.filled(value.length, true);
             table = value;

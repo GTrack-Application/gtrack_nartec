@@ -4,7 +4,10 @@ import 'package:gtrack_mobile_app/screens/home/share/product-information/events_
 import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_information_screen.dart';
 
 class ProductInformationScreen extends StatefulWidget {
-  const ProductInformationScreen({super.key});
+  final String gtin;
+  final String codeType;
+  const ProductInformationScreen(
+      {super.key, required this.gtin, required this.codeType});
 
   @override
   State<ProductInformationScreen> createState() =>
@@ -34,17 +37,23 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
             labelColor: AppColors.white,
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: <Widget>[
             // Widget for Tab 1
-            GtinInformationScreen(),
+            GtinInformationScreen(
+              gtin: widget.gtin,
+              codeType: widget.codeType,
+            ),
 
             // Widget for Tab 2
-            Center(
+            const Center(
               child: Text('This is Tab 2'),
             ),
 
-            EventsScreen(gtin: ""),
+            EventsScreen(
+              gtin: widget.gtin,
+              codeType: widget.codeType,
+            ),
           ],
         ),
       ),

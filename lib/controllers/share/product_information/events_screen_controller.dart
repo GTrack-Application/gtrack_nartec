@@ -9,7 +9,7 @@ class EventsScreenController {
     List<EventsScreenModel> events = [];
 
     final url = Uri.parse(
-        "${AppUrls.domain}/api/search/event/gtin/with/maps?gtin=6287004290017");
+        "${AppUrls.domain}/api/search/event/gtin/with/maps?gtin=$gtin");
 
     try {
       final response = await http.get(url);
