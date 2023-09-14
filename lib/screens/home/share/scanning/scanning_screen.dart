@@ -37,10 +37,10 @@ class _ScanningScreenState extends State<ScanningScreen> {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               color: AppColors.green.withOpacity(0.2),
               border: const Border(
-                top: BorderSide(width: 1.0, color: AppColors.black),
-                left: BorderSide(width: 1.0, color: AppColors.black),
-                right: BorderSide(width: 1.0, color: AppColors.black),
-                bottom: BorderSide(width: 1.0, color: AppColors.black),
+                top: BorderSide(width: 1.0, color: Colors.black),
+                left: BorderSide(width: 1.0, color: Colors.black),
+                right: BorderSide(width: 1.0, color: Colors.black),
+                bottom: BorderSide(width: 1.0, color: Colors.black),
               ),
             ),
             child: Builder(

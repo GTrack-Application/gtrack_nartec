@@ -142,7 +142,7 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                                 },
                               ),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
+                                color: AppColors.green,
                                 border:
                                     Border.all(color: AppColors.grey, width: 1),
                               ),
