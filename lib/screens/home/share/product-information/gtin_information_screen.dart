@@ -135,22 +135,22 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                                         .primary
                                         .withOpacity(0.08);
                                   }
-                                  return Colors.white;
+                                  return AppColors.background;
                                 },
                               ),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).primaryColor,
                                 border:
-                                    Border.all(color: Colors.grey, width: 1),
+                                    Border.all(color: AppColors.grey, width: 1),
                               ),
                               dividerThickness: 2,
                               border: const TableBorder(
                                 horizontalInside: BorderSide(
-                                  color: Colors.grey,
+                                  color: AppColors.grey,
                                   width: 2,
                                 ),
                                 verticalInside: BorderSide(
-                                  color: Colors.grey,
+                                  color: AppColors.grey,
                                   width: 2,
                                 ),
                               ),
@@ -190,29 +190,19 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                                           ),
                                         ),
                                         DataCell(
-                                          Text(
-                                            e.batch.toString(),
-                                          ),
+                                          Text(e.batch.toString()),
                                         ),
                                         DataCell(
-                                          Text(
-                                            e.expiry.toString(),
-                                          ),
+                                          Text(e.expiry.toString()),
                                         ),
                                         DataCell(
-                                          Text(
-                                            e.serial.toString(),
-                                          ),
+                                          Text(e.serial.toString()),
                                         ),
                                         DataCell(
-                                          Text(
-                                            e.manufacturingDate.toString(),
-                                          ),
+                                          Text(e.manufacturingDate.toString()),
                                         ),
                                         DataCell(
-                                          Text(
-                                            e.bestBeforeDate.toString(),
-                                          ),
+                                          Text(e.bestBeforeDate.toString()),
                                         ),
                                       ],
                                     ),
