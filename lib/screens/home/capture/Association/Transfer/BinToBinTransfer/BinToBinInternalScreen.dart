@@ -5,7 +5,6 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/BinToBinInternalTableDataController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/GetAllDistinctItemCodesFromTblMappedBarcodesController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/NewOne.dart';
@@ -30,6 +29,8 @@ class BinToBinInternalScreen extends StatefulWidget {
 class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
   final TextEditingController _palletIdController = TextEditingController();
   final TextEditingController _serialNumberController = TextEditingController();
+  final TextEditingController _locationFromController = TextEditingController();
+  final TextEditingController _locationToController = TextEditingController();
 
   String total = "0";
   String total2 = "0";
@@ -41,20 +42,10 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
 
   String _site = "By Serial";
 
-  final TextEditingController _searchController = TextEditingController();
-  String? dropDownValue;
-  List<String> dropDownList = [];
-  List<String> filterList = [];
-
   final TextEditingController _searchController2 = TextEditingController();
   String? dropDownValue2;
   List<String> dropDownList2 = [];
   List<String> filterList2 = [];
-
-  final TextEditingController _searchController3 = TextEditingController();
-  String? dropDownValue3;
-  List<String> dropDownList3 = [];
-  List<String> filterList3 = [];
 
   // ScrollController
   final ScrollController _scrollController = ScrollController();
@@ -64,56 +55,24 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
     super.initState();
     Future.delayed(Duration.zero, () {
       AppDialogs.loadingDialog(context);
-      GetMapBarcodeDataByItemCodeController.getData().then((value) {
-        for (int i = 0; i < value.length; i++) {
-          setState(() {
-            dropDownList.add(value[i].bIN ?? "");
-            Set<String> set = dropDownList.toSet();
-            dropDownList = set.toList();
-          });
-        }
 
+      GetAllDistinctItemCodesFromTblMappedBarcodesController.getAllTable()
+          .then((value) {
         for (int i = 0; i < value.length; i++) {
           setState(() {
-            dropDownList3.add(value[i].bIN ?? "");
-            Set<String> set = dropDownList3.toSet();
-            dropDownList3 = set.toList();
+            dropDownList2.add(value[i]);
+            Set<String> set = dropDownList2.toSet();
+            dropDownList2 = set.toList();
           });
         }
 
         setState(() {
-          dropDownList.removeWhere((element) => element == "");
-          dropDownList3.removeWhere((element) => element == "");
-          dropDownValue = dropDownList[0];
-          dropDownValue3 = dropDownList3[0];
-          filterList = dropDownList;
-          filterList3 = dropDownList3;
+          dropDownValue2 = dropDownList2[0];
+          filterList2 = dropDownList2;
         });
 
-        GetAllDistinctItemCodesFromTblMappedBarcodesController.getAllTable()
-            .then((value) {
-          for (int i = 0; i < value.length; i++) {
-            setState(() {
-              dropDownList2.add(value[i]);
-              Set<String> set = dropDownList2.toSet();
-              dropDownList2 = set.toList();
-            });
-          }
-
-          setState(() {
-            dropDownValue2 = dropDownList2[0];
-            filterList2 = dropDownList2;
-          });
-
-          AppDialogs.closeDialog();
-        }).onError((error, stackTrace) {
-          AppDialogs.closeDialog();
-        });
+        AppDialogs.closeDialog();
       }).onError((error, stackTrace) {
-        setState(() {
-          dropDownValue = "";
-          filterList = [];
-        });
         AppDialogs.closeDialog();
       });
     });
@@ -279,114 +238,19 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                   fontSize: 13,
                 ),
               ),
-              Row(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.73,
-                    margin: const EdgeInsets.only(left: 20),
-                    child: DropdownSearch<String>(
-                      filterFn: (item, filter) {
-                        return item
-                            .toLowerCase()
-                            .contains(filter.toLowerCase());
-                      },
-                      enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList3,
-                      onChanged: (value) {
-                        setState(() {
-                          dropDownValue3 = value!;
-                        });
-                      },
-                      selectedItem: dropDownValue3,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: IconButton(
-                      onPressed: () {
-                        // show dialog box for search
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: TextWidget(
-                                text: "Search",
-                                color: Colors.blue[900]!,
-                                fontSize: 15,
-                              ),
-                              content: TextFormFieldWidget(
-                                controller: _searchController3,
-                                readOnly: false,
-                                hintText: "Enter/Scan Location",
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                onEditingComplete: () {
-                                  setState(() {
-                                    dropDownList3 = dropDownList3
-                                        .where((element) => element
-                                            .toLowerCase()
-                                            .contains(_searchController3.text
-                                                .toLowerCase()))
-                                        .toList();
-                                    dropDownValue3 = dropDownList3[0];
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Cancel",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // filter list based on search
-                                    setState(() {
-                                      filterList3 = dropDownList3
-                                          .where((element) => element
-                                              .toLowerCase()
-                                              .contains(_searchController3.text
-                                                  .toLowerCase()))
-                                          .toList();
-                                      dropDownValue3 = filterList3[0];
-                                    });
-
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Search",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.search),
-                    ),
-                  ),
-                ],
+              Container(
+                margin: const EdgeInsets.only(left: 20),
+                child: TextFormFieldWidget(
+                  controller: _locationFromController,
+                  hintText: "Enter/Scan Bin Location From",
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  onEditingComplete: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                ),
               ),
 
-              const SizedBox(height: 10),
-              // button for get data
+              const SizedBox(height: 20),
               Container(
                 margin: const EdgeInsets.only(left: 20),
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -396,7 +260,8 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                   textColor: AppColors.pink,
                   title: "Search",
                   onPressed: () {
-                    if (dropDownList2.isEmpty || dropDownList3.isEmpty) {
+                    if (dropDownList2.isEmpty ||
+                        _locationFromController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -412,125 +277,6 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                   },
                 ),
               ),
-              // Container(
-              //   margin: const EdgeInsets.only(left: 20),
-              //   child: const TextWidget(
-              //     text: "Bin Location (FROM)*",
-              //     fontSize: 13,
-              //   ),
-              // ),
-              // Row(
-              //   children: [
-              //     Container(
-              //       decoration: const BoxDecoration(
-              //         borderRadius: BorderRadius.all(Radius.circular(10)),
-              //         color: Colors.white,
-              //       ),
-              //       width: MediaQuery.of(context).size.width * 0.73,
-              //       margin: const EdgeInsets.only(left: 20),
-              //       child: DropdownSearch<String>(
-              //         filterFn: (item, filter) {
-              //           return item
-              //               .toLowerCase()
-              //               .contains(filter.toLowerCase());
-              //         },
-              //         enabled: true,
-              //         dropdownButtonProps: const DropdownButtonProps(
-              //           icon: Icon(
-              //             Icons.arrow_drop_down,
-              //             color: Colors.black,
-              //           ),
-              //         ),
-              //         items: filterList3,
-              //         onChanged: (value) {
-              //           setState(() {
-              //             dropDownValue3 = value!;
-
-              //             // filter the table based on search item code
-              //             table = table2
-              //                 .where((element) =>
-              //                     element.itemCode == dropDownValue3)
-              //                 .toList();
-              //           });
-              //         },
-              //         selectedItem: "Bin Location (FROM)",
-              //       ),
-              //     ),
-              //     Container(
-              //       margin: const EdgeInsets.only(left: 10),
-              //       child: IconButton(
-              //         onPressed: () {
-              //           // show dialog box for search
-              //           showDialog(
-              //             context: context,
-              //             builder: (context) {
-              //               return AlertDialog(
-              //                 title: TextWidget(
-              //                   text: "Search",
-              //                   color: Colors.blue[900]!,
-              //                   fontSize: 15,
-              //                 ),
-              //                 content: TextFormFieldWidget(
-              //                   controller: _searchController3,
-              //                   readOnly: false,
-              //                   hintText: "Enter/Scan Item Code",
-              //                   width: MediaQuery.of(context).size.width * 0.9,
-              //                   onEditingComplete: () {
-              //                     setState(() {
-              //                       filterList3 = dropDownList3
-              //                           .where((element) => element
-              //                               .toLowerCase()
-              //                               .contains(_searchController3.text
-              //                                   .toLowerCase()))
-              //                           .toList();
-              //                       dropDownValue3 = dropDownList3[0];
-              //                     });
-              //                     Navigator.pop(context);
-              //                   },
-              //                 ),
-              //                 actions: [
-              //                   TextButton(
-              //                     onPressed: () {
-              //                       Navigator.pop(context);
-              //                     },
-              //                     child: TextWidget(
-              //                       text: "Cancel",
-              //                       color: Colors.blue[900]!,
-              //                       fontSize: 15,
-              //                     ),
-              //                   ),
-              //                   TextButton(
-              //                     onPressed: () {
-              //                       // filter list based on search
-              //                       setState(() {
-              //                         filterList2 = dropDownList3
-              //                             .where((element) => element
-              //                                 .toLowerCase()
-              //                                 .contains(_searchController3.text
-              //                                     .toLowerCase()))
-              //                             .toList();
-              //                         dropDownValue3 = filterList3[0];
-              //                       });
-
-              //                       Navigator.pop(context);
-              //                     },
-              //                     child: TextWidget(
-              //                       text: "Search",
-              //                       color: Colors.blue[900]!,
-              //                       fontSize: 15,
-              //                     ),
-              //                   ),
-              //                 ],
-              //               );
-              //             },
-              //           );
-              //         },
-              //         icon: const Icon(Icons.search),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-
               const SizedBox(height: 10),
               Container(
                 height: MediaQuery.of(context).size.height * 0.45,
@@ -927,110 +673,16 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                   fontSize: 15,
                 ),
               ),
-              Row(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.73,
-                    margin: const EdgeInsets.only(left: 20),
-                    child: DropdownSearch<String>(
-                      filterFn: (item, filter) {
-                        return item
-                            .toLowerCase()
-                            .contains(filter.toLowerCase());
-                      },
-                      enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList,
-                      onChanged: (value) {
-                        setState(() {
-                          dropDownValue = value!;
-                        });
-                      },
-                      selectedItem: dropDownValue,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: IconButton(
-                      onPressed: () {
-                        // show dialog box for search
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: TextWidget(
-                                text: "Search",
-                                color: Colors.blue[900]!,
-                                fontSize: 15,
-                              ),
-                              content: TextFormFieldWidget(
-                                controller: _searchController,
-                                readOnly: false,
-                                hintText: "Enter/Scan Location",
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                onEditingComplete: () {
-                                  setState(() {
-                                    dropDownList = dropDownList
-                                        .where((element) => element
-                                            .toLowerCase()
-                                            .contains(_searchController.text
-                                                .toLowerCase()))
-                                        .toList();
-                                    dropDownValue = dropDownList[0];
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Cancel",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // filter list based on search
-                                    setState(() {
-                                      filterList = dropDownList
-                                          .where((element) => element
-                                              .toLowerCase()
-                                              .contains(_searchController.text
-                                                  .toLowerCase()))
-                                          .toList();
-                                      dropDownValue = filterList[0];
-                                    });
-
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Search",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.search),
-                    ),
-                  ),
-                ],
+              Container(
+                margin: const EdgeInsets.only(left: 20),
+                child: TextFormFieldWidget(
+                  controller: _locationToController,
+                  hintText: "Enter/Scan Bin Location To",
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  onEditingComplete: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                ),
               ),
               const SizedBox(height: 10),
 
@@ -1067,7 +719,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                           updateByPalletController
                               .updateBin(
                             filterTable,
-                            dropDownValue.toString(),
+                            _locationToController.text.toString().trim(),
                           )
                               .then((value) {
                             setState(() {
@@ -1104,7 +756,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                           updateBySerialController
                               .updateBin(
                             filterTable,
-                            dropDownValue.toString(),
+                            _locationToController.text.toString().trim(),
                           )
                               .then((value) {
                             setState(() {
@@ -1183,7 +835,8 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
 
   Future searchMethod() async {
     AppDialogs.loadingDialog(context);
-    BinToBinInternalTableDataController.getAllTable(dropDownValue.toString())
+    BinToBinInternalTableDataController.getAllTable(
+            _locationToController.text.trim().toString())
         .then((value) {
       setState(() {
         table = value;
@@ -1328,7 +981,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
     AppDialogs.loadingDialog(context);
     NewOne.getData(
       dropDownValue2.toString().trim(),
-      dropDownValue3.toString().trim(),
+      _locationFromController.text.toString().trim(),
     ).then((value) {
       setState(() {
         // filterList2 = value.map((e) => e.itemCode.toString()).toSet().toList();

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/BinToBinInternalTableDataController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/GetAllDistinctItemCodesFromTblMappedBarcodesController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateBySerialController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/PalletTransfer/GetMappedBarcodedsByItemCodeAndPalletCodeController.dart';
@@ -272,120 +271,6 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-
-              // Container(
-              //   margin: const EdgeInsets.only(left: 20),
-              //   child: const TextWidget(
-              //     text: "Scan Bin (FROM)*",
-              //     fontSize: 13,
-              //   ),
-              // ),
-              // Row(
-              //   children: [
-              //     Container(
-              //       decoration: const BoxDecoration(
-              //         borderRadius: BorderRadius.all(Radius.circular(10)),
-              //         color: Colors.white,
-              //       ),
-              //       width: MediaQuery.of(context).size.width * 0.73,
-              //       margin: const EdgeInsets.only(left: 20),
-              //       child: DropdownSearch<String>(
-              //         filterFn: (item, filter) {
-              //           return item
-              //               .toLowerCase()
-              //               .contains(filter.toLowerCase());
-              //         },
-              //         enabled: true,
-              //         dropdownButtonProps: const DropdownButtonProps(
-              //           icon: Icon(
-              //             Icons.arrow_drop_down,
-              //             color: Colors.black,
-              //           ),
-              //         ),
-              //         items: filterList3,
-              //         onChanged: (value) {
-              //           setState(() {
-              //             dropDownValue3 = value!;
-              //           });
-              //         },
-              //         selectedItem: dropDownValue3,
-              //       ),
-              //     ),
-              //     Container(
-              //       margin: const EdgeInsets.only(left: 10),
-              //       child: IconButton(
-              //         onPressed: () {
-              //           // show dialog box for search
-              //           showDialog(
-              //             context: context,
-              //             builder: (context) {
-              //               return AlertDialog(
-              //                 title: TextWidget(
-              //                   text: "Search",
-              //                   color: Colors.blue[900]!,
-              //                   fontSize: 15,
-              //                 ),
-              //                 content: TextFormFieldWidget(
-              //                   controller: _searchController3,
-              //                   readOnly: false,
-              //                   hintText: "Enter/Scan Location",
-              //                   width: MediaQuery.of(context).size.width * 0.9,
-              //                   onEditingComplete: () {
-              //                     setState(() {
-              //                       dropDownList3 = dropDownList3
-              //                           .where((element) => element
-              //                               .toLowerCase()
-              //                               .contains(_searchController3.text
-              //                                   .toLowerCase()))
-              //                           .toList();
-              //                       dropDownValue3 = dropDownList3[0];
-              //                     });
-              //                     Navigator.pop(context);
-              //                   },
-              //                 ),
-              //                 actions: [
-              //                   TextButton(
-              //                     onPressed: () {
-              //                       Navigator.pop(context);
-              //                     },
-              //                     child: TextWidget(
-              //                       text: "Cancel",
-              //                       color: Colors.blue[900]!,
-              //                       fontSize: 15,
-              //                     ),
-              //                   ),
-              //                   TextButton(
-              //                     onPressed: () {
-              //                       // filter list based on search
-              //                       setState(() {
-              //                         filterList3 = dropDownList3
-              //                             .where((element) => element
-              //                                 .toLowerCase()
-              //                                 .contains(_searchController3.text
-              //                                     .toLowerCase()))
-              //                             .toList();
-              //                         dropDownValue3 = filterList3[0];
-              //                       });
-
-              //                       Navigator.pop(context);
-              //                     },
-              //                     child: TextWidget(
-              //                       text: "Search",
-              //                       color: Colors.blue[900]!,
-              //                       fontSize: 15,
-              //                     ),
-              //                   ),
-              //                 ],
-              //               );
-              //             },
-              //           );
-              //         },
-              //         icon: const Icon(Icons.search),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-
               Container(
                 margin: const EdgeInsets.only(left: 20),
                 child: const TextWidget(
@@ -405,7 +290,6 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
               ),
 
               const SizedBox(height: 10),
-              // button for get data
               Container(
                 margin: const EdgeInsets.only(left: 20),
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -432,124 +316,6 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                   },
                 ),
               ),
-              // Container(
-              //   margin: const EdgeInsets.only(left: 20),
-              //   child: const TextWidget(
-              //     text: "Bin Location (FROM)*",
-              //     fontSize: 13,
-              //   ),
-              // ),
-              // Row(
-              //   children: [
-              //     Container(
-              //       decoration: const BoxDecoration(
-              //         borderRadius: BorderRadius.all(Radius.circular(10)),
-              //         color: Colors.white,
-              //       ),
-              //       width: MediaQuery.of(context).size.width * 0.73,
-              //       margin: const EdgeInsets.only(left: 20),
-              //       child: DropdownSearch<String>(
-              //         filterFn: (item, filter) {
-              //           return item
-              //               .toLowerCase()
-              //               .contains(filter.toLowerCase());
-              //         },
-              //         enabled: true,
-              //         dropdownButtonProps: const DropdownButtonProps(
-              //           icon: Icon(
-              //             Icons.arrow_drop_down,
-              //             color: Colors.black,
-              //           ),
-              //         ),
-              //         items: filterList3,
-              //         onChanged: (value) {
-              //           setState(() {
-              //             dropDownValue3 = value!;
-
-              //             // filter the table based on search item code
-              //             table = table2
-              //                 .where((element) =>
-              //                     element.itemCode == dropDownValue3)
-              //                 .toList();
-              //           });
-              //         },
-              //         selectedItem: "Bin Location (FROM)",
-              //       ),
-              //     ),
-              //     Container(
-              //       margin: const EdgeInsets.only(left: 10),
-              //       child: IconButton(
-              //         onPressed: () {
-              //           // show dialog box for search
-              //           showDialog(
-              //             context: context,
-              //             builder: (context) {
-              //               return AlertDialog(
-              //                 title: TextWidget(
-              //                   text: "Search",
-              //                   color: Colors.blue[900]!,
-              //                   fontSize: 15,
-              //                 ),
-              //                 content: TextFormFieldWidget(
-              //                   controller: _searchController3,
-              //                   readOnly: false,
-              //                   hintText: "Enter/Scan Item Code",
-              //                   width: MediaQuery.of(context).size.width * 0.9,
-              //                   onEditingComplete: () {
-              //                     setState(() {
-              //                       filterList3 = dropDownList3
-              //                           .where((element) => element
-              //                               .toLowerCase()
-              //                               .contains(_searchController3.text
-              //                                   .toLowerCase()))
-              //                           .toList();
-              //                       dropDownValue3 = dropDownList3[0];
-              //                     });
-              //                     Navigator.pop(context);
-              //                   },
-              //                 ),
-              //                 actions: [
-              //                   TextButton(
-              //                     onPressed: () {
-              //                       Navigator.pop(context);
-              //                     },
-              //                     child: TextWidget(
-              //                       text: "Cancel",
-              //                       color: Colors.blue[900]!,
-              //                       fontSize: 15,
-              //                     ),
-              //                   ),
-              //                   TextButton(
-              //                     onPressed: () {
-              //                       // filter list based on search
-              //                       setState(() {
-              //                         filterList2 = dropDownList3
-              //                             .where((element) => element
-              //                                 .toLowerCase()
-              //                                 .contains(_searchController3.text
-              //                                     .toLowerCase()))
-              //                             .toList();
-              //                         dropDownValue3 = filterList3[0];
-              //                       });
-
-              //                       Navigator.pop(context);
-              //                     },
-              //                     child: TextWidget(
-              //                       text: "Search",
-              //                       color: Colors.blue[900]!,
-              //                       fontSize: 15,
-              //                     ),
-              //                   ),
-              //                 ],
-              //               );
-              //             },
-              //           );
-              //         },
-              //         icon: const Icon(Icons.search),
-              //       ),
-              //     ),
-              //   ],
-              // ),
               const SizedBox(height: 10),
               Container(
                 margin: const EdgeInsets.only(left: 20),
