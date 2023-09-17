@@ -4,12 +4,14 @@ import 'package:gtrack_mobile_app/controllers/share/product_information/safety_i
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
+import 'package:gtrack_mobile_app/models/share/product_information/product_contents_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/promotional_offer_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/safety_information_model.dart';
 
 // Some global variables
 List<SafetyInfromationModel> safetyInformation = [];
 List<PromotionalOfferModel> promotionalOffer = [];
+List<ProductContentsModel> productContents = [];
 
 class DigitalLinkScreen extends StatefulWidget {
   final String gtin;
@@ -50,7 +52,7 @@ class _DigitalLinkScreenState extends State<DigitalLinkScreen> {
     }
     screens.insert(0, SafetyInformation(gtin: gtin ?? ""));
     screens.insert(1, PromotionalOffers(gtin: gtin ?? ""));
-    // screens.insert(2, ProductContents(gtin: widget.gtin));
+    screens.insert(2, ProductContents(gtin: gtin ?? ""));
     // screens.insert(3, ProductLocationOfOrigin(gtin: widget.gtin));
     // screens.insert(4, ProductRecall(gtin: widget.gtin));
     // screens.insert(5, Recipe(gtin: widget.gtin));
@@ -250,7 +252,7 @@ class _PromotionalOffersState extends State<PromotionalOffers> {
                       DataColumn(label: Text("Price")),
                       DataColumn(label: Text("Banner")),
                     ],
-                    source: SafetyInformationSource(),
+                    source: PromotionalOfferSource(),
                     arrowHeadColor: AppColors.green,
                     showCheckboxColumn: false,
                     rowsPerPage: 10,
@@ -297,27 +299,136 @@ class PromotionalOfferSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-// class ProductContents extends StatelessWidget {
-//   const ProductContents({Key? key}) : super(key: key);
+class ProductContents extends StatefulWidget {
+  final String gtin;
+  const ProductContents({Key? key, required this.gtin}) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Center(
-//       child: Text("Product Contents"),
-//     );
-//   }
-// }
+  @override
+  State<ProductContents> createState() => _ProductContentsState();
+}
 
-// class ProductLocationOfOrigin extends StatelessWidget {
-//   const ProductLocationOfOrigin({Key? key}) : super(key: key);
+class _ProductContentsState extends State<ProductContents> {
+  @override
+  void initState() {
+    super.initState();
+    ProductInformationController.getProductContents(widget.gtin).then((value) {
+      productContents = value;
+    });
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Center(
-//       child: Text("Product Location Of Origin"),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Product Contents"),
+        backgroundColor: AppColors.green,
+      ),
+      body: FutureBuilder(
+        future: ProductInformationController.getProductContents(widget.gtin),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: LoadingWidget(),
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text("Something went wrong"),
+            );
+          } else if (!snapshot.hasData) {
+            return const Center(
+              child: Text("No data available"),
+            );
+          } else {
+            return Column(
+              children: [
+                Expanded(
+                  child: PaginatedDataTable(
+                    columns: const [
+                      DataColumn(label: Text("Id")),
+                      DataColumn(label: Text("Product Allergen Information")),
+                      DataColumn(label: Text("Product Nutrient Information")),
+                      DataColumn(label: Text("GTIN")),
+                      DataColumn(label: Text("Link Type")),
+                      DataColumn(label: Text("Batch")),
+                      DataColumn(label: Text("Expiry")),
+                      DataColumn(label: Text("Serial")),
+                      DataColumn(label: Text("Manufecturing Date")),
+                      DataColumn(label: Text("Best Before")),
+                      DataColumn(label: Text("GLNID Form")),
+                      DataColumn(label: Text("Unit Price")),
+                      DataColumn(label: Text("Ingredients")),
+                      DataColumn(label: Text("Allergen Info")),
+                      DataColumn(label: Text("Calories")),
+                      DataColumn(label: Text("Sugar")),
+                      DataColumn(label: Text("Salt")),
+                      DataColumn(label: Text("Fat")),
+                    ],
+                    source: ProductContentsSource(),
+                    arrowHeadColor: AppColors.green,
+                    showCheckboxColumn: false,
+                    rowsPerPage: 10,
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class ProductContentsSource extends DataTableSource {
+  List<ProductContentsModel> data = productContents;
+
+  @override
+  DataRow getRow(int index) {
+    final rowData = data[index];
+    return DataRow.byIndex(
+      index: index,
+      cells: [
+        DataCell(Text(rowData.iD.toString())),
+        DataCell(Text(rowData.productAllergenInformation.toString())),
+        DataCell(Text(rowData.productNutrientsInformation.toString())),
+        DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.linkType.toString())),
+        DataCell(Text(rowData.batch.toString())),
+        DataCell(Text(rowData.expiry.toString())),
+        DataCell(Text(rowData.serial.toString())),
+        DataCell(Text(rowData.manufacturingDate.toString())),
+        DataCell(Text(rowData.bestBeforeDate.toString())),
+        DataCell(Text(rowData.gLNIDFrom.toString())),
+        DataCell(Text(rowData.unitPrice.toString())),
+        DataCell(Text(rowData.ingredients.toString())),
+        DataCell(Text(rowData.allergenInfo.toString())),
+        DataCell(Text(rowData.calories.toString())),
+        DataCell(Text(rowData.sugar.toString())),
+        DataCell(Text(rowData.salt.toString())),
+        DataCell(Text(rowData.fat.toString())),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+}
+
+class ProductLocationOfOrigin extends StatelessWidget {
+  const ProductLocationOfOrigin({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text("Product Location Of Origin"),
+    );
+  }
+}
 
 // class ProductRecall extends StatelessWidget {
 //   const ProductRecall({Key? key}) : super(key: key);
