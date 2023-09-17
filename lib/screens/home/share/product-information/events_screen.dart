@@ -63,9 +63,10 @@ class _EventsScreenState extends State<EventsScreen> {
                   double.parse(data.itemGPSOnGoLat.toString()),
                   double.parse(data.itemGPSOnGoLon.toString()),
                 ),
-                // infoWindow: InfoWindow(
-                //   snippet: data.locationNameAr.toString(),
-                // ),
+                infoWindow: InfoWindow(
+                  title: data.memberID,
+                  snippet: "${data.itemGPSOnGoLat}, ${data.itemGPSOnGoLon}",
+                ),
               );
             }).toSet();
 
@@ -120,15 +121,29 @@ class _EventsScreenState extends State<EventsScreen> {
                         longitude[0],
                       ),
                 zoom: 14,
+                tilt: 0,
+                bearing: 0,
               ),
+              cameraTargetBounds: CameraTargetBounds.unbounded,
+              mapType: MapType.normal,
+              myLocationButtonEnabled: true,
+              mapToolbarEnabled: true,
+              markers: markers,
+              buildingsEnabled: true,
+              compassEnabled: true,
+              zoomGesturesEnabled: true,
+              scrollGesturesEnabled: true,
+
               // each marker will connect to each other and will show the route to the next marker
-              rotateGesturesEnabled: true,
+              // rotateGesturesEnabled: true,
               // lines on routes
 
               polylines: {
                 Polyline(
                   polylineId: const PolylineId('route'),
-                  color: AppColors.green,
+                  jointType: JointType.mitered,
+                  consumeTapEvents: true,
+                  color: AppColors.primary,
                   width: 5,
                   points: latitude.isEmpty
                       ? [
@@ -147,12 +162,6 @@ class _EventsScreenState extends State<EventsScreen> {
                           .toList(),
                 ),
               },
-
-              markers: markers,
-              buildingsEnabled: true,
-              compassEnabled: true,
-              indoorViewEnabled: true,
-              mapToolbarEnabled: true,
             ),
     );
   }

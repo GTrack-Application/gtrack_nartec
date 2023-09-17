@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/screens/home/share/product-information/digital_link_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/events_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_information_screen.dart';
 
@@ -17,7 +18,7 @@ class ProductInformationScreen extends StatefulWidget {
 class _ProductInformationScreenState extends State<ProductInformationScreen> {
   final List<Tab> myTabs = const <Tab>[
     Tab(text: 'GTIN Information'),
-    Tab(text: 'Tab 2'),
+    Tab(text: 'Digital Links'),
     Tab(text: 'Events'),
   ];
 
@@ -31,29 +32,40 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
           backgroundColor: AppColors.green,
           bottom: TabBar(
             tabs: myTabs,
+            dividerColor: AppColors.primary,
+
             automaticIndicatorColorAdjustment: true,
-            indicatorColor: AppColors.primary,
+            indicatorColor: AppColors.white,
             unselectedLabelColor: AppColors.white,
             labelColor: AppColors.white,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorWeight: 2,
+            indicatorPadding: const EdgeInsets.all(8.0),
+            labelStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.white,
+              letterSpacing: 1,
+              height: 1,
+              fontFamily: 'Poppins',
+              decoration: TextDecoration.none,
+              decorationColor: AppColors.white,
+              decorationStyle: TextDecorationStyle.solid,
+              decorationThickness: 1,
+            ),
+            unselectedLabelStyle: const TextStyle(fontSize: 16),
+            physics: const NeverScrollableScrollPhysics(),
+            // do not change with the swipe
+            onTap: (index) {},
+            // do not change with the swipe
+            isScrollable: true,
           ),
         ),
         body: TabBarView(
           children: <Widget>[
-            // Widget for Tab 1
-            GtinInformationScreen(
-              gtin: widget.gtin,
-              codeType: widget.codeType,
-            ),
-
-            // Widget for Tab 2
-            const Center(
-              child: Text('This is Tab 2'),
-            ),
-
-            EventsScreen(
-              gtin: widget.gtin,
-              codeType: widget.codeType,
-            ),
+            GtinInformationScreen(gtin: widget.gtin, codeType: widget.codeType),
+            DigitalLinkScreen(gtin: widget.gtin, codeType: widget.codeType),
+            EventsScreen(gtin: widget.gtin, codeType: widget.codeType),
           ],
         ),
       ),
