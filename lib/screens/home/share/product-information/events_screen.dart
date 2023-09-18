@@ -108,67 +108,65 @@ class _EventsScreenState extends State<EventsScreen> {
     return Scaffold(
       body: isLoaded == false
           ? const SizedBox.shrink()
-          : Column(
-              children: [
-                Expanded(
-                  child: GoogleMap(
-                    fortyFiveDegreeImageryEnabled: true,
-                    onMapCreated: (GoogleMapController controller) {
-                      mapController = controller;
-                    },
-                    initialCameraPosition: CameraPosition(
-                      // with current position using geolocator
-                      target: latitude.isEmpty
-                          ? LatLng(currentLat, currentLong)
-                          : LatLng(
-                              latitude[0],
-                              longitude[0],
-                            ),
-                      zoom: 14,
-                      tilt: 0,
-                      bearing: 0,
-                    ),
-                    cameraTargetBounds: CameraTargetBounds.unbounded,
-                    mapType: MapType.normal,
-                    myLocationButtonEnabled: true,
-                    mapToolbarEnabled: true,
-                    markers: markers,
-                    buildingsEnabled: true,
-                    compassEnabled: true,
-                    zoomGesturesEnabled: true,
-                    scrollGesturesEnabled: true,
-
-                    // each marker will connect to each other and will show the route to the next marker
-                    // rotateGesturesEnabled: true,
-                    // lines on routes
-
-                    polylines: {
-                      Polyline(
-                        polylineId: const PolylineId('route'),
-                        jointType: JointType.mitered,
-                        consumeTapEvents: true,
-                        color: AppColors.primary,
-                        width: 5,
-                        points: latitude.isEmpty
-                            ? [
-                                LatLng(currentLat, currentLong),
-                                LatLng(currentLat, currentLong),
-                              ]
-                            : latitude
-                                .asMap()
-                                .map((index, value) => MapEntry(
-                                    index,
-                                    LatLng(
-                                      latitude[index],
-                                      longitude[index],
-                                    )))
-                                .values
-                                .toList(),
+          : Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: GoogleMap(
+                      fortyFiveDegreeImageryEnabled: false,
+                      onMapCreated: (GoogleMapController controller) {
+                        mapController = controller;
+                      },
+                      initialCameraPosition: CameraPosition(
+                        // with current position using geolocator
+                        target: latitude.isEmpty
+                            ? LatLng(currentLat, currentLong)
+                            : LatLng(
+                                latitude[0],
+                                longitude[0],
+                              ),
+                        zoom: 14,
+                        tilt: 0,
+                        bearing: 0,
                       ),
-                    },
+                      cameraTargetBounds: CameraTargetBounds.unbounded,
+                      mapType: MapType.normal,
+                      myLocationButtonEnabled: true,
+                      mapToolbarEnabled: true,
+                      markers: markers,
+                      buildingsEnabled: true,
+                      compassEnabled: true,
+                      zoomGesturesEnabled: true,
+                      scrollGesturesEnabled: true,
+                      polylines: {
+                        Polyline(
+                          polylineId: const PolylineId('route'),
+                          jointType: JointType.mitered,
+                          consumeTapEvents: true,
+                          color: AppColors.primary,
+                          width: 5,
+                          points: latitude.isEmpty
+                              ? [
+                                  LatLng(currentLat, currentLong),
+                                  LatLng(currentLat, currentLong),
+                                ]
+                              : latitude
+                                  .asMap()
+                                  .map((index, value) => MapEntry(
+                                      index,
+                                      LatLng(
+                                        latitude[index],
+                                        longitude[index],
+                                      )))
+                                  .values
+                                  .toList(),
+                        ),
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
     );
   }

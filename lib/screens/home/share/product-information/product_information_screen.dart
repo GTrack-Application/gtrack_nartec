@@ -7,8 +7,11 @@ import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_in
 class ProductInformationScreen extends StatefulWidget {
   final String gtin;
   final String codeType;
-  const ProductInformationScreen(
-      {super.key, required this.gtin, required this.codeType});
+  const ProductInformationScreen({
+    super.key,
+    required this.gtin,
+    required this.codeType,
+  });
 
   @override
   State<ProductInformationScreen> createState() =>
@@ -25,15 +28,14 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: myTabs.length,
+      length: myTabs.length, // Replace with the actual length of your tabs
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Product Information'),
           backgroundColor: AppColors.green,
+          title: const Text('Product Information'),
           bottom: TabBar(
             tabs: myTabs,
-            dividerColor: AppColors.primary,
-
+            dividerColor: AppColors.green,
             automaticIndicatorColorAdjustment: true,
             indicatorColor: AppColors.white,
             unselectedLabelColor: AppColors.white,
@@ -42,7 +44,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
             indicatorWeight: 2,
             indicatorPadding: const EdgeInsets.all(8.0),
             labelStyle: const TextStyle(
-              fontSize: 16,
+              fontSize: 13,
               fontWeight: FontWeight.bold,
               color: AppColors.white,
               letterSpacing: 1,
@@ -53,20 +55,22 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
               decorationStyle: TextDecorationStyle.solid,
               decorationThickness: 1,
             ),
-            unselectedLabelStyle: const TextStyle(fontSize: 16),
-            physics: const BouncingScrollPhysics(),
-            // do not change with the swipe
-            onTap: (index) {},
-            // do not change with the swipe
+            unselectedLabelStyle: const TextStyle(fontSize: 13),
+            onTap: (index) {
+              FocusScope.of(context).unfocus();
+            },
+            physics:
+                const NeverScrollableScrollPhysics(), // Disable tab swiping
             isScrollable: true,
           ),
         ),
         body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
             GtinInformationScreen(gtin: widget.gtin, codeType: widget.codeType),
             DigitalLinkScreen(gtin: widget.gtin, codeType: widget.codeType),
             EventsScreen(gtin: widget.gtin, codeType: widget.codeType),
-          ],
+          ], // Disable tab swiping
         ),
       ),
     );

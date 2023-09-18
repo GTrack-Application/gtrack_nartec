@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/product_information_controller.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/safety_informaiton_controller.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/models/share/product_information/leaflets_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/location_origin_model.dart';
+import 'package:gtrack_mobile_app/models/share/product_information/packaging_composition_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/product_contents_model.dart';
+import 'package:gtrack_mobile_app/models/share/product_information/product_recall_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/promotional_offer_model.dart';
+import 'package:gtrack_mobile_app/models/share/product_information/recipe_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/safety_information_model.dart';
 
 // Some global variables
@@ -12,6 +16,10 @@ List<SafetyInfromationModel> safetyInformation = [];
 List<PromotionalOfferModel> promotionalOffer = [];
 List<ProductContentsModel> productContents = [];
 List<LocationOriginModel> locationOrigin = [];
+List<ProductRecallModel> productRecall = [];
+List<RecipeModel> recipe = [];
+List<PackagingCompositionModel> packagingComposition = [];
+List<LeafletsModel> leaflets = [];
 
 class DigitalLinkScreen extends StatefulWidget {
   final String gtin;
@@ -54,10 +62,10 @@ class _DigitalLinkScreenState extends State<DigitalLinkScreen> {
     screens.insert(1, PromotionalOffers(gtin: gtin ?? ""));
     screens.insert(2, ProductContents(gtin: gtin ?? ""));
     screens.insert(3, ProductLocationOfOrigin(gtin: widget.gtin));
-    // screens.insert(4, ProductRecall(gtin: widget.gtin));
-    // screens.insert(5, Recipe(gtin: widget.gtin));
-    // screens.insert(6, PackagingComposition(gtin: widget.gtin));
-    // screens.insert(7, ElectronicLeaflets(gtin: widget.gtin));
+    screens.insert(4, ProductRecall(gtin: widget.gtin));
+    screens.insert(5, Recipe(gtin: widget.gtin));
+    screens.insert(6, PackagingComposition(gtin: widget.gtin));
+    screens.insert(7, ElectronicLeaflets(gtin: widget.gtin));
 
     super.initState();
   }
@@ -65,12 +73,14 @@ class _DigitalLinkScreenState extends State<DigitalLinkScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Create list of radio list based on above data variable but we will be able to select only one at a time.
-          Expanded(
-            child: ListView.builder(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Create list of radio list based on above data variable but we will be able to select only one at a time.
+            ListView.builder(
+              shrinkWrap: true,
               itemCount: data.length,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () {
@@ -101,20 +111,17 @@ class _DigitalLinkScreenState extends State<DigitalLinkScreen> {
               },
               padding: const EdgeInsets.symmetric(horizontal: 10),
             ),
-          ),
-          const Divider(thickness: 2, color: AppColors.green),
-          Text(
-            data[selectedIndex],
-            style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
+            const Divider(thickness: 2, color: AppColors.green),
+            Text(
+              data[selectedIndex],
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: screens[selectedIndex],
-          ),
-        ],
+            screens[selectedIndex],
+          ],
+        ),
       ),
     );
   }
@@ -536,48 +543,288 @@ class ProductLocationOriginSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
+class ProductRecall extends StatefulWidget {
+  final String gtin;
+  const ProductRecall({Key? key, required this.gtin}) : super(key: key);
 
+  @override
+  State<ProductRecall> createState() => _ProductRecallState();
+}
 
-// class ProductRecall extends StatelessWidget {
-//   const ProductRecall({Key? key}) : super(key: key);
+class _ProductRecallState extends State<ProductRecall> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      ProductInformationController.getProductRecallByGtin(widget.gtin)
+          .then((value) {
+        productRecall = value;
+      });
+    });
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Center(
-//       child: Text("Product Recall"),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text("Id")),
+        DataColumn(label: Text("Product Recall")),
+        DataColumn(label: Text("Link Type")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Target URL")),
+        DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Expiry Date")),
+      ],
+      source: ProductRecallSource(),
+      arrowHeadColor: AppColors.green,
+      showCheckboxColumn: false,
+      rowsPerPage: 5,
+    );
+  }
+}
 
-// class Recipe extends StatelessWidget {
-//   const Recipe({Key? key}) : super(key: key);
+class ProductRecallSource extends DataTableSource {
+  List<ProductRecallModel> data = productRecall;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Center(
-//       child: Text("Recipe"),
-//     );
-//   }
-// }
+  @override
+  DataRow getRow(int index) {
+    final rowData = data[index];
+    return DataRow.byIndex(
+      index: index,
+      cells: [
+        DataCell(Text(rowData.iD.toString())),
+        DataCell(Text(rowData.productRecall.toString())),
+        DataCell(Text(rowData.linkType.toString())),
+        DataCell(Text(rowData.lang.toString())),
+        DataCell(Text(rowData.targetURL.toString())),
+        DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.expiryDate.toString())),
+      ],
+    );
+  }
 
-// class PackagingComposition extends StatelessWidget {
-//   const PackagingComposition({Key? key}) : super(key: key);
+  @override
+  bool get isRowCountApproximate => false;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Center(
-//       child: Text("Packaging Composition"),
-//     );
-//   }
-// }
+  @override
+  int get rowCount => data.length;
 
-// class ElectronicLeaflets extends StatelessWidget {
-//   const ElectronicLeaflets({Key? key}) : super(key: key);
+  @override
+  int get selectedRowCount => 0;
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Center(
-//       child: Text("Electronic Leaflets"),
-//     );
-//   }
-// }
+class Recipe extends StatefulWidget {
+  final String gtin;
+  const Recipe({Key? key, required this.gtin}) : super(key: key);
+
+  @override
+  State<Recipe> createState() => _RecipeState();
+}
+
+class _RecipeState extends State<Recipe> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      ProductInformationController.getRecipeByGtin(widget.gtin).then((value) {
+        recipe = value;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text("Id")),
+        DataColumn(label: Text("Logo")),
+        DataColumn(label: Text("Title")),
+        DataColumn(label: Text("Description")),
+        DataColumn(label: Text("Ingredients")),
+        DataColumn(label: Text("Link Type")),
+        DataColumn(label: Text("GTIN")),
+      ],
+      source: RecipeSource(),
+      arrowHeadColor: AppColors.green,
+      showCheckboxColumn: false,
+      rowsPerPage: 5,
+    );
+  }
+}
+
+class RecipeSource extends DataTableSource {
+  List<RecipeModel> data = recipe;
+
+  @override
+  DataRow getRow(int index) {
+    final rowData = data[index];
+    return DataRow.byIndex(
+      index: index,
+      cells: [
+        DataCell(Text(rowData.iD.toString())),
+        DataCell(Text(rowData.logo.toString())),
+        DataCell(Text(rowData.title.toString())),
+        DataCell(Text(rowData.description.toString())),
+        DataCell(Text(rowData.ingredients.toString())),
+        DataCell(Text(rowData.linkType.toString())),
+        DataCell(Text(rowData.gTIN.toString())),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+}
+
+class PackagingComposition extends StatefulWidget {
+  final String gtin;
+  const PackagingComposition({Key? key, required this.gtin}) : super(key: key);
+
+  @override
+  State<PackagingComposition> createState() => _PackagingCompositionState();
+}
+
+class _PackagingCompositionState extends State<PackagingComposition> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      ProductInformationController.getPackagingCompositionByGtin(widget.gtin)
+          .then((value) {
+        packagingComposition = value;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text("Id")),
+        DataColumn(label: Text("Logo")),
+        DataColumn(label: Text("Title")),
+        DataColumn(label: Text("Consumer Product Variant")),
+        DataColumn(label: Text("Packaging")),
+        DataColumn(label: Text("Material")),
+        DataColumn(label: Text("Recyclability")),
+        DataColumn(label: Text("Product Owner")),
+        DataColumn(label: Text("Link Type")),
+        DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Brand Owner")),
+      ],
+      source: PackagingCompositionSource(),
+      arrowHeadColor: AppColors.green,
+      showCheckboxColumn: false,
+      rowsPerPage: 5,
+    );
+  }
+}
+
+class PackagingCompositionSource extends DataTableSource {
+  List<PackagingCompositionModel> data = packagingComposition;
+
+  @override
+  DataRow getRow(int index) {
+    final rowData = data[index];
+    return DataRow.byIndex(
+      index: index,
+      cells: [
+        DataCell(Text(rowData.iD.toString())),
+        DataCell(Text(rowData.logo.toString())),
+        DataCell(Text(rowData.title.toString())),
+        DataCell(Text(rowData.consumerProductVariant.toString())),
+        DataCell(Text(rowData.packaging.toString())),
+        DataCell(Text(rowData.material.toString())),
+        DataCell(Text(rowData.recyclability.toString())),
+        DataCell(Text(rowData.productOwner.toString())),
+        DataCell(Text(rowData.linkType.toString())),
+        DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.brandOwner.toString())),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+}
+
+class ElectronicLeaflets extends StatefulWidget {
+  final String gtin;
+  const ElectronicLeaflets({Key? key, required this.gtin}) : super(key: key);
+
+  @override
+  State<ElectronicLeaflets> createState() => _ElectronicLeafletsState();
+}
+
+class _ElectronicLeafletsState extends State<ElectronicLeaflets> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      ProductInformationController.getLeafletsByGtin(widget.gtin).then((value) {
+        leaflets = value;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text("Id")),
+        DataColumn(label: Text("Product Leaflets Information")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Link Type")),
+        DataColumn(label: Text("Target URL")),
+        DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("PDF Doc")),
+      ],
+      source: LeafletsSource(),
+      arrowHeadColor: AppColors.green,
+      showCheckboxColumn: false,
+      rowsPerPage: 5,
+    );
+  }
+}
+
+class LeafletsSource extends DataTableSource {
+  List<LeafletsModel> data = leaflets;
+
+  @override
+  DataRow getRow(int index) {
+    final rowData = data[index];
+    return DataRow.byIndex(
+      index: index,
+      cells: [
+        DataCell(Text(rowData.iD.toString())),
+        DataCell(Text(rowData.productLeafletInformation.toString())),
+        DataCell(Text(rowData.lang.toString())),
+        DataCell(Text(rowData.linkType.toString())),
+        DataCell(Text(rowData.targetURL.toString())),
+        DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.pdfDoc.toString())),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+}

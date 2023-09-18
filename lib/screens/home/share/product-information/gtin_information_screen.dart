@@ -109,113 +109,113 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                           value2: gtinInformationModel!.gtinArr!.gpcCategoryCode
                               .toString(),
                         ),
-                        BorderedRowWidget(value1: "Net Content", value2: "123"),
+                        const BorderedRowWidget(
+                            value1: "Net Content", value2: "123"),
                         BorderedRowWidget(
                           value1: "Country Of Sale",
                           value2: gtinInformationModel!
                               .gtinArr!.countryOfSaleCode
                               .toString(),
                         ),
-                        20.height,
-                        10.height,
+                        30.height,
                         const Divider(thickness: 2),
                         10.height,
-                        // Create a horizontal scrollable table with the following columns:
-                        // - Allergen Info
-                        // - Nutrients Info
-                        // - Batch
-                        // - Expiry
-                        // - Serial
-                        // - Manufacturing Date
-                        // - Best Before
-
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.grey, width: 1),
+                          ),
+                          height: MediaQuery.of(context).size.height * 0.4,
                           child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: DataTable(
-                              dataRowColor:
-                                  MaterialStateProperty.resolveWith<Color>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.selected)) {
-                                    return Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withOpacity(0.08);
-                                  }
-                                  return AppColors.background;
-                                },
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.green,
-                                border:
-                                    Border.all(color: AppColors.grey, width: 1),
-                              ),
-                              dividerThickness: 2,
-                              border: const TableBorder(
-                                horizontalInside: BorderSide(
-                                  color: AppColors.grey,
-                                  width: 2,
+                            scrollDirection: Axis.horizontal,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: DataTable(
+                                dataRowColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    if (states
+                                        .contains(MaterialState.selected)) {
+                                      return Theme.of(context)
+                                          .colorScheme
+                                          .primary
+                                          .withOpacity(0.08);
+                                    }
+                                    return AppColors.background;
+                                  },
                                 ),
-                                verticalInside: BorderSide(
-                                  color: AppColors.grey,
-                                  width: 2,
+                                decoration: BoxDecoration(
+                                  color: AppColors.green,
+                                  border: Border.all(
+                                      color: AppColors.grey, width: 1),
                                 ),
-                              ),
-                              columns: const [
-                                DataColumn(
-                                  label: TableHeaderText(text: 'Allergen Info'),
+                                dividerThickness: 2,
+                                border: const TableBorder(
+                                  horizontalInside: BorderSide(
+                                    color: AppColors.grey,
+                                    width: 2,
+                                  ),
+                                  verticalInside: BorderSide(
+                                    color: AppColors.grey,
+                                    width: 2,
+                                  ),
                                 ),
-                                DataColumn(
-                                    label: TableHeaderText(
-                                        text: 'Nutrients Info')),
-                                DataColumn(
-                                    label: TableHeaderText(text: 'Batch')),
-                                DataColumn(
-                                    label: TableHeaderText(text: 'Expiry')),
-                                DataColumn(
-                                    label: TableHeaderText(text: 'Serial')),
-                                DataColumn(
-                                    label: TableHeaderText(
-                                        text: 'Manufacturing Date')),
-                                DataColumn(
+                                columns: const [
+                                  DataColumn(
                                     label:
-                                        TableHeaderText(text: 'Best Before')),
-                              ],
-                              rows: gtinInformationModel!.productContents!
-                                  .map(
-                                    (e) => DataRow(
-                                      cells: [
-                                        DataCell(
-                                          Text(
-                                            e.allergenInfo.toString(),
+                                        TableHeaderText(text: 'Allergen Info'),
+                                  ),
+                                  DataColumn(
+                                      label: TableHeaderText(
+                                          text: 'Nutrients Info')),
+                                  DataColumn(
+                                      label: TableHeaderText(text: 'Batch')),
+                                  DataColumn(
+                                      label: TableHeaderText(text: 'Expiry')),
+                                  DataColumn(
+                                      label: TableHeaderText(text: 'Serial')),
+                                  DataColumn(
+                                      label: TableHeaderText(
+                                          text: 'Manufacturing Date')),
+                                  DataColumn(
+                                      label:
+                                          TableHeaderText(text: 'Best Before')),
+                                ],
+                                rows: gtinInformationModel!.productContents!
+                                    .map(
+                                      (e) => DataRow(
+                                        cells: [
+                                          DataCell(
+                                            Text(
+                                              e.allergenInfo.toString(),
+                                            ),
                                           ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            e.productNutrientsInformation
-                                                .toString(),
+                                          DataCell(
+                                            Text(
+                                              e.productNutrientsInformation
+                                                  .toString(),
+                                            ),
                                           ),
-                                        ),
-                                        DataCell(
-                                          Text(e.batch.toString()),
-                                        ),
-                                        DataCell(
-                                          Text(e.expiry.toString()),
-                                        ),
-                                        DataCell(
-                                          Text(e.serial.toString()),
-                                        ),
-                                        DataCell(
-                                          Text(e.manufacturingDate.toString()),
-                                        ),
-                                        DataCell(
-                                          Text(e.bestBeforeDate.toString()),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                  .toList(),
+                                          DataCell(
+                                            Text(e.batch.toString()),
+                                          ),
+                                          DataCell(
+                                            Text(e.expiry.toString()),
+                                          ),
+                                          DataCell(
+                                            Text(e.serial.toString()),
+                                          ),
+                                          DataCell(
+                                            Text(
+                                                e.manufacturingDate.toString()),
+                                          ),
+                                          DataCell(
+                                            Text(e.bestBeforeDate.toString()),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
                             ),
                           ),
                         )
