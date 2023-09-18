@@ -115,7 +115,6 @@ class _EventsScreenState extends State<EventsScreen> {
           : Column(
               children: [
                 ElevatedButton(
-                  child: Text(isTableVisible ? "Hide Grid" : "Show Grid"),
                   onPressed: () {
                     setState(() {
                       isTableVisible = !isTableVisible;
@@ -124,6 +123,7 @@ class _EventsScreenState extends State<EventsScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.green,
                   ),
+                  child: Text(isTableVisible ? "Hide Grid" : "Show Grid"),
                 ),
                 !isTableVisible
                     ? const SizedBox.shrink()
