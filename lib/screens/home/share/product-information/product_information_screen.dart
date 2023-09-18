@@ -54,7 +54,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
               decorationThickness: 1,
             ),
             unselectedLabelStyle: const TextStyle(fontSize: 16),
-            physics: const NeverScrollableScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             // do not change with the swipe
             onTap: (index) {},
             // do not change with the swipe

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/product_information_controller.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/safety_informaiton_controller.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/models/share/product_information/location_origin_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/product_contents_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/promotional_offer_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/safety_information_model.dart';
@@ -10,6 +11,7 @@ import 'package:gtrack_mobile_app/models/share/product_information/safety_inform
 List<SafetyInfromationModel> safetyInformation = [];
 List<PromotionalOfferModel> promotionalOffer = [];
 List<ProductContentsModel> productContents = [];
+List<LocationOriginModel> locationOrigin = [];
 
 class DigitalLinkScreen extends StatefulWidget {
   final String gtin;
@@ -51,7 +53,7 @@ class _DigitalLinkScreenState extends State<DigitalLinkScreen> {
     screens.insert(0, SafetyInformation(gtin: gtin ?? ""));
     screens.insert(1, PromotionalOffers(gtin: gtin ?? ""));
     screens.insert(2, ProductContents(gtin: gtin ?? ""));
-    // screens.insert(3, ProductLocationOfOrigin(gtin: widget.gtin));
+    screens.insert(3, ProductLocationOfOrigin(gtin: widget.gtin));
     // screens.insert(4, ProductRecall(gtin: widget.gtin));
     // screens.insert(5, Recipe(gtin: widget.gtin));
     // screens.insert(6, PackagingComposition(gtin: widget.gtin));
@@ -462,16 +464,79 @@ class ProductContentsSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-class ProductLocationOfOrigin extends StatelessWidget {
-  const ProductLocationOfOrigin({Key? key}) : super(key: key);
+class ProductLocationOfOrigin extends StatefulWidget {
+  final String gtin;
+  const ProductLocationOfOrigin({Key? key, required this.gtin})
+      : super(key: key);
+
+  @override
+  State<ProductLocationOfOrigin> createState() =>
+      _ProductLocationOfOriginState();
+}
+
+class _ProductLocationOfOriginState extends State<ProductLocationOfOrigin> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      ProductInformationController.getProductLocationOrigin(widget.gtin)
+          .then((value) {
+        locationOrigin = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("Product Location Of Origin"),
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text("Id")),
+        DataColumn(label: Text("Product Location Origin")),
+        DataColumn(label: Text("Link Type")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Target URL")),
+        DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Expiry Date")),
+      ],
+      source: ProductLocationOriginSource(),
+      arrowHeadColor: AppColors.green,
+      showCheckboxColumn: false,
+      rowsPerPage: 5,
     );
   }
 }
+
+class ProductLocationOriginSource extends DataTableSource {
+  List<LocationOriginModel> data = locationOrigin;
+
+  @override
+  DataRow getRow(int index) {
+    final rowData = data[index];
+    return DataRow.byIndex(
+      index: index,
+      cells: [
+        DataCell(Text(rowData.iD.toString())),
+        DataCell(Text(rowData.productLocationOrigin.toString())),
+        DataCell(Text(rowData.linkType.toString())),
+        DataCell(Text(rowData.lang.toString())),
+        DataCell(Text(rowData.targetURL.toString())),
+        DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.expiryDate.toString())),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+}
+
+
 
 // class ProductRecall extends StatelessWidget {
 //   const ProductRecall({Key? key}) : super(key: key);
