@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/product_information_controller.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/safety_informaiton_controller.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/product_contents_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/promotional_offer_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/safety_information_model.dart';
@@ -72,22 +70,47 @@ class _DigitalLinkScreenState extends State<DigitalLinkScreen> {
             child: ListView.builder(
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  leading: const CircleAvatar(),
-                  title: Text(data[index]),
+                return GestureDetector(
                   onTap: () {
                     setState(() {
                       selectedIndex = index;
-                      AppNavigator.goToPage(
-                        context: context,
-                        screen: screens[index],
-                      );
                     });
                   },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: selectedIndex == index
+                          ? AppColors.green
+                          : AppColors.green.withOpacity(0.2),
+                      border: Border.all(width: 1, color: AppColors.green),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      data[index],
+                      style: TextStyle(
+                        color: (selectedIndex == index)
+                            ? AppColors.white
+                            : AppColors.black,
+                      ),
+                    ),
+                  ),
                 );
               },
-              padding: const EdgeInsets.all(0),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
             ),
+          ),
+          const Divider(thickness: 2, color: AppColors.green),
+          Text(
+            data[selectedIndex],
+            style: const TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: screens[selectedIndex],
           ),
         ],
       ),
@@ -106,61 +129,32 @@ class SafetyInformation extends StatefulWidget {
 class _SafetyInformationState extends State<SafetyInformation> {
   @override
   void initState() {
-    SafetyInfromationController.getSafeInfromation(widget.gtin).then((value) {
-      safetyInformation = value;
+    setState(() {
+      SafetyInfromationController.getSafeInfromation(widget.gtin).then((value) {
+        safetyInformation = value;
+      });
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Safety Information"),
-        backgroundColor: AppColors.green,
-      ),
-      body: FutureBuilder(
-        future: SafetyInfromationController.getSafeInfromation(widget.gtin),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: LoadingWidget(),
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text("Something went wrong"),
-            );
-          } else if (!snapshot.hasData) {
-            return const Center(
-              child: Text("No data available"),
-            );
-          } else {
-            return Column(
-              children: [
-                Expanded(
-                  child: PaginatedDataTable(
-                    columns: const [
-                      DataColumn(label: Text("Id")),
-                      DataColumn(label: Text("Safety Details Information")),
-                      DataColumn(label: Text("Link Type")),
-                      DataColumn(label: Text("Language")),
-                      DataColumn(label: Text("Target URL")),
-                      DataColumn(label: Text("GTIN")),
-                      DataColumn(label: Text("Logo")),
-                      DataColumn(label: Text("Company Name")),
-                      DataColumn(label: Text("Process")),
-                    ],
-                    source: SafetyInformationSource(),
-                    arrowHeadColor: AppColors.green,
-                    showCheckboxColumn: false,
-                    rowsPerPage: 10,
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text("Id")),
+        DataColumn(label: Text("Safety Details Information")),
+        DataColumn(label: Text("Link Type")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Target URL")),
+        DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Logo")),
+        DataColumn(label: Text("Company Name")),
+        DataColumn(label: Text("Process")),
+      ],
+      source: SafetyInformationSource(),
+      arrowHeadColor: AppColors.green,
+      showCheckboxColumn: false,
+      rowsPerPage: 5,
     );
   }
 }
@@ -208,62 +202,82 @@ class PromotionalOffers extends StatefulWidget {
 class _PromotionalOffersState extends State<PromotionalOffers> {
   @override
   void initState() {
-    ProductInformationController.getPromotionalOffer(widget.gtin).then((value) {
-      promotionalOffer = value;
+    setState(() {
+      ProductInformationController.getPromotionalOffer(widget.gtin)
+          .then((value) {
+        promotionalOffer = value;
+      });
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Promotional Offers"),
-        backgroundColor: AppColors.green,
-      ),
-      body: FutureBuilder(
-        future: ProductInformationController.getPromotionalOffer(widget.gtin),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: LoadingWidget(),
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text("Something went wrong"),
-            );
-          } else if (!snapshot.hasData) {
-            return const Center(
-              child: Text("No data available"),
-            );
-          } else {
-            return Column(
-              children: [
-                Expanded(
-                  child: PaginatedDataTable(
-                    columns: const [
-                      DataColumn(label: Text("Id")),
-                      DataColumn(label: Text("Promotional Offers")),
-                      DataColumn(label: Text("Link Type")),
-                      DataColumn(label: Text("Language")),
-                      DataColumn(label: Text("Target URL")),
-                      DataColumn(label: Text("GTIN")),
-                      DataColumn(label: Text("Expiry Date")),
-                      DataColumn(label: Text("Price")),
-                      DataColumn(label: Text("Banner")),
-                    ],
-                    source: PromotionalOfferSource(),
-                    arrowHeadColor: AppColors.green,
-                    showCheckboxColumn: false,
-                    rowsPerPage: 10,
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text("Id")),
+        DataColumn(label: Text("Promotional Offers")),
+        DataColumn(label: Text("Link Type")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Target URL")),
+        DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Expiry Date")),
+        DataColumn(label: Text("Price")),
+        DataColumn(label: Text("Banner")),
+      ],
+      source: PromotionalOfferSource(),
+      arrowHeadColor: AppColors.green,
+      showCheckboxColumn: false,
+      rowsPerPage: 5,
     );
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: const Text("Promotional Offers"),
+    //     backgroundColor: AppColors.green,
+    //   ),
+    //   body: FutureBuilder(
+    //     future: ProductInformationController.getPromotionalOffer(widget.gtin),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return const Center(
+    //           child: LoadingWidget(),
+    //         );
+    //       } else if (snapshot.hasError) {
+    //         return const Center(
+    //           child: Text("Something went wrong"),
+    //         );
+    //       } else if (!snapshot.hasData) {
+    //         return const Center(
+    //           child: Text("No data available"),
+    //         );
+    //       } else {
+    //         return Column(
+    //           children: [
+    //             Expanded(
+    //               child: PaginatedDataTable(
+    //                 columns: const [
+    //                   DataColumn(label: Text("Id")),
+    //                   DataColumn(label: Text("Promotional Offers")),
+    //                   DataColumn(label: Text("Link Type")),
+    //                   DataColumn(label: Text("Language")),
+    //                   DataColumn(label: Text("Target URL")),
+    //                   DataColumn(label: Text("GTIN")),
+    //                   DataColumn(label: Text("Expiry Date")),
+    //                   DataColumn(label: Text("Price")),
+    //                   DataColumn(label: Text("Banner")),
+    //                 ],
+    //                 source: PromotionalOfferSource(),
+    //                 arrowHeadColor: AppColors.green,
+    //                 showCheckboxColumn: false,
+    //                 rowsPerPage: 10,
+    //               ),
+    //             ),
+    //           ],
+    //         );
+    //       }
+    //     },
+    //   ),
+    // );
   }
 }
 
@@ -311,70 +325,99 @@ class _ProductContentsState extends State<ProductContents> {
   @override
   void initState() {
     super.initState();
-    ProductInformationController.getProductContents(widget.gtin).then((value) {
-      productContents = value;
+    setState(() {
+      ProductInformationController.getProductContents(widget.gtin)
+          .then((value) {
+        productContents = value;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Product Contents"),
-        backgroundColor: AppColors.green,
-      ),
-      body: FutureBuilder(
-        future: ProductInformationController.getProductContents(widget.gtin),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: LoadingWidget(),
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text("Something went wrong"),
-            );
-          } else if (!snapshot.hasData) {
-            return const Center(
-              child: Text("No data available"),
-            );
-          } else {
-            return Column(
-              children: [
-                Expanded(
-                  child: PaginatedDataTable(
-                    columns: const [
-                      DataColumn(label: Text("Id")),
-                      DataColumn(label: Text("Product Allergen Information")),
-                      DataColumn(label: Text("Product Nutrient Information")),
-                      DataColumn(label: Text("GTIN")),
-                      DataColumn(label: Text("Link Type")),
-                      DataColumn(label: Text("Batch")),
-                      DataColumn(label: Text("Expiry")),
-                      DataColumn(label: Text("Serial")),
-                      DataColumn(label: Text("Manufecturing Date")),
-                      DataColumn(label: Text("Best Before")),
-                      DataColumn(label: Text("GLNID Form")),
-                      DataColumn(label: Text("Unit Price")),
-                      DataColumn(label: Text("Ingredients")),
-                      DataColumn(label: Text("Allergen Info")),
-                      DataColumn(label: Text("Calories")),
-                      DataColumn(label: Text("Sugar")),
-                      DataColumn(label: Text("Salt")),
-                      DataColumn(label: Text("Fat")),
-                    ],
-                    source: ProductContentsSource(),
-                    arrowHeadColor: AppColors.green,
-                    showCheckboxColumn: false,
-                    rowsPerPage: 10,
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+    return PaginatedDataTable(
+      columns: const [
+        DataColumn(label: Text("Id")),
+        DataColumn(label: Text("Product Allergen Information")),
+        DataColumn(label: Text("Product Nutrient Information")),
+        DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Link Type")),
+        DataColumn(label: Text("Batch")),
+        DataColumn(label: Text("Expiry")),
+        DataColumn(label: Text("Serial")),
+        DataColumn(label: Text("Manufecturing Date")),
+        DataColumn(label: Text("Best Before")),
+        DataColumn(label: Text("GLNID Form")),
+        DataColumn(label: Text("Unit Price")),
+        DataColumn(label: Text("Ingredients")),
+        DataColumn(label: Text("Allergen Info")),
+        DataColumn(label: Text("Calories")),
+        DataColumn(label: Text("Sugar")),
+        DataColumn(label: Text("Salt")),
+        DataColumn(label: Text("Fat")),
+      ],
+      source: ProductContentsSource(),
+      arrowHeadColor: AppColors.green,
+      showCheckboxColumn: false,
+      rowsPerPage: 5,
     );
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: const Text("Product Contents"),
+    //     backgroundColor: AppColors.green,
+    //   ),
+    //   body: FutureBuilder(
+    //     future: ProductInformationController.getProductContents(widget.gtin),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return const Center(
+    //           child: LoadingWidget(),
+    //         );
+    //       } else if (snapshot.hasError) {
+    //         return const Center(
+    //           child: Text("Something went wrong"),
+    //         );
+    //       } else if (!snapshot.hasData) {
+    //         return const Center(
+    //           child: Text("No data available"),
+    //         );
+    //       } else {
+    //         return Column(
+    //           children: [
+    //             Expanded(
+    //               child: PaginatedDataTable(
+    //                 columns: const [
+    //                   DataColumn(label: Text("Id")),
+    //                   DataColumn(label: Text("Product Allergen Information")),
+    //                   DataColumn(label: Text("Product Nutrient Information")),
+    //                   DataColumn(label: Text("GTIN")),
+    //                   DataColumn(label: Text("Link Type")),
+    //                   DataColumn(label: Text("Batch")),
+    //                   DataColumn(label: Text("Expiry")),
+    //                   DataColumn(label: Text("Serial")),
+    //                   DataColumn(label: Text("Manufecturing Date")),
+    //                   DataColumn(label: Text("Best Before")),
+    //                   DataColumn(label: Text("GLNID Form")),
+    //                   DataColumn(label: Text("Unit Price")),
+    //                   DataColumn(label: Text("Ingredients")),
+    //                   DataColumn(label: Text("Allergen Info")),
+    //                   DataColumn(label: Text("Calories")),
+    //                   DataColumn(label: Text("Sugar")),
+    //                   DataColumn(label: Text("Salt")),
+    //                   DataColumn(label: Text("Fat")),
+    //                 ],
+    //                 source: ProductContentsSource(),
+    //                 arrowHeadColor: AppColors.green,
+    //                 showCheckboxColumn: false,
+    //                 rowsPerPage: 10,
+    //               ),
+    //             ),
+    //           ],
+    //         );
+    //       }
+    //     },
+    //   ),
+    // );
   }
 }
 
