@@ -57,6 +57,7 @@ dependencies:
   google_maps_flutter: ^2.4.0 
   geolocator: ^9.0.2
   flutter_barcode_scanner: ^2.0.0
+  flutter_polyline_points: 
 
 flutter_native_splash:
   color: "#FFFFFF"
