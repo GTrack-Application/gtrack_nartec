@@ -56,9 +56,14 @@ dependencies:
   dropdown_search: ^5.0.6
   google_maps_flutter: ^2.4.0 
   geolocator: ^9.0.2
+<<<<<<< HEAD
   flutter_barcode_scanner: ^2.0.0 
   flutter_polyline_points:
   pda_rfid_scanner: ^0.0.2+1
+=======
+  flutter_barcode_scanner: ^2.0.0
+  flutter_polyline_points: 
+>>>>>>> 280ed37b5075b28a8a85269c13c097c97de71760
 
 flutter_native_splash:
   color: "#FFFFFF"
