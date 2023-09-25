@@ -4,7 +4,7 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/aggregation_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/association_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/MappingRFID/bluetooth_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/MappingRFID/mapping_rfid_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Mapping_Barcode/BarcodeMappingScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Transformation/transformation_screen.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
@@ -61,7 +61,7 @@ class _CaptureScreenState extends State<CaptureScreen> {
     data[4]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: BarcodeMappingScreen());
     data[5]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const BluetoothScreen());
+        context: context, screen: const MappingRFIDScreen());
     super.initState();
   }
 

@@ -1,130 +1,163 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
-import 'package:pda_rfid_scanner/pda_rfid_scanner.dart';
+import 'package:zebra_rfid_sdk_plugin/zebra_event_handler.dart';
+import 'package:zebra_rfid_sdk_plugin/zebra_rfid_sdk_plugin.dart';
 
 class MappingRFIDScreen extends StatefulWidget {
   const MappingRFIDScreen({super.key});
 
   @override
-  State<MappingRFIDScreen> createState() => _MappingRFIDScreenState();
+  _MappingRFIDScreenState createState() => _MappingRFIDScreenState();
 }
 
 class _MappingRFIDScreenState extends State<MappingRFIDScreen> {
-  StreamSubscription? _streamSubscription;
-  String _platformMessage = '';
-  String status = 'off';
-
-  void _enableEventReceiver() {
-    _streamSubscription =
-        PdaRfidScanner.channel.receiveBroadcastStream().listen(
-      (dynamic event) {
-        debugPrint('Received event: $event');
-        setState(() {
-          _platformMessage = event;
-        });
-      },
-      onError: (dynamic error) {
-        debugPrint('Received error: ${error.message}');
-      },
-      cancelOnError: true,
-    );
-  }
-
-  void _disableEventReceiver() {
-    if (_streamSubscription != null) {
-      _streamSubscription!.cancel();
-      _streamSubscription = null;
-    }
-  }
-
+  String? _platformVersion = 'Unknown';
   @override
   void initState() {
-    _enableEventReceiver();
     super.initState();
+    initPlatformState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _disableEventReceiver();
+  Map<String?, RfidData> rfidDatas = {};
+  ReaderConnectionStatus connectionStatus = ReaderConnectionStatus.UnConnection;
+  addDatas(List<RfidData> datas) async {
+    for (var item in datas) {
+      var data = rfidDatas[item.tagID];
+      if (data != null) {
+        data.count;
+        data.count = data.count + 1;
+        data.peakRSSI = item.peakRSSI;
+        data.relativeDistance = item.relativeDistance;
+      } else {
+        rfidDatas.addAll({item.tagID: item});
+      }
+    }
+    setState(() {});
   }
 
-  powerOn() async {
-    final value = await PdaRfidScanner.powerOn();
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String? platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      platformVersion = await ZebraRfidSdkPlugin.platformVersion;
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+    if (!mounted) return;
+
     setState(() {
-      status = value;
-    });
-  }
-
-  powerOff() async {
-    final value = await PdaRfidScanner.powerOff();
-    setState(() {
-      status = value;
-    });
-  }
-
-  startScan() async {
-    final value = await PdaRfidScanner.scanStart();
-    setState(() {
-      status = value;
+      _platformVersion = platformVersion;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.pink,
-        title: const Text('Mapping RFID'),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 10),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: PrimaryButtonWidget(
-                    backgroungColor: AppColors.pink,
-                    onPressed: () {
-                      powerOn();
-                    },
-                    text: 'Power On',
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: PrimaryButtonWidget(
-                    backgroungColor: AppColors.pink,
-                    onPressed: () {
-                      powerOff();
-                    },
-                    text: "Power Off",
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: PrimaryButtonWidget(
-                    backgroungColor: AppColors.pink,
-                    onPressed: () {
-                      startScan();
-                    },
-                    text: "Start Scan",
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text('Running on: \n $_platformMessage'),
-                const SizedBox(height: 10),
-                Text('The Scanned Value is: $status'),
-              ],
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.pink,
+          title: Text(
+            'Status  ${connectionStatus.index}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
             ),
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 10),
+              Text(
+                'Running on: $_platformVersion\n',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                'Count: ${rfidDatas.length.toString()}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    child: PrimaryButtonWidget(
+                      backgroungColor: AppColors.green,
+                      text: "Read",
+                      onPressed: () async {
+                        ZebraRfidSdkPlugin.setEventHandler(
+                          ZebraEngineEventHandler(
+                            readRfidCallback: (datas) async {
+                              addDatas(datas);
+                            },
+                            errorCallback: (err) {
+                              ZebraRfidSdkPlugin.toast(err.errorMessage);
+                            },
+                            connectionStatusCallback: (status) {
+                              setState(() {
+                                connectionStatus = status;
+                              });
+                            },
+                          ),
+                        );
+                        ZebraRfidSdkPlugin.connect();
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    child: PrimaryButtonWidget(
+                      backgroungColor: Colors.amber,
+                      onPressed: () async {
+                        setState(() {
+                          rfidDatas = {};
+                        });
+                      },
+                      text: "Clear",
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    child: PrimaryButtonWidget(
+                      backgroungColor: AppColors.danger,
+                      text: "Stop",
+                      onPressed: () async {
+                        ZebraRfidSdkPlugin.disconnect();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: Scrollbar(
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      var key = rfidDatas.keys.toList()[index];
+                      return ListTile(
+                          title: Text(rfidDatas[key]?.tagID ?? 'null'));
+                    },
+                    itemCount: rfidDatas.length,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
