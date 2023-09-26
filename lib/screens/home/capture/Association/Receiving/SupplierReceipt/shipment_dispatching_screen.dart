@@ -34,6 +34,11 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
       appBar: AppBar(
         title: Text(
           "Supplier Receipt".toUpperCase(),
+          style: const TextStyle(
+            color: AppColors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: AppColors.pink,
       ),

@@ -624,7 +624,7 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
                       dataRowColor: MaterialStateColor.resolveWith(
                           (states) => Colors.grey.withOpacity(0.2)),
                       headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.orange),
+                          (states) => AppColors.pink),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey,
