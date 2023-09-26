@@ -47,6 +47,8 @@ class _TransferScreenState extends State<TransferScreen> {
   @override
   void initState() {
     super.initState();
+    data[0]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const BinToBinAxaptaScreen());
     data[1]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const BinToBinAxaptaScreen());
     data[2]["onTap"] = () => AppNavigator.goToPage(

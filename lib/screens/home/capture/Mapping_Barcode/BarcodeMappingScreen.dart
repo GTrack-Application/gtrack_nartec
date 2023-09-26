@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element, avoid_print, sized_box_for_whitespace
+// ignore_for_file: unused_element, avoid_print, sized_box_for_whitespace, use_key_in_widget_constructors, depend_on_referenced_packages
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dropdown_search/dropdown_search.dart';
