@@ -7,6 +7,8 @@ import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/BinT
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/ItemReallocation/ItemReAllocationScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/PalletTransfer/PalletTransferScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/RawMaterialsToWIPS/RawMaterialsToWIPScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/WIPtoFG/WIPtoFGScreen.dart';
 
 class TransferScreen extends StatefulWidget {
   const TransferScreen({super.key});
@@ -38,7 +40,12 @@ class _TransferScreenState extends State<TransferScreen> {
       "onTap": () {},
     },
     {
-      "text": "Item Re-Allocation",
+      "text": "Pallet Re-Allocation",
+      "icon": AppIcons.aggPackaging,
+      "onTap": () {},
+    },
+    {
+      "text": "FIP to FG Transfer",
       "icon": AppIcons.transferItem,
       "onTap": () {},
     },
@@ -48,7 +55,7 @@ class _TransferScreenState extends State<TransferScreen> {
   void initState() {
     super.initState();
     data[0]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const BinToBinAxaptaScreen());
+        context: context, screen: const RawMaterialsToWIPScreen());
     data[1]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const BinToBinAxaptaScreen());
     data[2]["onTap"] = () => AppNavigator.goToPage(
@@ -57,6 +64,8 @@ class _TransferScreenState extends State<TransferScreen> {
         context: context, screen: const PalletTransferScreen());
     data[4]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const ItemReAllocationScreen());
+    data[5]["onTap"] = () =>
+        AppNavigator.goToPage(context: context, screen: const WIPtoFGScreen());
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(

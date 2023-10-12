@@ -79,6 +79,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
     ).then((value) {
       AppPreferences.setToken(value.token.toString()).then((_) {});
       AppPreferences.setUserId(value.data!.userID.toString()).then((_) {});
+      AppPreferences.setNormalUserId(emailController.text.trim().toString())
+          .then((_) {});
 
       AppDialogs.closeDialog();
       AppSnackbars.success(context, "Login Successful", 2);

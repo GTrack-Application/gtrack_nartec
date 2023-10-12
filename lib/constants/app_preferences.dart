@@ -28,6 +28,12 @@ class AppPreferences {
     prefs.setString('token', token);
   }
 
+  // normal user id
+  static Future<void> setNormalUserId(String normalUserId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('normalUserId', normalUserId);
+  }
+
   // Getters
 
   /*  Get user id  */
@@ -52,5 +58,11 @@ class AppPreferences {
   static Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
+  }
+
+  // normal user id
+  static Future<String?> getNormalUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('normalUserId');
   }
 }
