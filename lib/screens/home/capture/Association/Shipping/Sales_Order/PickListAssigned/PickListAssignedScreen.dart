@@ -25,7 +25,7 @@ class PickListAssignedScreen extends StatefulWidget {
 }
 
 class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
-  final TextEditingController _routeIdController = TextEditingController();
+  final TextEditingController _packingSlipController = TextEditingController();
   String total = "0";
   List<GetPickingListModel> BinToBinJournalTableList = [];
   List<bool> isMarked = [];
@@ -100,7 +100,7 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
               Container(
                 margin: const EdgeInsets.only(left: 20, top: 10),
                 child: const TextWidget(
-                  text: "Route ID*",
+                  text: "Packing Slip ID*",
                   fontSize: 16,
                 ),
               ),
@@ -112,8 +112,8 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: TextFormFieldWidget(
-                        controller: _routeIdController,
-                        hintText: "Enter/Scan Journal ID",
+                        controller: _packingSlipController,
+                        hintText: "Enter/Scan Packing Slip ID",
                         width: MediaQuery.of(context).size.width * 0.73,
                         onEditingComplete: () {
                           onClick();
@@ -140,38 +140,12 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, top: 10),
-                    child: const TextWidget(
-                      text: "Items*",
-                      fontSize: 16,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      const TextWidget(text: "TOTAL", fontSize: 15),
-                      const SizedBox(width: 5),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.blue,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: TextWidget(text: total),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ],
+              Container(
+                margin: const EdgeInsets.only(left: 10, top: 10),
+                child: const TextWidget(
+                  text: "List of Items*",
+                  fontSize: 16,
+                ),
               ),
               const SizedBox(height: 10),
               Container(
@@ -364,6 +338,30 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
                 ),
               ),
               const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  const TextWidget(text: "TOTAL", fontSize: 15),
+                  const SizedBox(width: 5),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blue,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: TextWidget(
+                        text: total,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
+              ),
             ],
           ),
         ),
@@ -374,7 +372,7 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
   void onClick() async {
     FocusScope.of(context).unfocus();
     AppDialogs.loadingDialog(context);
-    GetPickingListController.getAllTable(_routeIdController.text.trim())
+    GetPickingListController.getAllTable(_packingSlipController.text.trim())
         .then((value) {
       setState(() {
         BinToBinJournalTableList = value;
