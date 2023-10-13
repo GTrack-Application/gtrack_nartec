@@ -7,6 +7,7 @@ import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/Cus
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/RawMaterials/RawMaterialsScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/SupplierReceipt/shipment_dispatching_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
 
 class ReceivingScreen extends StatefulWidget {
   const ReceivingScreen({super.key});
@@ -52,7 +53,7 @@ class _ReceivingScreenState extends State<ReceivingScreen> {
     };
     data[1]['onTap'] = () {
       AppNavigator.goToPage(
-          context: context, screen: const BinToBinAxaptaScreen());
+          context: context, screen: const BinToBinInternalScreen());
     };
     data[2]['onTap'] = () {
       AppNavigator.goToPage(context: context, screen: const ReturnRMAScreen1());

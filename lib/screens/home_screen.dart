@@ -7,6 +7,8 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/global/components/app_logo.dart';
+import 'package:gtrack_mobile_app/old/pages/login/user_login_page.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/capture_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/identify/identify_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/share_screen.dart';
@@ -218,6 +220,34 @@ class MyDrawerWidget extends StatelessWidget {
               Navigator.pop(context);
               AppNavigator.goToPage(
                   context: context, screen: const ShareScreen());
+            },
+          ),
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 20),
+          ListTile(
+            textColor: Colors.red,
+            leading: SizedBox(
+              width: 70,
+              height: 70,
+              child: CircleAvatar(
+                backgroundColor: Colors.red.withOpacity(0.8),
+                child: const Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            title: const Text(
+              'Sign out',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Get.offAll(() => const UserLoginPage());
             },
           ),
         ],
