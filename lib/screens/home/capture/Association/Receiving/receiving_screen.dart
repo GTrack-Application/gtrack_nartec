@@ -6,7 +6,6 @@ import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/CustomerReturns/ReturnRMAScreen1.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/RawMaterials/RawMaterialsScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/SupplierReceipt/shipment_dispatching_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
 
 class ReceivingScreen extends StatefulWidget {

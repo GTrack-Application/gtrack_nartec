@@ -7,7 +7,6 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/components/app_logo.dart';
 import 'package:gtrack_mobile_app/old/pages/login/user_login_page.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/capture_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/identify/identify_screen.dart';
