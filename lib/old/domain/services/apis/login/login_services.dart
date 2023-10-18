@@ -5,7 +5,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/LoginUser/LoginUserModel.dart';
+import 'package:gtrack_mobile_app/models/LoginUser/BrandOwnerLoginModel.dart';
+import 'package:gtrack_mobile_app/models/LoginUser/SupplierLoginModel.dart';
 import 'package:gtrack_mobile_app/models/Member/member_data_model.dart';
 import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
 import 'package:http/http.dart' as http;
@@ -175,8 +176,10 @@ class LoginServices {
     }
   }
 
-  static Future<LoginUserModel> normalUserLogin(
-      String email, String pass) async {
+  static Future<BrandOwnerLoginModel> brandOwnerLogin(
+    String email,
+    String pass,
+  ) async {
     const baseUrl = '${AppUrls.baseUrlWithPort}loginUser';
     final uri = Uri.parse(baseUrl);
 
@@ -196,7 +199,43 @@ class LoginServices {
       if (response.statusCode == 200) {
         print("Status Code: ${response.statusCode}");
         final responseBody = json.decode(response.body);
-        return LoginUserModel.fromJson(responseBody);
+        return BrandOwnerLoginModel.fromJson(responseBody);
+      } else {
+        print("Status Code: ${response.statusCode}");
+
+        var data = json.decode(response.body);
+        String msg = data['message'];
+        throw Exception(msg);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future<SupplierLoginModel> supplierLogin(
+    String email,
+    String pass,
+  ) async {
+    const baseUrl = '${AppUrls.baseUrlWithPort}loginInternalUser';
+    final uri = Uri.parse(baseUrl);
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Host': AppUrls.host,
+    };
+
+    final body = jsonEncode(
+      {'user_email': email, 'user_password': pass},
+    );
+
+    try {
+      final response = await http.post(uri, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        print("Status Code: ${response.statusCode}");
+        final responseBody = json.decode(response.body);
+        return SupplierLoginModel.fromJson(responseBody);
       } else {
         print("Status Code: ${response.statusCode}");
 

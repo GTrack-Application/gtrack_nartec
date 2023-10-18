@@ -1,13 +1,13 @@
 // ignore_for_file: file_names
 
-class LoginUserModel {
+class BrandOwnerLoginModel {
   String? message;
   String? token;
   Data? data;
 
-  LoginUserModel({this.message, this.token, this.data});
+  BrandOwnerLoginModel({this.message, this.token, this.data});
 
-  LoginUserModel.fromJson(Map<String, dynamic> json) {
+  BrandOwnerLoginModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     token = json['token'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;

@@ -49,7 +49,7 @@ class _RawMaterialsToWIPScreenState extends State<RawMaterialsToWIPScreen> {
 
   void _showUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    AppPreferences.getNormalUserId().then((value) {
+    AppPreferences.getUserId().then((value) {
       setState(() {
         userID = value!;
       });
@@ -460,7 +460,10 @@ class _RawMaterialsToWIPScreenState extends State<RawMaterialsToWIPScreen> {
                   children: <Widget>[
                     Flexible(
                       child: ListTile(
-                        title: const Text('By GTIN'),
+                        title: const Text(
+                          'By GTIN',
+                          style: TextStyle(fontSize: 15),
+                        ),
                         leading: Radio(
                           value: "By Gtin",
                           groupValue: _site,
@@ -475,7 +478,10 @@ class _RawMaterialsToWIPScreenState extends State<RawMaterialsToWIPScreen> {
                     ),
                     Flexible(
                       child: ListTile(
-                        title: const Text('By SSCC'),
+                        title: const Text(
+                          'By SSCC',
+                          style: TextStyle(fontSize: 15),
+                        ),
                         leading: Radio(
                           value: "By Sscc",
                           groupValue: _site,

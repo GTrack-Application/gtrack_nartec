@@ -2,18 +2,19 @@
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/GetPickingListModel.dart';
+import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class GetPickingListController {
-  static Future<List<GetPickingListModel>> getAllTable(
-      String pickingRouteId) async {
+  static Future<List<GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel>>
+      getAllTable(String pickingRouteId) async {
     String? tokenNew = await AppPreferences.getToken();
+    String? userId = await AppPreferences.getUserId();
 
     String url =
-        "${AppUrls.baseUrlWithPort}getAllWmsSalesPickingListClFromWBSByPickingRouteId?PICKINGROUTEID=$pickingRouteId";
+        "${AppUrls.baseUrlWithPort}getSalesPickingListByAssignToUserIdAndPurchaseOrder?assign_to_user_id=$userId&purchase_order=$pickingRouteId";
 
     print(url);
 
@@ -33,8 +34,12 @@ class GetPickingListController {
         print("response: ${response.body}");
 
         var data = json.decode(response.body) as List;
-        List<GetPickingListModel> shipmentData =
-            data.map((e) => GetPickingListModel.fromJson(e)).toList();
+        List<GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel>
+            shipmentData = data
+                .map((e) =>
+                    GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel
+                        .fromJson(e))
+                .toList();
         return shipmentData;
       } else {
         print("Status Code: ${response.statusCode}");
