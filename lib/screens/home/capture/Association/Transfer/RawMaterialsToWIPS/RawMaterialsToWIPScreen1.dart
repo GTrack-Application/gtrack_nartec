@@ -3,16 +3,17 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/GetPickingListController.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel.dart';
+import 'package:gtrack_mobile_app/models/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorModel.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/RawMaterialsToWIPS/RawMaterialsToWIPScreen2.dart';
 
 // ignore: must_be_immutable
@@ -28,15 +29,21 @@ class RawMaterialsToWIPScreen1 extends StatefulWidget {
 
 class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
   String total = "0";
-  List<GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel> table = [];
+  List<GetSalesPickingListCLRMByAssignToUserAndVendorModel> table = [];
   List<bool> isMarked = [];
 
   String? userId;
+  String? vendorId;
 
-  void getCurrentUserId() {
+  void getPref() {
     AppPreferences.getUserId().then((value) {
       setState(() {
         userId = value;
+      });
+    });
+    AppPreferences.getVendorId().then((value) {
+      setState(() {
+        vendorId = value;
       });
     });
   }
@@ -44,35 +51,26 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
   @override
   void initState() {
     super.initState();
-    getCurrentUserId();
+    getPref();
 
-    if (widget.pickedQty != null && widget.pickedQty != "") {
-      Future.delayed(
-        Duration.zero,
-        () {
-          AppDialogs.loadingDialog(context);
-          GetPickingListController.getAllTable(widget.pickedQty!).then((value) {
-            setState(() {
-              table = value;
-              total = value.length.toString();
-              isMarked = List<bool>.filled(value.length, false);
-            });
-            AppDialogs.closeDialog();
-          }).onError(
-            (error, stackTrace) {
-              AppDialogs.closeDialog();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    error.toString().replaceAll("Exception:", ""),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      );
-    }
+    Future.delayed(Duration.zero, () {
+      AppDialogs.loadingDialog(context);
+      RawMaterialsToWIPController
+          .getSalesPickingListCLRMByAssignToUserAndVendorController(
+        int.parse(userId ?? ""),
+        int.parse(vendorId ?? ""),
+      ).then((value) {
+        setState(() {
+          table = value;
+          total = value.length.toString();
+          isMarked = List<bool>.filled(value.length, false);
+        });
+        AppDialogs.closeDialog();
+      }).onError((error, stackTrace) {
+        AppDialogs.closeDialog();
+        AppSnackbars.normal(context, error.toString());
+      });
+    });
   }
 
   String? dropDownValue = "Raw Material Warehouse";
@@ -184,7 +182,7 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
                 child: PaginatedDataTable(
                   rowsPerPage: 5,
                   header: const TextWidget(
-                    text: "List of Items in Picklist",
+                    text: "List of Items",
                     fontSize: 16,
                     color: Colors.black,
                   ),
@@ -196,18 +194,42 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
                     )),
                     DataColumn(
                         label: Text(
-                      'po_detail_id',
+                      'assign_to_userid',
                       style: TextStyle(color: Colors.black),
                     )),
                     DataColumn(
                         label: Text(
-                      'po_header_id',
+                      'product_name',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
-                      'assign_to_user_id',
+                      'quantity',
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'productid',
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'job_order_number',
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'transaction_date',
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'created',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
@@ -217,85 +239,6 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
-                    DataColumn(
-                        label: Text(
-                      'purchase_order',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'member_id',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'create_date',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'supplier_id',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'product_name',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                      label: Text(
-                        'quantity',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'price',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'price_subtotal',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'price_total',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'date_order',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'state',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'partner_name',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
                   ],
                   source: SourceData(
                     table,
@@ -314,39 +257,10 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
       ),
     );
   }
-
-  void onClick() async {
-    FocusScope.of(context).unfocus();
-    AppDialogs.loadingDialog(context);
-    GetPickingListController.getAllTable("P00001").then((value) {
-      setState(() {
-        table = value;
-        total = value.length.toString();
-        isMarked = List<bool>.filled(value.length, false);
-      });
-      AppDialogs.closeDialog();
-    }).onError(
-      (error, stackTrace) {
-        setState(() {
-          table = [];
-          total = "0";
-          isMarked = [];
-        });
-        AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              error.toString().replaceAll("Exception:", ""),
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
 
 class SourceData extends DataTableSource {
-  List<GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel> students;
+  List<GetSalesPickingListCLRMByAssignToUserAndVendorModel> students;
   BuildContext ctx;
   String binLocation;
 
@@ -376,81 +290,41 @@ class SourceData extends DataTableSource {
           );
           return;
         }
-
-        if (data.quantity == 0 ||
-            data.quantity == null ||
-            data.state == "Picked") {
-          ScaffoldMessenger.of(ctx).showSnackBar(
-            const SnackBar(
-              content: Text('Item already picked & ready for dispatch!'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-          return;
-        }
-
         AppNavigator.goToPage(
           context: ctx,
           screen: RawMaterialsToWIPScreen2(
-            id: data.id!,
-            poDetailId: data.poDetailId!,
-            poHeaderId: data.poHeaderId!,
-            assignToUserId: data.assignToUserId!,
-            vendorId: data.vendorId!,
-            purchaseOrder: data.purchaseOrder!,
-            memberId: data.memberId!,
-            createDate: data.createDate!,
-            supplierId: data.supplierId!,
-            productName: data.productName!,
-            quantity: data.quantity!,
-            price: data.price!,
-            priceSubtotal: data.priceSubtotal!,
-            priceTotal: data.priceTotal!,
-            dateOrder: data.dateOrder!,
-            state: data.state!,
-            partnerName: data.partnerName!,
-            binLocation: binLocation,
+            assignToUser: data.assignToUserid ?? 0,
+            created: data.created ?? "",
+            id: data.id ?? 0,
+            jobOrderNo: data.jobOrderNumber ?? "",
+            location: binLocation,
+            productId: data.productid ?? 0,
+            productName: data.productName ?? "",
+            quantity: data.quantity ?? 0,
+            transactionDate: data.transactionDate ?? "",
+            vendorId: data.vendorId ?? 0,
           ),
         );
       },
       cells: [
         DataCell(SelectableText(
             data.id.toString() == "null" ? "0" : data.id.toString())),
-        DataCell(SelectableText(data.poDetailId.toString() == "null"
+        DataCell(SelectableText(data.assignToUserid.toString() == "null"
             ? "0"
-            : data.poDetailId.toString())),
-        DataCell(SelectableText(data.poHeaderId.toString() == "null"
-            ? "0"
-            : data.poHeaderId.toString())),
-        DataCell(SelectableText(data.assignToUserId.toString() == "null"
-            ? "0"
-            : data.assignToUserId.toString())),
-        DataCell(SelectableText(data.vendorId.toString() == "null"
-            ? "0"
-            : data.vendorId.toString())),
-        DataCell(SelectableText(data.purchaseOrder ?? "")),
-        DataCell(SelectableText(data.memberId.toString() == "null"
-            ? "0"
-            : data.memberId.toString())),
-        DataCell(SelectableText(data.createDate ?? "")),
-        DataCell(SelectableText(data.supplierId.toString() == "null"
-            ? "0"
-            : data.supplierId.toString())),
+            : data.assignToUserid.toString())),
         DataCell(SelectableText(data.productName ?? "")),
         DataCell(SelectableText(data.quantity.toString() == "null"
             ? "0"
             : data.quantity.toString())),
-        DataCell(SelectableText(
-            data.price.toString() == "null" ? "0" : data.price.toString())),
-        DataCell(SelectableText(data.priceSubtotal.toString() == "null"
+        DataCell(SelectableText(data.productid.toString() == "null"
             ? "0"
-            : data.priceSubtotal.toString())),
-        DataCell(SelectableText(data.priceTotal.toString() == "null"
+            : data.productid.toString())),
+        DataCell(SelectableText(data.jobOrderNumber ?? "")),
+        DataCell(SelectableText(data.transactionDate ?? "")),
+        DataCell(SelectableText(data.created ?? "")),
+        DataCell(SelectableText(data.vendorId.toString() == "null"
             ? "0"
-            : data.priceTotal.toString())),
-        DataCell(SelectableText(data.dateOrder ?? "")),
-        DataCell(SelectableText(data.state ?? "")),
-        DataCell(SelectableText(data.partnerName.toString())),
+            : data.vendorId.toString())),
       ],
     );
   }

@@ -1,61 +1,44 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/GetAllTblDZonesController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/GetFirstTableData.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
+import 'package:gtrack_mobile_app/models/capture/Association/Transfer/RawMaterialsToWIP/GetMappedBarcodesRMByItemIdAndQtyModel.dart';
 
 // ignore: must_be_immutable
 class RawMaterialsToWIPScreen2 extends StatefulWidget {
   num id;
-  num poDetailId;
-  num poHeaderId;
-  num assignToUserId;
-  num vendorId;
-  String purchaseOrder;
-  num memberId;
-  String createDate;
-  num supplierId;
+  num assignToUser;
   String productName;
   num quantity;
-  num price;
-  num priceSubtotal;
-  num priceTotal;
-  String dateOrder;
-  String state;
-  String partnerName;
-  String binLocation;
+  num productId;
+  String jobOrderNo;
+  String transactionDate;
+  String created;
+  num vendorId;
+  String location;
 
   RawMaterialsToWIPScreen2({
-    Key? key,
+    super.key,
     required this.id,
-    required this.poDetailId,
-    required this.poHeaderId,
-    required this.assignToUserId,
-    required this.vendorId,
-    required this.purchaseOrder,
-    required this.memberId,
-    required this.createDate,
-    required this.supplierId,
+    required this.assignToUser,
     required this.productName,
     required this.quantity,
-    required this.price,
-    required this.priceSubtotal,
-    required this.priceTotal,
-    required this.dateOrder,
-    required this.state,
-    required this.partnerName,
-    required this.binLocation,
-  }) : super(key: key);
+    required this.productId,
+    required this.jobOrderNo,
+    required this.transactionDate,
+    required this.created,
+    required this.vendorId,
+    required this.location,
+  });
 
   @override
   State<RawMaterialsToWIPScreen2> createState() =>
@@ -64,16 +47,20 @@ class RawMaterialsToWIPScreen2 extends StatefulWidget {
 
 class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
   final TextEditingController LocationToController = TextEditingController();
+  final TextEditingController _scanItemIdController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
+
+  FocusNode _scanItemIdFocusNode = FocusNode();
 
   String result = "0";
-  String result2 = "0";
   List<String> serialNoList = [];
   List<bool> isMarked = [];
 
-  List<getMappedBarcodedsByItemCodeAndBinLocationModel> table1 = [];
+  List<GetMappedBarcodesRMByItemIdAndQtyModel> tableList = [];
 
   @override
   void initState() {
+    _quantityController.text = "1";
     super.initState();
 
     Future.delayed(const Duration(seconds: 1)).then((value) {
@@ -91,61 +78,29 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
           dropDownValue = dropDownList[0];
           filterList = dropDownList;
         });
-      });
 
-      GetFirstTableData.getData(
-        widget.productName,
-        widget.binLocation,
-      ).then((value) {
-        setState(() {
-          table1 = value;
-          result = table1.length.toString();
-        });
-        AppDialogs.closeDialog();
-      }).onError((error, stackTrace) {
-        setState(() {
-          table1 = [];
-          result = "0";
-        });
-      });
-
-      GetAllTblDZonesController.getData().then((value2) {
-        for (int i = 0; i < value2.length; i++) {
-          setState(() {
-            dropDownList2.add(value2[i].dZONE ?? "");
-            Set<String> set = dropDownList2.toSet();
-            dropDownList2 = set.toList();
-          });
-        }
-
-        setState(() {
-          dropDownValue2 = dropDownList2[0];
-          filterList2 = dropDownList2;
-        });
         AppDialogs.closeDialog();
       }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
-        setState(() {
-          dropDownValue2 = "";
-          filterList2 = [];
-        });
-      });
-    }).onError((error, stackTrace) {
-      AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            error.toString().replaceAll("Exception:", ""),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              error.toString().replaceAll("Exception:", ""),
+            ),
           ),
-        ),
-      );
+        );
+      });
     });
   }
 
-  final TextEditingController _searchController2 = TextEditingController();
-  String? dropDownValue2;
-  List<String> dropDownList2 = [];
-  List<String> filterList2 = [];
+  @override
+  void dispose() {
+    super.dispose();
+    _scanItemIdController.dispose();
+    _quantityController.dispose();
+    _scanItemIdFocusNode.dispose();
+    LocationToController.dispose();
+  }
 
   final TextEditingController _searchController = TextEditingController();
   String? dropDownValue;
@@ -190,7 +145,7 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               const Text(
-                                "Picklist ID",
+                                "Product ID",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -199,7 +154,7 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                widget.supplierId.toString(),
+                                widget.productId.toString(),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -219,7 +174,7 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                                 ),
                               ),
                               Text(
-                                widget.state,
+                                widget.jobOrderNo,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -240,7 +195,7 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                                 ),
                               ),
                               Text(
-                                widget.quantity.toString(),
+                                widget.id.toString(),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -367,115 +322,65 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                   ),
                 ],
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, top: 10),
-                child: TextWidget(
-                  text: "Scan Bin Location:",
-                  color: Colors.blue[900]!,
-                  fontSize: 15,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, top: 10),
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      child: const TextWidget(
+                        text: "Scan Item ID*",
+                        fontSize: 16,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 5, top: 10),
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      child: const TextWidget(
+                        text: "Qty*",
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Row(
                 children: [
                   Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.73,
                     margin: const EdgeInsets.only(left: 20),
-                    child: DropdownSearch<String>(
-                      filterFn: (item, filter) {
-                        return item
-                            .toLowerCase()
-                            .contains(filter.toLowerCase());
-                      },
-                      enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList2,
-                      onChanged: (value) {
-                        setState(() {
-                          dropDownValue2 = value!;
-                        });
-                      },
-                      selectedItem: dropDownValue2,
+                    child: TextFormFieldWidget(
+                      controller: _scanItemIdController,
+                      hintText: "Enter/Scan Item ID",
+                      focusNode: _scanItemIdFocusNode,
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      onEditingComplete: () {},
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: IconButton(
-                      onPressed: () {
-                        // show dialog box for search
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: TextWidget(
-                                text: "Search",
-                                color: Colors.blue[900]!,
-                                fontSize: 15,
-                              ),
-                              content: TextFormFieldWidget(
-                                controller: _searchController2,
-                                readOnly: false,
-                                hintText: "Enter/Scan Location",
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                onEditingComplete: () {
-                                  setState(() {
-                                    dropDownList2 = dropDownList2
-                                        .where((element) => element
-                                            .toLowerCase()
-                                            .contains(_searchController2.text
-                                                .toLowerCase()))
-                                        .toList();
-                                    dropDownValue2 = dropDownList2[0];
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Cancel",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // filter list based on search
-                                    setState(() {
-                                      filterList2 = dropDownList2
-                                          .where((element) => element
-                                              .toLowerCase()
-                                              .contains(_searchController2.text
-                                                  .toLowerCase()))
-                                          .toList();
-                                      dropDownValue2 = filterList2[0];
-                                    });
-
-                                    Navigator.pop(context);
-                                  },
-                                  child: TextWidget(
-                                    text: "Search",
-                                    color: Colors.blue[900]!,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                    margin: const EdgeInsets.only(left: 5),
+                    child: TextFormFieldWidget(
+                      controller: _quantityController,
+                      hintText: "Qty",
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      onEditingComplete: () {},
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        onClick();
                       },
-                      icon: const Icon(Icons.search),
+                      child: Image.asset(AppImages.finder,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          height: 60,
+                          fit: BoxFit.cover),
                     ),
                   ),
                 ],
@@ -488,113 +393,37 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                   columns: const [
                     DataColumn(
                         label: Text(
-                      'Item Code',
+                      'ID',
                       style: TextStyle(color: Colors.black),
                     )),
                     DataColumn(
                         label: Text(
-                      'Item Desc',
+                      'Item ID',
                       style: TextStyle(color: Colors.black),
                     )),
                     DataColumn(
                         label: Text(
-                      'GTIN',
+                      'Item Name',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
-                      'Remarks',
+                      'Available Qty',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
-                      'User',
+                      'Item Group ID',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
-                    DataColumn(
-                        label: Text(
-                      'Classification',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Main Location',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Bin Location',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Int Code',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Item Serial No.',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                      label: Text(
-                        'Map Date',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Pallet Code',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Reference',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'S-ID',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'C-ID',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'PO',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Trans',
-                        style: TextStyle(color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
                   ],
-                  source: StudentDataSource(table1, context),
+                  source: StudentDataSource(
+                    tableList,
+                    context,
+                  ),
                   showCheckboxColumn: false,
                   showFirstLastButtons: true,
                   arrowHeadColor: AppColors.pink,
@@ -616,7 +445,10 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                   readOnly: false,
                   hintText: "Enter/Scan Location To",
                   width: MediaQuery.of(context).size.width * 0.9,
-                  onEditingComplete: () {},
+                  onEditingComplete: () {
+                    // hide keyboard
+                    FocusScope.of(context).unfocus();
+                  },
                 ),
               ),
               const SizedBox(height: 10),
@@ -625,7 +457,9 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                   height: 50,
                   width: MediaQuery.of(context).size.width * 0.9,
                   title: "Complete",
-                  onPressed: () {},
+                  onPressed: () {
+                    onInsert();
+                  },
                   textColor: Colors.white,
                   color: AppColors.pink,
                 ),
@@ -637,10 +471,132 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
       ),
     );
   }
+
+  void onClick() {
+    if (_scanItemIdController.text.trim().isEmpty ||
+        _quantityController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter item id and quantity"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
+    if (int.parse(_quantityController.text.trim()) < 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Quantity should not be less than 1"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
+    AppDialogs.loadingDialog(context);
+    RawMaterialsToWIPController.getMappedBarcodesRMByItemIdAndQtyController(
+      _scanItemIdController.text.trim(),
+      int.parse(_quantityController.text.trim()),
+    ).then((value) {
+      setState(() {
+        // if the item id already exists then show snackbar
+        if (tableList.any((element) => element.itemId == value.itemId)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("This Item ID already exists"),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+          return;
+        }
+
+        tableList.add(value);
+        _scanItemIdController.text = "";
+        _quantityController.text = "1";
+
+        // focus on item id field
+        FocusScope.of(context).requestFocus(_scanItemIdFocusNode);
+      });
+      AppDialogs.closeDialog();
+    }).onError((error, stackTrace) {
+      AppDialogs.closeDialog();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            error.toString().replaceAll("Exception:", ""),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    });
+  }
+
+  void onInsert() async {
+    if (LocationToController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter location"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    if (tableList.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please add items"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    AppDialogs.loadingDialog(context);
+    RawMaterialsToWIPController.insertItemsLnWIP(
+      tableList,
+      _scanItemIdController.text.trim().toString(),
+      widget.productName.toString(),
+      int.parse(widget.quantity.toString()),
+      widget.jobOrderNo,
+      LocationToController.text.trim().toString(),
+    ).then((value) {
+      setState(() {
+        tableList.clear();
+        LocationToController.clear();
+        _quantityController.text = "1";
+        _scanItemIdController.clear();
+      });
+      AppDialogs.closeDialog();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Items inserted successfully"),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }).onError((error, stackTrace) {
+      AppDialogs.closeDialog();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            error.toString().replaceAll("Exception:", ""),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    });
+  }
 }
 
 class StudentDataSource extends DataTableSource {
-  List<getMappedBarcodedsByItemCodeAndBinLocationModel> students;
+  List<GetMappedBarcodesRMByItemIdAndQtyModel> students;
   BuildContext ctx;
 
   StudentDataSource(
@@ -660,46 +616,14 @@ class StudentDataSource extends DataTableSource {
       index: index,
       onSelectChanged: (value) {},
       cells: [
-        DataCell(SelectableText(student.itemCode ?? "")),
-        DataCell(SelectableText(student.itemDesc ?? "")),
-        DataCell(SelectableText(student.gTIN ?? "")),
-        DataCell(SelectableText(student.remarks ?? "")),
-        DataCell(SelectableText(student.user ?? "")),
-        DataCell(SelectableText(student.classification ?? "")),
-        DataCell(SelectableText(student.mainLocation ?? "")),
-        DataCell(SelectableText(student.binLocation ?? "")),
-        DataCell(SelectableText(student.intCode ?? "")),
-        DataCell(Row(
-          children: [
-            SelectableText(student.itemSerialNo ?? ""),
-            IconButton(
-              onPressed: () {
-                Clipboard.setData(
-                  ClipboardData(text: student.itemSerialNo ?? ""),
-                );
-                ScaffoldMessenger.of(ctx).showSnackBar(
-                  const SnackBar(
-                    content: Text("Copied to Clipboard"),
-                    backgroundColor: Colors.green,
-                    duration: Duration(seconds: 1),
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.copy,
-                size: 15,
-                color: Colors.blue,
-              ),
-            ),
-          ],
-        )),
-        DataCell(SelectableText(student.mapDate ?? "")),
-        DataCell(SelectableText(student.palletCode ?? "")),
-        DataCell(SelectableText(student.reference ?? "")),
-        DataCell(SelectableText(student.sID ?? "")),
-        DataCell(SelectableText(student.cID ?? "")),
-        DataCell(SelectableText(student.pO ?? "")),
-        DataCell(SelectableText(student.trans.toString())),
+        DataCell(SelectableText(
+            student.id.toString() == "null" ? "0" : student.id.toString())),
+        DataCell(SelectableText(student.itemId ?? "")),
+        DataCell(SelectableText(student.itemName ?? "")),
+        DataCell(SelectableText(student.availableQuantity.toString() == "null"
+            ? "0"
+            : student.availableQuantity.toString())),
+        DataCell(SelectableText(student.itemGroupId ?? "")),
       ],
     );
   }

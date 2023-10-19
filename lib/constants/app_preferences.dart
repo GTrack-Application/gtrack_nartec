@@ -40,6 +40,12 @@ class AppPreferences {
     prefs.setString('currentUser', currentUser);
   }
 
+  // vendorId
+  static Future<void> setVendorId(String vendorId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('vendorId', vendorId);
+  }
+
   // Getters
 
   /*  Get user id  */
@@ -76,5 +82,11 @@ class AppPreferences {
   static Future<String?> getCurrentUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('currentUser');
+  }
+
+  // vendorId
+  static Future<String?> getVendorId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('vendorId');
   }
 }

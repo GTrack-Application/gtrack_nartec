@@ -30,13 +30,16 @@ class Data {
   String? userEmail;
   String? userRole;
   bool? isActive;
+  int? vendorId;
 
-  Data(
-      {this.userId,
-      this.userName,
-      this.userEmail,
-      this.userRole,
-      this.isActive});
+  Data({
+    this.userId,
+    this.userName,
+    this.userEmail,
+    this.userRole,
+    this.isActive,
+    this.vendorId,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
@@ -44,6 +47,7 @@ class Data {
     userEmail = json['user_email'];
     userRole = json['user_role'];
     isActive = json['is_active'];
+    vendorId = json['vendor_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -53,6 +57,7 @@ class Data {
     data['user_email'] = userEmail;
     data['user_role'] = userRole;
     data['is_active'] = isActive;
+    data['vendor_id'] = vendorId;
     return data;
   }
 }
