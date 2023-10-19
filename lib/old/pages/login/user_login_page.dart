@@ -101,6 +101,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
       AppPreferences.setUserId(value.data!.userId.toString()).then((_) {});
       AppPreferences.setNormalUserId(emailController.text.trim().toString())
           .then((_) {});
+      AppPreferences.setCurrentUser(currentUser).then((_) {});
 
       AppDialogs.closeDialog();
       AppSnackbars.success(context, "Login Successful", 2);
@@ -110,6 +111,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
       AppSnackbars.danger(context, error.toString());
     });
   }
+
+  String currentUser = "";
 
   String dropdownValue = "Admin User";
   List<String> dropdownList = [
@@ -158,6 +161,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   onChanged: (value) {
                     setState(() {
                       dropdownValue = value!;
+                      if (dropdownValue == "Admin User") {
+                        currentUser = "Admin";
+                      }
                       emailController.clear();
                       passwordController.clear();
                     });
@@ -247,6 +253,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     onChanged: (value) {
                       setState(() {
                         stakeHolderValue = value!;
+                        currentUser = stakeHolderValue;
                       });
                     },
                   ),

@@ -1,10 +1,11 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, must_be_immutable
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/old/pages/login/user_login_page.dart';
@@ -51,8 +52,19 @@ class _HomeScreenState extends State<HomeScreen> {
     ],
   };
 
+  String currentUser = "";
+
+  void getCurrentUser() {
+    AppPreferences.getCurrentUser().then((value) {
+      setState(() {
+        currentUser = value!;
+      });
+    });
+  }
+
   @override
   void initState() {
+    getCurrentUser();
     super.initState();
     data['onTap']?[0] = () {
       AppNavigator.goToPage(context: context, screen: const IdentifyScreen());
@@ -97,36 +109,38 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         // make drawer from right side that contains the identity, capture and share screens
-        endDrawer: const MyDrawerWidget(),
-        body: SizedBox(
-          width: context.width,
-          height: context.height,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(height: 10),
-                Image.asset(
-                  AppImages.logo,
-                  width: 200,
-                  height: 150,
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return NavigateIconWidget(
-                      icon: data['icon']?[index] as String,
-                      title: data['title']?[index] as String,
-                      caption: data['caption']?[index] as String,
-                      color: data['color']?[index] as Color,
-                      onTap: data['onTap']?[index] as VoidCallback,
-                    );
-                  },
-                ),
-              ],
+        endDrawer: MyDrawerWidget(currentUser: currentUser),
+        body: SafeArea(
+          child: SizedBox(
+            width: context.width,
+            height: context.height,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(height: 10),
+                  Image.asset(
+                    AppImages.logo,
+                    width: 200,
+                    height: 150,
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return NavigateIconWidget(
+                        icon: data['icon']?[index] as String,
+                        title: data['title']?[index] as String,
+                        caption: data['caption']?[index] as String,
+                        color: data['color']?[index] as Color,
+                        onTap: data['onTap']?[index] as VoidCallback,
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -136,8 +150,11 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class MyDrawerWidget extends StatelessWidget {
-  const MyDrawerWidget({
+  String currentUser;
+
+  MyDrawerWidget({
     super.key,
+    required this.currentUser,
   });
 
   @override
@@ -146,17 +163,37 @@ class MyDrawerWidget extends StatelessWidget {
       backgroundColor: AppColors.white,
       child: ListView(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               color: AppColors.primary,
             ),
             curve: Curves.linear,
-            child: Text(
-              'GTIN Tracker v. 2.0',
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 24,
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  'GTIN Tracker v. 2.0',
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 24,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'User Type:',
+                      style: TextStyle(color: AppColors.white, fontSize: 15),
+                    ),
+                    const SizedBox(width: 20),
+                    Text(
+                      currentUser,
+                      style:
+                          const TextStyle(color: AppColors.green, fontSize: 20),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           ListTile(
@@ -255,7 +292,6 @@ class MyDrawerWidget extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
 class NavigateIconWidget extends StatelessWidget {
   String icon;
   String title;

@@ -1,6 +1,6 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
@@ -15,11 +15,35 @@ class WIPtoFGScreen extends StatefulWidget {
 }
 
 class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
-  final TextEditingController jobOrderNoController = TextEditingController();
+  final TextEditingController locationToController = TextEditingController();
 
   String total = "0";
   List<bool> isMarked = [];
   List<SsccProductsModel> table = [];
+
+  String? dropDownValue = "Raw Material Warehouse";
+  List<String> dropDownList = [
+    "Raw Material Warehouse",
+    "Plant Factory",
+    "Finished Goods Warehouse",
+    "Distribution Center",
+  ];
+
+  String? userId;
+
+  void getCurrentUserId() {
+    AppPreferences.getUserId().then((value) {
+      setState(() {
+        userId = value;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getCurrentUserId();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,50 +59,27 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                margin: const EdgeInsets.only(left: 20, top: 5),
-                child: const TextWidget(
-                  text: "Job Order No.",
-                  fontSize: 16,
-                ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+                color: AppColors.pink.withOpacity(0.1),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: TextFormFieldWidget(
-                        controller: jobOrderNoController,
-                        hintText: "Enter/Scan Job Order No.",
-                        width: MediaQuery.of(context).size.width * 0.73,
-                        onEditingComplete: () {
-                          FocusScope.of(context).unfocus();
-                        },
-                      ),
+                    const TextWidget(
+                      text: "Current Logged In User: ",
+                      fontSize: 16,
                     ),
-                    const SizedBox(width: 10),
                     Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: Image.asset(
-                          AppImages.finder,
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          height: 60,
-                          fit: BoxFit.cover,
-                        ),
+                      margin: const EdgeInsets.only(left: 5),
+                      child: TextWidget(
+                        text: userId ?? "",
+                        fontSize: 16,
+                        color: AppColors.pink,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -114,60 +115,68 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
                   arrowHeadColor: AppColors.pink,
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 5),
+              Container(
+                margin: const EdgeInsets.only(left: 20, top: 10),
+                child: const TextWidget(
+                  text: "Scan Bin (FROM)*",
+                  fontSize: 16,
+                ),
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Colors.white,
+                ),
+                width: MediaQuery.of(context).size.width * 0.9,
+                margin: const EdgeInsets.only(left: 20),
+                child: DropdownSearch<String>(
+                  filterFn: (item, filter) {
+                    return item.toLowerCase().contains(filter.toLowerCase());
+                  },
+                  enabled: true,
+                  dropdownButtonProps: const DropdownButtonProps(
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.black,
+                    ),
+                  ),
+                  items: dropDownList,
+                  onChanged: (value) {
+                    setState(() {
+                      dropDownValue = value!;
+                    });
+                  },
+                  selectedItem: dropDownValue,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 20, top: 10),
+                child: TextWidget(
+                  text: "Scan Location To*",
+                  color: Colors.blue[900]!,
+                  fontSize: 15,
+                ),
+              ),
               Container(
                 margin: const EdgeInsets.only(left: 20),
-                child: ElevatedButtonWidget(
+                child: TextFormFieldWidget(
+                  controller: locationToController,
+                  readOnly: false,
+                  hintText: "Enter/Scan Location To",
                   width: MediaQuery.of(context).size.width * 0.9,
+                  onEditingComplete: () {},
+                ),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButtonWidget(
                   height: 50,
-                  fontSize: 16,
-                  title: "Confirm All ?",
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  title: "Complete",
+                  onPressed: () {},
                   textColor: Colors.white,
                   color: AppColors.pink,
-                  onPressed: () {
-                    // show dialog for confirmation
-                    Get.defaultDialog(
-                      title: "Confirmation",
-                      titleStyle: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                      middleText: "Are you sure you want to confirm all?",
-                      middleTextStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                      backgroundColor: Colors.white,
-                      radius: 10,
-                      actions: [
-                        ElevatedButtonWidget(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          height: 40,
-                          title: "Yes",
-                          fontSize: 15,
-                          textColor: Colors.white,
-                          color: AppColors.pink,
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                        const SizedBox(width: 10),
-                        ElevatedButtonWidget(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          height: 40,
-                          title: "No",
-                          fontSize: 15,
-                          textColor: Colors.white,
-                          color: AppColors.pink,
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                      ],
-                    );
-                  },
                 ),
               ),
               const SizedBox(height: 20),

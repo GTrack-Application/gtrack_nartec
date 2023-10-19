@@ -7,7 +7,7 @@ import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/BinT
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/ItemReallocation/ItemReAllocationScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/PalletTransfer/PalletTransferScreen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/RawMaterialsToWIPS/RawMaterialsToWIPScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/RawMaterialsToWIPS/RawMaterialsToWIPScreen1.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/WIPtoFG/WIPtoFGScreen.dart';
 
 class TransferScreen extends StatefulWidget {
@@ -55,7 +55,7 @@ class _TransferScreenState extends State<TransferScreen> {
   void initState() {
     super.initState();
     data[0]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const RawMaterialsToWIPScreen());
+        context: context, screen: RawMaterialsToWIPScreen1());
     data[1]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const BinToBinAxaptaScreen());
     data[2]["onTap"] = () => AppNavigator.goToPage(
