@@ -50,7 +50,7 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
   final TextEditingController _scanItemIdController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
 
-  FocusNode _scanItemIdFocusNode = FocusNode();
+  final FocusNode _scanItemIdFocusNode = FocusNode();
 
   String result = "0";
   List<String> serialNoList = [];
@@ -180,26 +180,6 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                                   fontSize: 15,
                                 ),
                                 textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "User ID",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                widget.id.toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                ),
                               ),
                             ],
                           ),
@@ -515,8 +495,6 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
         }
 
         tableList.add(value);
-        _scanItemIdController.text = "";
-        _quantityController.text = "1";
 
         // focus on item id field
         FocusScope.of(context).requestFocus(_scanItemIdFocusNode);
@@ -567,20 +545,35 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
       widget.jobOrderNo,
       LocationToController.text.trim().toString(),
     ).then((value) {
-      setState(() {
-        tableList.clear();
-        LocationToController.clear();
-        _quantityController.text = "1";
-        _scanItemIdController.clear();
+      RawMaterialsToWIPController.insertEPCISEvent(
+        "Aggregation",
+        int.parse(_quantityController.text.trim()),
+      ).then((val) {
+        setState(() {
+          tableList.clear();
+          LocationToController.clear();
+          _quantityController.text = "1";
+          _scanItemIdController.clear();
+        });
+        AppDialogs.closeDialog();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Items added successfully"),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }).onError((error, stackTrace) {
+        AppDialogs.closeDialog();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              error.toString().replaceAll("Exception:", ""),
+            ),
+            duration: const Duration(seconds: 3),
+          ),
+        );
       });
-      AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Items inserted successfully"),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 1),
-        ),
-      );
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
       ScaffoldMessenger.of(context).showSnackBar(

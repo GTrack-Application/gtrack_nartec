@@ -68,7 +68,8 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
         AppDialogs.closeDialog();
       }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
-        AppSnackbars.normal(context, error.toString());
+        AppSnackbars.normal(
+            context, error.toString().replaceAll("Exception:", ""));
       });
     });
   }

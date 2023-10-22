@@ -14,15 +14,19 @@ class RawMaterialsToWIPController {
     int userId,
     int vendorId,
   ) async {
+    print(userId);
+    print(vendorId);
+    final url = Uri.parse(
+        '${AppUrls.baseUrlWithPort}getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId');
+    print(url);
+    final headers = {
+      'Content-Type': 'application/json',
+      'Host': AppUrls.host,
+    };
     try {
-      var response = await http.get(
-          Uri.parse(
-              '${AppUrls.baseUrlWithPort}getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': '${AppUrls.token}'
-          });
+      var response = await http.get(url, headers: headers);
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Status Code: ${response.statusCode}");
         var jsonString = jsonDecode(response.body) as List;
         return jsonString
             .map((item) =>
@@ -30,6 +34,7 @@ class RawMaterialsToWIPController {
                     item))
             .toList();
       } else {
+        print("Status Code: ${response.statusCode}");
         var jsonString = jsonDecode(response.body);
         var msg = jsonString['message'];
         throw Exception(msg);
@@ -71,7 +76,7 @@ class RawMaterialsToWIPController {
     String itemGroupId,
     String locations,
   ) async {
-    String token = await AppPreferences.getToken().toString();
+    String token = AppPreferences.getToken().toString();
     final url = Uri.parse('${AppUrls.baseUrlWithPort}insertItemsLnWIP');
     final headers = {
       'Host': AppUrls.host,
@@ -97,6 +102,69 @@ class RawMaterialsToWIPController {
 
     try {
       var response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Status Code: ${response.statusCode}");
+      } else {
+        print("Status Code: ${response.statusCode}");
+        var jsonString = jsonDecode(response.body);
+        var msg = jsonString['message'];
+        throw Exception(msg);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future<void> insertEPCISEvent(
+    String eventType,
+    int quantity,
+  ) async {
+    String token = AppPreferences.getToken().toString();
+    final url = Uri.parse('${AppUrls.baseUrlWithPort}insertEPCISEvent');
+    final headers = {
+      'Host': AppUrls.host,
+      'Authorization': '$token',
+      'Content-Type': 'application/json',
+    };
+
+    String eventTime = DateTime.now().toIso8601String();
+    String eventTimeZoneOffSet = DateTime.now().timeZoneOffset.toString();
+    String createDate = DateTime.now().toIso8601String();
+
+    var body = {
+      "EventType": eventType,
+      "EventAction": "OBSERVE",
+      "EventTime": eventTime,
+      "EventTimeZoneOffSet": eventTimeZoneOffSet,
+      "epcList": "urn:epc:id:sgtin:0614141.107346.2018",
+      "bizStep": "urn:epcglobal:cbv:bizstep:shipping",
+      "disposition": "urn:epcglobal:cbv:disp:in_transit",
+      "bizTransactionList": "urn:epcglobal:cbv:btt:po",
+      "readPoint": "urn:epc:id:sgln:0614141.00777.0",
+      "sourceList": "urn:epcglobal:cbv:sdt:owning_party",
+      "destinationList": "urn:epcglobal:cbv:sdt:possessing_party",
+      "sensorElementList": "temperature, humidity",
+      "childQuantityList":
+          "[{'epcClass': 'urn:epc:class:lgtin:4012345.012345', 'quantity': 1200}]",
+      "childEPCs": "urn:epc:id:sgtin:0614141.107346.2017",
+      "parentID": "urn:epc:id:sscc:0614141.1234567890",
+      "inputEPCList": "urn:epc:id:sgtin:0614141.107346.2016",
+      "inputQuantityList":
+          "[{'epcClass': 'urn:epc:class:lgtin:4012345.012345', 'quantity': $quantity}]",
+      "outputEPCList": "urn:epc:id:sgtin:0614141.107346.2015",
+      "ilmd": "",
+      "errorDeclaration": "",
+      "quantityList": "1",
+      "persistentDisposition": "urn:epcglobal:cbv:disp:in_progress",
+      "creationDate": createDate,
+      "sender": "SenderCompany",
+      "receiver": "ReceiverCompany",
+      "instanceIdentifer": "uniqueEventID"
+    };
+
+    try {
+      var response =
+          await http.post(url, headers: headers, body: jsonEncode(body));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Status Code: ${response.statusCode}");
       } else {

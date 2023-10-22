@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/capture/association/transfer/wip_to_fg_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/WIPtoFG/wip_to_fg_controller.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
@@ -92,6 +93,7 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
           dropDownValue.toString(),
         ),
       );
+      await RawMaterialsToWIPController.insertEPCISEvent("Transformation", 0);
     } catch (e) {
       AppSnackbars.danger(context, "$e");
     } finally {
