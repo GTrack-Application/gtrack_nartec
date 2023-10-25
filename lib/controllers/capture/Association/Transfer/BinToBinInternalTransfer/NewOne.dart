@@ -12,7 +12,8 @@ class NewOne {
     String itemCode,
     String binLocation,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getMappedBarcodedsByItemCodeAndBinLocation";

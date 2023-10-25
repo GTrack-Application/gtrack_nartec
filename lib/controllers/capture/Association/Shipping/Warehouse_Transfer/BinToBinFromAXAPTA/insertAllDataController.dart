@@ -22,7 +22,8 @@ class InsertAllDataController {
     String GROUPID,
     String MainLocation,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}insertTblTransferBinToBinCL";
     print("url: $url");

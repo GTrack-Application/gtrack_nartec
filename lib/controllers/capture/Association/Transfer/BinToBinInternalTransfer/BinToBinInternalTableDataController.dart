@@ -9,7 +9,8 @@ import 'dart:convert';
 class BinToBinInternalTableDataController {
   static Future<List<getMappedBarcodedsByItemCodeAndBinLocationModel>>
       getAllTable(String location) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getmapBarcodeDataByBinLocation?BinLocation=$location";

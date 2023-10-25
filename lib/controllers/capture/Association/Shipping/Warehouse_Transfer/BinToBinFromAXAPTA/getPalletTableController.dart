@@ -10,7 +10,8 @@ class GetPalletTableController {
   static Future<List<GetShipmentReceivedTableModel>> getAllTable(
     String palletCode,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getItemInfoByPalletCode";
     print("url: $url");

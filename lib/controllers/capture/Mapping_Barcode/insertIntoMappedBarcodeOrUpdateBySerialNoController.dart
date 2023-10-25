@@ -21,7 +21,8 @@ class insertIntoMappedBarcodeOrUpdateBySerialNoController {
     double weight,
     String manufacturingDate,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}insertIntoMappedBarcodeOrUpdateBySerialNo";

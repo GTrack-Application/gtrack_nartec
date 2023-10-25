@@ -7,7 +7,8 @@ import 'dart:convert';
 
 class GetQtyReceivedController {
   static Future<num> getAllTable(String transferID, String itemID) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getQtyReceivedFromTransferBinToBinCl?TRANSFERID=$transferID&ITEMID=$itemID";

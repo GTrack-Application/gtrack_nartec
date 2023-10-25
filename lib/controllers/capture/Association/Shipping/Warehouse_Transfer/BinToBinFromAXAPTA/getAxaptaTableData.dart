@@ -9,7 +9,8 @@ import 'dart:convert';
 class GetAxaptaTableDataController {
   static Future<List<GetAxaptaTableDataModel>> getAllTable(
       String transferID) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getExpectedTransferOrderByTransferId?TRANSFERID=$transferID";

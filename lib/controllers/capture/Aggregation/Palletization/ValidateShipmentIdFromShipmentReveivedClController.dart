@@ -7,7 +7,8 @@ import 'dart:convert';
 
 class ValidateShipmentIdFromShipmentReveivedClController {
   static Future<bool> palletizeSerialNo(String shipmentId) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=$shipmentId";

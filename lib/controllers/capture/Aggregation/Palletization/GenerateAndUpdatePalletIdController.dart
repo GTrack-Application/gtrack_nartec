@@ -10,8 +10,9 @@ class GenerateAndUpdatePalletIdController {
     List<String> serialNoList,
     String dropdownValue,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
-    // convert list to one string
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
+// convert list to one string
     String serialNoListString = serialNoList.join("&serialNumberList[]=");
 
     print(serialNoListString);

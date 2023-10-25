@@ -10,7 +10,8 @@ import 'package:http/http.dart' as http;
 class GetShipmentDataController {
   static Future<List<GetShipmentDataFromShipmentExpectedRModel>>
       getShipmentData(String id) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getShipmentDataFromShipmentExpectedR?SHIPMENTID=$id";

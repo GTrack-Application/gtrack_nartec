@@ -11,7 +11,8 @@ class UpdateMappedBarcodesPalletCodeBySerialNoController {
     List<getMappedBarcodedsByItemCodeAndBinLocationModel> oldBin,
     String newBin,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         '${AppUrls.baseUrlWithPort}updateMappedBarcodesPalletCodeBySerialNo';

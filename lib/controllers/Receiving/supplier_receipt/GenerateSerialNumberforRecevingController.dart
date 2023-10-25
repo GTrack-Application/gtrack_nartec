@@ -8,7 +8,8 @@ import 'package:http/http.dart' as http;
 
 class GenerateSerialNumberforRecevingController {
   static Future<String> generateSerialNo(String itemId) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}generateSerialNumberforReceving";
 

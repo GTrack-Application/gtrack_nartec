@@ -9,7 +9,8 @@ import 'dart:convert';
 class getWmsReturnSalesOrderByReturnItemNumController {
   static Future<List<getWmsReturnSalesOrderByReturnItemNumModel>> getData(
       String rmaValue) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=$rmaValue";

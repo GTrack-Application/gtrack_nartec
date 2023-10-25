@@ -9,7 +9,9 @@ class DeleteMultipleRecordsFromWmsReturnSalesOrderClController {
   static Future<void> getData(
     List<String> serialNo,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
+
     String url =
         "${AppUrls.baseUrlWithPort}deleteMultipleRecordsFromWmsReturnSalesOrderCl";
     print("url: $url");

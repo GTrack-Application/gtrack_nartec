@@ -8,7 +8,8 @@ import 'dart:convert';
 
 class GetAllTblDZonesController {
   static Future<List<GetAllTblDZonesModel>> getData() async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getAllTblDZones";
     print("url: $url");

@@ -11,7 +11,8 @@ class getMappedBarcodedsByItemCodeAndBinLocationController {
   static Future<List<getMappedBarcodedsByItemCodeAndBinLocationModel>> getData(
     String itemCode,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getmapBarcodeDataByItemCode";
 

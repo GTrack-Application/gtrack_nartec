@@ -7,9 +7,19 @@ import 'package:http/http.dart' as http;
 
 class WIPToFgController {
   static Future<List<GetItemsLnWipsModel>> getItems() async {
+    String? token;
+    await AppPreferences.getToken().then((value) => token = value);
+
     const endPoint = "${AppUrls.baseUrlWithPort}/getItemsLnWIPs";
+
     List<GetItemsLnWipsModel> items = [];
-    final response = await http.get(Uri.parse(endPoint));
+
+    final headers = <String, String>{
+      'Authorization': '$token',
+      'Host': AppUrls.host,
+    };
+
+    final response = await http.get(Uri.parse(endPoint), headers: headers);
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       for (var item in data) {
@@ -23,17 +33,16 @@ class WIPToFgController {
 
   static Future<void> insertManyIntoMappedBarcode(List records) async {
     const endPoint = "${AppUrls.baseUrlWithPort}insertManyIntoMappedBarcode";
+
     String? token;
-    AppPreferences.getToken().then((value) {
-      token = value;
-    });
+    await AppPreferences.getToken().then((value) => token = value);
     try {
       final response = await http.post(Uri.parse(endPoint),
           body: jsonEncode({"records": records}),
           headers: {
+            "Authorization": "$token",
             "Content-Type": "application/json",
             "Host": AppUrls.host,
-            "Authorization": "Bearer $token",
           });
       if (response.statusCode == 200 || response.statusCode == 201) {
       } else {

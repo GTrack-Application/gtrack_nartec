@@ -9,7 +9,8 @@ import 'dart:convert';
 class GetSerialTableController {
   static Future<List<GetShipmentReceivedTableModel>> getAllTable(
       String serialNo) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getItemInfoByItemSerialNo";
 

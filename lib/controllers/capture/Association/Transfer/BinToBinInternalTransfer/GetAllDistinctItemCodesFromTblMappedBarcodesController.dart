@@ -7,7 +7,8 @@ import 'dart:convert';
 
 class GetAllDistinctItemCodesFromTblMappedBarcodesController {
   static Future<List<String>> getAllTable() async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getAllDistinctItemCodesFromTblMappedBarcodes";

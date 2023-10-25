@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 
 class GetItemNameByItemIdController {
   static Future<List<BinToBinInternalModel>> getName(String itemId) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getOneMapBarcodeDataByItemCode?ItemCode=$itemId";

@@ -93,7 +93,7 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
           dropDownValue.toString(),
         ),
       );
-      await RawMaterialsToWIPController.insertEPCISEvent("Transformation", 0);
+      await RawMaterialsToWIPController.insertEPCISEvent("Transformation", 200);
     } catch (e) {
       AppSnackbars.danger(context, "$e");
     } finally {
@@ -123,17 +123,23 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
           } else if (state is GlobalErrorState) {
             return SafeArea(
                 child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(height: 20),
                 TextWidget(text: state.message),
-                ElevatedButtonWidget(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  title: "Retry",
-                  onPressed: () {
-                    wipToFGBloc.add(GlobalInitEvent());
-                  },
-                  textColor: Colors.white,
-                  color: AppColors.pink,
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButtonWidget(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    title: "Retry",
+                    onPressed: () {
+                      wipToFGBloc.add(GlobalInitEvent());
+                    },
+                    textColor: Colors.white,
+                    color: AppColors.pink,
+                  ),
                 ),
               ],
             ));

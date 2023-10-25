@@ -14,7 +14,8 @@ class UpdateStockMasterDataController {
     double height,
     double weight,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}updateStockMasterData";
 

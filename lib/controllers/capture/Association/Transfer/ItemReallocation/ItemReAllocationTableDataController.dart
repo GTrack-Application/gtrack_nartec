@@ -9,7 +9,8 @@ import 'dart:convert';
 class ItemReAllocationTableDataController {
   static Future<List<GetItemInfoByPalletCodeModel>> getAllTable(
       String palletId) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getItemInfoByPalletCode";
     print("url: $url");

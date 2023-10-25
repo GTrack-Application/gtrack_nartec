@@ -9,7 +9,8 @@ import 'dart:convert';
 class GetAlltblBinLocationsController {
   static Future<List<GetAlltblBinLocationsModel>>
       getShipmentPalletizing() async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getAlltblPalletMaster";
 

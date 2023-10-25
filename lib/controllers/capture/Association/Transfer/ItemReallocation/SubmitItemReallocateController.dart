@@ -13,7 +13,8 @@ class SubmitItemReallocateControllerimport {
     String serialnum,
     String selectType,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}manageItemsReallocation";
     print("url: $url");

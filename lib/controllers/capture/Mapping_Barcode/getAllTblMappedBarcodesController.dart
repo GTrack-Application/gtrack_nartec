@@ -9,7 +9,8 @@ import 'dart:convert';
 class getAllTblMappedBarcodesController {
   static Future<List<getInventTableWMSDataByItemIdOrItemNameModel>> getData(
       String searchText) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getInventTableWMSDataByItemIdOrItemName";

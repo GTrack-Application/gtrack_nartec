@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
 
-
 class InsertManyIntoMappedBarcodeController {
   static Future<void> getData(
     String itemCode,
@@ -19,8 +18,8 @@ class InsertManyIntoMappedBarcodeController {
     String gtin,
     String remarks,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
-
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}insertManyIntoMappedBarcode";
     print("url: $url");

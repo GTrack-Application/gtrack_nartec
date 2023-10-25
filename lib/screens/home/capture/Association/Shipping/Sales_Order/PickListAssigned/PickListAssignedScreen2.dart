@@ -905,7 +905,7 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                     ).then((value) {
                       RawMaterialsToWIPController.insertEPCISEvent(
                         "Sales Order",
-                        0,
+                        200,
                       ).then((val) {
                         AppDialogs.closeDialog();
                         ScaffoldMessenger.of(context).showSnackBar(

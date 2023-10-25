@@ -6,7 +6,8 @@ import 'dart:convert';
 
 class ReturnDZones {
   static Future<List<GetAllTblRZonesModel>> getData() async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getAllTblRZones";
 

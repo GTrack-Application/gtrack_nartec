@@ -10,8 +10,10 @@ import 'dart:convert';
 class GetPickingListController {
   static Future<List<GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel>>
       getAllTable(String pickingRouteId) async {
-    String? tokenNew = await AppPreferences.getToken();
-    String? userId = await AppPreferences.getUserId();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
+    String? userId;
+    await AppPreferences.getUserId().then((value) => userId = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getSalesPickingListByAssignToUserIdAndPurchaseOrder?assign_to_user_id=$userId&purchase_order=$pickingRouteId";

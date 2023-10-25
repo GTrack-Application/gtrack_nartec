@@ -10,7 +10,8 @@ import 'package:http/http.dart' as http;
 class GetTblStockMasterByItemIdController {
   static Future<List<GetTblStockMasterByItemIdModel>> getData(
       String itemId) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getTblStockMasterByItemId?itemid=$itemId";

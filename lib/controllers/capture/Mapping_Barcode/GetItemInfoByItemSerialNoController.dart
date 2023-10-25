@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 
 class GetItemInfoByItemSerialNoController {
   static Future<int> getData(String itemserialno) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getItemInfoByItemSerialNo";
 

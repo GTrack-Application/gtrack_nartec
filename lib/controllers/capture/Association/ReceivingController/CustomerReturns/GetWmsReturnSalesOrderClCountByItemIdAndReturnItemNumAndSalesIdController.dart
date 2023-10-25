@@ -11,7 +11,8 @@ class GetWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesIdController 
     String returnItemNum,
     String salesId,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesId";

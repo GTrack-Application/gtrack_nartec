@@ -9,7 +9,8 @@ import 'dart:convert';
 class GetShipmentPalletizingController {
   static Future<List<GetTransferDistributionByTransferIdModel>>
       getShipmentPalletizing(String id) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
         "${AppUrls.baseUrlWithPort}getTransferDistributionByTransferId?TRANSFERID=$id";

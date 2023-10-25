@@ -13,7 +13,8 @@ class GenerateBarcodeForRmaController {
     String ITEMID,
     String MODELNO,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}generateBarcodeForRma";
     print("url: $url");

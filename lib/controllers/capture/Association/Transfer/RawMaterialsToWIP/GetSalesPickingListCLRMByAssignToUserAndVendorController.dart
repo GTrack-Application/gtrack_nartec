@@ -19,10 +19,14 @@ class RawMaterialsToWIPController {
     final url = Uri.parse(
         '${AppUrls.baseUrlWithPort}getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId');
     print(url);
-    final headers = {
+    String? token;
+    await AppPreferences.getToken().then((value) => token = value);
+    final headers = <String, String>{
+      'Authorization': '$token',
       'Content-Type': 'application/json',
       'Host': AppUrls.host,
     };
+    print(headers);
     try {
       var response = await http.get(url, headers: headers);
       if (response.statusCode == 200 || response.statusCode == 201) {

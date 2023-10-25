@@ -11,7 +11,8 @@ class insertManyIntoMappedBarcodeController2 {
     String binLocation,
     List<getWmsReturnSalesOrderByReturnItemNum2Model> data,
   ) async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}insertManyIntoMappedBarcode";
     print("url: $url");

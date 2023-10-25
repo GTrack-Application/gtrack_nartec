@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 
 class GetAllTableZoneController {
   static Future<List<GetAllTableZoneModel>> getAllTableZone() async {
-    String? tokenNew = await AppPreferences.getToken();
+    String? tokenNew;
+    await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWithPort}getAllTblRZones";
 
