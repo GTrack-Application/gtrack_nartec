@@ -303,7 +303,8 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
       AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      AppSnackbars.danger(context, error.toString());
+      AppSnackbars.normal(
+          context, error.toString().replaceAll("Exception:", ""));
     });
   }
 }

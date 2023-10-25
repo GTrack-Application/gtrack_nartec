@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/GetAllTblDZonesController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/GetFirstTableData.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/InsertPickListController.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
@@ -902,29 +903,35 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                       data,
                       widget.id.toString(),
                     ).then((value) {
-                      AppDialogs.closeDialog();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Data Inserted Successfully"),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                      // setState(() {
-                      //   widget.QTY = (int.parse(widget.QTY.toString()) -
-                      //           int.parse(widget.QTYPICKED.toString()))
-                      //       .toString();
-                      //   _serialNoController.clear();
-                      //   table2.clear();
-                      //   result2 = "0";
-                      // });
-
-                      Navigator.pushReplacement(context, MaterialPageRoute(
-                        builder: (context) {
-                          return PickListAssignedScreen(
-                            pickedQty: widget.id.toString(),
-                          );
-                        },
-                      ));
+                      RawMaterialsToWIPController.insertEPCISEvent(
+                        "Sales Order",
+                        0,
+                      ).then((val) {
+                        AppDialogs.closeDialog();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Data Inserted Successfully"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (context) {
+                            return PickListAssignedScreen(
+                              pickedQty: widget.id.toString(),
+                            );
+                          },
+                        ));
+                      }).onError((error, stackTrace) {
+                        AppDialogs.closeDialog();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              error.toString().replaceAll("Exception:", ""),
+                            ),
+                            duration: const Duration(seconds: 3),
+                          ),
+                        );
+                      });
                     }).onError((error, stackTrace) {
                       AppDialogs.closeDialog();
                       ScaffoldMessenger.of(context).showSnackBar(
