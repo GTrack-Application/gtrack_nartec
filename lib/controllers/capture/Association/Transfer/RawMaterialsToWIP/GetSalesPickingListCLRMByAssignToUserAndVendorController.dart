@@ -53,10 +53,15 @@ class RawMaterialsToWIPController {
     String itemId,
     int qty,
   ) async {
+    String? token;
+    await AppPreferences.getToken().then((value) => token = value.toString());
     final url = Uri.parse(
         '${AppUrls.baseUrlWithPort}getMappedBarcodesRMByItemIdAndQty?item_id=$itemId&qty=$qty');
     print(url);
-    final headers = {'Host': AppUrls.host, 'Authorization': '${AppUrls.token}'};
+    final headers = <String, String>{
+      'Host': AppUrls.host,
+      'Authorization': token!,
+    };
     try {
       var response = await http.get(url, headers: headers);
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -80,13 +85,16 @@ class RawMaterialsToWIPController {
     String itemGroupId,
     String locations,
   ) async {
-    String token = AppPreferences.getToken().toString();
+    String? token;
+    await AppPreferences.getToken().then((value) => token = value.toString());
+
     final url = Uri.parse('${AppUrls.baseUrlWithPort}insertItemsLnWIP');
     final headers = {
       'Host': AppUrls.host,
       'Authorization': '$token',
       'Content-Type': 'application/json',
     };
+    print(headers);
 
     // send some extra feilds with every item of the list
     var bodyData = items.map((e) {
@@ -120,60 +128,93 @@ class RawMaterialsToWIPController {
   }
 
   static Future<void> insertEPCISEvent(
-    String eventType,
-    int quantity,
+    String EventAction,
+    int totalRows,
+    String eventAction,
+    String disposition,
+    String bizStep,
+    String readPoint,
+    String bizTransactionList,
+    String parentId,
   ) async {
-    String token = AppPreferences.getToken().toString();
+    String? token;
+
+    await AppPreferences.getToken().then((value) => token = value.toString());
+
     final url = Uri.parse('${AppUrls.baseUrlWithPort}insertEPCISEvent');
     final headers = {
       'Host': AppUrls.host,
       'Authorization': '$token',
       'Content-Type': 'application/json',
     };
+  
+    print(headers);
 
     String eventTime = DateTime.now().toIso8601String();
     String eventTimeZoneOffSet = DateTime.now().timeZoneOffset.toString();
     String createDate = DateTime.now().toIso8601String();
 
-    var body = {
-      "EventType": eventType,
-      "EventAction": "OBSERVE",
-      "EventTime": eventTime,
-      "EventTimeZoneOffSet": eventTimeZoneOffSet,
-      "epcList": "urn:epc:id:sgtin:0614141.107346.2018",
-      "bizStep": "urn:epcglobal:cbv:bizstep:shipping",
-      "disposition": "urn:epcglobal:cbv:disp:in_transit",
-      "bizTransactionList": "urn:epcglobal:cbv:btt:po",
-      "readPoint": "urn:epc:id:sgln:0614141.00777.0",
-      "sourceList": "urn:epcglobal:cbv:sdt:owning_party",
+    // Globally unique ID of the event, used for deduplication and event retrieval. EPCIS2.0 specifies a hashing algorithm to construct a worldwide-unique ID for an event.
+    String uniqueEventID = DateTime.now().toIso8601String();
+
+    String? userId;
+    await AppPreferences.getUserId().then((value) => userId = value.toString());
+
+    final body = {
+      "EventType": "$eventAction",
+      "EventAction": "$EventAction", // observe, add, or delete
+      "EventTime": "$eventTime",
+      "EventTimeZoneOffSet": "$eventTimeZoneOffSet",
+      "epcList": ["urn:epc:id:sgtin:0614141.107346.2018"],
+      // "bizLocation": "urn:epcglobal:cbv:loc:0614141.00001.0",
+      "bizStep": "$bizStep",
+      "disposition": "$disposition",
+      "bizTransactionList": "$bizTransactionList",
+      "readPoint": {
+        "id":
+            "urn:epc:id:sgln:6285084.00002.1", // "readPoint" will be pass here...
+      },
+      "sourceList":
+          "urn:epcglobal:cbv:sdt:owning_party", // "urn:epcglobal:cbv:sdt:owning_party",
       "destinationList": "urn:epcglobal:cbv:sdt:possessing_party",
       "sensorElementList": "temperature, humidity",
-      "childQuantityList":
-          "[{'epcClass': 'urn:epc:class:lgtin:4012345.012345', 'quantity': 1200}]",
-      "childEPCs": "urn:epc:id:sgtin:0614141.107346.2017",
+      "childQuantityList": [
+        {"epcClass": "urn:epc:class:lgtin:4012345.012345", "quantity": 1200}
+      ],
+      "childEPCs": ["urn:epc:id:sgtin:0614141.107346.2017"],
       "parentID": "urn:epc:id:sscc:0614141.1234567890",
       "inputEPCList": "urn:epc:id:sgtin:0614141.107346.2016",
-      "inputQuantityList":
-          "[{'epcClass': 'urn:epc:class:lgtin:4012345.012345', 'quantity': $quantity}]",
+      "inputQuantityList": [
+        {
+          "epcClass": "urn:epc:class:lgtin:4012345.012345",
+          "quantity": 200,
+          "uom": "kg"
+        }
+      ],
       "outputEPCList": "urn:epc:id:sgtin:0614141.107346.2015",
       "ilmd": "",
       "errorDeclaration": "",
-      "quantityList": "1",
+      "quantityList": "$totalRows",
       "persistentDisposition": "urn:epcglobal:cbv:disp:in_progress",
-      "creationDate": createDate,
-      "sender": "SenderCompany",
-      "receiver": "ReceiverCompany",
-      "instanceIdentifer": "uniqueEventID"
+      "creationDate": "$createDate",
+      "sender": "$userId",
+      "receiver": "$userId",
+      "instanceIdentifer": "$uniqueEventID"
     };
+
+    print("Hello......");
 
     try {
       var response =
           await http.post(url, headers: headers, body: jsonEncode(body));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Status Code: ${response.statusCode}");
+        print("Response Body: ${response.body}");
       } else {
         print("Status Code: ${response.statusCode}");
+        print("Response Body: ${response.body}");
         var jsonString = jsonDecode(response.body);
+
         var msg = jsonString['message'];
         throw Exception(msg);
       }

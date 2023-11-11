@@ -25,6 +25,7 @@ class RawMaterialsToWIPScreen2 extends StatefulWidget {
   String created;
   num vendorId;
   String location;
+  int totalRows;
 
   RawMaterialsToWIPScreen2({
     super.key,
@@ -38,6 +39,7 @@ class RawMaterialsToWIPScreen2 extends StatefulWidget {
     required this.created,
     required this.vendorId,
     required this.location,
+    required this.totalRows,
   });
 
   @override
@@ -546,8 +548,14 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
       LocationToController.text.trim().toString(),
     ).then((value) {
       RawMaterialsToWIPController.insertEPCISEvent(
-        "Aggregation",
-        int.parse(_quantityController.text.trim()),
+        "OBSERVE", // OBSERVE, ADD, DELETE
+        widget.totalRows,
+        "TRANSFER EVENT",
+        "Internal Transfer",
+        "Transfer",
+        "urn:epc:id:sgln:6285084.00002.1",
+        widget.jobOrderNo,
+        widget.jobOrderNo,
       ).then((val) {
         setState(() {
           tableList.clear();

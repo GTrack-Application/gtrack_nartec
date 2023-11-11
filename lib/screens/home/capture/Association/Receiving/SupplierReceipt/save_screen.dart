@@ -3,6 +3,7 @@ import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GenerateSerialNumberforRecevingController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/InsertShipmentReceivedDataController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/UpdateStockMasterDataController.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
@@ -38,6 +39,7 @@ class SaveScreen extends StatefulWidget {
   double width;
   double height;
   double weight;
+  int totalRows;
 
   SaveScreen({
     Key? key,
@@ -63,6 +65,7 @@ class SaveScreen extends StatefulWidget {
     required this.width,
     required this.height,
     required this.weight,
+    required this.totalRows,
   }) : super(key: key);
 
   @override
@@ -427,6 +430,17 @@ class _SaveScreenState extends State<SaveScreen> {
                           widget.height,
                           widget.weight);
 
+                      RawMaterialsToWIPController.insertEPCISEvent(
+                        "OBSERVE", // OBSERVE, ADD, DELETE
+                        widget.totalRows,
+                        "RECEIVING EVENT",
+                        "Internal Transfer",
+                        "Receiving",
+                        "urn:epc:id:sgln:6285084.00002.1",
+                        widget.sHIPMENTID,
+                        widget.sHIPMENTID,
+                      );
+
                       FocusScope.of(context).requestFocus(secondFocusNode);
                       AppDialogs.closeDialog();
                     }).onError((error, stackTrace) {
@@ -451,7 +465,7 @@ class _SaveScreenState extends State<SaveScreen> {
                   color: AppColors.pink.withOpacity(0.3),
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: 50,
-                  onPressed: () {
+                  onPressed: () async {
                     GenerateSerialNumberforRecevingController.generateSerialNo(
                             widget.iTEMID)
                         .then(
@@ -495,6 +509,17 @@ class _SaveScreenState extends State<SaveScreen> {
                             widget.width,
                             widget.height,
                             widget.weight,
+                          );
+
+                          RawMaterialsToWIPController.insertEPCISEvent(
+                            "OBSERVE", // OBSERVE, ADD, DELETE
+                            widget.totalRows,
+                            "RECEIVING EVENT",
+                            "Internal Transfer",
+                            "Receiving",
+                            "urn:epc:id:sgln:6285084.00002.1",
+                            widget.sHIPMENTID,
+                            widget.sHIPMENTID,
                           );
 
                           AppDialogs.closeDialog();

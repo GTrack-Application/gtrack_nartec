@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -85,22 +85,41 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
   }
 
   insertRecord() async {
-    try {
-      AppDialogs.loadingDialog(context);
-      await WIPToFgController.insertManyIntoMappedBarcode(
-        getRecords(
-          locationToController.text.trim(),
-          dropDownValue.toString(),
-        ),
-      );
-      await RawMaterialsToWIPController.insertEPCISEvent("Transformation", 200);
-    } catch (e) {
-      AppSnackbars.danger(context, "$e");
-    } finally {
-      AppDialogs.closeDialog();
-      AppSnackbars.normal(context, 'Successfully Inserted');
-      locationToController.clear();
+    if (locationToController.text.trim().isEmpty) {
+      AppSnackbars.danger(context, "Please enter location");
+      return;
     }
+
+    AppDialogs.loadingDialog(context);
+    WIPToFgController.insertManyIntoMappedBarcode(
+      getRecords(
+        locationToController.text.trim(),
+        dropDownValue.toString(),
+      ),
+    ).then((value) {
+      RawMaterialsToWIPController.insertEPCISEvent(
+        "OBSERVE", // OBSERVE, ADD, DELETE
+        table.length,
+        "TRANSFER EVENT",
+        "Internal Transfer",
+        "Transfer",
+        "urn:epc:id:sgln:6285084.00002.1",
+        table[0].ssccId.toString(),
+        table[0].sSCCBarcodeNumber.toString(),
+      ).then((value) {
+        AppDialogs.closeDialog();
+        locationToController.clear();
+        AppSnackbars.normal(context, 'Successfully Inserted');
+      }).onError((error1, stackTrace) {
+        AppDialogs.closeDialog();
+        AppSnackbars.danger(
+            context, error1.toString().replaceAll("Exception:", ""));
+      });
+    }).onError((error2, stackTrace) {
+      AppDialogs.closeDialog();
+      AppSnackbars.danger(
+          context, error2.toString().replaceAll("Exception:", ""));
+    });
   }
 
   @override

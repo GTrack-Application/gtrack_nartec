@@ -32,6 +32,8 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
   List<GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel> table = [];
   List<bool> isMarked = [];
 
+  String packingSlipId = '';
+
   @override
   void initState() {
     super.initState();
@@ -410,6 +412,7 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
                     table,
                     context,
                     dropDownValue ?? "",
+                    packingSlipId,
                   ),
                   showCheckboxColumn: false,
                   showFirstLastButtons: true,
@@ -610,6 +613,7 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
   }
 
   void onClick() async {
+    packingSlipId = _packingSlipController.text.trim();
     FocusScope.of(context).unfocus();
     AppDialogs.loadingDialog(context);
     GetPickingListController.getAllTable(_packingSlipController.text.trim())
@@ -641,6 +645,7 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
 }
 
 class SourceData extends DataTableSource {
+  String packingSlipId;
   List<GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel> students;
   BuildContext ctx;
   String binLocation;
@@ -649,6 +654,7 @@ class SourceData extends DataTableSource {
     this.students,
     this.ctx,
     this.binLocation,
+    this.packingSlipId,
   );
 
   @override
@@ -705,6 +711,8 @@ class SourceData extends DataTableSource {
             state: data.state!,
             partnerName: data.partnerName!,
             binLocation: binLocation,
+            totalRows: students.length,
+            packingSlipId: packingSlipId.toString(),
           ),
         );
       },

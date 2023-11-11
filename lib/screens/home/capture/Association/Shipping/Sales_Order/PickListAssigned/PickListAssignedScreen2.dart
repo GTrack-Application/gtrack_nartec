@@ -36,6 +36,8 @@ class PickListAssingedScreen2 extends StatefulWidget {
   String state;
   String partnerName;
   String binLocation;
+  int totalRows;
+  String packingSlipId;
 
   PickListAssingedScreen2({
     Key? key,
@@ -57,6 +59,8 @@ class PickListAssingedScreen2 extends StatefulWidget {
     required this.state,
     required this.partnerName,
     required this.binLocation,
+    required this.totalRows,
+    required this.packingSlipId,
   }) : super(key: key);
 
   @override
@@ -904,8 +908,14 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                       widget.id.toString(),
                     ).then((value) {
                       RawMaterialsToWIPController.insertEPCISEvent(
-                        "Sales Order",
-                        200,
+                        "OBSERVE", // OBSERVE, ADD, DELETE
+                        widget.totalRows,
+                        "SHIPPING EVENT",
+                        "Internal Transfer",
+                        "Shipping",
+                        "urn:epc:id:sgln:6285084.00002.1",
+                        widget.packingSlipId,
+                        widget.packingSlipId,
                       ).then((val) {
                         AppDialogs.closeDialog();
                         ScaffoldMessenger.of(context).showSnackBar(

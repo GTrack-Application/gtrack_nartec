@@ -36,6 +36,7 @@ class ScanSerialNumberScreen extends StatefulWidget {
   num rCVQTY;
   num rEMAININGQTY;
   String createdDateTime;
+  int totalRows;
 
   ScanSerialNumberScreen({
     Key? key,
@@ -57,6 +58,7 @@ class ScanSerialNumberScreen extends StatefulWidget {
     required this.rCVQTY,
     required this.rEMAININGQTY,
     required this.createdDateTime,
+    required this.totalRows,
   }) : super(key: key);
 
   @override
@@ -490,6 +492,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                             _heightController.text.trim().toString()),
                         weight: double.parse(
                             _weightController.text.trim().toString()),
+                        totalRows: widget.totalRows,
                       ),
                     );
                   },

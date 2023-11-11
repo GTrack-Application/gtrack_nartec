@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
@@ -45,8 +47,13 @@ class WIPToFgController {
             "Host": AppUrls.host,
           });
       if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        print(data);
+        print("status code: ${response.statusCode}");
       } else {
         var data = jsonDecode(response.body);
+        print("status code: ${response.statusCode}");
+
         var msg = data["message"];
         throw Exception(msg);
       }

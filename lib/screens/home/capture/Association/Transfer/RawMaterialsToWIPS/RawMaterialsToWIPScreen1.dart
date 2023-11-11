@@ -304,6 +304,7 @@ class SourceData extends DataTableSource {
             quantity: data.quantity ?? 0,
             transactionDate: data.transactionDate ?? "",
             vendorId: data.vendorId ?? 0,
+            totalRows: students.length,
           ),
         );
       },

@@ -351,6 +351,7 @@ class TableDataSource extends DataTableSource {
             sERIALNUM: instance.sERIALNUM ?? "",
             sHIPMENTID: instance.sHIPMENTID ?? "",
             createdDateTime: instance.tRXDATETIME ?? "",
+            totalRows: data.length,
           ),
         );
       },
