@@ -57,7 +57,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
         Provider.of<LoginProvider>(context, listen: false)
             .setActivities(activities);
 
-        AppPreferences.setCurrentUser(currentUser).then((_) {});
+        AppPreferences.setCurrentUser("Admin").then((_) {});
 
         AppNavigator.goToPage(
           context: context,
@@ -83,7 +83,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
       AppPreferences.setUserId(value.data!.userID.toString()).then((_) {});
       AppPreferences.setNormalUserId(emailController.text.trim().toString())
           .then((_) {});
-      AppPreferences.setCurrentUser(currentUser).then((_) {});
+      AppPreferences.setCurrentUser("Brand Owner").then((_) {});
 
       AppDialogs.closeDialog();
       AppSnackbars.success(context, "Login Successful", 2);
@@ -104,7 +104,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
       AppPreferences.setUserId(value.data!.userId.toString()).then((_) {});
       AppPreferences.setNormalUserId(emailController.text.trim().toString())
           .then((_) {});
-      AppPreferences.setCurrentUser(currentUser).then((_) {});
+      AppPreferences.setCurrentUser("Supplier").then((_) {});
       AppPreferences.setVendorId(value.data!.vendorId.toString()).then((_) {});
 
       AppDialogs.closeDialog();
