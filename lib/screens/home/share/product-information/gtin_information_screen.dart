@@ -29,10 +29,10 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
 
   @override
   void initState() {
-    print(widget.gtin);
     final gtin = widget.codeType == "1D"
         ? widget.gtin
         : widget.gtin.split("-")[0].replaceAll("", "");
+
     gtinInformationBloc = gtinInformationBloc..add(GlobalDataEvent(gtin));
     super.initState();
   }
