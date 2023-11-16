@@ -17,6 +17,7 @@ class ProductInformationController {
     try {
       var response = await http.get(Uri.parse(
           '${AppUrls.baseUrlWithPort}/getPromotionalOffersByGtin/$gtin'));
+      print(response.body);
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {
@@ -37,6 +38,8 @@ class ProductInformationController {
     try {
       var response = await http.get(Uri.parse(
           '${AppUrls.baseUrlWithPort}/getProductContentByGtin/$gtin'));
+      print(response.body);
+
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {
@@ -58,6 +61,8 @@ class ProductInformationController {
     try {
       var response = await http.get(Uri.parse(
           '${AppUrls.baseUrlWithPort}/getProductLocationOriginByGtin/$gtin'));
+      print(response.body);
+
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {
@@ -79,6 +84,8 @@ class ProductInformationController {
     try {
       var response = await http.get(Uri.parse(
           '${AppUrls.baseUrlWithPort}/getProductLocationOriginByGtin/$gtin'));
+      print(response.body);
+
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {
@@ -99,6 +106,8 @@ class ProductInformationController {
     try {
       var response = await http.get(
           Uri.parse('${AppUrls.baseUrlWithPort}/getRecipeDataByGtin/$gtin'));
+      print(response.body);
+
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {
@@ -120,6 +129,8 @@ class ProductInformationController {
     try {
       var response = await http.get(Uri.parse(
           '${AppUrls.baseUrlWithPort}/getAlltblPkgCompositionDataByGtin/$gtin'));
+      print(response.body);
+
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {
@@ -141,6 +152,8 @@ class ProductInformationController {
     try {
       var response = await http.get(Uri.parse(
           '${AppUrls.baseUrlWithPort}/getProductLeafLetsDataByGtin/$gtin'));
+      print(response.body);
+
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {
