@@ -17,6 +17,7 @@ class ScanningScreen extends StatefulWidget {
 
 class _ScanningScreenState extends State<ScanningScreen> {
   String? barcodeValue;
+  TextEditingController barcodeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +73,17 @@ class _ScanningScreenState extends State<ScanningScreen> {
                       50.height,
                       GestureDetector(
                         onTap: () {
-                          AppNavigator.goToPage(
-                            context: context,
-                            screen: ProductInformationScreen(
-                              gtin: barcodeValue.toString(),
-                            ),
-                          );
+                          if (barcodeController.text.length > 15 &&
+                              !barcodeController.text.startsWith("01")) {
+                            AppSnackbars.normal(context, "Invalid barcode");
+                          } else {
+                            AppNavigator.goToPage(
+                              context: context,
+                              screen: ProductInformationScreen(
+                                gtin: barcodeValue.toString(),
+                              ),
+                            );
+                          }
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -126,6 +132,7 @@ class _ScanningScreenState extends State<ScanningScreen> {
 
     setState(() {
       barcodeValue = barcodeScanResult.replaceAll("", "");
+      barcodeController.text = barcodeValue.toString();
 
       // Check if the barcode is 1D or 2D
       if (barcodeValue!.length < 15) {
