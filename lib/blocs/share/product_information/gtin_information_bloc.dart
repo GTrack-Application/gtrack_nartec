@@ -11,7 +11,7 @@ class GtinInformationBloc extends Bloc<GlobalEvent, GlobalState> {
       if (networkStatus) {
         try {
           final data = await GtinInformationController.getGtinInformation(
-              event.data as String);
+              event.data.toString());
           emit(GlobalLoadedState(data: data));
         } catch (error) {
           emit(GlobalErrorState(message: error.toString()));
