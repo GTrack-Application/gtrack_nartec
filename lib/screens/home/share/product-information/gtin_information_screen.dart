@@ -14,9 +14,7 @@ GtinInformationModel? gtinInformationModel;
 
 class GtinInformationScreen extends StatefulWidget {
   final String gtin;
-  final String codeType;
-  const GtinInformationScreen(
-      {super.key, required this.gtin, required this.codeType});
+  const GtinInformationScreen({super.key, required this.gtin});
 
   @override
   State<GtinInformationScreen> createState() => _GtinInformationScreenState();
@@ -29,11 +27,8 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
 
   @override
   void initState() {
-    print(widget.gtin);
-    final gtin = widget.codeType == "1D"
-        ? widget.gtin
-        : widget.gtin.split("-")[0].replaceAll("", "");
-    gtinInformationBloc = gtinInformationBloc..add(GlobalDataEvent(gtin));
+    gtinInformationBloc = gtinInformationBloc
+      ..add(GlobalDataEvent(widget.gtin));
     super.initState();
   }
 

@@ -23,12 +23,7 @@ List<LeafletsModel> leaflets = [];
 
 class DigitalLinkScreen extends StatefulWidget {
   final String gtin;
-  final String codeType;
-  const DigitalLinkScreen({
-    Key? key,
-    required this.gtin,
-    required this.codeType,
-  }) : super(key: key);
+  const DigitalLinkScreen({Key? key, required this.gtin}) : super(key: key);
 
   @override
   State<DigitalLinkScreen> createState() => _DigitalLinkScreenState();
@@ -53,14 +48,9 @@ class _DigitalLinkScreenState extends State<DigitalLinkScreen> {
   int selectedIndex = 0;
   @override
   void initState() {
-    if (widget.codeType == "1D") {
-      gtin = widget.gtin;
-    } else {
-      gtin = widget.gtin.substring(1, 14);
-    }
-    screens.insert(0, SafetyInformation(gtin: gtin ?? ""));
-    screens.insert(1, PromotionalOffers(gtin: gtin ?? ""));
-    screens.insert(2, ProductContents(gtin: gtin ?? ""));
+    screens.insert(0, SafetyInformation(gtin: widget.gtin));
+    screens.insert(1, PromotionalOffers(gtin: widget.gtin));
+    screens.insert(2, ProductContents(gtin: widget.gtin));
     screens.insert(3, ProductLocationOfOrigin(gtin: widget.gtin));
     screens.insert(4, ProductRecall(gtin: widget.gtin));
     screens.insert(5, Recipe(gtin: widget.gtin));

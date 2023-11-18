@@ -6,11 +6,9 @@ import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_in
 
 class ProductInformationScreen extends StatefulWidget {
   final String gtin;
-  final String codeType;
   const ProductInformationScreen({
     super.key,
     required this.gtin,
-    required this.codeType,
   });
 
   @override
@@ -67,9 +65,9 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
         body: TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
-            GtinInformationScreen(gtin: widget.gtin, codeType: widget.codeType),
-            DigitalLinkScreen(gtin: widget.gtin, codeType: widget.codeType),
-            EventsScreen(gtin: widget.gtin, codeType: widget.codeType),
+            GtinInformationScreen(gtin: widget.gtin),
+            DigitalLinkScreen(gtin: widget.gtin),
+            EventsScreen(gtin: widget.gtin),
           ], // Disable tab swiping
         ),
       ),

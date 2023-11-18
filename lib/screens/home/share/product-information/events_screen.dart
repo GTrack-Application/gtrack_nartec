@@ -13,9 +13,7 @@ List<EventsScreenModel> table = [];
 
 class EventsScreen extends StatefulWidget {
   final String gtin;
-  final String codeType;
-  const EventsScreen({Key? key, required this.gtin, required this.codeType})
-      : super(key: key);
+  const EventsScreen({Key? key, required this.gtin}) : super(key: key);
 
   @override
   State<EventsScreen> createState() => _EventsScreenState();
@@ -81,10 +79,7 @@ class _EventsScreenState extends State<EventsScreen> {
       Duration.zero,
       () {
         AppDialogs.loadingDialog(context);
-        final gtin = (widget.codeType == "1D")
-            ? widget.gtin
-            : widget.gtin.substring(1, 14);
-        EventsScreenController.getEventsData(gtin).then((value) {
+        EventsScreenController.getEventsData(widget.gtin).then((value) {
           setState(() {
             table = value;
             latitude = value

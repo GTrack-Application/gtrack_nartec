@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/product_information_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -15,9 +16,7 @@ class ScanningScreen extends StatefulWidget {
 }
 
 class _ScanningScreenState extends State<ScanningScreen> {
-  String? _oneDBarcodeValue;
-
-  String? codeType;
+  String? barcodeValue;
 
   @override
   Widget build(BuildContext context) {
@@ -63,20 +62,11 @@ class _ScanningScreenState extends State<ScanningScreen> {
                           scanBarcodeNormal();
                         },
                         color: AppColors.green,
-                        child: const Text('Scan 1D Barcode'),
-                      ),
-                      const SizedBox(height: 10),
-                      AppButton(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        onTap: () async {
-                          scanQRCode();
-                        },
-                        color: AppColors.green,
-                        child: const Text('Scan 2D Barcode'),
+                        child: const Text('Scan Barcode'),
                       ),
                       const SizedBox(height: 50),
                       TextWidget(
-                        text: _oneDBarcodeValue ?? "No data",
+                        text: barcodeValue ?? "No data",
                         fontSize: 15,
                       ),
                       50.height,
@@ -85,8 +75,7 @@ class _ScanningScreenState extends State<ScanningScreen> {
                           AppNavigator.goToPage(
                             context: context,
                             screen: ProductInformationScreen(
-                              gtin: _oneDBarcodeValue!,
-                              codeType: codeType!,
+                              gtin: barcodeValue.toString(),
                             ),
                           );
                         },
@@ -107,7 +96,7 @@ class _ScanningScreenState extends State<ScanningScreen> {
                             style: TextStyle(color: AppColors.green),
                           ),
                         ),
-                      ).visible(codeType != null),
+                      ).visible(barcodeValue != null),
                     ],
                   ),
                 );
@@ -126,40 +115,25 @@ class _ScanningScreenState extends State<ScanningScreen> {
         '#ff6666',
         'Cancel',
         true,
-        ScanMode.BARCODE,
+        ScanMode.DEFAULT,
       );
       debugPrint(barcodeScanResult);
     } on PlatformException {
       barcodeScanResult = 'Failed to get platform version.';
+      AppSnackbars.normal(context, barcodeScanResult);
     }
     if (!mounted) return;
 
     setState(() {
-      barcodeScanResult = barcodeScanResult;
-      _oneDBarcodeValue = barcodeScanResult;
-      codeType = "1D";
-    });
-  }
+      barcodeValue = barcodeScanResult.replaceAll("", "");
 
-  Future<void> scanQRCode() async {
-    String barcodeScanResult;
-    try {
-      barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.QR,
-      );
-      debugPrint(barcodeScanResult);
-    } on PlatformException {
-      barcodeScanResult = 'Failed to get platform version.';
-    }
-    if (!mounted) return;
-
-    setState(() {
-      barcodeScanResult = barcodeScanResult;
-      _oneDBarcodeValue = barcodeScanResult;
-      codeType = "2D";
+      // Check if the barcode is 1D or 2D
+      if (barcodeValue!.length < 15) {
+        // It means it is 1D, no need to extract
+        barcodeValue = barcodeValue;
+      } else {
+        barcodeValue = barcodeValue?.substring(2, 15);
+      }
     });
   }
 }
