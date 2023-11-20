@@ -60,6 +60,7 @@ dependencies:
   flutter_polyline_points:
   flutter_blue: ^0.8.0
   zebra_rfid_sdk_plugin: ^0.0.3
+  native_barcode_scanner: ^1.0.6
 
 flutter_native_splash:
   color: "#FFFFFF"

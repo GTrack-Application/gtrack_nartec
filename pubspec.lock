@@ -584,6 +584,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  native_barcode_scanner:
+    dependency: "direct main"
+    description:
+      name: native_barcode_scanner
+      sha256: db12350c77269bed2b9e933dd88ee359f813b6c42732af8a8afae75de52bcaf0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   nb_utils:
     dependency: "direct main"
     description:
