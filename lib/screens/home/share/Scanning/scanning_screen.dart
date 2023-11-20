@@ -5,7 +5,7 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/screens/home/share/product-information/product_information_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/share/Scanning/barcode_scanning_scanning.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ScanningScreen extends StatefulWidget {
@@ -60,7 +60,11 @@ class _ScanningScreenState extends State<ScanningScreen> {
                       AppButton(
                         width: MediaQuery.of(context).size.width * 0.7,
                         onTap: () async {
-                          scanBarcodeNormal();
+                          // scanBarcodeNormal();
+                          AppNavigator.goToPage(
+                            context: context,
+                            screen: const BarcodeScanningScreen(),
+                          );
                         },
                         color: AppColors.green,
                         child: const Text('Scan Barcode'),
@@ -73,17 +77,17 @@ class _ScanningScreenState extends State<ScanningScreen> {
                       50.height,
                       GestureDetector(
                         onTap: () {
-                          if (barcodeController.text.length > 15 &&
-                              !barcodeController.text.startsWith("01")) {
-                            AppSnackbars.normal(context, "Invalid barcode");
-                          } else {
-                            AppNavigator.goToPage(
-                              context: context,
-                              screen: ProductInformationScreen(
-                                gtin: barcodeValue.toString(),
-                              ),
-                            );
-                          }
+                          // if (barcodeController.text.length > 15 &&
+                          //     !barcodeController.text.startsWith("01")) {
+                          //   AppSnackbars.normal(context, "Invalid barcode");
+                          // } else {
+                          //   AppNavigator.goToPage(
+                          //     context: context,
+                          //     screen: ProductInformationScreen(
+                          //       gtin: barcodeValue.toString(),
+                          //     ),
+                          //   );
+                          // }
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
