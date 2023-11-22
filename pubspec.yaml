@@ -61,6 +61,7 @@ dependencies:
   flutter_blue: ^0.8.0
   zebra_rfid_sdk_plugin: ^0.0.3
   native_barcode_scanner: ^1.0.6
+  gs1_barcode_parser: ^1.0.5
 
 flutter_native_splash:
   color: "#FFFFFF"
