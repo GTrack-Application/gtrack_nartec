@@ -356,21 +356,21 @@ class TableDataSource extends DataTableSource {
         );
       },
       cells: [
-        DataCell(Text(instance.sHIPMENTID ?? "")),
-        DataCell(Text(instance.cONTAINERID ?? "")),
-        DataCell(Text(instance.aRRIVALWAREHOUSE ?? "")),
-        DataCell(Text(instance.iTEMNAME ?? "")),
-        DataCell(Text(instance.iTEMID ?? "")),
-        DataCell(Text(instance.pURCHID ?? "")),
-        DataCell(Text(instance.cLASSIFICATION ?? "")),
-        DataCell(Text(instance.sERIALNUM ?? "")),
-        DataCell(Text(instance.rCVDCONFIGID ?? "")),
-        DataCell(Text(instance.gTIN ?? "")),
-        DataCell(Text(instance.rZONE ?? "")),
-        DataCell(Text(instance.pALLETCODE ?? "")),
-        DataCell(Text(instance.bIN ?? "")),
-        DataCell(Text(instance.rEMARKS ?? "")),
-        DataCell(Text(instance.pOQTY.toString() == "null"
+        DataCell(SelectableText(instance.sHIPMENTID ?? "")),
+        DataCell(SelectableText(instance.cONTAINERID ?? "")),
+        DataCell(SelectableText(instance.aRRIVALWAREHOUSE ?? "")),
+        DataCell(SelectableText(instance.iTEMNAME ?? "")),
+        DataCell(SelectableText(instance.iTEMID ?? "")),
+        DataCell(SelectableText(instance.pURCHID ?? "")),
+        DataCell(SelectableText(instance.cLASSIFICATION ?? "")),
+        DataCell(SelectableText(instance.sERIALNUM ?? "")),
+        DataCell(SelectableText(instance.rCVDCONFIGID ?? "")),
+        DataCell(SelectableText(instance.gTIN ?? "")),
+        DataCell(SelectableText(instance.rZONE ?? "")),
+        DataCell(SelectableText(instance.pALLETCODE ?? "")),
+        DataCell(SelectableText(instance.bIN ?? "")),
+        DataCell(SelectableText(instance.rEMARKS ?? "")),
+        DataCell(SelectableText(instance.pOQTY.toString() == "null"
             ? "0"
             : instance.pOQTY.toString())),
         DataCell(Text(instance.rCVQTY.toString() == "null"

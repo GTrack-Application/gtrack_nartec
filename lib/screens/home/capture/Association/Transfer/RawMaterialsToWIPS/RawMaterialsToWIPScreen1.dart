@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, non_constant_identifier_names, sized_box_for_whitespace
+// ignore_for_file: use_key_in_widget_constructors, non_constant_identifier_names, sized_box_for_whitespace, file_names
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
@@ -53,7 +53,7 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
     super.initState();
     getPref();
 
-    Future.delayed(Duration.zero, () {
+    Future.delayed(const Duration(seconds: 1), () {
       AppDialogs.loadingDialog(context);
       RawMaterialsToWIPController
           .getSalesPickingListCLRMByAssignToUserAndVendorController(
