@@ -28,10 +28,10 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
 
   String total = "0";
 
-  List<GetItemInfoByPalletCodeModel> getItemInfoByPalletCodeList = [];
+  List<GetItemInfoByPalletCodeModel> table = [];
   List<bool> isMarked = [];
 
-  String _site = "";
+  String _site = "Allocation";
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
           onPressed: () {
             Get.back();
           },
-          title: "Bin To Bin Transfer".toUpperCase(),
+          title: "Pallet Re-Allocation".toUpperCase(),
           actions: [
             GestureDetector(
               onTap: () {
@@ -167,175 +167,116 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 10, top: 10),
-                child: const TextWidget(
-                  text: "List of items on Pallets*",
-                  fontSize: 16,
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1,
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      showCheckboxColumn: false,
-                      dataRowColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.grey.withOpacity(0.2)),
-                      headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => AppColors.pink),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1,
-                        ),
-                      ),
-                      border: TableBorder.all(
-                        color: Colors.white,
-                        width: 1,
-                      ),
-                      columns: const [
-                        DataColumn(
-                            label: Text(
-                          'ID',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Item Code',
-                          style: TextStyle(color: Colors.white),
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Item Desc',
-                          style: TextStyle(color: Colors.white),
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'GTIN',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Remarks',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'User',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Classification',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Main Location',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Bin Location',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Int Code',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Item Serial No.',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Map Date',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Pallet Code',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Reference',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'SID',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'CID',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'PO',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                        DataColumn(
-                            label: Text(
-                          'Trans',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )),
-                      ],
-                      rows: getItemInfoByPalletCodeList.map((e) {
-                        return DataRow(onSelectChanged: (value) {}, cells: [
-                          DataCell(Text(
-                              (getItemInfoByPalletCodeList.indexOf(e) + 1)
-                                  .toString())),
-                          DataCell(Text(e.itemCode ?? "")),
-                          DataCell(Text(e.itemDesc ?? "")),
-                          DataCell(Text(e.gTIN ?? "")),
-                          DataCell(Text(e.remarks ?? "")),
-                          DataCell(Text(e.user ?? "")),
-                          DataCell(Text(e.classification ?? "")),
-                          DataCell(Text(e.mainLocation ?? "")),
-                          DataCell(Text(e.binLocation ?? "")),
-                          DataCell(Text(e.intCode ?? "")),
-                          DataCell(Text(e.itemSerialNo ?? "")),
-                          DataCell(Text(e.mapDate ?? "")),
-                          DataCell(Text(e.palletCode ?? "")),
-                          DataCell(Text(e.reference ?? "")),
-                          DataCell(Text(e.sID ?? "")),
-                          DataCell(Text(e.cID ?? "")),
-                          DataCell(Text(e.pO ?? "")),
-                          DataCell(Text(e.trans.toString())),
-                        ]);
-                      }).toList(),
-                    ),
-                  ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 1,
+                child: PaginatedDataTable(
+                  rowsPerPage: 4,
+                  columns: const [
+                    DataColumn(
+                        label: Text(
+                      'Item Code',
+                      style: TextStyle(color: Colors.blue),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Item Desc',
+                      style: TextStyle(color: Colors.blue),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'GTIN',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Remarks',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'User',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Classification',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Main Location',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Bin Location',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Int Code',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Item Serial No.',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Map Date',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Pallet Code',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Reference',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'SID',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'CID',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'PO',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'Trans',
+                      style: TextStyle(color: Colors.blue),
+                      textAlign: TextAlign.center,
+                    )),
+                  ],
+                  source: SourceData(table, context),
+                  showCheckboxColumn: false,
+                  showFirstLastButtons: true,
+                  arrowHeadColor: AppColors.pink,
                 ),
               ),
               Container(
@@ -390,13 +331,13 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                           AppDialogs.loadingDialog(context);
 
                           SubmitItemReallocateControllerimport.postData(
-                            getItemInfoByPalletCodeList,
+                            table,
                             _palletIdController.text.trim(),
                             _scanSerialItemController.text.trim(),
                             _site,
                           ).then((value) {
                             setState(() {
-                              getItemInfoByPalletCodeList.clear();
+                              table.clear();
                               _scanSerialItemController.clear();
                               _site = "";
                               _palletIdController.clear();
@@ -462,12 +403,12 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
             _palletIdController.text.trim())
         .then((value) {
       setState(() {
-        getItemInfoByPalletCodeList = value;
+        table = value;
         isMarked = List<bool>.filled(
-          getItemInfoByPalletCodeList.length,
+          table.length,
           false,
         );
-        total = getItemInfoByPalletCodeList.length.toString();
+        total = table.length.toString();
       });
       AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
@@ -480,4 +421,56 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
       );
     });
   }
+}
+
+class SourceData extends DataTableSource {
+  List<GetItemInfoByPalletCodeModel> students;
+  BuildContext ctx;
+
+  SourceData(
+    this.students,
+    this.ctx,
+  );
+
+  @override
+  DataRow? getRow(int index) {
+    if (index >= students.length) {
+      return null;
+    }
+
+    final data = students[index];
+
+    return DataRow.byIndex(
+      index: index,
+      onSelectChanged: (value) {},
+      cells: [
+        DataCell(SelectableText(data.itemCode ?? "")),
+        DataCell(SelectableText(data.itemDesc ?? "")),
+        DataCell(SelectableText(data.gTIN ?? "")),
+        DataCell(SelectableText(data.remarks ?? "")),
+        DataCell(SelectableText(data.user ?? "")),
+        DataCell(SelectableText(data.classification ?? "")),
+        DataCell(SelectableText(data.mainLocation ?? "")),
+        DataCell(SelectableText(data.binLocation ?? "")),
+        DataCell(SelectableText(data.intCode ?? "")),
+        DataCell(SelectableText(data.itemSerialNo ?? "")),
+        DataCell(SelectableText(data.mapDate ?? "")),
+        DataCell(SelectableText(data.palletCode ?? "")),
+        DataCell(SelectableText(data.reference ?? "")),
+        DataCell(SelectableText(data.sID ?? "")),
+        DataCell(SelectableText(data.cID ?? "")),
+        DataCell(SelectableText(data.pO ?? "")),
+        DataCell(SelectableText(data.trans.toString())),
+      ],
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => students.length;
+
+  @override
+  int get selectedRowCount => 0;
 }

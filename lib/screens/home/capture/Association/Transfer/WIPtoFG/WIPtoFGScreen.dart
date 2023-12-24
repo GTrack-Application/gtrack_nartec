@@ -85,7 +85,7 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
   }
 
   insertRecord() async {
-    if (locationToController.text.trim().isEmpty) {
+    if (locationToController.text.trim().isEmpty || dropDownValue == null) {
       AppSnackbars.danger(context, "Please enter location");
       return;
     }
@@ -97,6 +97,10 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
         dropDownValue.toString(),
       ),
     ).then((value) {
+      setState(() {
+        locationToController.clear();
+      });
+      AppSnackbars.normal(context, 'Successfully Inserted');
       RawMaterialsToWIPController.insertEPCISEvent(
         "OBSERVE", // OBSERVE, ADD, DELETE
         table.length,
@@ -117,8 +121,8 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
       });
     }).onError((error2, stackTrace) {
       AppDialogs.closeDialog();
-      AppSnackbars.danger(
-          context, error2.toString().replaceAll("Exception:", ""));
+      // AppSnackbars.danger(
+      //     context, error2.toString().replaceAll("Exception:", ""));
     });
   }
 
