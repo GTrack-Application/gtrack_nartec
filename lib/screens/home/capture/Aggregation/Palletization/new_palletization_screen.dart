@@ -321,14 +321,13 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
 
   void onSearch() async {
     if (serialNoController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please enter serial no")));
+      FocusScope.of(context).unfocus();
       return;
     }
 
     if (noOfBoxController.text.isEmpty || qtyPerBoxController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Please enter no of box and qty per box")));
+          content: Text("Please enter No of Box and QTY per box")));
       return;
     }
 
