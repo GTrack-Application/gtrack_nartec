@@ -352,7 +352,11 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                     padding: const EdgeInsets.only(left: 10),
                     child: ElevatedButtonWidget(
                       title: "Generate Pallet",
-                      onPressed: () {},
+                      onPressed: () {
+                        if (isButtonEnabled) {
+                          // submit
+                        }
+                      },
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 50,
                       fontSize: 15,
