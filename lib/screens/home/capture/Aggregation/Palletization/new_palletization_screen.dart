@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_print, file_names
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/GetShipmentPalletizingController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/ValidateShipmentIdFromShipmentReveivedClController.dart';
@@ -12,9 +14,6 @@ import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetTransferDistributionByTransferIdModel.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization/PalletProceedScreen.dart';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class NewPalletizationScreen extends StatefulWidget {
   const NewPalletizationScreen({super.key});
@@ -36,11 +35,32 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
   List<GetTransferDistributionByTransferIdModel> table = [];
   List<bool> isMarked = [];
 
-  int generateButtonVisible = 0;
+  bool isButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  enableButton() {
+    double? totalBoxes = double.tryParse(noOfBoxController.text);
+    double? qtyPerBox = double.tryParse(qtyPerBoxController.text);
+
+    double multiply = 0;
+
+    if (totalBoxes != null && qtyPerBox != null) {
+      multiply = totalBoxes * qtyPerBox;
+    }
+
+    if (multiply == table.length && multiply != 0) {
+      setState(() {
+        isButtonEnabled = true;
+      });
+    } else {
+      setState(() {
+        isButtonEnabled = false;
+      });
+    }
   }
 
   @override
@@ -118,6 +138,9 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                         onEditingComplete: () {
                           onShipmentSearch();
                         },
+                        onChanged: (value) {
+                          enableButton();
+                        },
                       ),
                     ),
                   ),
@@ -142,6 +165,9 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                         controller: qtyPerBoxController,
                         focusNode: qtyPerBoxFocusNode,
                         hintText: "Enter Qty Per Box",
+                        onChanged: (value) {
+                          enableButton();
+                        },
                         readOnly: isShipmentId == true ? true : false,
                         onEditingComplete: () {
                           onShipmentSearch();
@@ -328,8 +354,9 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                       title: "Generate Pallet",
                       onPressed: () {},
                       width: MediaQuery.of(context).size.width * 0.4,
+                      height: 50,
                       fontSize: 15,
-                      color: AppColors.pink,
+                      color: isButtonEnabled ? AppColors.pink : AppColors.grey,
                       textColor: Colors.white,
                     ),
                   ),
