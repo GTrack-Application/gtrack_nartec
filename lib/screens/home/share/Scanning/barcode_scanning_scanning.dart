@@ -40,7 +40,6 @@ class _BarcodeScanningScreenState extends State<BarcodeScanningScreen> {
       final parser = GS1BarcodeParser.defaultParser();
       final result = parser.parse(scannedCode);
       RegExp gtinPattern = RegExp(r'01 \(GTIN\): (\d+)');
-
       Match? match = gtinPattern.firstMatch(result.toString());
       if (match != null) {
         String gtin = match.group(1)!;
