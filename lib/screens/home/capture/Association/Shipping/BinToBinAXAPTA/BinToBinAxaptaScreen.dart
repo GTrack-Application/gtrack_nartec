@@ -223,6 +223,7 @@ class _BinToBinAxaptaScreenState extends State<BinToBinAxaptaScreen> {
                               try {
                                 print("numb: $numb");
                                 if (numb >= e.qTYTRANSFER!) {
+                                  AppDialogs.closeDialog();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(

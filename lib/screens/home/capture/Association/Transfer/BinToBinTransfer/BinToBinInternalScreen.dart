@@ -54,16 +54,17 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      AppDialogs.loadingDialog(context);
-
+      AppDialogs.showLoadingDialog(context);
       GetAllDistinctItemCodesFromTblMappedBarcodesController.getAllTable()
           .then((value) {
         for (int i = 0; i < value.length; i++) {
-          setState(() {
-            dropDownList2.add(value[i]);
-            Set<String> set = dropDownList2.toSet();
-            dropDownList2 = set.toList();
-          });
+          setState(
+            () {
+              dropDownList2.add(value[i]);
+              Set<String> set = dropDownList2.toSet();
+              dropDownList2 = set.toList();
+            },
+          );
         }
 
         setState(() {
@@ -71,9 +72,9 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
           filterList2 = dropDownList2;
         });
 
-        AppDialogs.closeDialog();
+        Navigator.of(context).pop();
       }).onError((error, stackTrace) {
-        AppDialogs.closeDialog();
+        Navigator.of(context).pop();
       });
     });
   }

@@ -60,6 +60,8 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
 
   List<GetMappedBarcodesRMByItemIdAndQtyModel> tableList = [];
 
+  List<int> pickedQtyList = [];
+
   @override
   void initState() {
     _quantityController.text = "1";
@@ -397,6 +399,12 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                     )),
                     DataColumn(
                         label: Text(
+                      'Picked Qty',
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    )),
+                    DataColumn(
+                        label: Text(
                       'Item Group ID',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
@@ -405,6 +413,7 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                   source: StudentDataSource(
                     tableList,
                     context,
+                    pickedQtyList,
                   ),
                   showCheckboxColumn: false,
                   showFirstLastButtons: true,
@@ -484,7 +493,6 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
       int.parse(_quantityController.text.trim()),
     ).then((value) {
       setState(() {
-        // if the item id already exists then show snackbar
         if (tableList.any((element) => element.itemId == value.itemId)) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -497,6 +505,7 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
         }
 
         tableList.add(value);
+        pickedQtyList.add(int.parse(_quantityController.text.trim()));
 
         // focus on item id field
         FocusScope.of(context).requestFocus(_scanItemIdFocusNode);
@@ -540,9 +549,8 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
 
     AppDialogs.loadingDialog(context);
     RawMaterialsToWIPController.insertItemsLnWIP(
+      pickedQtyList,
       tableList,
-      _scanItemIdController.text.trim().toString(),
-      widget.productName.toString(),
       int.parse(widget.quantity.toString()),
       widget.jobOrderNo,
       LocationToController.text.trim().toString(),
@@ -597,12 +605,14 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
 }
 
 class StudentDataSource extends DataTableSource {
+  List<int> pickedQtyList;
   List<GetMappedBarcodesRMByItemIdAndQtyModel> students;
   BuildContext ctx;
 
   StudentDataSource(
     this.students,
     this.ctx,
+    this.pickedQtyList,
   );
 
   @override
@@ -624,6 +634,9 @@ class StudentDataSource extends DataTableSource {
         DataCell(SelectableText(student.availableQuantity.toString() == "null"
             ? "0"
             : student.availableQuantity.toString())),
+        DataCell(SelectableText(pickedQtyList[index].toString() == "null"
+            ? "0"
+            : pickedQtyList[index].toString())),
         DataCell(SelectableText(student.itemGroupId ?? "")),
       ],
     );

@@ -57,9 +57,9 @@ class _GLNScreenState extends State<GLNScreen> {
                   double.parse(data.latitude.toString()),
                   double.parse(data.longitude.toString()),
                 ),
-                // infoWindow: InfoWindow(
-                //   snippet: data.locationNameAr.toString(),
-                // ),
+                infoWindow: InfoWindow(
+                  snippet: data.locationNameAr.toString(),
+                ),
                 onTap: () {
                   showDialog(
                     context: context,
