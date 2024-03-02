@@ -454,17 +454,17 @@ class StudentDataSource extends DataTableSource {
         );
       },
       cells: [
-        DataCell(Text(tble.aLSPACKINGSLIPREF ?? "")),
-        DataCell(Text(tble.aLSTRANSFERORDERTYPE.toString())),
-        DataCell(Text(tble.tRANSFERID ?? "")),
-        DataCell(Text(tble.iNVENTLOCATIONIDFROM ?? "")),
-        DataCell(Text(tble.iNVENTLOCATIONIDTO ?? "")),
-        DataCell(Text(tble.qTYTRANSFER.toString())),
-        DataCell(Text(tble.iTEMID.toString())),
-        DataCell(Text(tble.iTEMNAME ?? "")),
-        DataCell(Text(tble.cONFIGID ?? "")),
-        DataCell(Text(tble.wMSLOCATIONID ?? "")),
-        DataCell(Text(tble.sHIPMENTID ?? "")),
+        DataCell(SelectableText(tble.aLSPACKINGSLIPREF ?? "")),
+        DataCell(SelectableText(tble.aLSTRANSFERORDERTYPE.toString())),
+        DataCell(SelectableText(tble.tRANSFERID ?? "")),
+        DataCell(SelectableText(tble.iNVENTLOCATIONIDFROM ?? "")),
+        DataCell(SelectableText(tble.iNVENTLOCATIONIDTO ?? "")),
+        DataCell(SelectableText(tble.qTYTRANSFER.toString())),
+        DataCell(SelectableText(tble.iTEMID.toString())),
+        DataCell(SelectableText(tble.iTEMNAME ?? "")),
+        DataCell(SelectableText(tble.cONFIGID ?? "")),
+        DataCell(SelectableText(tble.wMSLOCATIONID ?? "")),
+        DataCell(SelectableText(tble.sHIPMENTID ?? "")),
       ],
     );
   }

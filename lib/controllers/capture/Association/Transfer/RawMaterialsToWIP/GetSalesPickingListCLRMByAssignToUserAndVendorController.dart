@@ -78,9 +78,8 @@ class RawMaterialsToWIPController {
   }
 
   static Future<void> insertItemsLnWIP(
+    List<int> pickedQtyList,
     List<GetMappedBarcodesRMByItemIdAndQtyModel> items,
-    String itemId,
-    String itemName,
     int availableQuantity,
     String itemGroupId,
     String locations,
@@ -99,10 +98,10 @@ class RawMaterialsToWIPController {
     // send some extra feilds with every item of the list
     var bodyData = items.map((e) {
       return {
-        "item_id": itemId,
-        "item_name": itemName,
-        "available_quantity": availableQuantity,
-        "item_group_id": itemGroupId,
+        "item_id": e.itemId,
+        "item_name": e.itemName,
+        "available_quantity": pickedQtyList[items.indexOf(e)],
+        "item_group_id": e.itemGroupId,
         "locations": locations
       };
     }).toList();
@@ -137,13 +136,12 @@ class RawMaterialsToWIPController {
     String bizTransactionList,
     String parentId,
   ) async {
-
     String? token;
 
     await AppPreferences.getToken().then((value) => token = value.toString());
 
     final url = Uri.parse('${AppUrls.baseUrlWithPort}insertEPCISEvent');
-  
+
     final headers = {
       'Host': AppUrls.host,
       'Authorization': '$token',
