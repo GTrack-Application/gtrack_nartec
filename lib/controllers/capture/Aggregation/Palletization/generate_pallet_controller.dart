@@ -29,6 +29,7 @@ class GeneratePalletController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = json.decode(response.body)["data"] as List;
         print("Status Code: ${response.statusCode}");
+        print(response.body);
         List<GetControlledSerialBySerialNoModel> controlledSerials = data
             .map((e) => GetControlledSerialBySerialNoModel.fromJson(e))
             .toList();

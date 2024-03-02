@@ -336,29 +336,24 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
     GeneratePalletController.generatePallet(
       serialNoController.text.trim(),
     ).then((value) {
-      if (table.isNotEmpty) {
-        for (var i = 0; i < value.length;) {
-          if (table.any((element) => element.serialNo == value[i].serialNo)) {
-            table.addAll([]);
-            AppDialogs.closeDialog();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content:
-                    Text("Serial No ${value[i].serialNo} already exists")));
-          }
-          return;
-        }
-      } else {
-        setState(() {
-          serialNoController.clear();
-          table.addAll(value);
-          total = table.length.toString();
-        });
-        enableButton();
-
-        // Hide keyboard
-        FocusScope.of(context).requestFocus(serialNoFocusNode);
+      bool test =
+          table.map((e) => e.serialNo).toList().contains(value[0].serialNo);
+      if (test) {
         AppDialogs.closeDialog();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Serial No ${value[0].serialNo} already exists")));
+        return;
       }
+
+      setState(() {
+        table.add(value[0]);
+        total = table.length.toString();
+        serialNoController.clear();
+      });
+      enableButton();
+
+      FocusScope.of(context).requestFocus(serialNoFocusNode);
+      AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
