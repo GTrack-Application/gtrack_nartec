@@ -319,6 +319,21 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
     );
   }
 
+  String grabSerialNumber(String input) {
+    // Check if the string contains at least 5 dashes
+    if ('-'.allMatches(input).length >= 5) {
+      // Split the string into parts
+      List<String> parts = input.split('-');
+
+      // Get the parts from the 5th dash onwards and join them back together
+      String result = parts.sublist(5).join('-');
+
+      return result; // Outputs: 5561000957-04062026-173
+    } else {
+      return input;
+    }
+  }
+
   void onSearch() async {
     if (serialNoController.text.isEmpty) {
       FocusScope.of(context).unfocus();
@@ -332,6 +347,8 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
     }
 
     AppDialogs.loadingDialog(context);
+    // split the controller value and get the value after 5th -
+    serialNoController.text = grabSerialNumber(serialNoController.text);
 
     GeneratePalletController.generatePallet(
       serialNoController.text.trim(),
