@@ -6,10 +6,9 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
-import 'package:gtrack_mobile_app/global/components/app_logo.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/old/pages/login/activities_and_password_page.dart';
 import 'package:gtrack_mobile_app/old/providers/login/login_provider.dart';
@@ -27,8 +26,13 @@ class UserLoginPage extends StatefulWidget {
 
 class _UserLoginPageState extends State<UserLoginPage> {
   final formKey = GlobalKey<FormState>();
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final FocusNode emailNode = FocusNode();
+  final FocusNode passwordNode = FocusNode();
+
   bool obscureText = true;
 
   @override
@@ -134,157 +138,218 @@ class _UserLoginPageState extends State<UserLoginPage> {
     "Local Authority",
   ];
 
+  bool rememberMe = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Login'),
-        centerTitle: true,
-      ),
-      body: Form(
-        key: formKey,
-        child: SingleChildScrollView(
+      body: Container(
+        width: context.width,
+        height: context.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/login_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Form(
+          key: formKey,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const AppLogo(width: 180, height: 180),
-                const SizedBox(height: 20),
-                const Text(
-                  'User Type',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.grey,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      "assets/images/trans_logo.png",
+                      width: 200,
+                      height: 200,
+                    ),
                   ),
-                ),
-                DropDownWidget(
-                  items: dropdownList,
-                  value: dropdownValue,
-                  onChanged: (value) {
-                    setState(() {
-                      dropdownValue = value!;
-                      if (dropdownValue == "Admin User") {
-                        currentUser = "Admin";
-                      }
-                      emailController.clear();
-                      passwordController.clear();
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Enter your login ID',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.grey,
-                  ),
-                ),
-                IconTextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  leadingIcon: Image.asset(AppIcons.usernameIcon),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your login ID';
-                    }
-                    // if (EmailValidator.validate(value)) {
-                    //   return null;
-                    // } else {
-                    //   return 'Please enter a valid email';
-                    // }
-                    return null;
-                  },
-                ).box.width(context.width * 0.9).make(),
-                const SizedBox(height: 20),
-                Visibility(
-                  visible: dropdownValue == "Admin User" ? false : true,
-                  child: const Text(
-                    "Enter your password",
+                  const Text(
+                    'User Type',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 23,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.grey,
+                      color: AppColors.white,
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: dropdownValue == "Admin User" ? false : true,
-                  child: IconTextField(
-                    controller: passwordController,
-                    leadingIcon: Image.asset(
-                      AppIcons.passwordIcon,
-                      width: 42,
-                      height: 42,
-                    ),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: obscureText,
-                    validator: (p0) {
-                      if (p0!.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
+                  DropDownWidget(
+                    items: dropdownList,
+                    value: dropdownValue,
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                        if (dropdownValue == "Admin User") {
+                          currentUser = "Admin";
+                        }
+                        emailController.clear();
+                        passwordController.clear();
+                      });
                     },
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.remove_red_eye),
-                      onPressed: () {
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Enter your login ID',
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.white,
+                    ),
+                  ),
+                  TextFieldWidget(
+                    hintText: "Login ID",
+                    controller: emailController,
+                    focusNode: emailNode,
+                    keyboardType: TextInputType.emailAddress,
+                    leadingIcon: Image.asset(AppIcons.usernameIcon),
+                    onFieldSubmitted: (p0) {
+                      if (dropdownValue == "Admin User") {
+                        // hide the keyboard
+                        emailNode.unfocus();
+                      } else {
+                        // scope to password node
+                        FocusScope.of(context).requestFocus(passwordNode);
+                      }
+                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please enter your login ID';
+                    //   }
+                    //   // if (EmailValidator.validate(value)) {
+                    //   //   return null;
+                    //   // } else {
+                    //   //   return 'Please enter a valid email';
+                    //   // }
+                    //   return null;
+                    // },
+                  ).box.width(context.width * 0.9).make(),
+                  const SizedBox(height: 20),
+                  Visibility(
+                    visible: dropdownValue == "Admin User" ? false : true,
+                    child: TextFieldWidget(
+                      hintText: "Password",
+                      focusNode: passwordNode,
+                      onFieldSubmitted: (p0) {
+                        // hide keyboard
+                        passwordNode.unfocus();
+                      },
+                      controller: passwordController,
+                      leadingIcon: Image.asset(
+                        AppIcons.passwordIcon,
+                        width: 42,
+                        height: 42,
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: obscureText,
+                      // validator: (p0) {
+                      //   if (p0!.isEmpty) {
+                      //     return 'Please enter your password';
+                      //   }
+                      //   return null;
+                      // },
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.remove_red_eye),
+                        onPressed: () {
+                          setState(() {
+                            obscureText = !obscureText;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Visibility(
+                    visible: dropdownValue == "Admin User" ? false : true,
+                    child: const Text(
+                      'Stakeholder Type',
+                      style: TextStyle(
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: dropdownValue == "Admin User" ? false : true,
+                    child: DropDownWidget(
+                      items: stakeHolderList,
+                      value: stakeHolderValue,
+                      onChanged: (value) {
                         setState(() {
-                          obscureText = !obscureText;
+                          stakeHolderValue = value!;
+                          currentUser = stakeHolderValue;
                         });
                       },
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Visibility(
-                  visible: dropdownValue == "Admin User" ? false : true,
-                  child: const Text(
-                    'Stakeholder\'s Type',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.grey,
+                  const SizedBox(height: 20),
+                  PrimaryButtonWidget(
+                    // rgba(66, 0, 255, 1)
+                    backgroungColor: const Color(0xFF4200FF),
+                    onPressed: () {
+                      if (dropdownValue.toString() == "Normal User") {
+                        if (stakeHolderValue == "Brand Owner") {
+                          brandOwnerLogin();
+                          return;
+                        }
+                        if (stakeHolderValue == "Supplier") {
+                          supplierOwnerLogin();
+                          return;
+                        }
+                      }
+
+                      if (dropdownValue.toString() == "Admin User") {
+                        login();
+                        return;
+                      }
+                    },
+                    text: "Login Now",
+                  ).box.width(context.width * 0.85).makeCentered(),
+                  const SizedBox(height: 20),
+                  // remember me and neeed help
+                  Container(
+                    margin: const EdgeInsets.only(right: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: rememberMe,
+                              onChanged: (value) {
+                                setState(() {
+                                  rememberMe = value!;
+                                });
+                              },
+                            ),
+                            const Text(
+                              'Remember Me',
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const Text(
+                            'Need Help?',
+                            style: TextStyle(
+                              color: AppColors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: dropdownValue == "Admin User" ? false : true,
-                  child: DropDownWidget(
-                    items: stakeHolderList,
-                    value: stakeHolderValue,
-                    onChanged: (value) {
-                      setState(() {
-                        stakeHolderValue = value!;
-                        currentUser = stakeHolderValue;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-                PrimaryButtonWidget(
-                  onPressed: () {
-                    if (dropdownValue.toString() == "Normal User") {
-                      if (stakeHolderValue == "Brand Owner") {
-                        brandOwnerLogin();
-                        return;
-                      }
-                      if (stakeHolderValue == "Supplier") {
-                        supplierOwnerLogin();
-                        return;
-                      }
-                    }
-
-                    if (dropdownValue.toString() == "Admin User") {
-                      login();
-                      return;
-                    }
-                  },
-                  text: "Log in",
-                ).box.width(context.width * 0.85).makeCentered(),
-                const SizedBox(height: 20),
-              ],
+                ],
+              ),
             ),
           ),
         ),

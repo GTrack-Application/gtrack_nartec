@@ -15,6 +15,7 @@ class TextFieldWidget extends StatelessWidget {
     this.focusNode,
     this.onFieldSubmitted,
     this.enabled,
+    this.hintText,
   });
 
   final TextEditingController controller;
@@ -28,6 +29,7 @@ class TextFieldWidget extends StatelessWidget {
   final FocusNode? focusNode;
   final Function(String)? onFieldSubmitted;
   final bool? enabled;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +50,12 @@ class TextFieldWidget extends StatelessWidget {
             return null;
           },
       decoration: InputDecoration(
+        hintText: hintText,
         fillColor: AppColors.fields,
         filled: true,
+        hintStyle: const TextStyle(
+          color: AppColors.grey,
+        ),
         suffixIcon: suffixIcon ?? const SizedBox.shrink(),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 10,
