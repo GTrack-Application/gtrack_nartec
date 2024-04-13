@@ -527,10 +527,12 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                           FocusScope.of(context).unfocus();
                           filterMethod();
                         },
-                        child: Image.asset(AppImages.finder,
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            height: 60,
-                            fit: BoxFit.cover),
+                        child: Image.asset(
+                          AppImages.finder,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          height: 60,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   ],

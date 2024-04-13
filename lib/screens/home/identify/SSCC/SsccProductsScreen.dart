@@ -1,9 +1,13 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/controllers/Identify/SSCC/SsccController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/models/Identify/SSCC/SsccProductsModel.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class SsccProductsScreen extends StatefulWidget {
   const SsccProductsScreen({super.key});
@@ -17,8 +21,17 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
   List<bool> isMarked = [];
   List<SsccProductsModel> table = [];
 
+  TextEditingController searchController = TextEditingController();
+
+  String? userId, gcp, memberCategoryDescription;
+
   @override
   void initState() {
+    super.initState();
+    AppPreferences.getUserId().then((value) => userId = value);
+    AppPreferences.getGcp().then((value) => gcp = value);
+    AppPreferences.getMemberCategoryDescription()
+        .then((value) => memberCategoryDescription = value);
     super.initState();
     Future.delayed(Duration.zero, () {
       onSearch();
@@ -39,42 +52,112 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.8,
-              margin: const EdgeInsets.only(left: 10, right: 10),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: AppColors.grey,
-                  width: 1,
-                ),
-              ),
-              child: PaginatedDataTable(
-                rowsPerPage: 10,
-                columns: const [
-                  DataColumn(
-                      label: Text(
-                    'SSCC ID',
-                    style: TextStyle(color: AppColors.primary),
-                    textAlign: TextAlign.center,
-                  )),
-                  DataColumn(
-                      label: Text(
-                    'Type',
-                    style: TextStyle(color: AppColors.primary),
-                    textAlign: TextAlign.center,
-                  )),
-                  DataColumn(
-                      label: Text(
-                    'SSCC Barcode Number',
-                    style: TextStyle(color: AppColors.primary),
-                    textAlign: TextAlign.center,
-                  )),
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Member ID",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text(
+                    gcp.toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                 ],
-                source: TableDataSource(table, context),
-                showCheckboxColumn: false,
-                showFirstLastButtons: true,
-                arrowHeadColor: AppColors.skyBlue,
               ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  width: 100,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/icons/add_Icon.png',
+                        width: 20,
+                        height: 20,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        'Add',
+                        style: TextStyle(
+                          color: Colors.green[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      suffixIcon: Icon(Ionicons.search_outline),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "SSCC List",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Icon(
+                    Ionicons.filter_outline,
+                    size: 30,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            PaginatedDataTable(
+              rowsPerPage: 5,
+              columns: const [
+                DataColumn(
+                    label: Text(
+                  'SSCC ID',
+                  style: TextStyle(color: AppColors.primary),
+                  textAlign: TextAlign.center,
+                )),
+                DataColumn(
+                    label: Text(
+                  'Type',
+                  style: TextStyle(color: AppColors.primary),
+                  textAlign: TextAlign.center,
+                )),
+                DataColumn(
+                    label: Text(
+                  'SSCC Barcode Number',
+                  style: TextStyle(color: AppColors.primary),
+                  textAlign: TextAlign.center,
+                )),
+              ],
+              source: TableDataSource(table, context),
+              showCheckboxColumn: false,
+              showFirstLastButtons: true,
+              arrowHeadColor: AppColors.skyBlue,
             ),
             const SizedBox(height: 10),
           ],
@@ -95,8 +178,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
       AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      AppSnackbars.danger(
-          context, error.toString().replaceAll("Exception:", ""));
+      toast(error.toString().replaceAll("Exception:", ""));
     });
   }
 }

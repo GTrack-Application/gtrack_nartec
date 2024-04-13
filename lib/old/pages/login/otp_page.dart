@@ -1,13 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_toast.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/screens/home_screen.dart';
 
@@ -30,6 +30,7 @@ class OtpPage extends StatefulWidget {
 class _OtpPageState extends State<OtpPage> {
   final formKey = GlobalKey<FormState>();
   final otpController = TextEditingController();
+  final FocusNode otpFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -74,49 +75,63 @@ class _OtpPageState extends State<OtpPage> {
   void dispose() {
     formKey.currentState?.dispose();
     otpController.dispose();
+    otpFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Verify OTP"),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: Form(
-          key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Image.asset(AppImages.logo),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Enter the OTP sent to you!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+      body: Container(
+        width: context.width,
+        height: context.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/login_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Form(
+            key: formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Container(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      "assets/images/trans_logo.png",
+                      width: 200,
+                      height: 200,
+                    ),
                   ),
-                ),
-                IconTextField(
-                  controller: otpController,
-                  leadingIcon: Image.asset(AppIcons.work),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "The field is required";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                PrimaryButtonWidget(text: "Verify OTP", onPressed: verifyOtp),
-              ],
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Enter the OTP sent to you!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  TextFieldWidget(
+                    controller: otpController,
+                    leadingIcon: Image.asset(AppIcons.work),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "The field is required";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  PrimaryButtonWidget(text: "Verify OTP", onPressed: verifyOtp),
+                ],
+              ),
             ),
           ),
         ),

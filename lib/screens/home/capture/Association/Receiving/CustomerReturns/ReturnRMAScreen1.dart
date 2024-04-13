@@ -205,7 +205,7 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                             AppImages.finder,
                             width: MediaQuery.of(context).size.width * 0.15,
                             height: 60,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                           ),
                         ),
                       ),

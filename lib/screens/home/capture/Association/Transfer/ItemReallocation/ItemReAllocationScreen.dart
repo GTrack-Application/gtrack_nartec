@@ -160,7 +160,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                           AppImages.finder,
                           width: MediaQuery.of(context).size.width * 0.15,
                           height: 60,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                         ),
                       ),
                     ),

@@ -86,9 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-
         appBar: AppBar(
-          title: const Text("GTIN Tracker v. 2.0"),
+          title: const Text("GTIN Tracker v.2.0"),
           automaticallyImplyLeading: false,
         ),
         bottomNavigationBar: Row(
@@ -108,8 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ).pOnly(right: 20),
           ],
         ),
-        // make drawer from right side that contains the identity, capture and share screens
-        endDrawer: MyDrawerWidget(currentUser: currentUser),
+        // Drawer from right side that contains the identity, capture and share screens
+        // endDrawer: MyDrawerWidget(currentUser: currentUser),
+
         body: SafeArea(
           child: SizedBox(
             width: context.width,
@@ -122,8 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   Image.asset(
                     AppImages.logo,
-                    width: 200,
-                    height: 150,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: MediaQuery.of(context).size.width * 0.4,
                   ),
                   ListView.builder(
                     shrinkWrap: true,

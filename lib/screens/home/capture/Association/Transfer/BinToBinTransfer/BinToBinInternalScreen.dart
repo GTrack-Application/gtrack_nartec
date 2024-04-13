@@ -489,10 +489,12 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                             AppDialogs.closeDialog();
                           });
                         },
-                        child: Image.asset(AppImages.finder,
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            height: 60,
-                            fit: BoxFit.cover),
+                        child: Image.asset(
+                          AppImages.finder,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          height: 60,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   ],

@@ -30,6 +30,7 @@ class ActivitiesAndPasswordPage extends StatefulWidget {
 class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController passwordController = TextEditingController();
+  final FocusNode passwordFocusNode = FocusNode();
   bool obscureText = true;
   List<String> activities = [];
   String? activityValue;
@@ -121,6 +122,10 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
   void dispose() {
     passwordController.dispose();
     formKey.currentState?.dispose();
+
+    // focusnode
+    passwordFocusNode.dispose();
+
     super.dispose();
   }
 
@@ -153,7 +158,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                 ),
                 const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -195,6 +200,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                         ),
                       ),
                       TextFieldWidget(
+                        focusNode: passwordFocusNode,
                         hintText: "Password",
                         controller: passwordController,
                         leadingIcon: Image.asset(
@@ -202,14 +208,18 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                           width: 42,
                           height: 42,
                         ),
+                        onFieldSubmitted: (p0) {
+                          FocusScope.of(context).unfocus();
+                          login();
+                        },
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: obscureText,
-                        // validator: (p0) {
-                        //   if (p0!.isEmpty) {
-                        //     return 'Please enter your password';
-                        //   }
-                        //   return null;
-                        // },
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.remove_red_eye),
                           onPressed: () {

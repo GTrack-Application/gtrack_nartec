@@ -244,10 +244,12 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
                           onTap: () {
                             _onSearchItem();
                           },
-                          child: Image.asset(AppImages.finder,
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              height: 60,
-                              fit: BoxFit.cover),
+                          child: Image.asset(
+                            AppImages.finder,
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            height: 60,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
                     ],

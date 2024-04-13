@@ -16,6 +16,8 @@ class GTINScreen extends StatefulWidget {
 }
 
 class _GTINScreenState extends State<GTINScreen> {
+  TextEditingController searchController = TextEditingController();
+
   GtinBloc gtinBloc = GtinBloc();
   GTINModel gtinModel = GTINModel();
 
@@ -58,13 +60,91 @@ class _GTINScreenState extends State<GTINScreen> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CustomBoxText(text: "Member Id: $userId"),
-                      CustomBoxText(
-                        text: "GCP: $gcp",
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Member ID",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            gcp.toString(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "GCP",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            gcp.toString(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Total Products",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            gtinModel.products?.length.toString() ?? "0",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Category C",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            memberCategoryDescription
+                                .toString()
+                                .replaceAll("Category C", ""),
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -72,45 +152,125 @@ class _GTINScreenState extends State<GTINScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CustomBoxText(
-                        text: memberCategoryDescription.toString(),
+                      Container(
+                        width: 100,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/icons/add_Icon.png',
+                              width: 20,
+                              height: 20,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              'Add',
+                              style: TextStyle(
+                                color: Colors.green[700],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(),
+                      Expanded(
+                        child: TextField(
+                          controller: searchController,
+                          decoration: const InputDecoration(
+                            suffixIcon: Icon(Ionicons.search_outline),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Divider(thickness: 2),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "GTIN List",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Icon(
+                          Ionicons.filter_outline,
+                          size: 30,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: gtinModel.products?.length,
+                    child: ListView.separated(
+                      itemCount: gtinModel.products?.length ?? 0,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         final productName =
                             gtinModel.products?[index].productnameenglish;
                         final barcode = gtinModel.products?[index].barcode;
-                        final brandName = gtinModel.products?[index].brandName;
                         final frontImage =
                             "${gtinModel.imagePath}/${gtinModel.products?[index].frontImage}";
 
-                        return Card(
-                          elevation: 2,
-                          color: AppColors.background,
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(
-                                frontImage.toString(),
-                              ),
-                              onBackgroundImageError: (exception, stackTrace) =>
-                                  const Icon(Ionicons.image_outline),
+                        return ListTile(
+                          leading: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(
+                              frontImage.toString(),
                             ),
-                            title: Text(
-                              productName.toString(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            onBackgroundImageError: (exception, stackTrace) =>
+                                const Icon(Ionicons.image_outline),
+                          ),
+                          title: Text(
+                            productName.toString(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
-                            subtitle: Text(barcode.toString()),
-                            trailing: Text(brandName.toString()),
+                          ),
+                          subtitle: Text(barcode.toString()),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[50],
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Image.asset(
+                                    'assets/icons/add_Icon.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red[50],
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Image.asset(
+                                    'assets/icons/remove_icon.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -120,35 +280,6 @@ class _GTINScreenState extends State<GTINScreen> {
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class CustomBoxText extends StatelessWidget {
-  const CustomBoxText({
-    super.key,
-    required this.text,
-  });
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.skyBlue,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Center(
-        child: FittedBox(
-          child: Text(
-            text,
-            style: const TextStyle(color: AppColors.background),
-          ),
         ),
       ),
     );

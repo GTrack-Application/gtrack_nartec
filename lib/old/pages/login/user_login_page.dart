@@ -42,9 +42,15 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   @override
   void dispose() {
+    //controllers
     emailController.dispose();
     passwordController.dispose();
     formKey.currentState?.dispose();
+
+    //focus nodes
+    emailNode.dispose();
+    passwordNode.dispose();
+
     super.dispose();
   }
 
@@ -215,17 +221,17 @@ class _UserLoginPageState extends State<UserLoginPage> {
                         FocusScope.of(context).requestFocus(passwordNode);
                       }
                     },
-                    // validator: (value) {
-                    //   if (value == null || value.isEmpty) {
-                    //     return 'Please enter your login ID';
-                    //   }
-                    //   // if (EmailValidator.validate(value)) {
-                    //   //   return null;
-                    //   // } else {
-                    //   //   return 'Please enter a valid email';
-                    //   // }
-                    //   return null;
-                    // },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your login ID';
+                      }
+                      // if (EmailValidator.validate(value)) {
+                      //   return null;
+                      // } else {
+                      //   return 'Please enter a valid email';
+                      // }
+                      return null;
+                    },
                   ).box.width(context.width * 0.9).make(),
                   const SizedBox(height: 20),
                   Visibility(
@@ -245,12 +251,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       ),
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: obscureText,
-                      // validator: (p0) {
-                      //   if (p0!.isEmpty) {
-                      //     return 'Please enter your password';
-                      //   }
-                      //   return null;
-                      // },
+                      validator: (p0) {
+                        if (p0!.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.remove_red_eye),
                         onPressed: () {

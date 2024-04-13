@@ -21,9 +21,13 @@ class GTINController {
         },
       );
 
+      print(response.statusCode);
+      print(response.body);
+
       if (response.statusCode == 200) {
         final GTINModel gtinModel =
             GTINModel.fromJson(jsonDecode(response.body));
+
         return gtinModel;
       } else {
         throw Exception("Something went wrong");
