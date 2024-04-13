@@ -27,24 +27,30 @@ class _ScanningScreenState extends State<ScanningScreen> {
           backgroundColor: AppColors.green,
           title: const Text('Scanning'),
         ),
-        body: SizedBox(
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/login_background.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
           width: context.width(),
           height: context.height(),
           child: Container(
             margin: const EdgeInsets.only(
-              top: 100,
+              top: 150,
               left: 20,
               right: 20,
-              bottom: 100,
+              bottom: 250,
             ),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              color: AppColors.green.withOpacity(0.2),
-              border: const Border(
-                top: BorderSide(width: 1.0, color: AppColors.black),
-                left: BorderSide(width: 1.0, color: AppColors.black),
-                right: BorderSide(width: 1.0, color: AppColors.black),
-                bottom: BorderSide(width: 1.0, color: AppColors.black),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              // gradient color for borders
+              border: Border(
+                top: BorderSide(width: 1.0, color: AppColors.green),
+                left: BorderSide(width: 1.0, color: AppColors.green),
+                right: BorderSide(width: 1.0, color: AppColors.green),
+                bottom: BorderSide(width: 1.0, color: AppColors.green),
               ),
             ),
             child: Builder(
@@ -55,26 +61,32 @@ class _ScanningScreenState extends State<ScanningScreen> {
                     direction: Axis.vertical,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const TextWidget(text: "Scan Barcode or QR Code"),
-                      const SizedBox(height: 10),
-                      AppButton(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        onTap: () async {
+                      GestureDetector(
+                        onTap: () {
                           // scanBarcodeNormal();
                           AppNavigator.goToPage(
                             context: context,
                             screen: const BarcodeScanningScreen(),
                           );
                         },
-                        color: AppColors.green,
-                        child: const Text('Scan Barcode'),
+                        child: Image.asset(
+                          'assets/icons/barcode_icon.png',
+                          width: 200,
+                          height: 100,
+                        ),
+                      ),
+                      TextWidget(
+                        text: barcodeValue ?? "Scan a Barcode or QR Code",
+                        fontSize: 20,
+                        color: AppColors.white,
                       ),
                       const SizedBox(height: 50),
                       TextWidget(
-                        text: barcodeValue ?? "No data",
+                        text: barcodeValue ?? "",
                         fontSize: 15,
+                        color: AppColors.white,
                       ),
-                      50.height,
+                      20.height,
                       GestureDetector(
                         onTap: () {
                           // if (barcodeController.text.length > 15 &&

@@ -82,7 +82,7 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                       child: Image.asset(
                         AppImages.finder,
                         width: MediaQuery.of(context).size.width * 0.15,
-                        height: 60,
+                        height: 50,
                         fit: BoxFit.fill,
                       ),
                     ),
