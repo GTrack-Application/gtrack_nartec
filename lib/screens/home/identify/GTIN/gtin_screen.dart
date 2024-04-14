@@ -21,6 +21,8 @@ class _GTINScreenState extends State<GTINScreen> {
   GtinBloc gtinBloc = GtinBloc();
   GTINModel gtinModel = GTINModel();
 
+  List<Products> products = [];
+
   String? userId, gcp, memberCategoryDescription;
   @override
   void initState() {
@@ -45,6 +47,7 @@ class _GTINScreenState extends State<GTINScreen> {
           listener: (context, state) {
             if (state is GlobalLoadedState) {
               gtinModel = state.data as GTINModel;
+              products = gtinModel.products ?? [];
             }
           },
           builder: (context, state) {
@@ -181,6 +184,22 @@ class _GTINScreenState extends State<GTINScreen> {
                       Expanded(
                         child: TextField(
                           controller: searchController,
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              final searchResult = products
+                                  .where((element) => element.barcode!
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                              setState(() {
+                                products = searchResult;
+                              });
+                            } else {
+                              setState(() {
+                                products = gtinModel.products ?? [];
+                              });
+                            }
+                          },
                           decoration: const InputDecoration(
                             suffixIcon: Icon(Ionicons.search_outline),
                           ),
@@ -208,15 +227,14 @@ class _GTINScreenState extends State<GTINScreen> {
                   const SizedBox(height: 10),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: gtinModel.products?.length ?? 0,
+                      itemCount: products.length,
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 10),
                       itemBuilder: (context, index) {
-                        final productName =
-                            gtinModel.products?[index].productnameenglish;
-                        final barcode = gtinModel.products?[index].barcode;
+                        final productName = products[index].productnameenglish;
+                        final barcode = products[index].barcode;
                         final frontImage =
-                            "${gtinModel.imagePath}/${gtinModel.products?[index].frontImage}";
+                            "${gtinModel.imagePath}/${products[index].frontImage}";
 
                         return ListTile(
                           leading: CircleAvatar(
@@ -255,7 +273,35 @@ class _GTINScreenState extends State<GTINScreen> {
                               ),
                               const SizedBox(width: 5),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Remove Product'),
+                                        content: const Text(
+                                            'Are you sure you want to remove this product?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              setState(() {
+                                                products.removeAt(index);
+                                              });
+                                            },
+                                            child: const Text('Remove'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
                                 child: Container(
                                   width: 40,
                                   height: 40,

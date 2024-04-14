@@ -221,6 +221,8 @@ class _GLNScreenState extends State<GLNScreen> {
               const SizedBox(height: 20),
               PaginatedDataTable(
                 rowsPerPage: 5,
+                // headingRowColor:
+                //     MaterialStateColor.resolveWith((states) => Colors.blue),
                 columns: const [
                   DataColumn(
                       label: Text(
@@ -262,7 +264,6 @@ class _GLNScreenState extends State<GLNScreen> {
                 source: TableDataSource(table, context),
                 showCheckboxColumn: false,
                 showFirstLastButtons: true,
-                arrowHeadColor: AppColors.skyBlue,
               ),
               const SizedBox(height: 10),
               // Container(
