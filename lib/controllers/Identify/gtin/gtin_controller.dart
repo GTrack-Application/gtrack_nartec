@@ -27,8 +27,7 @@ class GTINController {
 
       return products;
     } else {
-      final msg = json.decode(response.body)['message'];
-      throw Exception(msg);
+      return [];
     }
   }
 }
