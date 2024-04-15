@@ -7,30 +7,28 @@ import 'package:http/http.dart' as http;
 
 class GTINController {
   static Future<List<GTIN_Model>> getProducts() async {
-
     final userId = await AppPreferences.getUserId();
 
     String url = "${AppUrls.baseUrl}/api/products?user_id=$userId";
 
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Host': AppUrls.host,
-        },
-      );
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Host': AppUrls.host,
+      },
+    );
 
-      var data = json.decode(response.body) as List;
+    var data = json.decode(response.body) as List;
 
-      if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
+      List<GTIN_Model> products =
+          data.map((e) => GTIN_Model.fromJson(e)).toList();
 
-        List<GTIN_Model> products = data.map((e) => GTIN_Model.fromJson(e)).toList();
-        return products;
-      } else {
-        var msg = json.decode(response.body)['message'];
-        throw Exception("msg");
-      }
-
-
+      return products;
+    } else {
+      final msg = json.decode(response.body)['message'];
+      throw Exception(msg);
+    }
   }
 }

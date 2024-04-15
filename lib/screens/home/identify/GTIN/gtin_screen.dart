@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
-import 'package:gtrack_mobile_app/blocs/gtin/gtin_bloc.dart';
+import 'package:gtrack_mobile_app/blocs/gtin/gtin_cubit.dart';
+import 'package:gtrack_mobile_app/blocs/gtin/gtin_events_states.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/gtin_model.dart';
+import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class GTINScreen extends StatefulWidget {
-  const GTINScreen({Key? key}) : super(key: key);
+  const GTINScreen({super.key});
 
   @override
   State<GTINScreen> createState() => _GTINScreenState();
@@ -18,10 +19,10 @@ class GTINScreen extends StatefulWidget {
 class _GTINScreenState extends State<GTINScreen> {
   TextEditingController searchController = TextEditingController();
 
-  GtinBloc gtinBloc = GtinBloc();
-  GTINModel gtinModel = GTINModel();
+  GtinCubit gtinBloc = GtinCubit();
 
-  List<Products> products = [];
+  List<GTIN_Model> products = [];
+  List<GTIN_Model> productsFiltered = [];
 
   String? userId, gcp, memberCategoryDescription;
   @override
@@ -30,7 +31,7 @@ class _GTINScreenState extends State<GTINScreen> {
     AppPreferences.getGcp().then((value) => gcp = value);
     AppPreferences.getMemberCategoryDescription()
         .then((value) => memberCategoryDescription = value);
-    gtinBloc = gtinBloc..add(GlobalInitEvent());
+    gtinBloc = gtinBloc..getGtinData();
     super.initState();
   }
 
@@ -42,20 +43,20 @@ class _GTINScreenState extends State<GTINScreen> {
         backgroundColor: AppColors.skyBlue,
       ),
       body: SafeArea(
-        child: BlocConsumer<GtinBloc, GlobalState>(
+        child: BlocConsumer<GtinCubit, GtinState>(
           bloc: gtinBloc,
           listener: (context, state) {
-            if (state is GlobalLoadedState) {
-              gtinModel = state.data as GTINModel;
-              products = gtinModel.products ?? [];
+            if (state is GtinLoadedState) {
+              products = state.data;
+              productsFiltered = state.data;
             }
           },
           builder: (context, state) {
-            if (state is GlobalLoadingState) {
+            if (state is GtinLoadingState) {
               return const Center(
                 child: LoadingWidget(),
               );
-            } else if (state is GlobalErrorState) {
+            } else if (state is GtinErrorState) {
               return Center(
                 child: Text(state.message),
               );
@@ -120,7 +121,7 @@ class _GTINScreenState extends State<GTINScreen> {
                             ),
                           ),
                           Text(
-                            gtinModel.products?.length.toString() ?? "0",
+                            productsFiltered.length.toString(),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -181,22 +182,23 @@ class _GTINScreenState extends State<GTINScreen> {
                           ],
                         ),
                       ),
+                      10.width,
                       Expanded(
                         child: TextField(
                           controller: searchController,
                           onChanged: (value) {
                             if (value.isNotEmpty) {
-                              final searchResult = products
-                                  .where((element) => element.barcode!
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()))
-                                  .toList();
                               setState(() {
-                                products = searchResult;
+                                productsFiltered = products
+                                    .where((element) => element.barcode
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase()))
+                                    .toList();
                               });
                             } else {
                               setState(() {
-                                products = gtinModel.products ?? [];
+                                productsFiltered = products;
                               });
                             }
                           },
@@ -227,14 +229,17 @@ class _GTINScreenState extends State<GTINScreen> {
                   const SizedBox(height: 10),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: products.length,
+                      itemCount: productsFiltered.length,
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 10),
                       itemBuilder: (context, index) {
-                        final productName = products[index].productnameenglish;
-                        final barcode = products[index].barcode;
+                        final productName =
+                            productsFiltered[index].productnameenglish;
+                        final barcode = productsFiltered[index].barcode;
+
+                        // Remove any leading or trailing slashes from the cleaned path
                         final frontImage =
-                            "${gtinModel.imagePath}/${products[index].frontImage}";
+                            "https://gs1ksa.org:3093/${productsFiltered[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}";
 
                         return ListTile(
                           leading: CircleAvatar(

@@ -2,7 +2,7 @@ class GTIN_Model {
   String? id;
   String? userId;
   String? gcpGLNID;
-  Null? importCode;
+  String? importCode;
   String? productnameenglish;
   String? productnamearabic;
   String? brandName;
@@ -29,17 +29,17 @@ class GTIN_Model {
   String? detailsPage;
   String? detailsPageAr;
   int? status;
-  Null? deletedAt;
+  String? deletedAt;
   String? createdAt;
   String? updatedAt;
-  Null? memberID;
+  String? memberID;
   int? adminId;
   String? saveAs;
   String? gtinType;
   String? productUrl;
   String? productLinkUrl;
   String? brandNameAr;
-  Null? digitalInfoType;
+  String? digitalInfoType;
   String? readyForGepir;
   int? gepirPosted;
   String? image1;
@@ -48,51 +48,51 @@ class GTIN_Model {
 
   GTIN_Model(
       {this.id,
-        this.userId,
-        this.gcpGLNID,
-        this.importCode,
-        this.productnameenglish,
-        this.productnamearabic,
-        this.brandName,
-        this.productType,
-        this.origin,
-        this.packagingType,
-        this.mnfCode,
-        this.mnfGLN,
-        this.provGLN,
-        this.unit,
-        this.size,
-        this.frontImage,
-        this.backImage,
-        this.childProduct,
-        this.quantity,
-        this.barcode,
-        this.gpc,
-        this.gpcCode,
-        this.countrySale,
-        this.hSCODES,
-        this.hsDescription,
-        this.gcpType,
-        this.prodLang,
-        this.detailsPage,
-        this.detailsPageAr,
-        this.status,
-        this.deletedAt,
-        this.createdAt,
-        this.updatedAt,
-        this.memberID,
-        this.adminId,
-        this.saveAs,
-        this.gtinType,
-        this.productUrl,
-        this.productLinkUrl,
-        this.brandNameAr,
-        this.digitalInfoType,
-        this.readyForGepir,
-        this.gepirPosted,
-        this.image1,
-        this.image2,
-        this.image3});
+      this.userId,
+      this.gcpGLNID,
+      this.importCode,
+      this.productnameenglish,
+      this.productnamearabic,
+      this.brandName,
+      this.productType,
+      this.origin,
+      this.packagingType,
+      this.mnfCode,
+      this.mnfGLN,
+      this.provGLN,
+      this.unit,
+      this.size,
+      this.frontImage,
+      this.backImage,
+      this.childProduct,
+      this.quantity,
+      this.barcode,
+      this.gpc,
+      this.gpcCode,
+      this.countrySale,
+      this.hSCODES,
+      this.hsDescription,
+      this.gcpType,
+      this.prodLang,
+      this.detailsPage,
+      this.detailsPageAr,
+      this.status,
+      this.deletedAt,
+      this.createdAt,
+      this.updatedAt,
+      this.memberID,
+      this.adminId,
+      this.saveAs,
+      this.gtinType,
+      this.productUrl,
+      this.productLinkUrl,
+      this.brandNameAr,
+      this.digitalInfoType,
+      this.readyForGepir,
+      this.gepirPosted,
+      this.image1,
+      this.image2,
+      this.image3});
 
   GTIN_Model.fromJson(Map<String, dynamic> json) {
     id = json['id'];
