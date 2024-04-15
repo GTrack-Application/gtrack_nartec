@@ -107,6 +107,12 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                 Expanded(
                   child: TextField(
                     controller: searchController,
+                    onChanged: (value) {
+                      // filter the table based on the search value
+                      setState(() {
+                        table = table.where((element) => element.sSCCBarcodeNumber!.contains(value)).toList();
+                      });
+                    },
                     decoration: const InputDecoration(
                       suffixIcon: Icon(Ionicons.search_outline),
                     ),
@@ -134,30 +140,31 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
             const SizedBox(height: 10),
             PaginatedDataTable(
               rowsPerPage: 5,
+              headingRowColor: MaterialStateColor.resolveWith((states) => Colors.blue),
+              arrowHeadColor: Colors.blue,
               columns: const [
                 DataColumn(
                     label: Text(
                   'SSCC ID',
-                  style: TextStyle(color: AppColors.primary),
+                  style: TextStyle(color: AppColors.white),
                   textAlign: TextAlign.center,
                 )),
                 DataColumn(
                     label: Text(
                   'Type',
-                  style: TextStyle(color: AppColors.primary),
+                  style: TextStyle(color: AppColors.white),
                   textAlign: TextAlign.center,
                 )),
                 DataColumn(
                     label: Text(
                   'SSCC Barcode Number',
-                  style: TextStyle(color: AppColors.primary),
+                  style: TextStyle(color: AppColors.white),
                   textAlign: TextAlign.center,
                 )),
               ],
               source: TableDataSource(table, context),
               showCheckboxColumn: false,
               showFirstLastButtons: true,
-              arrowHeadColor: AppColors.skyBlue,
             ),
             const SizedBox(height: 10),
           ],

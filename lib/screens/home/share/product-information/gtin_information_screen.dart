@@ -73,7 +73,7 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                               image: CachedNetworkImageProvider(
                                 gtinInformationModel!.gtinArr!.productImageUrl
                                     .toString(),
-                                errorListener: () =>
+                                errorListener: (error) =>
                                     const Icon(Ionicons.image_outline),
                               ),
                             ),

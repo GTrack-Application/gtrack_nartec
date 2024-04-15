@@ -221,43 +221,44 @@ class _GLNScreenState extends State<GLNScreen> {
               const SizedBox(height: 20),
               PaginatedDataTable(
                 rowsPerPage: 5,
-                // headingRowColor:
-                //     MaterialStateColor.resolveWith((states) => Colors.blue),
+                headingRowColor:
+                    MaterialStateColor.resolveWith((states) => Colors.blue),
+                arrowHeadColor: Colors.blue,
                 columns: const [
                   DataColumn(
                       label: Text(
                     'GLN ID',
-                    style: TextStyle(color: AppColors.black),
+                    style: TextStyle(color: AppColors.white),
                     textAlign: TextAlign.center,
                   )),
                   DataColumn(
                       label: Text(
-                    'gcp GLNID',
-                    style: TextStyle(color: AppColors.black),
+                    'GCP GLNID',
+                    style: TextStyle(color: AppColors.white),
                     textAlign: TextAlign.center,
                   )),
                   DataColumn(
                       label: Text(
                     'location Name En',
-                    style: TextStyle(color: AppColors.black),
+                    style: TextStyle(color: AppColors.white),
                     textAlign: TextAlign.center,
                   )),
                   DataColumn(
                       label: Text(
                     'location Name Ar',
-                    style: TextStyle(color: AppColors.black),
+                    style: TextStyle(color: AppColors.white),
                     textAlign: TextAlign.center,
                   )),
                   DataColumn(
                       label: Text(
                     'GLN Barcode Number',
-                    style: TextStyle(color: AppColors.black),
+                    style: TextStyle(color: AppColors.white),
                     textAlign: TextAlign.center,
                   )),
                   DataColumn(
                       label: Text(
                     'Status',
-                    style: TextStyle(color: AppColors.black),
+                    style: TextStyle(color: AppColors.white),
                     textAlign: TextAlign.center,
                   )),
                 ],
