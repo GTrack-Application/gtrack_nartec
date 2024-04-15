@@ -2,38 +2,35 @@ import 'dart:convert';
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/gtin_model.dart';
+import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:http/http.dart' as http;
 
 class GTINController {
-  static Future<GTINModel> getProducts() async {
-    const String url = '${AppUrls.domain}/api/member/products';
+  static Future<List<GTIN_Model>> getProducts() async {
 
     final userId = await AppPreferences.getUserId();
 
-    try {
-      final response = await http.post(
+    String url = "${AppUrls.baseUrl}/api/products?user_id=$userId";
+
+      final response = await http.get(
         Uri.parse(url),
-        body: jsonEncode({'user_id': userId}),
         headers: {
           'Content-Type': 'application/json',
           'Host': AppUrls.host,
         },
       );
 
-      print(response.statusCode);
-      print(response.body);
+      var data = json.decode(response.body) as List;
 
       if (response.statusCode == 200) {
-        final GTINModel gtinModel =
-            GTINModel.fromJson(jsonDecode(response.body));
 
-        return gtinModel;
+        List<GTIN_Model> products = data.map((e) => GTIN_Model.fromJson(e)).toList();
+        return products;
       } else {
-        throw Exception("Something went wrong");
+        var msg = json.decode(response.body)['message'];
+        throw Exception("msg");
       }
-    } catch (e) {
-      throw Exception("Something went wrong");
-    }
+
+
   }
 }

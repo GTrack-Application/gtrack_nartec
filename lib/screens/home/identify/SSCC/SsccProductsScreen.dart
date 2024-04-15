@@ -188,6 +188,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
       toast(error.toString().replaceAll("Exception:", ""));
     });
   }
+
 }
 
 class TableDataSource extends DataTableSource {
@@ -209,7 +210,8 @@ class TableDataSource extends DataTableSource {
 
     return DataRow.byIndex(
       index: index,
-      onSelectChanged: (value) {},
+      onSelectChanged: (value) {
+      },
       cells: [
         DataCell(Text(instance.ssccId.toString() == "null"
             ? "0"
