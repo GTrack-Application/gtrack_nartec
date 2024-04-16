@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/gtin/gtin_events_states.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_mobile_app/controllers/Identify/gtin/gtin_controller.dart';
 import 'package:nb_utils/nb_utils.dart';
 

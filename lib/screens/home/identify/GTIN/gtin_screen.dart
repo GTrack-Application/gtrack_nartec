@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/gtin/gtin_cubit.dart';
-import 'package:gtrack_mobile_app/blocs/gtin/gtin_events_states.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_cubit.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class GTINScreen extends StatefulWidget {
   const GTINScreen({super.key});
@@ -53,8 +53,30 @@ class _GTINScreenState extends State<GTINScreen> {
           },
           builder: (context, state) {
             if (state is GtinLoadingState) {
-              return const Center(
-                child: LoadingWidget(),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: const CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                      ),
+                      title: Container(
+                        width: 100,
+                        height: 20,
+                        color: Colors.white,
+                      ),
+                      subtitle: Container(
+                        width: 100,
+                        height: 20,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                ),
               );
             } else if (state is GtinErrorState) {
               return Center(
@@ -233,6 +255,12 @@ class _GTINScreenState extends State<GTINScreen> {
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 10),
                       itemBuilder: (context, index) {
+                        if (productsFiltered.isEmpty) {
+                          return const Center(
+                            child: Text('No products found'),
+                          );
+                        }
+
                         final productName =
                             productsFiltered[index].productnameenglish;
                         final barcode = productsFiltered[index].barcode;
