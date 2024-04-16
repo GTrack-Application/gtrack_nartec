@@ -1,20 +1,16 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_print, file_names
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/GetShipmentPalletizingController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/ValidateShipmentIdFromShipmentReveivedClController.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/generate_pallet_controller.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetTransferDistributionByTransferIdModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization/PalletProceedScreen.dart';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
 
 class NewPalletizationScreen extends StatefulWidget {
   const NewPalletizationScreen({super.key});
@@ -33,14 +29,35 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
   FocusNode serialNoFocusNode = FocusNode();
 
   String total = "0";
-  List<GetTransferDistributionByTransferIdModel> table = [];
+  List<GetControlledSerialBySerialNoModel> table = [];
   List<bool> isMarked = [];
 
-  int generateButtonVisible = 0;
+  bool isButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  enableButton() {
+    double? totalBoxes = double.tryParse(noOfBoxController.text);
+    double? qtyPerBox = double.tryParse(qtyPerBoxController.text);
+
+    double multiply = 0;
+
+    if (totalBoxes != null && qtyPerBox != null) {
+      multiply = totalBoxes * qtyPerBox;
+    }
+
+    if (multiply == table.length && multiply != 0) {
+      setState(() {
+        isButtonEnabled = true;
+      });
+    } else {
+      setState(() {
+        isButtonEnabled = false;
+      });
+    }
   }
 
   @override
@@ -54,8 +71,6 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
     qtyPerBoxFocusNode.dispose();
     serialNoFocusNode.dispose();
   }
-
-  bool isShipmentId = false;
 
   @override
   Widget build(BuildContext context) {
@@ -114,9 +129,14 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                         controller: noOfBoxController,
                         focusNode: noOfBoxFocusNode,
                         hintText: "Enter No. of Box",
-                        readOnly: isShipmentId == true ? true : false,
+                        readOnly: false,
                         onEditingComplete: () {
-                          onShipmentSearch();
+                          noOfBoxFocusNode.unfocus();
+                          FocusScope.of(context)
+                              .requestFocus(qtyPerBoxFocusNode);
+                        },
+                        onChanged: (value) {
+                          enableButton();
                         },
                       ),
                     ),
@@ -142,9 +162,14 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                         controller: qtyPerBoxController,
                         focusNode: qtyPerBoxFocusNode,
                         hintText: "Enter Qty Per Box",
-                        readOnly: isShipmentId == true ? true : false,
+                        onChanged: (value) {
+                          enableButton();
+                        },
+                        readOnly: false,
                         onEditingComplete: () {
-                          onShipmentSearch();
+                          qtyPerBoxFocusNode.unfocus();
+                          FocusScope.of(context)
+                              .requestFocus(serialNoFocusNode);
                         },
                       ),
                     ),
@@ -172,7 +197,7 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                         focusNode: serialNoFocusNode,
                         hintText: "Enter Serial No",
                         onEditingComplete: () {
-                          onClick();
+                          onSearch();
                         },
                       ),
                     ),
@@ -184,12 +209,14 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          onClick();
+                          onSearch();
                         },
-                        child: Image.asset(AppImages.finder,
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            height: 60,
-                            fit: BoxFit.cover),
+                        child: Image.asset(
+                          AppImages.finder,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          height: 50,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   ],
@@ -208,111 +235,34 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                   columns: const [
                     DataColumn(
                         label: Text(
-                      'Item Code',
-                      style: TextStyle(color: Colors.black),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Item Desc',
-                      style: TextStyle(color: Colors.black),
-                    )),
-                    DataColumn(
-                        label: Text(
                       'GTIN',
                       style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
-                      'Remarks',
+                      'SERIAL NO',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'EXP DATE',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
-                      'User',
+                      'BATCH',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
-                      'Classification',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Main Location',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Bin Location',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Int Code',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Item Serial No.',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Map Date',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Pallet Code',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Reference',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'SID',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'CID',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'PO',
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Trans',
+                      'MANUFACTURING DATE',
                       style: TextStyle(color: Colors.black),
                       textAlign: TextAlign.center,
                     )),
                   ],
-                  source: StudentDataSource(
-                    table,
-                    context,
-                    "Hello",
-                    true,
-                  ),
+                  source: StudentDataSource(table, context),
                   showCheckboxColumn: false,
                   showFirstLastButtons: true,
                   arrowHeadColor: AppColors.pink,
@@ -326,10 +276,13 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
                     padding: const EdgeInsets.only(left: 10),
                     child: ElevatedButtonWidget(
                       title: "Generate Pallet",
-                      onPressed: () {},
+                      onPressed: () {
+                        onGeneratePallet();
+                      },
                       width: MediaQuery.of(context).size.width * 0.4,
+                      height: 50,
                       fontSize: 15,
-                      color: AppColors.pink,
+                      color: isButtonEnabled ? AppColors.pink : AppColors.grey,
                       textColor: Colors.white,
                     ),
                   ),
@@ -368,80 +321,103 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
     );
   }
 
-  void onClick() async {
+  String grabSerialNumber(String input) {
+    // Remove spaces before and after each dash
+    input = input.replaceAll(' - ', '-');
+
+    if ('-'.allMatches(input).length >= 5) {
+      // Split the string into parts
+      List<String> parts = input.split('-');
+
+      // Get the parts from the 5th dash onwards and join them back together
+      String result = parts.sublist(4).join('-');
+      print("new result $result");
+      return result; // Outputs: 5561000957-04062026-173
+    } else {
+      print('old result $input');
+      return input;
+    }
+  }
+
+  void onSearch() async {
+    if (serialNoController.text.isEmpty) {
+      FocusScope.of(context).unfocus();
+      return;
+    }
+
+    if (noOfBoxController.text.isEmpty || qtyPerBoxController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Please enter No of Box and QTY per box")));
+      return;
+    }
+
     AppDialogs.loadingDialog(context);
-    GetShipmentPalletizingController.getShipmentPalletizing(
-            noOfBoxController.text.trim())
-        .then((value) {
+    // split the controller value and get the value after 5th -
+    serialNoController.text = grabSerialNumber(serialNoController.text.trim());
+
+    GeneratePalletController.generatePallet(
+      serialNoController.text.trim(),
+    ).then((value) {
+      bool test =
+          table.map((e) => e.serialNo).toList().contains(value[0].serialNo);
+      if (test) {
+        AppDialogs.closeDialog();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Serial No ${value[0].serialNo} already exists")));
+        return;
+      }
+
       setState(() {
-        table = value;
-        total = value.length.toString();
-        qtyPerBoxController.text = value[0].sHIPMENTID ?? "";
-        if (value[0].sHIPMENTID != null && value[0].sHIPMENTID != "") {
-          isShipmentId = true;
-        } else {
-          isShipmentId = false;
-        }
+        table.add(value[0]);
+        total = table.length.toString();
+        serialNoController.clear();
       });
-      // Hide keyboard
-      FocusScope.of(context).requestFocus(FocusNode());
+      enableButton();
+
+      FocusScope.of(context).requestFocus(serialNoFocusNode);
       AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
-      setState(() {
-        table = [];
-        total = "0";
-        isShipmentId = false;
-      });
       AppDialogs.closeDialog();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(error.toString().replaceAll("Exception:", ""))));
     });
   }
 
-  void onShipmentSearch() async {
-    FocusScope.of(context).requestFocus(FocusNode());
-    AppDialogs.loadingDialog(context);
-    bool value = await ValidateShipmentIdFromShipmentReveivedClController
-        .palletizeSerialNo(qtyPerBoxController.text.trim());
-    try {
-      if (value) {
+  void onGeneratePallet() {
+    if (isButtonEnabled) {
+      AppDialogs.loadingDialog(context);
+      GeneratePalletController.insertPallet(
+        table[0].gTIN ?? "",
+        int.tryParse(noOfBoxController.text.trim()) ?? 0,
+        int.tryParse(qtyPerBoxController.text.trim()) ?? 0,
+        table.map((e) => e.serialNo ?? "").toList(),
+      ).then((value) {
         setState(() {
-          isShipmentId = true;
+          noOfBoxController.clear();
+          qtyPerBoxController.clear();
+          serialNoController.clear();
+          table.clear();
+          total = "0";
         });
         AppDialogs.closeDialog();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Shipment ID is valid."),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 1),
-        ));
-      } else {
-        setState(() {
-          isShipmentId = false;
-        });
+            content: Text("SSCC Generated and Details Saved Successfully")));
+      }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Shipment ID not found in tbl_Shipment_Received_CL"),
-          backgroundColor: Colors.redAccent,
-          duration: Duration(seconds: 1),
-        ));
-      }
-    } catch (e) {
-      print(e);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(error.toString().replaceAll("Exception:", ""))));
+      });
     }
   }
 }
 
 class StudentDataSource extends DataTableSource {
-  List<GetTransferDistributionByTransferIdModel> table;
+  List<GetControlledSerialBySerialNoModel> table;
   BuildContext ctx;
-  String? shipmentId;
-  bool isShipmentId;
 
   StudentDataSource(
     this.table,
     this.ctx,
-    this.shipmentId,
-    this.isShipmentId,
   );
 
   @override
@@ -454,55 +430,13 @@ class StudentDataSource extends DataTableSource {
 
     return DataRow.byIndex(
       index: index,
-      onSelectChanged: (value) {
-        if (shipmentId == null || shipmentId == "") {
-          ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
-            content: Text("Please Enter Shipment id."),
-            backgroundColor: Colors.redAccent,
-            duration: Duration(seconds: 1),
-          ));
-          return;
-        }
-
-        FocusScope.of(ctx).requestFocus(FocusNode());
-        if (isShipmentId == false) {
-          ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
-            content: Text("Shipment ID not found in tbl_Shipment_Received_CL"),
-            backgroundColor: Colors.redAccent,
-            duration: Duration(seconds: 1),
-          ));
-          return;
-        }
-        AppNavigator.goToPage(
-          context: ctx,
-          screen: PalletProceedScreen(
-            iNVENTLOCATIONIDFROM: tble.iNVENTLOCATIONIDFROM ?? "",
-            iNVENTLOCATIONIDTO: tble.iNVENTLOCATIONIDTO ?? "",
-            iTEMID: tble.iTEMID ?? "",
-            tRANSFERID: tble.tRANSFERID ?? "",
-            shipmentId: shipmentId!,
-            ALS_PACKINGSLIPREF: tble.aLSPACKINGSLIPREF ?? "",
-            ALS_TRANSFERORDERTYPE:
-                int.parse(tble.aLSTRANSFERORDERTYPE.toString()),
-            QTYTRANSFER: int.parse(tble.qTYTRANSFER.toString()),
-            ITEMNAME: tble.iTEMNAME ?? "",
-            CONFIGID: tble.cONFIGID ?? "",
-            WMSLOCATIONID: tble.wMSLOCATIONID ?? "",
-          ),
-        );
-      },
+      onSelectChanged: (value) {},
       cells: [
-        DataCell(SelectableText(tble.aLSPACKINGSLIPREF ?? "")),
-        DataCell(SelectableText(tble.aLSTRANSFERORDERTYPE.toString())),
-        DataCell(SelectableText(tble.tRANSFERID ?? "")),
-        DataCell(SelectableText(tble.iNVENTLOCATIONIDFROM ?? "")),
-        DataCell(SelectableText(tble.iNVENTLOCATIONIDTO ?? "")),
-        DataCell(SelectableText(tble.qTYTRANSFER.toString())),
-        DataCell(SelectableText(tble.iTEMID.toString())),
-        DataCell(SelectableText(tble.iTEMNAME ?? "")),
-        DataCell(SelectableText(tble.cONFIGID ?? "")),
-        DataCell(SelectableText(tble.wMSLOCATIONID ?? "")),
-        DataCell(SelectableText(tble.sHIPMENTID ?? "")),
+        DataCell(SelectableText(tble.gTIN ?? "")),
+        DataCell(SelectableText(tble.serialNo ?? "")),
+        DataCell(SelectableText(tble.eXPIRYDATE ?? "")),
+        DataCell(SelectableText(tble.bATCH ?? "")),
+        DataCell(SelectableText(tble.mANUFACTURINGDATE ?? "")),
       ],
     );
   }

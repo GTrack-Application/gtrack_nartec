@@ -361,10 +361,12 @@ class _RawMaterialsToWIPScreen2State extends State<RawMaterialsToWIPScreen2> {
                       onTap: () {
                         onClick();
                       },
-                      child: Image.asset(AppImages.finder,
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          height: 60,
-                          fit: BoxFit.cover),
+                      child: Image.asset(
+                        AppImages.finder,
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        height: 50,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ],

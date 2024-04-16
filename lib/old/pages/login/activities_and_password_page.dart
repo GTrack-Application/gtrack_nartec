@@ -4,14 +4,12 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/constants/app_text_styles.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/custom_dialog.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/icon_text_field.dart';
+import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/old/pages/login/otp_page.dart';
@@ -32,6 +30,7 @@ class ActivitiesAndPasswordPage extends StatefulWidget {
 class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController passwordController = TextEditingController();
+  final FocusNode passwordFocusNode = FocusNode();
   bool obscureText = true;
   List<String> activities = [];
   String? activityValue;
@@ -123,130 +122,143 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
   void dispose() {
     passwordController.dispose();
     formKey.currentState?.dispose();
+
+    // focusnode
+    passwordFocusNode.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Login'),
-        centerTitle: true,
-      ),
-      body: Form(
-        key: formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 50),
+      body: Container(
+        width: context.width,
+        height: context.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/login_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  alignment: Alignment.center,
                   child: Image.asset(
-                    AppImages.logo,
-                    width: 189,
-                    height: 189,
+                    "assets/images/trans_logo.png",
+                    width: 200,
+                    height: 200,
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 30,
-                  right: 30,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 60),
-                    //   child: const Text('Select your activity'),
-                    // ),
-                    Text(
-                      "Select your activity",
-                      style: AppTextStyle.titleStyle,
-                    ),
-                    Row(
-                      children: [
-                        Image.asset(AppIcons.work, width: 42, height: 42),
-                        const SizedBox(width: 10),
-                        Flexible(
-                          child: DropDownWidget(
-                            items: activities,
-                            value: activityValue ?? activities[0],
-                            onChanged: (activity) {
-                              setState(() {
-                                activityValue = activity.toString();
-                                activityId = widget.activities!
-                                    .firstWhere((element) =>
-                                        element.activity == activityValue)
-                                    .activityID;
-                              });
-                              print("activityId: $activityId");
-                            },
-                          ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Container(
+                      //   margin: const EdgeInsets.only(left: 60),
+                      //   child: const Text('Select your activity'),
+                      // ),
+                      const Text(
+                        "Select Activity",
+                        style: TextStyle(
+                          fontSize: 23,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 60),
-                    //   child: const Text('Enter your password'),
-                    // ),
-                    Text(
-                      "Enter your password",
-                      style: AppTextStyle.titleStyle,
-                    ),
-                    IconTextField(
-                      controller: passwordController,
-                      leadingIcon: Image.asset(
-                        AppIcons.passwordIcon,
-                        width: 42,
-                        height: 42,
                       ),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: obscureText,
-                      validator: (p0) {
-                        if (p0!.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.remove_red_eye),
-                        onPressed: () {
+                      DropDownWidget(
+                        items: activities,
+                        value: activityValue ?? activities[0],
+                        onChanged: (activity) {
                           setState(() {
-                            obscureText = !obscureText;
+                            activityValue = activity.toString();
+                            activityId = widget.activities!
+                                .firstWhere((element) =>
+                                    element.activity == activityValue)
+                                .activityID;
                           });
+                          print("activityId: $activityId");
                         },
                       ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      alignment: Alignment.centerRight,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Text('Forgot password?'),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Click here',
-                            ),
-                          ),
-                        ],
+
+                      const SizedBox(height: 30),
+
+                      const Text(
+                        "Enter Password",
+                        style: TextStyle(
+                          fontSize: 23,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+                      TextFieldWidget(
+                        focusNode: passwordFocusNode,
+                        hintText: "Password",
+                        controller: passwordController,
+                        leadingIcon: Image.asset(
+                          AppIcons.passwordIcon,
+                          width: 42,
+                          height: 42,
+                        ),
+                        onFieldSubmitted: (p0) {
+                          FocusScope.of(context).unfocus();
+                          login();
+                        },
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: obscureText,
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Text(
+                              'Forgot password?',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            TextButton(
+                              onPressed: () {},
+                              child: const Text(
+                                'Click here',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-              ),
-              PrimaryButtonWidget(
-                onPressed: login,
-                text: "Log in",
-              ).box.width(context.width * 0.85).makeCentered(),
-              const SizedBox(height: 20),
-            ],
+                PrimaryButtonWidget(
+                  onPressed: login,
+                  text: "Login Now",
+                ).box.width(context.width * 0.85).makeCentered(),
+              ],
+            ),
           ),
         ),
       ),

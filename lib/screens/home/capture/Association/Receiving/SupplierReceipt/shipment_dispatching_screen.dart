@@ -79,10 +79,12 @@ class _ShipmentDispatchingScreenState extends State<ShipmentDispatchingScreen> {
                       onTap: () {
                         onSearch();
                       },
-                      child: Image.asset(AppImages.finder,
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          height: 60,
-                          fit: BoxFit.cover),
+                      child: Image.asset(
+                        AppImages.finder,
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        height: 50,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ],
