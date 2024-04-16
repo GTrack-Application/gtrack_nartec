@@ -21,4 +21,20 @@ class GtinCubit extends Cubit<GtinState> {
       emit(GtinErrorState(message: 'No Internet Connection'));
     }
   }
+
+  void deleteGtinProductById(String productId) async {
+    emit(GtinDeleteProductLoadingState());
+
+    bool networkStatus = await isNetworkAvailable();
+    if (networkStatus) {
+      try {
+        await GTINController.deleteProductById(productId);
+        emit(GtinDeleteProductLoadedState());
+      } catch (e) {
+        emit(GtinErrorState(message: e.toString()));
+      }
+    } else {
+      emit(GtinErrorState(message: 'No Internet Connection'));
+    }
+  }
 }

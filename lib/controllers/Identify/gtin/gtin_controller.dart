@@ -30,4 +30,22 @@ class GTINController {
       return [];
     }
   }
+
+  static Future<void> deleteProductById(String productId) async {
+    final token = await AppPreferences.getToken();
+    String url = "${AppUrls.baseUrl}api/products/gtin/$productId";
+    final response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Host': AppUrls.host,
+        'authorization': "Bearer $token",
+      },
+    );
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to delete product');
+    }
+  }
 }

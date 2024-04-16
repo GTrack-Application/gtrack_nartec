@@ -4,6 +4,7 @@ import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -49,6 +50,11 @@ class _GTINScreenState extends State<GTINScreen> {
             if (state is GtinLoadedState) {
               products = state.data;
               productsFiltered = state.data;
+            } else if (state is GtinDeleteProductLoadedState) {
+              AppSnackbars.success(context, "Product successfully deleted", 2);
+              gtinBloc.getGtinData();
+            } else if (state is GtinErrorState) {
+              AppSnackbars.danger(context, state.message);
             }
           },
           builder: (context, state) {
@@ -78,11 +84,12 @@ class _GTINScreenState extends State<GTINScreen> {
                   },
                 ),
               );
-            } else if (state is GtinErrorState) {
-              return Center(
-                child: Text(state.message),
-              );
             }
+            // else if (state is GtinErrorState) {
+            //   return Center(
+            //     child: Text(state.message),
+            //   );
+            // }
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -324,9 +331,13 @@ class _GTINScreenState extends State<GTINScreen> {
                                           TextButton(
                                             onPressed: () {
                                               Navigator.pop(context);
-                                              setState(() {
-                                                products.removeAt(index);
-                                              });
+                                              gtinBloc.deleteGtinProductById(
+                                                  productsFiltered[index]
+                                                      .id
+                                                      .toString());
+                                              // setState(() {
+                                              //   products.removeAt(index);
+                                              // });
                                             },
                                             child: const Text('Remove'),
                                           ),
