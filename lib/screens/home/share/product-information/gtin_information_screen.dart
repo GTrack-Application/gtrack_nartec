@@ -11,6 +11,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 GtinInformationModel? gtinInformationModel;
+GtinInformationDataModel? gtinInformationDataModel;
 
 class GtinInformationScreen extends StatefulWidget {
   final String gtin;
@@ -38,7 +39,11 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
       bloc: gtinInformationBloc,
       listener: (context, state) {
         if (state is GlobalLoadedState) {
-          gtinInformationModel = state.data as GtinInformationModel;
+          if (state.data is GtinInformationDataModel) {
+            gtinInformationDataModel = state.data as GtinInformationDataModel;
+          } else {
+            gtinInformationModel = state.data as GtinInformationModel;
+          }
         }
       },
       builder: (context, state) {
@@ -71,8 +76,11 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                                 Ionicons.image_outline,
                               ),
                               image: CachedNetworkImageProvider(
-                                gtinInformationModel!.gtinArr!.productImageUrl
-                                    .toString(),
+                                gtinInformationDataModel == null
+                                    ? ""
+                                    : gtinInformationDataModel!
+                                        .data!.productImageUrl!.value
+                                        .toString(),
                                 errorListener: (error) =>
                                     const Icon(Ionicons.image_outline),
                               ),
@@ -82,56 +90,68 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                         const SizedBox(height: 10),
                         BorderedRowWidget(
                           value1: "GTIN",
-                          value2:
-                              gtinInformationModel!.gtinArr!.gtin.toString(),
+                          value2: gtinInformationDataModel == null
+                              ? ""
+                              : gtinInformationDataModel!.data!.gtin.toString(),
                         ),
                         BorderedRowWidget(
                           value1: "Brand name",
-                          value2: gtinInformationModel!.gtinArr!.brandName
-                              .toString(),
+                          value2: gtinInformationDataModel == null
+                              ? ""
+                              : gtinInformationDataModel!.data!.brandName!.value
+                                  .toString(),
                         ),
                         BorderedRowWidget(
                           value1: "Product Description",
-                          value2: gtinInformationModel!
-                              .gtinArr!.productDescription
-                              .toString(),
+                          value2: gtinInformationDataModel == null
+                              ? ""
+                              : gtinInformationDataModel!
+                                  .data!.productDescription!.value
+                                  .toString(),
                         ),
                         BorderedRowWidget(
                           value1: "Image URL",
-                          value2: gtinInformationModel!.gtinArr!.productImageUrl
-                              .toString(),
+                          value2: gtinInformationDataModel == null
+                              ? ""
+                              : gtinInformationDataModel!
+                                  .data!.productImageUrl!.value
+                                  .toString(),
                         ),
                         BorderedRowWidget(
                           value1: "Global Product Category",
-                          value2: gtinInformationModel!.gtinArr!.gpcCategoryCode
-                              .toString(),
+                          value2: gtinInformationDataModel == null
+                              ? ""
+                              : gtinInformationDataModel!.data!.gpcCategoryCode
+                                  .toString(),
                         ),
                         // const BorderedRowWidget(
-                        //     value1: "Net Content", value2: gtinInformationModel!.gtinArr!.),
+                        //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
                         BorderedRowWidget(
                           value1: "Country Of Sale",
-                          value2: gtinInformationModel!
-                              .gtinArr!.countryOfSaleCode
-                              .toString(),
+                          value2: gtinInformationDataModel == null
+                              ? ""
+                              : gtinInformationDataModel!
+                                  .data!.countryOfSaleName
+                                  .toString(),
                         ),
                         30.height,
-                        const Divider(thickness: 2),
+                        // const Divider(thickness: 2),
                         10.height,
-                        PaginatedDataTable(
-                          columns: const [
-                            DataColumn(label: Text("Allergen Info")),
-                            DataColumn(label: Text("Nutrients Info")),
-                            DataColumn(label: Text("Batch")),
-                            DataColumn(label: Text("Expiry")),
-                            DataColumn(label: Text("Serial")),
-                            DataColumn(label: Text("Manufecturing Date")),
-                            DataColumn(label: Text("Best Before")),
-                          ],
-                          source: GtinInformationSource(),
-                          arrowHeadColor: AppColors.green,
-                          showCheckboxColumn: false,
-                          rowsPerPage: 5,
-                        ),
+                        // PaginatedDataTable(
+                        //   columns: const [
+                        //     DataColumn(label: Text("Allergen Info")),
+                        //     DataColumn(label: Text("Nutrients Info")),
+                        //     DataColumn(label: Text("Batch")),
+                        //     DataColumn(label: Text("Expiry")),
+                        //     DataColumn(label: Text("Serial")),
+                        //     DataColumn(label: Text("Manufecturing Date")),
+                        //     DataColumn(label: Text("Best Before")),
+                        //   ],
+                        //   source: GtinInformationSource(),
+                        //   arrowHeadColor: AppColors.green,
+                        //   showCheckboxColumn: false,
+                        //   rowsPerPage: 5,
+                        // ),
                       ],
                     ),
                   )
@@ -192,32 +212,32 @@ class BorderedRowWidget extends StatelessWidget {
   }
 }
 
-class GtinInformationSource extends DataTableSource {
-  List<ProductContents> data = gtinInformationModel!.productContents!;
+// class GtinInformationSource extends DataTableSource {
+//   List<ProductContents> data = gtinInformationModel!.productContents!;
 
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        DataCell(Text(rowData.productAllergenInformation.toString())),
-        DataCell(Text(rowData.productNutrientsInformation.toString())),
-        DataCell(Text(rowData.batch.toString())),
-        DataCell(Text(rowData.expiry.toString())),
-        DataCell(Text(rowData.serial.toString())),
-        DataCell(Text(rowData.manufacturingDate.toString())),
-        DataCell(Text(rowData.bestBeforeDate.toString())),
-      ],
-    );
-  }
+//   @override
+//   DataRow getRow(int index) {
+//     final rowData = data[index];
+//     return DataRow.byIndex(
+//       index: index,
+//       cells: [
+//         DataCell(Text(rowData.productAllergenInformation.toString())),
+//         DataCell(Text(rowData.productNutrientsInformation.toString())),
+//         DataCell(Text(rowData.batch.toString())),
+//         DataCell(Text(rowData.expiry.toString())),
+//         DataCell(Text(rowData.serial.toString())),
+//         DataCell(Text(rowData.manufacturingDate.toString())),
+//         DataCell(Text(rowData.bestBeforeDate.toString())),
+//       ],
+//     );
+//   }
 
-  @override
-  bool get isRowCountApproximate => false;
+//   @override
+//   bool get isRowCountApproximate => false;
 
-  @override
-  int get rowCount => data.length;
+//   @override
+//   int get rowCount => data.length;
 
-  @override
-  int get selectedRowCount => 0;
-}
+//   @override
+//   int get selectedRowCount => 0;
+// }

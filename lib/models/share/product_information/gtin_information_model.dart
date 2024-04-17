@@ -1,194 +1,224 @@
 class GtinInformationModel {
-  int? status;
-  GtinArr? gtinArr;
-  List<ProductContents>? productContents;
+  bool? productDataAvailable;
+  CompanyInfo? companyInfo;
 
-  GtinInformationModel({this.status, this.gtinArr, this.productContents});
+  GtinInformationModel({this.productDataAvailable, this.companyInfo});
 
   GtinInformationModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    gtinArr =
-        json['gtinArr'] != null ? GtinArr.fromJson(json['gtinArr']) : null;
-    if (json['productContents'] != null) {
-      productContents = <ProductContents>[];
-      json['productContents'].forEach((v) {
-        productContents!.add(ProductContents.fromJson(v));
-      });
-    }
+    productDataAvailable = json['ProductDataAvailable'];
+    companyInfo = json['companyInfo'] != null
+        ? CompanyInfo.fromJson(json['companyInfo'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    if (gtinArr != null) {
-      data['gtinArr'] = gtinArr!.toJson();
-    }
-    if (productContents != null) {
-      data['productContents'] =
-          productContents!.map((v) => v.toJson()).toList();
+    data['ProductDataAvailable'] = productDataAvailable;
+    if (companyInfo != null) {
+      data['companyInfo'] = companyInfo!.toJson();
     }
     return data;
   }
 }
 
-class GtinArr {
-  String? gtin;
+class CompanyInfo {
   String? companyName;
   String? licenceKey;
-  String? website;
-  String? address;
   String? licenceType;
+  String? licenceStatus;
+  String? licensingMOName;
+  String? licensingMOGLN;
+  String? primaryMOName;
+  String? primaryMOGLN;
+  String? contactWebsite;
+  String? formattedAddress;
+  String? dateCreated;
+  String? dateUpdated;
+  String? gtin;
+
+  CompanyInfo(
+      {this.companyName,
+      this.licenceKey,
+      this.licenceType,
+      this.licenceStatus,
+      this.licensingMOName,
+      this.licensingMOGLN,
+      this.primaryMOName,
+      this.primaryMOGLN,
+      this.contactWebsite,
+      this.formattedAddress,
+      this.dateCreated,
+      this.dateUpdated,
+      this.gtin});
+
+  CompanyInfo.fromJson(Map<String, dynamic> json) {
+    companyName = json['companyName'];
+    licenceKey = json['licenceKey'];
+    licenceType = json['licenceType'];
+    licenceStatus = json['licenceStatus'];
+    licensingMOName = json['licensingMOName'];
+    licensingMOGLN = json['licensingMOGLN'];
+    primaryMOName = json['primaryMOName'];
+    primaryMOGLN = json['primaryMOGLN'];
+    contactWebsite = json['contactWebsite'];
+    formattedAddress = json['formattedAddress'];
+    dateCreated = json['dateCreated'];
+    dateUpdated = json['dateUpdated'];
+    gtin = json['gtin'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['companyName'] = companyName;
+    data['licenceKey'] = licenceKey;
+    data['licenceType'] = licenceType;
+    data['licenceStatus'] = licenceStatus;
+    data['licensingMOName'] = licensingMOName;
+    data['licensingMOGLN'] = licensingMOGLN;
+    data['primaryMOName'] = primaryMOName;
+    data['primaryMOGLN'] = primaryMOGLN;
+    data['contactWebsite'] = contactWebsite;
+    data['formattedAddress'] = formattedAddress;
+    data['dateCreated'] = dateCreated;
+    data['dateUpdated'] = dateUpdated;
+    data['gtin'] = gtin;
+    return data;
+  }
+}
+
+class GtinInformationDataModel {
+  bool? productDataAvailable;
+  Data? data;
+
+  GtinInformationDataModel({this.productDataAvailable, this.data});
+
+  GtinInformationDataModel.fromJson(Map<String, dynamic> json) {
+    productDataAvailable = json['ProductDataAvailable'];
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ProductDataAvailable'] = productDataAvailable;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  String? gtin;
+  String? companyName;
   String? gpcCategoryCode;
-  String? brandName;
-  String? productDescription;
-  String? productImageUrl;
+  String? gpcCategoryName;
+  BrandName? brandName;
+  BrandName? productDescription;
+  BrandName? productImageUrl;
   String? unitCode;
   String? unitValue;
-  String? countryOfSaleCode;
   String? productName;
+  String? moName;
+  String? licenceKey;
+  String? licenceType;
+  String? type;
+  String? countryOfSaleName;
   String? gcpGLNID;
-  String? status;
+  String? contactWebsite;
+  String? formattedAddress;
 
-  GtinArr(
+  Data(
       {this.gtin,
       this.companyName,
-      this.licenceKey,
-      this.website,
-      this.address,
-      this.licenceType,
       this.gpcCategoryCode,
+      this.gpcCategoryName,
       this.brandName,
       this.productDescription,
       this.productImageUrl,
       this.unitCode,
       this.unitValue,
-      this.countryOfSaleCode,
       this.productName,
+      this.moName,
+      this.licenceKey,
+      this.licenceType,
+      this.type,
+      this.countryOfSaleName,
       this.gcpGLNID,
-      this.status});
+      this.contactWebsite,
+      this.formattedAddress});
 
-  GtinArr.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     gtin = json['gtin'];
     companyName = json['companyName'];
-    licenceKey = json['licenceKey'];
-    website = json['website'];
-    address = json['address'];
-    licenceType = json['licenceType'];
     gpcCategoryCode = json['gpcCategoryCode'];
-    brandName = json['brandName'];
-    productDescription = json['productDescription'];
-    productImageUrl = json['productImageUrl'];
+    gpcCategoryName = json['gpcCategoryName'];
+    brandName = json['brandName'] != null
+        ? BrandName.fromJson(json['brandName'])
+        : null;
+    productDescription = json['productDescription'] != null
+        ? BrandName.fromJson(json['productDescription'])
+        : null;
+    productImageUrl = json['productImageUrl'] != null
+        ? BrandName.fromJson(json['productImageUrl'])
+        : null;
     unitCode = json['unitCode'];
     unitValue = json['unitValue'];
-    countryOfSaleCode = json['countryOfSaleCode'];
     productName = json['productName'];
+    moName = json['moName'];
+    licenceKey = json['licenceKey'];
+    licenceType = json['licenceType'];
+    type = json['type'];
+    countryOfSaleName = json['countryOfSaleName'];
     gcpGLNID = json['gcpGLNID'];
-    status = json['status'];
+    contactWebsite = json['contactWebsite'];
+    formattedAddress = json['formattedAddress'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['gtin'] = gtin;
     data['companyName'] = companyName;
-    data['licenceKey'] = licenceKey;
-    data['website'] = website;
-    data['address'] = address;
-    data['licenceType'] = licenceType;
     data['gpcCategoryCode'] = gpcCategoryCode;
-    data['brandName'] = brandName;
-    data['productDescription'] = productDescription;
-    data['productImageUrl'] = productImageUrl;
+    data['gpcCategoryName'] = gpcCategoryName;
+    if (brandName != null) {
+      data['brandName'] = brandName!.toJson();
+    }
+    if (productDescription != null) {
+      data['productDescription'] = productDescription!.toJson();
+    }
+    if (productImageUrl != null) {
+      data['productImageUrl'] = productImageUrl!.toJson();
+    }
     data['unitCode'] = unitCode;
     data['unitValue'] = unitValue;
-    data['countryOfSaleCode'] = countryOfSaleCode;
     data['productName'] = productName;
+    data['moName'] = moName;
+    data['licenceKey'] = licenceKey;
+    data['licenceType'] = licenceType;
+    data['type'] = type;
+    data['countryOfSaleName'] = countryOfSaleName;
     data['gcpGLNID'] = gcpGLNID;
-    data['status'] = status;
+    data['contactWebsite'] = contactWebsite;
+    data['formattedAddress'] = formattedAddress;
     return data;
   }
 }
 
-class ProductContents {
-  String? iD;
-  String? productAllergenInformation;
-  String? productNutrientsInformation;
-  String? gTIN;
-  String? linkType;
-  String? batch;
-  String? expiry;
-  String? serial;
-  String? manufacturingDate;
-  String? bestBeforeDate;
-  String? gLNIDFrom;
-  String? unitPrice;
-  String? ingredients;
-  String? allergenInfo;
-  String? calories;
-  String? sugar;
-  String? salt;
-  String? fat;
+class BrandName {
+  String? language;
+  String? value;
 
-  ProductContents(
-      {this.iD,
-      this.productAllergenInformation,
-      this.productNutrientsInformation,
-      this.gTIN,
-      this.linkType,
-      this.batch,
-      this.expiry,
-      this.serial,
-      this.manufacturingDate,
-      this.bestBeforeDate,
-      this.gLNIDFrom,
-      this.unitPrice,
-      this.ingredients,
-      this.allergenInfo,
-      this.calories,
-      this.sugar,
-      this.salt,
-      this.fat});
+  BrandName({this.language, this.value});
 
-  ProductContents.fromJson(Map<String, dynamic> json) {
-    iD = json['ID'];
-    productAllergenInformation = json['ProductAllergenInformation'];
-    productNutrientsInformation = json['ProductNutrientsInformation'];
-    gTIN = json['GTIN'];
-    linkType = json['LinkType'];
-    batch = json['Batch'];
-    expiry = json['Expiry'];
-    serial = json['Serial'];
-    manufacturingDate = json['ManufacturingDate'];
-    bestBeforeDate = json['bestBeforeDate'];
-    gLNIDFrom = json['GLNIDFrom'];
-    unitPrice = json['unitPrice'];
-    ingredients = json['ingredients'];
-    allergenInfo = json['allergen_info'];
-    calories = json['calories'];
-    sugar = json['sugar'];
-    salt = json['salt'];
-    fat = json['fat'];
+  BrandName.fromJson(Map<String, dynamic> json) {
+    language = json['language'];
+    value = json['value'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['ID'] = iD;
-    data['ProductAllergenInformation'] = productAllergenInformation;
-    data['ProductNutrientsInformation'] = productNutrientsInformation;
-    data['GTIN'] = gTIN;
-    data['LinkType'] = linkType;
-    data['Batch'] = batch;
-    data['Expiry'] = expiry;
-    data['Serial'] = serial;
-    data['ManufacturingDate'] = manufacturingDate;
-    data['bestBeforeDate'] = bestBeforeDate;
-    data['GLNIDFrom'] = gLNIDFrom;
-    data['unitPrice'] = unitPrice;
-    data['ingredients'] = ingredients;
-    data['allergen_info'] = allergenInfo;
-    data['calories'] = calories;
-    data['sugar'] = sugar;
-    data['salt'] = salt;
-    data['fat'] = fat;
+    data['language'] = language;
+    data['value'] = value;
     return data;
   }
 }
