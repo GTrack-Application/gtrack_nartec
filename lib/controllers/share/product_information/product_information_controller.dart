@@ -17,7 +17,6 @@ class ProductInformationController {
     try {
       var response = await http.get(Uri.parse(
           '${AppUrls.baseUrlWithPort}/getPromotionalOffersByGtin/$gtin'));
-      print(response.body);
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {
