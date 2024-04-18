@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/controllers/share/product_information/digital_links_controller.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/product_information_controller.dart';
-import 'package:gtrack_mobile_app/controllers/share/product_information/safety_informaiton_controller.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/leaflets_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/location_origin_model.dart';
@@ -119,7 +119,7 @@ class _DigitalLinkScreenState extends State<DigitalLinkScreen> {
 
 class SafetyInformation extends StatefulWidget {
   final String gtin;
-  const SafetyInformation({Key? key, required this.gtin}) : super(key: key);
+  const SafetyInformation({super.key, required this.gtin});
 
   @override
   State<SafetyInformation> createState() => _SafetyInformationState();
@@ -129,7 +129,13 @@ class _SafetyInformationState extends State<SafetyInformation> {
   @override
   void initState() {
     setState(() {
-      SafetyInfromationController.getSafeInfromation(widget.gtin).then((value) {
+      DigitalLinksController()
+          .getDigitalLinksData(
+        "safety-information",
+        widget.gtin,
+      )
+          // SafetyInfromationController.getSafeInfromation(widget.gtin)
+          .then((value) {
         safetyInformation = value;
       });
     });
@@ -141,15 +147,22 @@ class _SafetyInformationState extends State<SafetyInformation> {
     return PaginatedDataTable(
       headingRowColor: MaterialStateProperty.all(Colors.blue),
       columns: const [
-        DataColumn(label: Text("Id", style: TextStyle(color: Colors.white))),
-        DataColumn(label: Text("Safety Details Information", style: TextStyle(color: Colors.white))),
-        DataColumn(label: Text("Link Type", style: TextStyle(color: Colors.white))),
-        DataColumn(label: Text("Language", style: TextStyle(color: Colors.white))),
-        DataColumn(label: Text("Target URL", style: TextStyle(color: Colors.white))),
-        DataColumn(label: Text("GTIN", style: TextStyle(color: Colors.white))),
-        DataColumn(label: Text("Logo", style: TextStyle(color: Colors.white))),
-        DataColumn(label: Text("Company Name", style: TextStyle(color: Colors.white))),
-        DataColumn(label: Text("Process", style: TextStyle(color: Colors.white))),
+        // DataColumn(label: Text("Id", style: TextStyle(color: Colors.white))),
+        // DataColumn(
+        //     label: Text("Safety Details Information",
+        //         style: TextStyle(color: Colors.white))),
+        DataColumn(
+            label: Text("Link Type", style: TextStyle(color: Colors.white))),
+        DataColumn(
+            label: Text("Language", style: TextStyle(color: Colors.white))),
+        DataColumn(
+            label: Text("Target URL", style: TextStyle(color: Colors.white))),
+        // DataColumn(label: Text("GTIN", style: TextStyle(color: Colors.white))),
+        // DataColumn(label: Text("Logo", style: TextStyle(color: Colors.white))),
+        // DataColumn(
+        //     label: Text("Company Name", style: TextStyle(color: Colors.white))),
+        // DataColumn(
+        //     label: Text("Process", style: TextStyle(color: Colors.white))),
       ],
       source: SafetyInformationSource(),
       arrowHeadColor: AppColors.green,
@@ -168,15 +181,15 @@ class SafetyInformationSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.safetyDetailedInformation.toString())),
+        // DataCell(Text(rowData.iD.toString())),
+        // DataCell(Text(rowData.safetyDetailedInformation.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.lang.toString())),
-        DataCell(Text(rowData.targetURL.toString())),
-        DataCell(Text(rowData.gTIN.toString())),
-        DataCell(Text(rowData.logo.toString())),
-        DataCell(Text(rowData.companyName.toString())),
-        DataCell(Text(rowData.process.toString())),
+        DataCell(Text(rowData.language.toString())),
+        DataCell(Text(rowData.targetUrl.toString())),
+        // DataCell(Text(rowData.gTIN.toString())),
+        // DataCell(Text(rowData.logo.toString())),
+        // DataCell(Text(rowData.companyName.toString())),
+        // DataCell(Text(rowData.process.toString())),
       ],
     );
   }
@@ -193,7 +206,7 @@ class SafetyInformationSource extends DataTableSource {
 
 class PromotionalOffers extends StatefulWidget {
   final String gtin;
-  const PromotionalOffers({Key? key, required this.gtin}) : super(key: key);
+  const PromotionalOffers({super.key, required this.gtin});
 
   @override
   State<PromotionalOffers> createState() => _PromotionalOffersState();
@@ -203,9 +216,11 @@ class _PromotionalOffersState extends State<PromotionalOffers> {
   @override
   void initState() {
     setState(() {
-      ProductInformationController.getPromotionalOffer(widget.gtin)
+      DigitalLinksController()
+          .getDigitalLinksData("promotional-offers", widget.gtin)
+          // ProductInformationController.getPromotionalOffer(widget.gtin)
           .then((value) {
-        promotionalOffer = value;
+        promotionalOffer = value as List<PromotionalOfferModel>;
       });
     });
     super.initState();
@@ -215,15 +230,15 @@ class _PromotionalOffersState extends State<PromotionalOffers> {
   Widget build(BuildContext context) {
     return PaginatedDataTable(
       columns: const [
-        DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Promotional Offers")),
+        // DataColumn(label: Text("Id")),
+        // DataColumn(label: Text("Promotional Offers")),
         DataColumn(label: Text("Link Type")),
         DataColumn(label: Text("Language")),
         DataColumn(label: Text("Target URL")),
-        DataColumn(label: Text("GTIN")),
-        DataColumn(label: Text("Expiry Date")),
-        DataColumn(label: Text("Price")),
-        DataColumn(label: Text("Banner")),
+        // DataColumn(label: Text("GTIN")),
+        // DataColumn(label: Text("Expiry Date")),
+        // DataColumn(label: Text("Price")),
+        // DataColumn(label: Text("Banner")),
       ],
       source: PromotionalOfferSource(),
       arrowHeadColor: AppColors.green,
@@ -290,15 +305,15 @@ class PromotionalOfferSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.promotionalOffers.toString())),
+        // DataCell(Text(rowData.id.toString())),
+        // DataCell(Text(rowData.promotionalOffers.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.lang.toString())),
-        DataCell(Text(rowData.targetURL.toString())),
-        DataCell(Text(rowData.gTIN.toString())),
-        DataCell(Text(rowData.expiryDate.toString())),
-        DataCell(Text(rowData.price.toString())),
-        DataCell(Text(rowData.banner.toString())),
+        DataCell(Text(rowData.language.toString())),
+        DataCell(Text(rowData.targetUrl.toString())),
+        // DataCell(Text(rowData.gTIN.toString())),
+        // DataCell(Text(rowData.expiryDate.toString())),
+        // DataCell(Text(rowData.price.toString())),
+        // DataCell(Text(rowData.banner.toString())),
       ],
     );
   }
@@ -315,7 +330,7 @@ class PromotionalOfferSource extends DataTableSource {
 
 class ProductContents extends StatefulWidget {
   final String gtin;
-  const ProductContents({Key? key, required this.gtin}) : super(key: key);
+  const ProductContents({super.key, required this.gtin});
 
   @override
   State<ProductContents> createState() => _ProductContentsState();
@@ -325,11 +340,16 @@ class _ProductContentsState extends State<ProductContents> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      ProductInformationController.getProductContents(widget.gtin)
-          .then((value) {
-        productContents = value;
-      });
+
+    DigitalLinksController()
+        .getDigitalLinksData(
+      "product-contents",
+      widget.gtin,
+    )
+        // ProductInformationController.getProductContents(widget.gtin)
+        .then((value) {
+      productContents = value;
+      setState(() {});
     });
   }
 
@@ -337,87 +357,30 @@ class _ProductContentsState extends State<ProductContents> {
   Widget build(BuildContext context) {
     return PaginatedDataTable(
       columns: const [
-        DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Product Allergen Information")),
-        DataColumn(label: Text("Product Nutrient Information")),
-        DataColumn(label: Text("GTIN")),
+        // DataColumn(label: Text("Id")),
+        // DataColumn(label: Text("Product Allergen Information")),
+        // DataColumn(label: Text("Product Nutrient Information")),
+        // DataColumn(label: Text("GTIN")),
         DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Batch")),
-        DataColumn(label: Text("Expiry")),
-        DataColumn(label: Text("Serial")),
-        DataColumn(label: Text("Manufecturing Date")),
-        DataColumn(label: Text("Best Before")),
-        DataColumn(label: Text("GLNID Form")),
-        DataColumn(label: Text("Unit Price")),
-        DataColumn(label: Text("Ingredients")),
-        DataColumn(label: Text("Allergen Info")),
-        DataColumn(label: Text("Calories")),
-        DataColumn(label: Text("Sugar")),
-        DataColumn(label: Text("Salt")),
-        DataColumn(label: Text("Fat")),
+        // DataColumn(label: Text("Batch")),
+        // DataColumn(label: Text("Expiry")),
+        // DataColumn(label: Text("Serial")),
+        // DataColumn(label: Text("Manufecturing Date")),
+        // DataColumn(label: Text("Best Before")),
+        // DataColumn(label: Text("GLNID Form")),
+        // DataColumn(label: Text("Unit Price")),
+        // DataColumn(label: Text("Ingredients")),
+        // DataColumn(label: Text("Allergen Info")),
+        // DataColumn(label: Text("Calories")),
+        // DataColumn(label: Text("Sugar")),
+        // DataColumn(label: Text("Salt")),
+        // DataColumn(label: Text("Fat")),
       ],
       source: ProductContentsSource(),
       arrowHeadColor: AppColors.green,
       showCheckboxColumn: false,
       rowsPerPage: 5,
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: const Text("Product Contents"),
-    //     backgroundColor: AppColors.green,
-    //   ),
-    //   body: FutureBuilder(
-    //     future: ProductInformationController.getProductContents(widget.gtin),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return const Center(
-    //           child: LoadingWidget(),
-    //         );
-    //       } else if (snapshot.hasError) {
-    //         return const Center(
-    //           child: Text("Something went wrong"),
-    //         );
-    //       } else if (!snapshot.hasData) {
-    //         return const Center(
-    //           child: Text("No data available"),
-    //         );
-    //       } else {
-    //         return Column(
-    //           children: [
-    //             Expanded(
-    //               child: PaginatedDataTable(
-    //                 columns: const [
-    //                   DataColumn(label: Text("Id")),
-    //                   DataColumn(label: Text("Product Allergen Information")),
-    //                   DataColumn(label: Text("Product Nutrient Information")),
-    //                   DataColumn(label: Text("GTIN")),
-    //                   DataColumn(label: Text("Link Type")),
-    //                   DataColumn(label: Text("Batch")),
-    //                   DataColumn(label: Text("Expiry")),
-    //                   DataColumn(label: Text("Serial")),
-    //                   DataColumn(label: Text("Manufecturing Date")),
-    //                   DataColumn(label: Text("Best Before")),
-    //                   DataColumn(label: Text("GLNID Form")),
-    //                   DataColumn(label: Text("Unit Price")),
-    //                   DataColumn(label: Text("Ingredients")),
-    //                   DataColumn(label: Text("Allergen Info")),
-    //                   DataColumn(label: Text("Calories")),
-    //                   DataColumn(label: Text("Sugar")),
-    //                   DataColumn(label: Text("Salt")),
-    //                   DataColumn(label: Text("Fat")),
-    //                 ],
-    //                 source: ProductContentsSource(),
-    //                 arrowHeadColor: AppColors.green,
-    //                 showCheckboxColumn: false,
-    //                 rowsPerPage: 10,
-    //               ),
-    //             ),
-    //           ],
-    //         );
-    //       }
-    //     },
-    //   ),
-    // );
   }
 }
 
@@ -430,24 +393,24 @@ class ProductContentsSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.productAllergenInformation.toString())),
-        DataCell(Text(rowData.productNutrientsInformation.toString())),
-        DataCell(Text(rowData.gTIN.toString())),
+        // DataCell(Text(rowData.iD.toString())),
+        // DataCell(Text(rowData.productAllergenInformation.toString())),
+        // DataCell(Text(rowData.productNutrientsInformation.toString())),
+        // DataCell(Text(rowData.gTIN.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.batch.toString())),
-        DataCell(Text(rowData.expiry.toString())),
-        DataCell(Text(rowData.serial.toString())),
-        DataCell(Text(rowData.manufacturingDate.toString())),
-        DataCell(Text(rowData.bestBeforeDate.toString())),
-        DataCell(Text(rowData.gLNIDFrom.toString())),
-        DataCell(Text(rowData.unitPrice.toString())),
-        DataCell(Text(rowData.ingredients.toString())),
-        DataCell(Text(rowData.allergenInfo.toString())),
-        DataCell(Text(rowData.calories.toString())),
-        DataCell(Text(rowData.sugar.toString())),
-        DataCell(Text(rowData.salt.toString())),
-        DataCell(Text(rowData.fat.toString())),
+        // DataCell(Text(rowData.batch.toString())),
+        // DataCell(Text(rowData.expiry.toString())),
+        // DataCell(Text(rowData.serial.toString())),
+        // DataCell(Text(rowData.manufacturingDate.toString())),
+        // DataCell(Text(rowData.bestBeforeDate.toString())),
+        // DataCell(Text(rowData.gLNIDFrom.toString())),
+        // DataCell(Text(rowData.unitPrice.toString())),
+        // DataCell(Text(rowData.ingredients.toString())),
+        // DataCell(Text(rowData.allergenInfo.toString())),
+        // DataCell(Text(rowData.calories.toString())),
+        // DataCell(Text(rowData.sugar.toString())),
+        // DataCell(Text(rowData.salt.toString())),
+        // DataCell(Text(rowData.fat.toString())),
       ],
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/screens/home/share/product-information/company_information.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/digital_link_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/share/product-information/events_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_information_screen.dart';
 
 class ProductInformationScreen extends StatefulWidget {
@@ -19,8 +19,9 @@ class ProductInformationScreen extends StatefulWidget {
 class _ProductInformationScreenState extends State<ProductInformationScreen> {
   final List<Tab> myTabs = const <Tab>[
     Tab(text: 'GTIN Information'),
+    Tab(text: 'Company Information'),
     Tab(text: 'Digital Links'),
-    Tab(text: 'Events'),
+    // Tab(text: 'Events'),
   ];
 
   @override
@@ -57,8 +58,8 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
             onTap: (index) {
               FocusScope.of(context).unfocus();
             },
-            physics:
-                const NeverScrollableScrollPhysics(), // Disable tab swiping
+            // physics:
+            //     const NeverScrollableScrollPhysics(), // Disable tab swiping
             isScrollable: true,
           ),
         ),
@@ -66,9 +67,10 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
           physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
             GtinInformationScreen(gtin: widget.gtin),
+            CompanyInformationScreen(gtin: widget.gtin),
             DigitalLinkScreen(gtin: widget.gtin),
-            EventsScreen(gtin: widget.gtin),
-          ], // Disable tab swiping
+            // EventsScreen(gtin: widget.gtin),
+          ],
         ),
       ),
     );

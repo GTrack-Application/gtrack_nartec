@@ -1,48 +1,60 @@
 class SafetyInfromationModel {
-  int? iD;
-  String? safetyDetailedInformation;
   String? linkType;
-  String? lang;
-  String? targetURL;
-  String? gTIN;
-  String? logo;
-  String? companyName;
-  String? process;
+  String? language;
+  String? context;
+  String? mimeType;
+  String? linkTitle;
+  String? targetUrl;
+  bool? defaultLinkType;
+  bool? defaultLanguage;
+  bool? defaultContext;
+  bool? defaultMimeType;
+  bool? fwqs;
+  bool? public;
 
   SafetyInfromationModel(
-      {this.iD,
-      this.safetyDetailedInformation,
-      this.linkType,
-      this.lang,
-      this.targetURL,
-      this.gTIN,
-      this.logo,
-      this.companyName,
-      this.process});
+      {this.linkType,
+      this.language,
+      this.context,
+      this.mimeType,
+      this.linkTitle,
+      this.targetUrl,
+      this.defaultLinkType,
+      this.defaultLanguage,
+      this.defaultContext,
+      this.defaultMimeType,
+      this.fwqs,
+      this.public});
 
   SafetyInfromationModel.fromJson(Map<String, dynamic> json) {
-    iD = json['ID'];
-    safetyDetailedInformation = json['SafetyDetailedInformation'];
-    linkType = json['LinkType'];
-    lang = json['Lang'];
-    targetURL = json['TargetURL'];
-    gTIN = json['GTIN'];
-    logo = json['logo'];
-    companyName = json['companyName'];
-    process = json['process'];
+    linkType = json['linkType'];
+    language = json['language'];
+    context = json['context'];
+    mimeType = json['mimeType'];
+    linkTitle = json['linkTitle'];
+    targetUrl = json['targetUrl'];
+    defaultLinkType = json['defaultLinkType'];
+    defaultLanguage = json['defaultLanguage'];
+    defaultContext = json['defaultContext'];
+    defaultMimeType = json['defaultMimeType'];
+    fwqs = json['fwqs'];
+    public = json['public'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['ID'] = iD;
-    data['SafetyDetailedInformation'] = safetyDetailedInformation;
-    data['LinkType'] = linkType;
-    data['Lang'] = lang;
-    data['TargetURL'] = targetURL;
-    data['GTIN'] = gTIN;
-    data['logo'] = logo;
-    data['companyName'] = companyName;
-    data['process'] = process;
+    data['linkType'] = linkType;
+    data['language'] = language;
+    data['context'] = context;
+    data['mimeType'] = mimeType;
+    data['linkTitle'] = linkTitle;
+    data['targetUrl'] = targetUrl;
+    data['defaultLinkType'] = defaultLinkType;
+    data['defaultLanguage'] = defaultLanguage;
+    data['defaultContext'] = defaultContext;
+    data['defaultMimeType'] = defaultMimeType;
+    data['fwqs'] = fwqs;
+    data['public'] = public;
     return data;
   }
 }
