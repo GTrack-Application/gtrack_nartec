@@ -119,7 +119,7 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                         value1: "Global Product Category",
                         value2: gtinInformationDataModel == null
                             ? ""
-                            : gtinInformationDataModel!.data!.gpcCategoryCode
+                            : gtinInformationDataModel!.data!.gcpGLNID
                                 .toString(),
                       ),
                       // const BorderedRowWidget(
