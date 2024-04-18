@@ -12,6 +12,7 @@ class GtinInformationController {
     final url = Uri.parse(
         "${AppUrls.baseUrl}api/foreignGtin/getGtinProductDetails?barcode=$gtin");
     try {
+      print(url);
       final response = await http.get(url);
       log(response.body);
 

@@ -41,7 +41,7 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
         if (state is GlobalLoadedState) {
           if (state.data is GtinInformationDataModel) {
             gtinInformationDataModel = state.data as GtinInformationDataModel;
-          } else {
+          } else if (state.data is GtinInformationModel) {
             gtinInformationModel = state.data as GtinInformationModel;
           }
         }
@@ -49,118 +49,113 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
       builder: (context, state) {
         if (state is GlobalLoadingState) {
           return const Center(child: LoadingWidget());
-        } else if (state is GlobalErrorState) {
-          return Center(child: Text(state.message));
-        } else if (state is GlobalLoadedState) {
-          return Scaffold(
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 200,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: AppColors.grey,
-                              width: 1,
+        }
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.grey,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                          image: DecorationImage(
+                            alignment: Alignment.center,
+                            fit: BoxFit.contain,
+                            onError: (exception, stackTrace) => const Icon(
+                              Ionicons.image_outline,
                             ),
-                            borderRadius: BorderRadius.circular(5),
-                            image: DecorationImage(
-                              alignment: Alignment.center,
-                              fit: BoxFit.contain,
-                              onError: (exception, stackTrace) => const Icon(
-                                Ionicons.image_outline,
-                              ),
-                              image: CachedNetworkImageProvider(
-                                gtinInformationDataModel == null
-                                    ? ""
-                                    : gtinInformationDataModel!
-                                        .data!.productImageUrl!.value
-                                        .toString(),
-                                errorListener: (error) =>
-                                    const Icon(Ionicons.image_outline),
-                              ),
+                            image: CachedNetworkImageProvider(
+                              gtinInformationDataModel == null
+                                  ? ""
+                                  : gtinInformationDataModel!
+                                      .data!.productImageUrl!.value
+                                      .toString(),
+                              errorListener: (error) =>
+                                  const Icon(Ionicons.image_outline),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        BorderedRowWidget(
-                          value1: "GTIN",
-                          value2: gtinInformationDataModel == null
-                              ? ""
-                              : gtinInformationDataModel!.data!.gtin.toString(),
-                        ),
-                        BorderedRowWidget(
-                          value1: "Brand name",
-                          value2: gtinInformationDataModel == null
-                              ? ""
-                              : gtinInformationDataModel!.data!.brandName!.value
-                                  .toString(),
-                        ),
-                        BorderedRowWidget(
-                          value1: "Product Description",
-                          value2: gtinInformationDataModel == null
-                              ? ""
-                              : gtinInformationDataModel!
-                                  .data!.productDescription!.value
-                                  .toString(),
-                        ),
-                        BorderedRowWidget(
-                          value1: "Image URL",
-                          value2: gtinInformationDataModel == null
-                              ? ""
-                              : gtinInformationDataModel!
-                                  .data!.productImageUrl!.value
-                                  .toString(),
-                        ),
-                        BorderedRowWidget(
-                          value1: "Global Product Category",
-                          value2: gtinInformationDataModel == null
-                              ? ""
-                              : gtinInformationDataModel!.data!.gpcCategoryCode
-                                  .toString(),
-                        ),
-                        // const BorderedRowWidget(
-                        //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
-                        BorderedRowWidget(
-                          value1: "Country Of Sale",
-                          value2: gtinInformationDataModel == null
-                              ? ""
-                              : gtinInformationDataModel!
-                                  .data!.countryOfSaleName
-                                  .toString(),
-                        ),
-                        30.height,
-                        // const Divider(thickness: 2),
-                        10.height,
-                        // PaginatedDataTable(
-                        //   columns: const [
-                        //     DataColumn(label: Text("Allergen Info")),
-                        //     DataColumn(label: Text("Nutrients Info")),
-                        //     DataColumn(label: Text("Batch")),
-                        //     DataColumn(label: Text("Expiry")),
-                        //     DataColumn(label: Text("Serial")),
-                        //     DataColumn(label: Text("Manufecturing Date")),
-                        //     DataColumn(label: Text("Best Before")),
-                        //   ],
-                        //   source: GtinInformationSource(),
-                        //   arrowHeadColor: AppColors.green,
-                        //   showCheckboxColumn: false,
-                        //   rowsPerPage: 5,
-                        // ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      ),
+                      const SizedBox(height: 10),
+                      BorderedRowWidget(
+                        value1: "GTIN",
+                        value2: gtinInformationDataModel == null
+                            ? ""
+                            : gtinInformationDataModel!.data!.gtin.toString(),
+                      ),
+                      BorderedRowWidget(
+                        value1: "Brand name",
+                        value2: gtinInformationDataModel == null
+                            ? ""
+                            : gtinInformationDataModel!.data!.brandName!.value
+                                .toString(),
+                      ),
+                      BorderedRowWidget(
+                        value1: "Product Description",
+                        value2: gtinInformationDataModel == null
+                            ? ""
+                            : gtinInformationDataModel!
+                                .data!.productDescription!.value
+                                .toString(),
+                      ),
+                      BorderedRowWidget(
+                        value1: "Image URL",
+                        value2: gtinInformationDataModel == null
+                            ? ""
+                            : gtinInformationDataModel!
+                                .data!.productImageUrl!.value
+                                .toString(),
+                      ),
+                      BorderedRowWidget(
+                        value1: "Global Product Category",
+                        value2: gtinInformationDataModel == null
+                            ? ""
+                            : gtinInformationDataModel!.data!.gpcCategoryCode
+                                .toString(),
+                      ),
+                      // const BorderedRowWidget(
+                      //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
+                      BorderedRowWidget(
+                        value1: "Country Of Sale",
+                        value2: gtinInformationDataModel == null
+                            ? ""
+                            : gtinInformationDataModel!.data!.countryOfSaleName
+                                .toString(),
+                      ),
+                      30.height,
+                      // const Divider(thickness: 2),
+                      10.height,
+                      // PaginatedDataTable(
+                      //   columns: const [
+                      //     DataColumn(label: Text("Allergen Info")),
+                      //     DataColumn(label: Text("Nutrients Info")),
+                      //     DataColumn(label: Text("Batch")),
+                      //     DataColumn(label: Text("Expiry")),
+                      //     DataColumn(label: Text("Serial")),
+                      //     DataColumn(label: Text("Manufecturing Date")),
+                      //     DataColumn(label: Text("Best Before")),
+                      //   ],
+                      //   source: GtinInformationSource(),
+                      //   arrowHeadColor: AppColors.green,
+                      //   showCheckboxColumn: false,
+                      //   rowsPerPage: 5,
+                      // ),
+                    ],
+                  ),
+                )
+              ],
             ),
-          );
-        }
-        return const Center(child: Text("Something went wrong"));
+          ),
+        );
       },
     );
   }

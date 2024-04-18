@@ -23,7 +23,7 @@ List<LeafletsModel> leaflets = [];
 
 class DigitalLinkScreen extends StatefulWidget {
   final String gtin;
-  const DigitalLinkScreen({Key? key, required this.gtin}) : super(key: key);
+  const DigitalLinkScreen({super.key, required this.gtin});
 
   @override
   State<DigitalLinkScreen> createState() => _DigitalLinkScreenState();
