@@ -139,16 +139,17 @@ class _SafetyInformationState extends State<SafetyInformation> {
   @override
   Widget build(BuildContext context) {
     return PaginatedDataTable(
+      headingRowColor: MaterialStateProperty.all(Colors.blue),
       columns: const [
-        DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Safety Details Information")),
-        DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Language")),
-        DataColumn(label: Text("Target URL")),
-        DataColumn(label: Text("GTIN")),
-        DataColumn(label: Text("Logo")),
-        DataColumn(label: Text("Company Name")),
-        DataColumn(label: Text("Process")),
+        DataColumn(label: Text("Id", style: TextStyle(color: Colors.white))),
+        DataColumn(label: Text("Safety Details Information", style: TextStyle(color: Colors.white))),
+        DataColumn(label: Text("Link Type", style: TextStyle(color: Colors.white))),
+        DataColumn(label: Text("Language", style: TextStyle(color: Colors.white))),
+        DataColumn(label: Text("Target URL", style: TextStyle(color: Colors.white))),
+        DataColumn(label: Text("GTIN", style: TextStyle(color: Colors.white))),
+        DataColumn(label: Text("Logo", style: TextStyle(color: Colors.white))),
+        DataColumn(label: Text("Company Name", style: TextStyle(color: Colors.white))),
+        DataColumn(label: Text("Process", style: TextStyle(color: Colors.white))),
       ],
       source: SafetyInformationSource(),
       arrowHeadColor: AppColors.green,
