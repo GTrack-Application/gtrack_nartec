@@ -56,50 +56,72 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
-                      const Text(
-                          "Information about the company that licenced this GTIN"),
+                      const Center(
+                        child: Text(
+                          "Information about the company that licenced this GTIN",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       BorderedRowWidget(
                         value1: "Company Name",
                         value2: gtinInformationDataModel == null
-                            ? ""
+                            ? gtinInformationModel!.companyInfo!.companyName!
+                                .toString()
                             : gtinInformationDataModel!.data!.companyName
                                 .toString(),
                       ),
                       BorderedRowWidget(
                         value1: "Address",
                         value2: gtinInformationDataModel == null
-                            ? ""
+                            ? gtinInformationModel!
+                                .companyInfo!.formattedAddress!
+                                .toString()
                             : gtinInformationDataModel!.data!.formattedAddress!
                                 .toString(),
                       ),
                       BorderedRowWidget(
                         value1: "Website",
                         value2: gtinInformationDataModel == null
-                            ? ""
+                            ? gtinInformationModel!.companyInfo!.contactWebsite!
+                                .toString()
                             : gtinInformationDataModel!.data!.contactWebsite!
                                 .toString(),
                       ),
                       BorderedRowWidget(
                         value1: "Licence Key",
                         value2: gtinInformationDataModel == null
-                            ? ""
+                            ? gtinInformationModel!.companyInfo!.licenceKey!
+                                .toString()
                             : gtinInformationDataModel!.data!.licenceKey
                                 .toString(),
                       ),
                       BorderedRowWidget(
-                        value1: "Global Product Category",
+                        value1: "Licence Type",
                         value2: gtinInformationDataModel == null
-                            ? ""
+                            ? gtinInformationModel!.companyInfo!.licenceType!
+                                .toString()
+                            : gtinInformationDataModel!.data!.licenceKey
+                                .toString(),
+                      ),
+                      BorderedRowWidget(
+                        value1: "Global Location Number (GLN)",
+                        value2: gtinInformationDataModel == null
+                            ? gtinInformationModel!.companyInfo!.gtin!
+                                .toString()
                             : gtinInformationDataModel!.data!.gpcCategoryCode
                                 .toString(),
                       ),
                       // const BorderedRowWidget(
                       //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
                       BorderedRowWidget(
-                        value1: "Country Of Sale",
+                        value1: "Licensing GS1 Member Organisation",
                         value2: gtinInformationDataModel == null
-                            ? ""
+                            ? "	GS1 SAUDI ARABIA"
                             : gtinInformationDataModel!.data!.countryOfSaleName
                                 .toString(),
                       ),
