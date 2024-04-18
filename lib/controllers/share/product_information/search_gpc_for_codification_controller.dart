@@ -8,14 +8,15 @@ import 'dart:convert';
 class SearchGpcForCodificationController {
   static Future<SearchGpcForCodification> searchGpcForCodification(
       String gpc) async {
-    final url = "${AppUrls.baseUrl}//gpc/searchGpcForCodification?gpc=$gpc";
+    final url = "${AppUrls.baseUrl}api/gpc/searchGpcForCodification?gpc=$gpc";
     final uri = Uri.parse(url);
 
     final token = await AppPreferences.getToken();
 
     final headers = <String, String>{
       'Content-Type': 'application/json',
-      'authorization': '$token',
+      'Host': AppUrls.host,
+      'authorization': 'Bearer $token',
     };
 
     final response = await http.get(uri, headers: headers);

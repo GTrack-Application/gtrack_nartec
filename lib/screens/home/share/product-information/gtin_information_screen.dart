@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -119,8 +118,7 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                         value1: "Global Product Category",
                         value2: gtinInformationDataModel == null
                             ? ""
-                            : gtinInformationDataModel!.data!.gcpGLNID
-                                .toString(),
+                            : "${gtinInformationDataModel!.data!.gpcCategoryCode.toString()} ${gtinInformationDataModel!.data!.gpcCategoryName.toString()}",
                       ),
                       // const BorderedRowWidget(
                       //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
@@ -192,7 +190,7 @@ class BorderedRowWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: AutoSizeText(
+              child: SelectableText(
                 value2,
                 style: const TextStyle(
                   fontSize: 15,

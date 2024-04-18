@@ -2,12 +2,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_simple_treeview/flutter_simple_treeview.dart';
 import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
+import 'package:gtrack_mobile_app/blocs/share/codification/codification_cubit.dart';
+import 'package:gtrack_mobile_app/blocs/share/codification/codification_states.dart';
 import 'package:gtrack_mobile_app/blocs/share/product_information/gtin_information_bloc.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/gtin_information_model.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 GtinInformationModel? gtinInformationModel;
@@ -24,7 +25,7 @@ class CodificationScreen extends StatefulWidget {
 class _CodificationScreenState extends State<CodificationScreen> {
   GtinInformationBloc gtinInformationBloc = GtinInformationBloc();
 
-  // Models
+  CodificationCubit codificationCubit = CodificationCubit();
 
   @override
   void initState() {
@@ -33,14 +34,20 @@ class _CodificationScreenState extends State<CodificationScreen> {
     super.initState();
   }
 
+  var isTapedContainer = -1;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GtinInformationBloc, GlobalState>(
       bloc: gtinInformationBloc,
       listener: (context, state) {
+        if (state is GlobalErrorState) {}
         if (state is GlobalLoadedState) {
           if (state.data is GtinInformationDataModel) {
             gtinInformationDataModel = state.data as GtinInformationDataModel;
+
+            codificationCubit.getGpcInformation(
+                gtinInformationDataModel!.data!.gpcCategoryCode.toString());
           } else if (state.data is GtinInformationModel) {
             gtinInformationModel = state.data as GtinInformationModel;
           }
@@ -51,107 +58,209 @@ class _CodificationScreenState extends State<CodificationScreen> {
           return const Center(child: LoadingWidget());
         }
         return Scaffold(
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 200,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: AppColors.grey,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                          image: DecorationImage(
-                            alignment: Alignment.center,
-                            fit: BoxFit.contain,
-                            onError: (exception, stackTrace) => const Icon(
-                              Ionicons.image_outline,
+          body: SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: 2,
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isTapedContainer = index;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: isTapedContainer == index
+                                          ? Colors.yellow
+                                          : index == 0
+                                              ? Colors.blue
+                                              : Colors.blue[200],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Row(
+                                        children: [
+                                          CachedNetworkImage(
+                                            imageUrl:
+                                                "https://gs1ksa.org:3093/assets/gs1logowhite-QWHdyWZd.png",
+                                            height: 50,
+                                            width: 100,
+                                            fit: BoxFit.fill,
+                                          ),
+                                          Expanded(
+                                            child: AutoSizeText(
+                                              index == 0
+                                                  ? "GS1 GPC"
+                                                  : "HS CODES",
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            image: CachedNetworkImageProvider(
-                              gtinInformationDataModel == null
-                                  ? ""
-                                  : gtinInformationDataModel!
-                                      .data!.productImageUrl!.value
-                                      .toString(),
-                              errorListener: (error) =>
-                                  const Icon(Ionicons.image_outline),
-                            ),
-                          ),
+                            20.height,
+                            isTapedContainer == 0 || isTapedContainer == -1
+                                ? BlocConsumer<CodificationCubit,
+                                    CodificationState>(
+                                    bloc: codificationCubit,
+                                    listener: (context, st) {
+                                      if (st is CodificationError) {
+                                        toast(st.error);
+                                      }
+                                      if (st is CodificationLoaded) {}
+                                    },
+                                    builder: (context, state) {
+                                      return state is CodificationLoaded
+                                          ? SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: TreeView(
+                                                nodes: [
+                                                  TreeNode(
+                                                    content: Text(
+                                                      "Segment: - ${state.data.segmentTitle}",
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    children: [
+                                                      TreeNode(
+                                                        content: Text(
+                                                          "Family: - ${state.data.familyTitle}",
+                                                          style:
+                                                              const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        children: [
+                                                          TreeNode(
+                                                            content: Text(
+                                                              "Class: - ${state.data.classTitle}",
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            children: [
+                                                              TreeNode(
+                                                                content: Text(
+                                                                  "Brick: - ${state.data.brickTitle}",
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                                children: [
+                                                                  TreeNode(
+                                                                    content:
+                                                                        const Text(
+                                                                            ""),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : TreeView(
+                                              nodes: [
+                                                TreeNode(
+                                                  content: const Text(
+                                                    "Segment: -",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  children: [
+                                                    TreeNode(
+                                                      content: const Text(
+                                                        "Family: -",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      children: [
+                                                        TreeNode(
+                                                          content: const Text(
+                                                            "Class: -",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                          children: [
+                                                            TreeNode(
+                                                              content:
+                                                                  const Text(
+                                                                "Brick: -",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                              children: [
+                                                                TreeNode(
+                                                                  content:
+                                                                      const Text(
+                                                                          ""),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            );
+                                    },
+                                  )
+                                : Container(),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      BorderedRowWidget(
-                        value1: "GTIN",
-                        value2: gtinInformationDataModel == null
-                            ? ""
-                            : gtinInformationDataModel!.data!.gtin.toString(),
-                      ),
-                      BorderedRowWidget(
-                        value1: "Brand name",
-                        value2: gtinInformationDataModel == null
-                            ? ""
-                            : gtinInformationDataModel!.data!.brandName!.value
-                                .toString(),
-                      ),
-                      BorderedRowWidget(
-                        value1: "Product Description",
-                        value2: gtinInformationDataModel == null
-                            ? ""
-                            : gtinInformationDataModel!
-                                .data!.productDescription!.value
-                                .toString(),
-                      ),
-                      BorderedRowWidget(
-                        value1: "Image URL",
-                        value2: gtinInformationDataModel == null
-                            ? ""
-                            : gtinInformationDataModel!
-                                .data!.productImageUrl!.value
-                                .toString(),
-                      ),
-                      BorderedRowWidget(
-                        value1: "Global Product Category",
-                        value2: gtinInformationDataModel == null
-                            ? ""
-                            : gtinInformationDataModel!.data!.gpcCategoryCode
-                                .toString(),
-                      ),
-                      // const BorderedRowWidget(
-                      //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
-                      BorderedRowWidget(
-                        value1: "Country Of Sale",
-                        value2: gtinInformationDataModel == null
-                            ? ""
-                            : gtinInformationDataModel!.data!.countryOfSaleName
-                                .toString(),
-                      ),
-                      30.height,
-                      // const Divider(thickness: 2),
-                      10.height,
-                      // PaginatedDataTable(
-                      //   columns: const [
-                      //     DataColumn(label: Text("Allergen Info")),
-                      //     DataColumn(label: Text("Nutrients Info")),
-                      //     DataColumn(label: Text("Batch")),
-                      //     DataColumn(label: Text("Expiry")),
-                      //     DataColumn(label: Text("Serial")),
-                      //     DataColumn(label: Text("Manufecturing Date")),
-                      //     DataColumn(label: Text("Best Before")),
-                      //   ],
-                      //   source: GtinInformationSource(),
-                      //   arrowHeadColor: AppColors.green,
-                      //   showCheckboxColumn: false,
-                      //   rowsPerPage: 5,
-                      // ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -159,6 +268,16 @@ class _CodificationScreenState extends State<CodificationScreen> {
       },
     );
   }
+}
+
+class MyTreeNode {
+  const MyTreeNode({
+    required this.title,
+    this.children = const <MyTreeNode>[],
+  });
+
+  final String title;
+  final List<MyTreeNode> children;
 }
 
 class BorderedRowWidget extends StatelessWidget {

@@ -63,6 +63,7 @@ dependencies:
   native_barcode_scanner: ^1.0.6
   gs1_barcode_parser: ^1.0.5
   shimmer: ^3.0.0
+  flutter_simple_treeview: ^3.0.2
 
 flutter_native_splash:
   color: "#FFFFFF"
