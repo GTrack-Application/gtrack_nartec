@@ -120,8 +120,12 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                             ? ""
                             : "${gtinInformationDataModel!.data!.gpcCategoryCode.toString()} ${gtinInformationDataModel!.data!.gpcCategoryName.toString()}",
                       ),
-                      // const BorderedRowWidget(
-                      //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
+                      BorderedRowWidget(
+                        value1: "Net Content",
+                        value2: gtinInformationDataModel == null
+                            ? ""
+                            : gtinInformationDataModel!.data!.moName.toString(),
+                      ),
                       BorderedRowWidget(
                         value1: "Country Of Sale",
                         value2: gtinInformationDataModel == null
