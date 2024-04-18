@@ -16,7 +16,9 @@ class GtinInformationBloc extends Bloc<GlobalEvent, GlobalState> {
         } catch (error) {
           emit(GlobalErrorState(message: error.toString()));
         }
-      } else {}
+      } else {
+        emit(GlobalErrorState(message: 'No internet connection'));
+      }
     });
   }
 }

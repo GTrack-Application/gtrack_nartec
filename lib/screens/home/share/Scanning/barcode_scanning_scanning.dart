@@ -7,7 +7,7 @@ import 'package:gtrack_mobile_app/screens/home/share/product-information/product
 import 'package:native_barcode_scanner/barcode_scanner.dart';
 
 class BarcodeScanningScreen extends StatefulWidget {
-  const BarcodeScanningScreen({Key? key}) : super(key: key);
+  const BarcodeScanningScreen({super.key});
 
   @override
   State<BarcodeScanningScreen> createState() => _BarcodeScanningScreenState();

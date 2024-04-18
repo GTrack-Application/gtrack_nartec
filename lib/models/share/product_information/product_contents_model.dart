@@ -1,84 +1,60 @@
 class ProductContentsModel {
-  int? iD;
-  String? productAllergenInformation;
-  String? productNutrientsInformation;
-  String? gTIN;
   String? linkType;
-  String? batch;
-  String? expiry;
-  String? serial;
-  String? manufacturingDate;
-  String? bestBeforeDate;
-  String? gLNIDFrom;
-  num? unitPrice;
-  String? ingredients;
-  String? allergenInfo;
-  String? calories;
-  String? sugar;
-  String? salt;
-  String? fat;
+  String? language;
+  String? context;
+  String? mimeType;
+  String? linkTitle;
+  String? targetUrl;
+  bool? defaultLinkType;
+  bool? defaultLanguage;
+  bool? defaultContext;
+  bool? defaultMimeType;
+  bool? fwqs;
+  bool? public;
 
   ProductContentsModel(
-      {this.iD,
-      this.productAllergenInformation,
-      this.productNutrientsInformation,
-      this.gTIN,
-      this.linkType,
-      this.batch,
-      this.expiry,
-      this.serial,
-      this.manufacturingDate,
-      this.bestBeforeDate,
-      this.gLNIDFrom,
-      this.unitPrice,
-      this.ingredients,
-      this.allergenInfo,
-      this.calories,
-      this.sugar,
-      this.salt,
-      this.fat});
+      {this.linkType,
+      this.language,
+      this.context,
+      this.mimeType,
+      this.linkTitle,
+      this.targetUrl,
+      this.defaultLinkType,
+      this.defaultLanguage,
+      this.defaultContext,
+      this.defaultMimeType,
+      this.fwqs,
+      this.public});
 
   ProductContentsModel.fromJson(Map<String, dynamic> json) {
-    iD = json['ID'];
-    productAllergenInformation = json['ProductAllergenInformation'];
-    productNutrientsInformation = json['ProductNutrientsInformation'];
-    gTIN = json['GTIN'];
-    linkType = json['LinkType'];
-    batch = json['Batch'];
-    expiry = json['Expiry'];
-    serial = json['Serial'];
-    manufacturingDate = json['ManufacturingDate'];
-    bestBeforeDate = json['bestBeforeDate'];
-    gLNIDFrom = json['GLNIDFrom'];
-    unitPrice = json['unitPrice'];
-    ingredients = json['ingredients'];
-    allergenInfo = json['allergen_info'];
-    calories = json['calories'];
-    sugar = json['sugar'];
-    salt = json['salt'];
-    fat = json['fat'];
+    linkType = json['linkType'];
+    language = json['language'];
+    context = json['context'];
+    mimeType = json['mimeType'];
+    linkTitle = json['linkTitle'];
+    targetUrl = json['targetUrl'];
+    defaultLinkType = json['defaultLinkType'];
+    defaultLanguage = json['defaultLanguage'];
+    defaultContext = json['defaultContext'];
+    defaultMimeType = json['defaultMimeType'];
+    fwqs = json['fwqs'];
+    public = json['public'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['ID'] = iD;
-    data['ProductAllergenInformation'] = productAllergenInformation;
-    data['ProductNutrientsInformation'] = productNutrientsInformation;
-    data['GTIN'] = gTIN;
-    data['LinkType'] = linkType;
-    data['Batch'] = batch;
-    data['Expiry'] = expiry;
-    data['Serial'] = serial;
-    data['ManufacturingDate'] = manufacturingDate;
-    data['bestBeforeDate'] = bestBeforeDate;
-    data['GLNIDFrom'] = gLNIDFrom;
-    data['unitPrice'] = unitPrice;
-    data['ingredients'] = ingredients;
-    data['allergen_info'] = allergenInfo;
-    data['calories'] = calories;
-    data['sugar'] = sugar;
-    data['salt'] = salt;
-    data['fat'] = fat;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['linkType'] = this.linkType;
+    data['language'] = this.language;
+    data['context'] = this.context;
+    data['mimeType'] = this.mimeType;
+    data['linkTitle'] = this.linkTitle;
+    data['targetUrl'] = this.targetUrl;
+    data['defaultLinkType'] = this.defaultLinkType;
+    data['defaultLanguage'] = this.defaultLanguage;
+    data['defaultContext'] = this.defaultContext;
+    data['defaultMimeType'] = this.defaultMimeType;
+    data['fwqs'] = this.fwqs;
+    data['public'] = this.public;
     return data;
   }
 }

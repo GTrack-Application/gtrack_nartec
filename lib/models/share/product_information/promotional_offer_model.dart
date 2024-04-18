@@ -1,48 +1,60 @@
 class PromotionalOfferModel {
-  int? iD;
-  String? promotionalOffers;
   String? linkType;
-  String? lang;
-  String? targetURL;
-  String? gTIN;
-  String? expiryDate;
-  int? price;
-  String? banner;
+  String? language;
+  String? context;
+  String? mimeType;
+  String? linkTitle;
+  String? targetUrl;
+  bool? defaultLinkType;
+  bool? defaultLanguage;
+  bool? defaultContext;
+  bool? defaultMimeType;
+  bool? fwqs;
+  bool? public;
 
   PromotionalOfferModel(
-      {this.iD,
-      this.promotionalOffers,
-      this.linkType,
-      this.lang,
-      this.targetURL,
-      this.gTIN,
-      this.expiryDate,
-      this.price,
-      this.banner});
+      {this.linkType,
+      this.language,
+      this.context,
+      this.mimeType,
+      this.linkTitle,
+      this.targetUrl,
+      this.defaultLinkType,
+      this.defaultLanguage,
+      this.defaultContext,
+      this.defaultMimeType,
+      this.fwqs,
+      this.public});
 
   PromotionalOfferModel.fromJson(Map<String, dynamic> json) {
-    iD = json['ID'];
-    promotionalOffers = json['PromotionalOffers'];
-    linkType = json['LinkType'];
-    lang = json['Lang'];
-    targetURL = json['TargetURL'];
-    gTIN = json['GTIN'];
-    expiryDate = json['ExpiryDate'];
-    price = json['price'];
-    banner = json['banner'];
+    linkType = json['linkType'];
+    language = json['language'];
+    context = json['context'];
+    mimeType = json['mimeType'];
+    linkTitle = json['linkTitle'];
+    targetUrl = json['targetUrl'];
+    defaultLinkType = json['defaultLinkType'];
+    defaultLanguage = json['defaultLanguage'];
+    defaultContext = json['defaultContext'];
+    defaultMimeType = json['defaultMimeType'];
+    fwqs = json['fwqs'];
+    public = json['public'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['ID'] = iD;
-    data['PromotionalOffers'] = promotionalOffers;
-    data['LinkType'] = linkType;
-    data['Lang'] = lang;
-    data['TargetURL'] = targetURL;
-    data['GTIN'] = gTIN;
-    data['ExpiryDate'] = expiryDate;
-    data['price'] = price;
-    data['banner'] = banner;
+    data['linkType'] = linkType;
+    data['language'] = language;
+    data['context'] = context;
+    data['mimeType'] = mimeType;
+    data['linkTitle'] = linkTitle;
+    data['targetUrl'] = targetUrl;
+    data['defaultLinkType'] = defaultLinkType;
+    data['defaultLanguage'] = defaultLanguage;
+    data['defaultContext'] = defaultContext;
+    data['defaultMimeType'] = defaultMimeType;
+    data['fwqs'] = fwqs;
+    data['public'] = public;
     return data;
   }
 }

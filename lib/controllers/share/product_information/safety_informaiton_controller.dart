@@ -9,8 +9,9 @@ class SafetyInfromationController {
       String gtin) async {
     List<SafetyInfromationModel> safetyInfromations = [];
     try {
-      var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/getSafetyInformationByGtin/$gtin'));
+      var response = await http.get(
+          Uri.parse('${AppUrls.baseUrl}/getSafetyInformationByGtin/$gtin'));
+      print(response.body);
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         responseBody.forEach((data) {

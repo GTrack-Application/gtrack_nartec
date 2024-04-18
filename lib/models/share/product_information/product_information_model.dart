@@ -1,4 +1,4 @@
-class GtinInformationModel {
+class ProductInformationModel {
   String? gtin;
   String? companyName;
   String? licenceKey;
@@ -16,7 +16,7 @@ class GtinInformationModel {
   String? gcpGLNID;
   String? status;
 
-  GtinInformationModel(
+  ProductInformationModel(
       {this.gtin,
       this.companyName,
       this.licenceKey,
@@ -34,7 +34,7 @@ class GtinInformationModel {
       this.gcpGLNID,
       this.status});
 
-  GtinInformationModel.fromJson(Map<String, dynamic> json) {
+  ProductInformationModel.fromJson(Map<String, dynamic> json) {
     gtin = json['gtin'];
     companyName = json['companyName'];
     licenceKey = json['licenceKey'];

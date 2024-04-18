@@ -80,45 +80,45 @@ class _ScanningScreenState extends State<ScanningScreen> {
                         fontSize: 20,
                         color: AppColors.white,
                       ),
-                      const SizedBox(height: 50),
-                      TextWidget(
-                        text: barcodeValue ?? "",
-                        fontSize: 15,
-                        color: AppColors.white,
-                      ),
-                      20.height,
-                      GestureDetector(
-                        onTap: () {
-                          // if (barcodeController.text.length > 15 &&
-                          //     !barcodeController.text.startsWith("01")) {
-                          //   AppSnackbars.normal(context, "Invalid barcode");
-                          // } else {
-                          //   AppNavigator.goToPage(
-                          //     context: context,
-                          //     screen: ProductInformationScreen(
-                          //       gtin: barcodeValue.toString(),
-                          //     ),
-                          //   );
-                          // }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: AppColors.green,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Text(
-                            "View Product Information",
-                            style: TextStyle(color: AppColors.green),
-                          ),
-                        ),
-                      ).visible(barcodeValue != null),
+                      const SizedBox(height: 20),
+                      // TextWidget(
+                      //   text: barcodeValue ?? "",
+                      //   fontSize: 15,
+                      //   color: AppColors.white,
+                      // ),
+                      // 20.height,
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     // if (barcodeController.text.length > 15 &&
+                      //     //     !barcodeController.text.startsWith("01")) {
+                      //     //   AppSnackbars.normal(context, "Invalid barcode");
+                      //     // } else {
+                      //     //   AppNavigator.goToPage(
+                      //     //     context: context,
+                      //     //     screen: ProductInformationScreen(
+                      //     //       gtin: barcodeValue.toString(),
+                      //     //     ),
+                      //     //   );
+                      //     // }
+                      //   },
+                      //   child: Container(
+                      //     padding: const EdgeInsets.symmetric(
+                      //       horizontal: 20,
+                      //       vertical: 10,
+                      //     ),
+                      //     decoration: BoxDecoration(
+                      //       border: Border.all(
+                      //         width: 1,
+                      //         color: AppColors.green,
+                      //       ),
+                      //       borderRadius: BorderRadius.circular(20),
+                      //     ),
+                      //     child: const Text(
+                      //       "View Product Information",
+                      //       style: TextStyle(color: AppColors.green),
+                      //     ),
+                      //   ),
+                      // ).visible(barcodeValue != null),
                     ],
                   ),
                 );

@@ -13,7 +13,7 @@ List<EventsScreenModel> table = [];
 
 class EventsScreen extends StatefulWidget {
   final String gtin;
-  const EventsScreen({Key? key, required this.gtin}) : super(key: key);
+  const EventsScreen({super.key, required this.gtin});
 
   @override
   State<EventsScreen> createState() => _EventsScreenState();
@@ -136,7 +136,7 @@ class _EventsScreenState extends State<EventsScreen> {
 
   @override
   void dispose() {
-    mapController.dispose();
+    // mapController.dispose();
 
     latitude.clear();
     longitude.clear();
