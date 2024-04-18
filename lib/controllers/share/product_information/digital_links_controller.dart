@@ -75,6 +75,18 @@ class DigitalLinksController {
               models.add(ProductContentsModel.fromJson(i));
             });
             return models;
+          case "product-recall":
+            List<ProductContentsModel> models = [];
+            var data = responses
+                ?.where(
+                  (element) => element.linkType == 'gs1:pip',
+                )
+                .map((e) => e.toJson())
+                .toList();
+            data?.forEach((i) {
+              models.add(ProductContentsModel.fromJson(i));
+            });
+            return models;
         }
       }
     } else {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/screens/home/share/product-information/codification_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/company_information.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/digital_link_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_information_screen.dart';
@@ -22,6 +23,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
     Tab(text: 'Company Information'),
     Tab(text: 'Digital Links'),
     // Tab(text: 'Events'),
+    Tab(text: "Codification"),
   ];
 
   @override
@@ -69,6 +71,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
             GtinInformationScreen(gtin: widget.gtin),
             CompanyInformationScreen(gtin: widget.gtin),
             DigitalLinkScreen(gtin: widget.gtin),
+            CodificationScreen(gtin: widget.gtin),
             // EventsScreen(gtin: widget.gtin),
           ],
         ),
