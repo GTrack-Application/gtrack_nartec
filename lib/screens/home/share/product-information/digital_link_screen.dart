@@ -125,17 +125,17 @@ class SafetyInformation extends StatefulWidget {
 class _SafetyInformationState extends State<SafetyInformation> {
   @override
   void initState() {
-    setState(() {
-      DigitalLinksController()
-          .getDigitalLinksData(
-        "safety-information",
-        widget.gtin,
-      )
-          // SafetyInfromationController.getSafeInfromation(widget.gtin)
-          .then((value) {
-        safetyInformation = value;
-      });
+    DigitalLinksController()
+        .getDigitalLinksData(
+      "safety-information",
+      widget.gtin,
+    )
+        // SafetyInfromationController.getSafeInfromation(widget.gtin)
+        .then((value) {
+      safetyInformation = value;
+      setState(() {});
     });
+
     super.initState();
   }
 
@@ -145,16 +145,16 @@ class _SafetyInformationState extends State<SafetyInformation> {
       headingRowColor: MaterialStateProperty.all(Colors.blue),
       columns: const [
         // DataColumn(label: Text("Id", style: TextStyle(color: Colors.white))),
-        // DataColumn(
-        //     label: Text("Safety Details Information",
-        //         style: TextStyle(color: Colors.white))),
+        DataColumn(
+            label: Text("Link Title", style: TextStyle(color: Colors.white))),
         DataColumn(
             label: Text("Link Type", style: TextStyle(color: Colors.white))),
         DataColumn(
             label: Text("Language", style: TextStyle(color: Colors.white))),
         DataColumn(
             label: Text("Target URL", style: TextStyle(color: Colors.white))),
-        // DataColumn(label: Text("GTIN", style: TextStyle(color: Colors.white))),
+        DataColumn(
+            label: Text("Mime Type", style: TextStyle(color: Colors.white))),
         // DataColumn(label: Text("Logo", style: TextStyle(color: Colors.white))),
         // DataColumn(
         //     label: Text("Company Name", style: TextStyle(color: Colors.white))),
@@ -179,11 +179,11 @@ class SafetyInformationSource extends DataTableSource {
       index: index,
       cells: [
         // DataCell(Text(rowData.iD.toString())),
-        // DataCell(Text(rowData.safetyDetailedInformation.toString())),
+        DataCell(Text(rowData.linkTitle.toString())),
         DataCell(Text(rowData.linkType.toString())),
         DataCell(Text(rowData.language.toString())),
         DataCell(Text(rowData.targetUrl.toString())),
-        // DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.mimeType.toString())),
         // DataCell(Text(rowData.logo.toString())),
         // DataCell(Text(rowData.companyName.toString())),
         // DataCell(Text(rowData.process.toString())),
@@ -212,14 +212,14 @@ class PromotionalOffers extends StatefulWidget {
 class _PromotionalOffersState extends State<PromotionalOffers> {
   @override
   void initState() {
-    setState(() {
-      DigitalLinksController()
-          .getDigitalLinksData("promotional-offers", widget.gtin)
-          // ProductInformationController.getPromotionalOffer(widget.gtin)
-          .then((value) {
-        promotionalOffer = value as List<PromotionalOfferModel>;
-      });
+    DigitalLinksController()
+        .getDigitalLinksData("promotional-offers", widget.gtin)
+        // ProductInformationController.getPromotionalOffer(widget.gtin)
+        .then((value) {
+      promotionalOffer = value as List<PromotionalOfferModel>;
+      setState(() {});
     });
+
     super.initState();
   }
 
@@ -228,11 +228,11 @@ class _PromotionalOffersState extends State<PromotionalOffers> {
     return PaginatedDataTable(
       columns: const [
         // DataColumn(label: Text("Id")),
-        // DataColumn(label: Text("Promotional Offers")),
+        DataColumn(label: Text("Link Title")),
         DataColumn(label: Text("Link Type")),
         DataColumn(label: Text("Language")),
         DataColumn(label: Text("Target URL")),
-        // DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Mime Type")),
         // DataColumn(label: Text("Expiry Date")),
         // DataColumn(label: Text("Price")),
         // DataColumn(label: Text("Banner")),
@@ -242,54 +242,6 @@ class _PromotionalOffersState extends State<PromotionalOffers> {
       showCheckboxColumn: false,
       rowsPerPage: 5,
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: const Text("Promotional Offers"),
-    //     backgroundColor: AppColors.green,
-    //   ),
-    //   body: FutureBuilder(
-    //     future: ProductInformationController.getPromotionalOffer(widget.gtin),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return const Center(
-    //           child: LoadingWidget(),
-    //         );
-    //       } else if (snapshot.hasError) {
-    //         return const Center(
-    //           child: Text("Something went wrong"),
-    //         );
-    //       } else if (!snapshot.hasData) {
-    //         return const Center(
-    //           child: Text("No data available"),
-    //         );
-    //       } else {
-    //         return Column(
-    //           children: [
-    //             Expanded(
-    //               child: PaginatedDataTable(
-    //                 columns: const [
-    //                   DataColumn(label: Text("Id")),
-    //                   DataColumn(label: Text("Promotional Offers")),
-    //                   DataColumn(label: Text("Link Type")),
-    //                   DataColumn(label: Text("Language")),
-    //                   DataColumn(label: Text("Target URL")),
-    //                   DataColumn(label: Text("GTIN")),
-    //                   DataColumn(label: Text("Expiry Date")),
-    //                   DataColumn(label: Text("Price")),
-    //                   DataColumn(label: Text("Banner")),
-    //                 ],
-    //                 source: PromotionalOfferSource(),
-    //                 arrowHeadColor: AppColors.green,
-    //                 showCheckboxColumn: false,
-    //                 rowsPerPage: 10,
-    //               ),
-    //             ),
-    //           ],
-    //         );
-    //       }
-    //     },
-    //   ),
-    // );
   }
 }
 
@@ -303,11 +255,11 @@ class PromotionalOfferSource extends DataTableSource {
       index: index,
       cells: [
         // DataCell(Text(rowData.id.toString())),
-        // DataCell(Text(rowData.promotionalOffers.toString())),
+        DataCell(Text(rowData.linkTitle.toString())),
         DataCell(Text(rowData.linkType.toString())),
         DataCell(Text(rowData.language.toString())),
         DataCell(Text(rowData.targetUrl.toString())),
-        // DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.mimeType.toString())),
         // DataCell(Text(rowData.expiryDate.toString())),
         // DataCell(Text(rowData.price.toString())),
         // DataCell(Text(rowData.banner.toString())),
@@ -357,11 +309,11 @@ class _ProductContentsState extends State<ProductContents> {
         // DataColumn(label: Text("Id")),
         // DataColumn(label: Text("Product Allergen Information")),
         // DataColumn(label: Text("Product Nutrient Information")),
-        // DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("link Title")),
         DataColumn(label: Text("Link Type")),
-        // DataColumn(label: Text("Batch")),
-        // DataColumn(label: Text("Expiry")),
-        // DataColumn(label: Text("Serial")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Target Url")),
+        DataColumn(label: Text("Mime Type")),
         // DataColumn(label: Text("Manufecturing Date")),
         // DataColumn(label: Text("Best Before")),
         // DataColumn(label: Text("GLNID Form")),
@@ -393,11 +345,11 @@ class ProductContentsSource extends DataTableSource {
         // DataCell(Text(rowData.iD.toString())),
         // DataCell(Text(rowData.productAllergenInformation.toString())),
         // DataCell(Text(rowData.productNutrientsInformation.toString())),
-        // DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.linkTitle.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        // DataCell(Text(rowData.batch.toString())),
-        // DataCell(Text(rowData.expiry.toString())),
-        // DataCell(Text(rowData.serial.toString())),
+        DataCell(Text(rowData.language.toString())),
+        DataCell(Text(rowData.targetUrl.toString())),
+        DataCell(Text(rowData.mimeType.toString())),
         // DataCell(Text(rowData.manufacturingDate.toString())),
         // DataCell(Text(rowData.bestBeforeDate.toString())),
         // DataCell(Text(rowData.gLNIDFrom.toString())),
@@ -435,11 +387,11 @@ class _ProductLocationOfOriginState extends State<ProductLocationOfOrigin> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      ProductInformationController.getProductLocationOrigin(widget.gtin)
-          .then((value) {
-        locationOrigin = value;
-      });
+
+    ProductInformationController.getProductLocationOrigin(widget.gtin)
+        .then((value) {
+      locationOrigin = value;
+      setState(() {});
     });
   }
 
@@ -505,16 +457,16 @@ class _ProductRecallState extends State<ProductRecall> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      DigitalLinksController()
-          .getDigitalLinksData(
-        "product-contents",
-        widget.gtin,
-      )
-          // ProductInformationController.getProductRecallByGtin(widget.gtin)
-          .then((value) {
-        productRecall = value;
-      });
+
+    DigitalLinksController()
+        .getDigitalLinksData(
+      "product-recall",
+      widget.gtin,
+    )
+        // ProductInformationController.getProductRecallByGtin(widget.gtin)
+        .then((value) {
+      productRecall = value;
+      setState(() {});
     });
   }
 
@@ -523,11 +475,11 @@ class _ProductRecallState extends State<ProductRecall> {
     return PaginatedDataTable(
       columns: const [
         // DataColumn(label: Text("Id")),
-        // DataColumn(label: Text("Product Recall")),
+        DataColumn(label: Text("Link Title")),
         DataColumn(label: Text("Link Type")),
         DataColumn(label: Text("Language")),
         DataColumn(label: Text("Target URL")),
-        // DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Mime Type")),
         // DataColumn(label: Text("Expiry Date")),
       ],
       source: ProductRecallSource(),
@@ -548,11 +500,11 @@ class ProductRecallSource extends DataTableSource {
       index: index,
       cells: [
         // DataCell(Text(rowData.iD.toString())),
-        // DataCell(Text(rowData.productRecall.toString())),
+        DataCell(Text(rowData.linkTitle.toString())),
         DataCell(Text(rowData.linkType.toString())),
         DataCell(Text(rowData.language.toString())),
         DataCell(Text(rowData.targetUrl.toString())),
-        // DataCell(Text(rowData.gTIN.toString())),
+        DataCell(Text(rowData.mimeType.toString())),
         // DataCell(Text(rowData.expiryDate.toString())),
       ],
     );
@@ -580,16 +532,16 @@ class _RecipeState extends State<Recipe> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      DigitalLinksController()
-          .getDigitalLinksData(
-        "recipe",
-        widget.gtin,
-      )
-          // ProductInformationController.getRecipeByGtin(widget.gtin)
-          .then((value) {
-        recipe = value;
-      });
+
+    DigitalLinksController()
+        .getDigitalLinksData(
+      "recipe",
+      widget.gtin,
+    )
+        // ProductInformationController.getRecipeByGtin(widget.gtin)
+        .then((value) {
+      recipe = value;
+      setState(() {});
     });
   }
 
@@ -601,9 +553,11 @@ class _RecipeState extends State<Recipe> {
         // DataColumn(label: Text("Logo")),
         // DataColumn(label: Text("Title")),
         // DataColumn(label: Text("Description")),
-        // DataColumn(label: Text("Ingredients")),
+        DataColumn(label: Text("Link Title")),
         DataColumn(label: Text("Link Type")),
-        // DataColumn(label: Text("GTIN")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Target Url")),
+        DataColumn(label: Text("Mime Type")),
       ],
       source: RecipeSource(),
       arrowHeadColor: AppColors.green,
@@ -622,12 +576,12 @@ class RecipeSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        // DataCell(Text(rowData.iD.toString())),
-        // DataCell(Text(rowData.logo.toString())),
-        // DataCell(Text(rowData.title.toString())),
-        // DataCell(Text(rowData.description.toString())),
-        // DataCell(Text(rowData.ingredients.toString())),
+        DataCell(Text(rowData.linkTitle.toString())),
         DataCell(Text(rowData.linkType.toString())),
+        DataCell(Text(rowData.language.toString())),
+        DataCell(Text(rowData.targetUrl.toString())),
+        DataCell(Text(rowData.mimeType.toString())),
+        // DataCell(Text(rowData.ingredients.toString())),
         // DataCell(Text(rowData.gTIN.toString())),
       ],
     );
@@ -655,16 +609,16 @@ class _PackagingCompositionState extends State<PackagingComposition> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      DigitalLinksController()
-          .getDigitalLinksData(
-        "packaging-composition",
-        widget.gtin,
-      )
-          // ProductInformationController.getPackagingCompositionByGtin(widget.gtin)
-          .then((value) {
-        packagingComposition = value;
-      });
+
+    DigitalLinksController()
+        .getDigitalLinksData(
+      "packaging-composition",
+      widget.gtin,
+    )
+        // ProductInformationController.getPackagingCompositionByGtin(widget.gtin)
+        .then((value) {
+      packagingComposition = value;
+      setState(() {});
     });
   }
 
@@ -679,10 +633,11 @@ class _PackagingCompositionState extends State<PackagingComposition> {
         // DataColumn(label: Text("Packaging")),
         // DataColumn(label: Text("Material")),
         // DataColumn(label: Text("Recyclability")),
-        // DataColumn(label: Text("Product Owner")),
+        DataColumn(label: Text("Link Title")),
         DataColumn(label: Text("Link Type")),
-        // DataColumn(label: Text("GTIN")),
-        // DataColumn(label: Text("Brand Owner")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Target Url")),
+        DataColumn(label: Text("Mime Type")),
       ],
       source: PackagingCompositionSource(),
       arrowHeadColor: AppColors.green,
@@ -708,10 +663,11 @@ class PackagingCompositionSource extends DataTableSource {
         // DataCell(Text(rowData.packaging.toString())),
         // DataCell(Text(rowData.material.toString())),
         // DataCell(Text(rowData.recyclability.toString())),
-        // DataCell(Text(rowData.productOwner.toString())),
+        DataCell(Text(rowData.linkTitle.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        // DataCell(Text(rowData.gTIN.toString())),
-        // DataCell(Text(rowData.brandOwner.toString())),
+        DataCell(Text(rowData.language.toString())),
+        DataCell(Text(rowData.targetUrl.toString())),
+        DataCell(Text(rowData.mimeType.toString())),
       ],
     );
   }
@@ -738,16 +694,16 @@ class _ElectronicLeafletsState extends State<ElectronicLeaflets> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      DigitalLinksController()
-          .getDigitalLinksData(
-        "electronic-leaflets",
-        widget.gtin,
-      )
-          // ProductInformationController.getLeafletsByGtin(widget.gtin)
-          .then((value) {
-        leaflets = value;
-      });
+
+    DigitalLinksController()
+        .getDigitalLinksData(
+      "electronic-leaflets",
+      widget.gtin,
+    )
+        // ProductInformationController.getLeafletsByGtin(widget.gtin)
+        .then((value) {
+      leaflets = value;
+      setState(() {});
     });
   }
 
@@ -757,11 +713,11 @@ class _ElectronicLeafletsState extends State<ElectronicLeaflets> {
       columns: const [
         // DataColumn(label: Text("Id")),
         // DataColumn(label: Text("Product Leaflets Information")),
-        // DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Link Title")),
         DataColumn(label: Text("Link Type")),
-        // DataColumn(label: Text("Target URL")),
-        // DataColumn(label: Text("GTIN")),
-        // DataColumn(label: Text("PDF Doc")),
+        DataColumn(label: Text("Language")),
+        DataColumn(label: Text("Target Url")),
+        DataColumn(label: Text("Mime Type")),
       ],
       source: LeafletsSource(),
       arrowHeadColor: AppColors.green,
@@ -782,11 +738,11 @@ class LeafletsSource extends DataTableSource {
       cells: [
         // DataCell(Text(rowData.iD.toString())),
         // DataCell(Text(rowData.productLeafletInformation.toString())),
-        // DataCell(Text(rowData.lang.toString())),
+        DataCell(Text(rowData.linkTitle.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        // DataCell(Text(rowData.targetURL.toString())),
-        // DataCell(Text(rowData.gTIN.toString())),
-        // DataCell(Text(rowData.pdfDoc.toString())),
+        DataCell(Text(rowData.language.toString())),
+        DataCell(Text(rowData.targetUrl.toString())),
+        DataCell(Text(rowData.mimeType.toString())),
       ],
     );
   }
