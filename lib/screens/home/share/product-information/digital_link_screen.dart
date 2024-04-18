@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/digital_links_controller.dart';
 import 'package:gtrack_mobile_app/controllers/share/product_information/product_information_controller.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/leaflets_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/location_origin_model.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/packaging_composition_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/product_contents_model.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/product_recall_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/promotional_offer_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/recipe_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/safety_information_model.dart';
@@ -16,10 +13,10 @@ List<SafetyInfromationModel> safetyInformation = [];
 List<PromotionalOfferModel> promotionalOffer = [];
 List<ProductContentsModel> productContents = [];
 List<LocationOriginModel> locationOrigin = [];
-List<ProductRecallModel> productRecall = [];
+List<SafetyInfromationModel> productRecall = [];
 List<RecipeModel> recipe = [];
-List<PackagingCompositionModel> packagingComposition = [];
-List<LeafletsModel> leaflets = [];
+List<ProductContentsModel> packagingComposition = [];
+List<ProductContentsModel> leaflets = [];
 
 class DigitalLinkScreen extends StatefulWidget {
   final String gtin;
@@ -427,8 +424,7 @@ class ProductContentsSource extends DataTableSource {
 
 class ProductLocationOfOrigin extends StatefulWidget {
   final String gtin;
-  const ProductLocationOfOrigin({Key? key, required this.gtin})
-      : super(key: key);
+  const ProductLocationOfOrigin({super.key, required this.gtin});
 
   @override
   State<ProductLocationOfOrigin> createState() =>
@@ -499,7 +495,7 @@ class ProductLocationOriginSource extends DataTableSource {
 
 class ProductRecall extends StatefulWidget {
   final String gtin;
-  const ProductRecall({Key? key, required this.gtin}) : super(key: key);
+  const ProductRecall({super.key, required this.gtin});
 
   @override
   State<ProductRecall> createState() => _ProductRecallState();
@@ -510,7 +506,12 @@ class _ProductRecallState extends State<ProductRecall> {
   void initState() {
     super.initState();
     setState(() {
-      ProductInformationController.getProductRecallByGtin(widget.gtin)
+      DigitalLinksController()
+          .getDigitalLinksData(
+        "product-contents",
+        widget.gtin,
+      )
+          // ProductInformationController.getProductRecallByGtin(widget.gtin)
           .then((value) {
         productRecall = value;
       });
@@ -521,13 +522,13 @@ class _ProductRecallState extends State<ProductRecall> {
   Widget build(BuildContext context) {
     return PaginatedDataTable(
       columns: const [
-        DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Product Recall")),
+        // DataColumn(label: Text("Id")),
+        // DataColumn(label: Text("Product Recall")),
         DataColumn(label: Text("Link Type")),
         DataColumn(label: Text("Language")),
         DataColumn(label: Text("Target URL")),
-        DataColumn(label: Text("GTIN")),
-        DataColumn(label: Text("Expiry Date")),
+        // DataColumn(label: Text("GTIN")),
+        // DataColumn(label: Text("Expiry Date")),
       ],
       source: ProductRecallSource(),
       arrowHeadColor: AppColors.green,
@@ -538,7 +539,7 @@ class _ProductRecallState extends State<ProductRecall> {
 }
 
 class ProductRecallSource extends DataTableSource {
-  List<ProductRecallModel> data = productRecall;
+  List<SafetyInfromationModel> data = productRecall;
 
   @override
   DataRow getRow(int index) {
@@ -546,13 +547,13 @@ class ProductRecallSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.productRecall.toString())),
+        // DataCell(Text(rowData.iD.toString())),
+        // DataCell(Text(rowData.productRecall.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.lang.toString())),
-        DataCell(Text(rowData.targetURL.toString())),
-        DataCell(Text(rowData.gTIN.toString())),
-        DataCell(Text(rowData.expiryDate.toString())),
+        DataCell(Text(rowData.language.toString())),
+        DataCell(Text(rowData.targetUrl.toString())),
+        // DataCell(Text(rowData.gTIN.toString())),
+        // DataCell(Text(rowData.expiryDate.toString())),
       ],
     );
   }
@@ -569,7 +570,7 @@ class ProductRecallSource extends DataTableSource {
 
 class Recipe extends StatefulWidget {
   final String gtin;
-  const Recipe({Key? key, required this.gtin}) : super(key: key);
+  const Recipe({super.key, required this.gtin});
 
   @override
   State<Recipe> createState() => _RecipeState();
@@ -580,7 +581,13 @@ class _RecipeState extends State<Recipe> {
   void initState() {
     super.initState();
     setState(() {
-      ProductInformationController.getRecipeByGtin(widget.gtin).then((value) {
+      DigitalLinksController()
+          .getDigitalLinksData(
+        "recipe",
+        widget.gtin,
+      )
+          // ProductInformationController.getRecipeByGtin(widget.gtin)
+          .then((value) {
         recipe = value;
       });
     });
@@ -590,13 +597,13 @@ class _RecipeState extends State<Recipe> {
   Widget build(BuildContext context) {
     return PaginatedDataTable(
       columns: const [
-        DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Logo")),
-        DataColumn(label: Text("Title")),
-        DataColumn(label: Text("Description")),
-        DataColumn(label: Text("Ingredients")),
+        // DataColumn(label: Text("Id")),
+        // DataColumn(label: Text("Logo")),
+        // DataColumn(label: Text("Title")),
+        // DataColumn(label: Text("Description")),
+        // DataColumn(label: Text("Ingredients")),
         DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("GTIN")),
+        // DataColumn(label: Text("GTIN")),
       ],
       source: RecipeSource(),
       arrowHeadColor: AppColors.green,
@@ -615,13 +622,13 @@ class RecipeSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.logo.toString())),
-        DataCell(Text(rowData.title.toString())),
-        DataCell(Text(rowData.description.toString())),
-        DataCell(Text(rowData.ingredients.toString())),
+        // DataCell(Text(rowData.iD.toString())),
+        // DataCell(Text(rowData.logo.toString())),
+        // DataCell(Text(rowData.title.toString())),
+        // DataCell(Text(rowData.description.toString())),
+        // DataCell(Text(rowData.ingredients.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.gTIN.toString())),
+        // DataCell(Text(rowData.gTIN.toString())),
       ],
     );
   }
@@ -638,7 +645,7 @@ class RecipeSource extends DataTableSource {
 
 class PackagingComposition extends StatefulWidget {
   final String gtin;
-  const PackagingComposition({Key? key, required this.gtin}) : super(key: key);
+  const PackagingComposition({super.key, required this.gtin});
 
   @override
   State<PackagingComposition> createState() => _PackagingCompositionState();
@@ -649,7 +656,12 @@ class _PackagingCompositionState extends State<PackagingComposition> {
   void initState() {
     super.initState();
     setState(() {
-      ProductInformationController.getPackagingCompositionByGtin(widget.gtin)
+      DigitalLinksController()
+          .getDigitalLinksData(
+        "packaging-composition",
+        widget.gtin,
+      )
+          // ProductInformationController.getPackagingCompositionByGtin(widget.gtin)
           .then((value) {
         packagingComposition = value;
       });
@@ -660,17 +672,17 @@ class _PackagingCompositionState extends State<PackagingComposition> {
   Widget build(BuildContext context) {
     return PaginatedDataTable(
       columns: const [
-        DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Logo")),
-        DataColumn(label: Text("Title")),
-        DataColumn(label: Text("Consumer Product Variant")),
-        DataColumn(label: Text("Packaging")),
-        DataColumn(label: Text("Material")),
-        DataColumn(label: Text("Recyclability")),
-        DataColumn(label: Text("Product Owner")),
+        // DataColumn(label: Text("Id")),
+        // DataColumn(label: Text("Logo")),
+        // DataColumn(label: Text("Title")),
+        // DataColumn(label: Text("Consumer Product Variant")),
+        // DataColumn(label: Text("Packaging")),
+        // DataColumn(label: Text("Material")),
+        // DataColumn(label: Text("Recyclability")),
+        // DataColumn(label: Text("Product Owner")),
         DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("GTIN")),
-        DataColumn(label: Text("Brand Owner")),
+        // DataColumn(label: Text("GTIN")),
+        // DataColumn(label: Text("Brand Owner")),
       ],
       source: PackagingCompositionSource(),
       arrowHeadColor: AppColors.green,
@@ -681,7 +693,7 @@ class _PackagingCompositionState extends State<PackagingComposition> {
 }
 
 class PackagingCompositionSource extends DataTableSource {
-  List<PackagingCompositionModel> data = packagingComposition;
+  List<ProductContentsModel> data = packagingComposition;
 
   @override
   DataRow getRow(int index) {
@@ -689,17 +701,17 @@ class PackagingCompositionSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.logo.toString())),
-        DataCell(Text(rowData.title.toString())),
-        DataCell(Text(rowData.consumerProductVariant.toString())),
-        DataCell(Text(rowData.packaging.toString())),
-        DataCell(Text(rowData.material.toString())),
-        DataCell(Text(rowData.recyclability.toString())),
-        DataCell(Text(rowData.productOwner.toString())),
+        // DataCell(Text(rowData.iD.toString())),
+        // DataCell(Text(rowData.logo.toString())),
+        // DataCell(Text(rowData.title.toString())),
+        // DataCell(Text(rowData.consumerProductVariant.toString())),
+        // DataCell(Text(rowData.packaging.toString())),
+        // DataCell(Text(rowData.material.toString())),
+        // DataCell(Text(rowData.recyclability.toString())),
+        // DataCell(Text(rowData.productOwner.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.gTIN.toString())),
-        DataCell(Text(rowData.brandOwner.toString())),
+        // DataCell(Text(rowData.gTIN.toString())),
+        // DataCell(Text(rowData.brandOwner.toString())),
       ],
     );
   }
@@ -716,7 +728,7 @@ class PackagingCompositionSource extends DataTableSource {
 
 class ElectronicLeaflets extends StatefulWidget {
   final String gtin;
-  const ElectronicLeaflets({Key? key, required this.gtin}) : super(key: key);
+  const ElectronicLeaflets({super.key, required this.gtin});
 
   @override
   State<ElectronicLeaflets> createState() => _ElectronicLeafletsState();
@@ -727,7 +739,13 @@ class _ElectronicLeafletsState extends State<ElectronicLeaflets> {
   void initState() {
     super.initState();
     setState(() {
-      ProductInformationController.getLeafletsByGtin(widget.gtin).then((value) {
+      DigitalLinksController()
+          .getDigitalLinksData(
+        "electronic-leaflets",
+        widget.gtin,
+      )
+          // ProductInformationController.getLeafletsByGtin(widget.gtin)
+          .then((value) {
         leaflets = value;
       });
     });
@@ -737,13 +755,13 @@ class _ElectronicLeafletsState extends State<ElectronicLeaflets> {
   Widget build(BuildContext context) {
     return PaginatedDataTable(
       columns: const [
-        DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Product Leaflets Information")),
-        DataColumn(label: Text("Language")),
+        // DataColumn(label: Text("Id")),
+        // DataColumn(label: Text("Product Leaflets Information")),
+        // DataColumn(label: Text("Language")),
         DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Target URL")),
-        DataColumn(label: Text("GTIN")),
-        DataColumn(label: Text("PDF Doc")),
+        // DataColumn(label: Text("Target URL")),
+        // DataColumn(label: Text("GTIN")),
+        // DataColumn(label: Text("PDF Doc")),
       ],
       source: LeafletsSource(),
       arrowHeadColor: AppColors.green,
@@ -754,7 +772,7 @@ class _ElectronicLeafletsState extends State<ElectronicLeaflets> {
 }
 
 class LeafletsSource extends DataTableSource {
-  List<LeafletsModel> data = leaflets;
+  List<ProductContentsModel> data = leaflets;
 
   @override
   DataRow getRow(int index) {
@@ -762,13 +780,13 @@ class LeafletsSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.productLeafletInformation.toString())),
-        DataCell(Text(rowData.lang.toString())),
+        // DataCell(Text(rowData.iD.toString())),
+        // DataCell(Text(rowData.productLeafletInformation.toString())),
+        // DataCell(Text(rowData.lang.toString())),
         DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.targetURL.toString())),
-        DataCell(Text(rowData.gTIN.toString())),
-        DataCell(Text(rowData.pdfDoc.toString())),
+        // DataCell(Text(rowData.targetURL.toString())),
+        // DataCell(Text(rowData.gTIN.toString())),
+        // DataCell(Text(rowData.pdfDoc.toString())),
       ],
     );
   }
