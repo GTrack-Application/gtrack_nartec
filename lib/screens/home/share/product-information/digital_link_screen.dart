@@ -7,6 +7,7 @@ import 'package:gtrack_mobile_app/models/share/product_information/product_conte
 import 'package:gtrack_mobile_app/models/share/product_information/promotional_offer_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/recipe_model.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/safety_information_model.dart';
+import 'package:gtrack_mobile_app/screens/home/share/product-information/codification_screen.dart';
 
 // Some global variables
 List<SafetyInfromationModel> safetyInformation = [];
@@ -123,6 +124,8 @@ class SafetyInformation extends StatefulWidget {
 }
 
 class _SafetyInformationState extends State<SafetyInformation> {
+  List<SafetyInfromationModel> getInfrom = [];
+
   @override
   void initState() {
     DigitalLinksController()
@@ -132,8 +135,9 @@ class _SafetyInformationState extends State<SafetyInformation> {
     )
         // SafetyInfromationController.getSafeInfromation(widget.gtin)
         .then((value) {
-      safetyInformation = value;
-      setState(() {});
+      setState(() {
+        getInfrom = value;
+      });
     });
 
     super.initState();
@@ -141,64 +145,38 @@ class _SafetyInformationState extends State<SafetyInformation> {
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      headingRowColor: MaterialStateProperty.all(Colors.blue),
-      columns: const [
-        // DataColumn(label: Text("Id", style: TextStyle(color: Colors.white))),
-        DataColumn(
-            label: Text("Link Title", style: TextStyle(color: Colors.white))),
-        DataColumn(
-            label: Text("Link Type", style: TextStyle(color: Colors.white))),
-        DataColumn(
-            label: Text("Language", style: TextStyle(color: Colors.white))),
-        DataColumn(
-            label: Text("Target URL", style: TextStyle(color: Colors.white))),
-        DataColumn(
-            label: Text("Mime Type", style: TextStyle(color: Colors.white))),
-        // DataColumn(label: Text("Logo", style: TextStyle(color: Colors.white))),
-        // DataColumn(
-        //     label: Text("Company Name", style: TextStyle(color: Colors.white))),
-        // DataColumn(
-        //     label: Text("Process", style: TextStyle(color: Colors.white))),
-      ],
-      source: SafetyInformationSource(),
-      arrowHeadColor: AppColors.green,
-      showCheckboxColumn: false,
-      rowsPerPage: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.green, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          BorderedRowWidget(
+            value1: "Link Title: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkTitle ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Link Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkType ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Language: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].language ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Target URL: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].targetUrl ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Mime Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].mimeType ?? "",
+          ),
+        ],
+      ),
     );
   }
-}
-
-class SafetyInformationSource extends DataTableSource {
-  List<SafetyInfromationModel> data = safetyInformation;
-
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        // DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.linkTitle.toString())),
-        DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.language.toString())),
-        DataCell(Text(rowData.targetUrl.toString())),
-        DataCell(Text(rowData.mimeType.toString())),
-        // DataCell(Text(rowData.logo.toString())),
-        // DataCell(Text(rowData.companyName.toString())),
-        // DataCell(Text(rowData.process.toString())),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
 
 class PromotionalOffers extends StatefulWidget {
@@ -210,14 +188,17 @@ class PromotionalOffers extends StatefulWidget {
 }
 
 class _PromotionalOffersState extends State<PromotionalOffers> {
+  List<PromotionalOfferModel> getInfrom = [];
+
   @override
   void initState() {
     DigitalLinksController()
         .getDigitalLinksData("promotional-offers", widget.gtin)
         // ProductInformationController.getPromotionalOffer(widget.gtin)
         .then((value) {
-      promotionalOffer = value as List<PromotionalOfferModel>;
-      setState(() {});
+      setState(() {
+        getInfrom = value;
+      });
     });
 
     super.initState();
@@ -225,56 +206,38 @@ class _PromotionalOffersState extends State<PromotionalOffers> {
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      columns: const [
-        // DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Link Title")),
-        DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Language")),
-        DataColumn(label: Text("Target URL")),
-        DataColumn(label: Text("Mime Type")),
-        // DataColumn(label: Text("Expiry Date")),
-        // DataColumn(label: Text("Price")),
-        // DataColumn(label: Text("Banner")),
-      ],
-      source: PromotionalOfferSource(),
-      arrowHeadColor: AppColors.green,
-      showCheckboxColumn: false,
-      rowsPerPage: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.green, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          BorderedRowWidget(
+            value1: "Link Title: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkTitle ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Link Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkType ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Language: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].language ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Target URL: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].targetUrl ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Mime Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].mimeType ?? "",
+          ),
+        ],
+      ),
     );
   }
-}
-
-class PromotionalOfferSource extends DataTableSource {
-  List<PromotionalOfferModel> data = promotionalOffer;
-
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        // DataCell(Text(rowData.id.toString())),
-        DataCell(Text(rowData.linkTitle.toString())),
-        DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.language.toString())),
-        DataCell(Text(rowData.targetUrl.toString())),
-        DataCell(Text(rowData.mimeType.toString())),
-        // DataCell(Text(rowData.expiryDate.toString())),
-        // DataCell(Text(rowData.price.toString())),
-        // DataCell(Text(rowData.banner.toString())),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
 
 class ProductContents extends StatefulWidget {
@@ -286,6 +249,8 @@ class ProductContents extends StatefulWidget {
 }
 
 class _ProductContentsState extends State<ProductContents> {
+  List<ProductContentsModel> getInfrom = [];
+
   @override
   void initState() {
     super.initState();
@@ -297,81 +262,46 @@ class _ProductContentsState extends State<ProductContents> {
     )
         // ProductInformationController.getProductContents(widget.gtin)
         .then((value) {
-      productContents = value;
-      setState(() {});
+      setState(() {
+        getInfrom = value;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      columns: const [
-        // DataColumn(label: Text("Id")),
-        // DataColumn(label: Text("Product Allergen Information")),
-        // DataColumn(label: Text("Product Nutrient Information")),
-        DataColumn(label: Text("link Title")),
-        DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Language")),
-        DataColumn(label: Text("Target Url")),
-        DataColumn(label: Text("Mime Type")),
-        // DataColumn(label: Text("Manufecturing Date")),
-        // DataColumn(label: Text("Best Before")),
-        // DataColumn(label: Text("GLNID Form")),
-        // DataColumn(label: Text("Unit Price")),
-        // DataColumn(label: Text("Ingredients")),
-        // DataColumn(label: Text("Allergen Info")),
-        // DataColumn(label: Text("Calories")),
-        // DataColumn(label: Text("Sugar")),
-        // DataColumn(label: Text("Salt")),
-        // DataColumn(label: Text("Fat")),
-      ],
-      source: ProductContentsSource(),
-      arrowHeadColor: AppColors.green,
-      showCheckboxColumn: false,
-      rowsPerPage: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.green, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          BorderedRowWidget(
+            value1: "Link Title: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkTitle ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Link Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkType ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Language: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].language ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Target URL: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].targetUrl ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Mime Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].mimeType ?? "",
+          ),
+        ],
+      ),
     );
   }
-}
-
-class ProductContentsSource extends DataTableSource {
-  List<ProductContentsModel> data = productContents;
-
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        // DataCell(Text(rowData.iD.toString())),
-        // DataCell(Text(rowData.productAllergenInformation.toString())),
-        // DataCell(Text(rowData.productNutrientsInformation.toString())),
-        DataCell(Text(rowData.linkTitle.toString())),
-        DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.language.toString())),
-        DataCell(Text(rowData.targetUrl.toString())),
-        DataCell(Text(rowData.mimeType.toString())),
-        // DataCell(Text(rowData.manufacturingDate.toString())),
-        // DataCell(Text(rowData.bestBeforeDate.toString())),
-        // DataCell(Text(rowData.gLNIDFrom.toString())),
-        // DataCell(Text(rowData.unitPrice.toString())),
-        // DataCell(Text(rowData.ingredients.toString())),
-        // DataCell(Text(rowData.allergenInfo.toString())),
-        // DataCell(Text(rowData.calories.toString())),
-        // DataCell(Text(rowData.sugar.toString())),
-        // DataCell(Text(rowData.salt.toString())),
-        // DataCell(Text(rowData.fat.toString())),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
 
 class ProductLocationOfOrigin extends StatefulWidget {
@@ -384,65 +314,64 @@ class ProductLocationOfOrigin extends StatefulWidget {
 }
 
 class _ProductLocationOfOriginState extends State<ProductLocationOfOrigin> {
+  List<LocationOriginModel> getInfrom = [];
+
   @override
   void initState() {
     super.initState();
 
     ProductInformationController.getProductLocationOrigin(widget.gtin)
         .then((value) {
-      locationOrigin = value;
-      setState(() {});
+      setState(() {
+        getInfrom = value;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      columns: const [
-        DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Product Location Origin")),
-        DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Language")),
-        DataColumn(label: Text("Target URL")),
-        DataColumn(label: Text("GTIN")),
-        DataColumn(label: Text("Expiry Date")),
-      ],
-      source: ProductLocationOriginSource(),
-      arrowHeadColor: AppColors.green,
-      showCheckboxColumn: false,
-      rowsPerPage: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.green, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          BorderedRowWidget(
+            value1: "ID: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].iD.toString(),
+          ),
+          BorderedRowWidget(
+            value1: "Product Location Origin: ",
+            value2: getInfrom.isEmpty
+                ? ""
+                : getInfrom[0].productLocationOrigin ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Language: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].lang ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Target URL: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].targetURL ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Link Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkType ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "GTIN: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].gTIN ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Expiry Date: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].expiryDate ?? "",
+          ),
+        ],
+      ),
     );
   }
-}
-
-class ProductLocationOriginSource extends DataTableSource {
-  List<LocationOriginModel> data = locationOrigin;
-
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.productLocationOrigin.toString())),
-        DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.lang.toString())),
-        DataCell(Text(rowData.targetURL.toString())),
-        DataCell(Text(rowData.gTIN.toString())),
-        DataCell(Text(rowData.expiryDate.toString())),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
 
 class ProductRecall extends StatefulWidget {
@@ -454,6 +383,8 @@ class ProductRecall extends StatefulWidget {
 }
 
 class _ProductRecallState extends State<ProductRecall> {
+  List<SafetyInfromationModel> getInfrom = [];
+
   @override
   void initState() {
     super.initState();
@@ -465,59 +396,46 @@ class _ProductRecallState extends State<ProductRecall> {
     )
         // ProductInformationController.getProductRecallByGtin(widget.gtin)
         .then((value) {
-      productRecall = value;
-      setState(() {});
+      setState(() {
+        getInfrom = value;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      columns: const [
-        // DataColumn(label: Text("Id")),
-        DataColumn(label: Text("Link Title")),
-        DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Language")),
-        DataColumn(label: Text("Target URL")),
-        DataColumn(label: Text("Mime Type")),
-        // DataColumn(label: Text("Expiry Date")),
-      ],
-      source: ProductRecallSource(),
-      arrowHeadColor: AppColors.green,
-      showCheckboxColumn: false,
-      rowsPerPage: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.green, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          BorderedRowWidget(
+            value1: "Link Title: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkTitle ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Link Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkType ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Language: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].language ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Target URL: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].targetUrl ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Mime Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].mimeType ?? "",
+          ),
+        ],
+      ),
     );
   }
-}
-
-class ProductRecallSource extends DataTableSource {
-  List<SafetyInfromationModel> data = productRecall;
-
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        // DataCell(Text(rowData.iD.toString())),
-        DataCell(Text(rowData.linkTitle.toString())),
-        DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.language.toString())),
-        DataCell(Text(rowData.targetUrl.toString())),
-        DataCell(Text(rowData.mimeType.toString())),
-        // DataCell(Text(rowData.expiryDate.toString())),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
 
 class Recipe extends StatefulWidget {
@@ -529,6 +447,8 @@ class Recipe extends StatefulWidget {
 }
 
 class _RecipeState extends State<Recipe> {
+  List<RecipeModel> getInfrom = [];
+
   @override
   void initState() {
     super.initState();
@@ -540,61 +460,46 @@ class _RecipeState extends State<Recipe> {
     )
         // ProductInformationController.getRecipeByGtin(widget.gtin)
         .then((value) {
-      recipe = value;
-      setState(() {});
+      setState(() {
+        getInfrom = value;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      columns: const [
-        // DataColumn(label: Text("Id")),
-        // DataColumn(label: Text("Logo")),
-        // DataColumn(label: Text("Title")),
-        // DataColumn(label: Text("Description")),
-        DataColumn(label: Text("Link Title")),
-        DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Language")),
-        DataColumn(label: Text("Target Url")),
-        DataColumn(label: Text("Mime Type")),
-      ],
-      source: RecipeSource(),
-      arrowHeadColor: AppColors.green,
-      showCheckboxColumn: false,
-      rowsPerPage: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.green, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          BorderedRowWidget(
+            value1: "Link Title: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkTitle ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Link Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkType ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Language: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].language ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Target URL: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].targetUrl ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Mime Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].mimeType ?? "",
+          ),
+        ],
+      ),
     );
   }
-}
-
-class RecipeSource extends DataTableSource {
-  List<RecipeModel> data = recipe;
-
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        DataCell(Text(rowData.linkTitle.toString())),
-        DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.language.toString())),
-        DataCell(Text(rowData.targetUrl.toString())),
-        DataCell(Text(rowData.mimeType.toString())),
-        // DataCell(Text(rowData.ingredients.toString())),
-        // DataCell(Text(rowData.gTIN.toString())),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
 
 class PackagingComposition extends StatefulWidget {
@@ -606,6 +511,7 @@ class PackagingComposition extends StatefulWidget {
 }
 
 class _PackagingCompositionState extends State<PackagingComposition> {
+  List<ProductContentsModel> getInfrom = [];
   @override
   void initState() {
     super.initState();
@@ -617,69 +523,46 @@ class _PackagingCompositionState extends State<PackagingComposition> {
     )
         // ProductInformationController.getPackagingCompositionByGtin(widget.gtin)
         .then((value) {
-      packagingComposition = value;
-      setState(() {});
+      setState(() {
+        getInfrom = value;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      columns: const [
-        // DataColumn(label: Text("Id")),
-        // DataColumn(label: Text("Logo")),
-        // DataColumn(label: Text("Title")),
-        // DataColumn(label: Text("Consumer Product Variant")),
-        // DataColumn(label: Text("Packaging")),
-        // DataColumn(label: Text("Material")),
-        // DataColumn(label: Text("Recyclability")),
-        DataColumn(label: Text("Link Title")),
-        DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Language")),
-        DataColumn(label: Text("Target Url")),
-        DataColumn(label: Text("Mime Type")),
-      ],
-      source: PackagingCompositionSource(),
-      arrowHeadColor: AppColors.green,
-      showCheckboxColumn: false,
-      rowsPerPage: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.green, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          BorderedRowWidget(
+            value1: "Link Title: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkTitle ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Link Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkType ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Language: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].language ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Target URL: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].targetUrl ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Mime Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].mimeType ?? "",
+          ),
+        ],
+      ),
     );
   }
-}
-
-class PackagingCompositionSource extends DataTableSource {
-  List<ProductContentsModel> data = packagingComposition;
-
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        // DataCell(Text(rowData.iD.toString())),
-        // DataCell(Text(rowData.logo.toString())),
-        // DataCell(Text(rowData.title.toString())),
-        // DataCell(Text(rowData.consumerProductVariant.toString())),
-        // DataCell(Text(rowData.packaging.toString())),
-        // DataCell(Text(rowData.material.toString())),
-        // DataCell(Text(rowData.recyclability.toString())),
-        DataCell(Text(rowData.linkTitle.toString())),
-        DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.language.toString())),
-        DataCell(Text(rowData.targetUrl.toString())),
-        DataCell(Text(rowData.mimeType.toString())),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }
 
 class ElectronicLeaflets extends StatefulWidget {
@@ -691,6 +574,8 @@ class ElectronicLeaflets extends StatefulWidget {
 }
 
 class _ElectronicLeafletsState extends State<ElectronicLeaflets> {
+  List<ProductContentsModel> getInfrom = [];
+
   @override
   void initState() {
     super.initState();
@@ -702,57 +587,44 @@ class _ElectronicLeafletsState extends State<ElectronicLeaflets> {
     )
         // ProductInformationController.getLeafletsByGtin(widget.gtin)
         .then((value) {
-      leaflets = value;
-      setState(() {});
+      setState(() {
+        getInfrom = value;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return PaginatedDataTable(
-      columns: const [
-        // DataColumn(label: Text("Id")),
-        // DataColumn(label: Text("Product Leaflets Information")),
-        DataColumn(label: Text("Link Title")),
-        DataColumn(label: Text("Link Type")),
-        DataColumn(label: Text("Language")),
-        DataColumn(label: Text("Target Url")),
-        DataColumn(label: Text("Mime Type")),
-      ],
-      source: LeafletsSource(),
-      arrowHeadColor: AppColors.green,
-      showCheckboxColumn: false,
-      rowsPerPage: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.green, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          BorderedRowWidget(
+            value1: "Link Title: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkTitle ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Link Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].linkType ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Language: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].language ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Target URL: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].targetUrl ?? "",
+          ),
+          BorderedRowWidget(
+            value1: "Mime Type: ",
+            value2: getInfrom.isEmpty ? "" : getInfrom[0].mimeType ?? "",
+          ),
+        ],
+      ),
     );
   }
-}
-
-class LeafletsSource extends DataTableSource {
-  List<ProductContentsModel> data = leaflets;
-
-  @override
-  DataRow getRow(int index) {
-    final rowData = data[index];
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        // DataCell(Text(rowData.iD.toString())),
-        // DataCell(Text(rowData.productLeafletInformation.toString())),
-        DataCell(Text(rowData.linkTitle.toString())),
-        DataCell(Text(rowData.linkType.toString())),
-        DataCell(Text(rowData.language.toString())),
-        DataCell(Text(rowData.targetUrl.toString())),
-        DataCell(Text(rowData.mimeType.toString())),
-      ],
-    );
-  }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }

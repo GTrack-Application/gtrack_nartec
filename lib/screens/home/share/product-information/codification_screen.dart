@@ -433,33 +433,3 @@ class BorderedRowWidget extends StatelessWidget {
     );
   }
 }
-
-// class GtinInformationSource extends DataTableSource {
-//   List<ProductContents> data = gtinInformationModel!.productContents!;
-
-//   @override
-//   DataRow getRow(int index) {
-//     final rowData = data[index];
-//     return DataRow.byIndex(
-//       index: index,
-//       cells: [
-//         DataCell(Text(rowData.productAllergenInformation.toString())),
-//         DataCell(Text(rowData.productNutrientsInformation.toString())),
-//         DataCell(Text(rowData.batch.toString())),
-//         DataCell(Text(rowData.expiry.toString())),
-//         DataCell(Text(rowData.serial.toString())),
-//         DataCell(Text(rowData.manufacturingDate.toString())),
-//         DataCell(Text(rowData.bestBeforeDate.toString())),
-//       ],
-//     );
-//   }
-
-//   @override
-//   bool get isRowCountApproximate => false;
-
-//   @override
-//   int get rowCount => data.length;
-
-//   @override
-//   int get selectedRowCount => 0;
-// }
