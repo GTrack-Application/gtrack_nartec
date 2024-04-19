@@ -61,8 +61,9 @@ class ProductInformationController {
       var response = await http.get(Uri.parse(
           '${AppUrls.baseUrlWithPort}/getProductLocationOriginByGtin/$gtin'));
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final responseBody = jsonDecode(response.body);
+
         responseBody.forEach((data) {
           productLocationOrigin.add(LocationOriginModel.fromJson(data));
         });

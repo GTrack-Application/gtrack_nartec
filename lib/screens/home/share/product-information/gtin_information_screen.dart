@@ -28,7 +28,7 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
   @override
   void initState() {
     gtinInformationBloc = gtinInformationBloc
-      ..add(GlobalDataEvent(widget.gtin));
+      .add(GlobalDataEvent(widget.gtin));
     super.initState();
   }
 

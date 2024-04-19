@@ -5,6 +5,7 @@ import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/variables/global_variable.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/product_information_screen.dart';
 import 'package:native_barcode_scanner/barcode_scanner.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class BarcodeScanningScreen extends StatefulWidget {
   const BarcodeScanningScreen({super.key});
@@ -20,7 +21,7 @@ class _BarcodeScanningScreenState extends State<BarcodeScanningScreen> {
     String? gtinCode = extractGtin(barcodeValue, codeType);
 
     if (gtinCode == null) {
-      AppSnackbars.danger(context, "Invalid Barcode");
+      toast("Invalid barcode");
       return;
     }
 

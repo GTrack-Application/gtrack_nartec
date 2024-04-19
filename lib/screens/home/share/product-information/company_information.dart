@@ -26,7 +26,8 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
 
   @override
   void initState() {
-    gtinInformationBloc.add(GlobalDataEvent(widget.gtin));
+    gtinInformationBloc = gtinInformationBloc
+      ..add(GlobalDataEvent(widget.gtin));
     super.initState();
   }
 
@@ -40,7 +41,7 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
             gtinInformationDataModel = state.data as GtinInformationDataModel;
           } else if (state.data is GtinInformationModel) {
             gtinInformationModel = state.data as GtinInformationModel;
-          } else {}
+          }
         }
       },
       builder: (context, state) {
@@ -128,13 +129,10 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
                             // const BorderedRowWidget(
                             //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
                             BorderedRowWidget(
-                              value1: "Licensing GS1 Member Organisation",
-                              value2: gtinInformationDataModel == null
-                                  ? "	GS1 SAUDI ARABIA"
-                                  : gtinInformationDataModel!
-                                      .data!.countryOfSaleName
-                                      .toString(),
-                            ),
+                                value1: "Licensing GS1 Member Organisation",
+                                value2: gtinInformationDataModel == null
+                                    ? "${gtinInformationModel?.companyInfo?.primaryMOName}"
+                                    : "${gtinInformationDataModel!.data!.countryOfSaleName}"),
                             30.height,
                             // const Divider(thickness: 2),
                             10.height,

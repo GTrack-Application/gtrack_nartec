@@ -20,6 +20,12 @@ class _ScanningScreenState extends State<ScanningScreen> {
   TextEditingController barcodeController = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+    barcodeController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
