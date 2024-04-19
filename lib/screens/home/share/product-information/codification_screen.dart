@@ -1,9 +1,13 @@
+import 'dart:developer' as dev;
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_simple_treeview/flutter_simple_treeview.dart';
 import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
+import 'package:gtrack_mobile_app/blocs/share/Similar_Records/record_states.dart';
+import 'package:gtrack_mobile_app/blocs/share/Similar_Records/records_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/share/codification/codification_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/share/codification/codification_states.dart';
 import 'package:gtrack_mobile_app/blocs/share/product_information/gtin_information_bloc.dart';
@@ -24,8 +28,8 @@ class CodificationScreen extends StatefulWidget {
 
 class _CodificationScreenState extends State<CodificationScreen> {
   GtinInformationBloc gtinInformationBloc = GtinInformationBloc();
-
   CodificationCubit codificationCubit = CodificationCubit();
+  RecordCubit recordsCubit = RecordCubit();
 
   @override
   void initState() {
@@ -48,6 +52,9 @@ class _CodificationScreenState extends State<CodificationScreen> {
 
             codificationCubit.getGpcInformation(
                 gtinInformationDataModel!.data!.gpcCategoryCode.toString());
+
+            recordsCubit.getRecords(
+                gtinInformationDataModel!.data!.gpcCategoryName.toString());
           } else if (state.data is GtinInformationModel) {
             gtinInformationModel = state.data as GtinInformationModel;
           }
@@ -254,7 +261,35 @@ class _CodificationScreenState extends State<CodificationScreen> {
                                             );
                                     },
                                   )
-                                : Container(),
+                                : BlocConsumer<RecordCubit, RecordsState>(
+                                    bloc: recordsCubit,
+                                    listener: (context, stt) {
+                                      if (stt is RecordsError) {
+                                        toast(stt.error);
+                                      }
+                                      if (stt is RecordsLoaded) {
+                                        dev.log("RecordsLoaded ${stt.data}");
+                                      }
+                                    },
+                                    builder: (context, stt) {
+                                      return stt is RecordsLoaded
+                                          ? SizedBox(
+                                              child: ListView.builder(
+                                                itemCount: stt.data.length,
+                                                shrinkWrap: true,
+                                                itemBuilder: (context, index) {
+                                                  return BorderedRowWidget(
+                                                    value1: stt.data[index]
+                                                        .toString(),
+                                                    value2: stt.data[index]
+                                                        .toString(),
+                                                  );
+                                                },
+                                              ),
+                                            )
+                                          : Container();
+                                    },
+                                  ),
                           ],
                         ),
                       ),

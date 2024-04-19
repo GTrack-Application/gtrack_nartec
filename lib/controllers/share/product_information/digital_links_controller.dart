@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
@@ -19,7 +18,6 @@ class DigitalLinksController {
       Uri.parse(url),
       headers: <String, String>{"authorization": "Bearer $token"},
     );
-    log(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       var digitalLinksModel = DigitalLinksModel.fromJson(
         jsonDecode(response.body),

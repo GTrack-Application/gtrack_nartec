@@ -15,4 +15,6 @@ abstract class AppUrls {
 
   // New Gtrack V.2 Urls
   static const String baseUrl = 'https://gs1ksa.org:3093/';
+
+  static const String vectorEmbeddingUrl = "http://gs1ksa.org:3077/";
 }
