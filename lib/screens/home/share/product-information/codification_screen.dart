@@ -242,7 +242,7 @@ class _CodificationScreenState extends State<CodificationScreen> {
                               toast(stt.error);
                             }
                             if (stt is RecordsLoaded) {
-                              dev.log("RecordsLoaded ${stt.data}");
+                              print("Length: ${stt.data.length}");
                             }
                           },
                           builder: (context, stt) {

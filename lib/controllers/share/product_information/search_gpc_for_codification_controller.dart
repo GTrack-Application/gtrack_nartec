@@ -44,7 +44,7 @@ class SearchGpcForCodificationController {
 
     final response = await http.get(uri, headers: headers);
 
-    var data = json.decode(response.body)[0] as List;
+    var data = json.decode(response.body) as List;
 
     if (response.statusCode == 200) {
       // return the list of similar records
