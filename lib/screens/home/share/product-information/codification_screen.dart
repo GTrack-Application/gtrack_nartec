@@ -254,8 +254,18 @@ class _CodificationScreenState extends State<CodificationScreen> {
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
                                           return BorderedRowWidget(
-                                            value1: stt.data[index].toString(),
-                                            value2: stt.data[index].toString(),
+                                            value1: stt.data[index]
+                                                .toString()
+                                                .replaceAll("{", "")
+                                                .replaceAll("}", "")
+                                                .replaceAll("[", "")
+                                                .replaceAll("]", ""),
+                                            value2: stt.data[index]
+                                                .toString()
+                                                .replaceAll("{", "")
+                                                .replaceAll("}", "")
+                                                .replaceAll("[", "")
+                                                .replaceAll("]", ""),
                                           );
                                         },
                                       ),
@@ -311,6 +321,7 @@ class BorderedRowWidget extends StatelessWidget {
                 value1,
                 style: const TextStyle(
                   fontSize: 15,
+                  color: Colors.orange,
                 ),
               ),
             ),
