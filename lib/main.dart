@@ -38,7 +38,6 @@ class MyApp extends StatelessWidget {
             title: 'Gtrack',
             theme: Themes.lightTheme(),
             home: const UserLoginPage(),
-            // home: const MappingRFIDScreen(),
           ),
         ),
       ),

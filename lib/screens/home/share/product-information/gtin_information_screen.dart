@@ -186,18 +186,20 @@ class BorderedRowWidget extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
+              flex: 3,
               child: Text(
                 value1,
                 style: const TextStyle(
-                  fontSize: 15,
+                  fontSize: 13,
                 ),
               ),
             ),
             Expanded(
+              flex: 4,
               child: SelectableText(
                 value2,
                 style: const TextStyle(
-                  fontSize: 15,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                 ),
               ),

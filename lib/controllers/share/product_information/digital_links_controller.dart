@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 class DigitalLinksController {
   Future<dynamic> getDigitalLinksData(String screen, String gtin) async {
     final url =
-        "${AppUrls.baseUrl}/api/digitalLinks?identificationKeyType=gtin&identificationKey=6281000004036";
+        "${AppUrls.baseUrl}/api/digitalLinks?identificationKeyType=gtin&identificationKey=$gtin,";
     final token = await AppPreferences.getToken();
     final response = await http.get(
       Uri.parse(url),

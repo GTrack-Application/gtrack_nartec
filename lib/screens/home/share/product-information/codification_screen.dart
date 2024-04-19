@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer' as dev;
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -242,7 +243,7 @@ class _CodificationScreenState extends State<CodificationScreen> {
                               toast(stt.error);
                             }
                             if (stt is RecordsLoaded) {
-                              print("Length: ${stt.data.length}");
+                              dev.log(jsonEncode(stt.data));
                             }
                           },
                           builder: (context, stt) {
@@ -253,19 +254,111 @@ class _CodificationScreenState extends State<CodificationScreen> {
                                         itemCount: stt.data.length,
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
-                                          return BorderedRowWidget(
-                                            value1: stt.data[index]
-                                                .toString()
-                                                .replaceAll("{", "")
-                                                .replaceAll("}", "")
-                                                .replaceAll("[", "")
-                                                .replaceAll("]", ""),
-                                            value2: stt.data[index]
-                                                .toString()
-                                                .replaceAll("{", "")
-                                                .replaceAll("}", "")
-                                                .replaceAll("[", "")
-                                                .replaceAll("]", ""),
+                                          var myMap = stt.data[index][0] as Map;
+                                          var metaData =
+                                              myMap['metadata'] as Map;
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.grey[300]!,
+                                                width: 1,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 5,
+                                                  blurRadius: 7,
+                                                  offset: const Offset(0,
+                                                      3), // changes position of shadow
+                                                ),
+                                              ],
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: Colors.grey[100],
+                                            ),
+                                            margin: const EdgeInsets.only(
+                                                bottom: 20),
+                                            child: Column(
+                                              children: [
+                                                Column(
+                                                  children: metaData.keys
+                                                      .map((e) => Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    bottom: 5),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        3),
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              border: Border(
+                                                                  bottom: BorderSide(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      width:
+                                                                          1)),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Expanded(
+                                                                  flex: 3,
+                                                                  child: Text(
+                                                                    e.toString(),
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      color: Colors
+                                                                          .orange,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                const Expanded(
+                                                                  flex: 1,
+                                                                  child:
+                                                                      Text(":"),
+                                                                ),
+                                                                Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                      metaData[
+                                                                              e]
+                                                                          .toString()),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ))
+                                                      .toList(),
+                                                ),
+                                                16.height,
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      const Text(
+                                                        "Results Rate:",
+                                                        style: TextStyle(
+                                                          color: Colors.orange,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      Text(
+                                                        stt.data[index][1]
+                                                            .toString(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           );
                                         },
                                       ),

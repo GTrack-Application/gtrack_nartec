@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 class GtinInformationController {
   static Future<dynamic> getGtinInformation(String gtin) async {
     final url = Uri.parse(
-        "${AppUrls.baseUrl}api/foreignGtin/getGtinProductDetails?barcode=0000030079236");
+      "${AppUrls.baseUrl}api/foreignGtin/getGtinProductDetails?barcode=$gtin",
+    );
 
     final response =
         await http.get(url, headers: {'Content-Type': 'application/json'});

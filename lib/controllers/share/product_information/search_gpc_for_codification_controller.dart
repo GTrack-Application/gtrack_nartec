@@ -1,15 +1,14 @@
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/SearchGpcForCodification.dart';
-
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class SearchGpcForCodificationController {
   static Future<SearchGpcForCodification> searchGpcForCodification(
-      String gpc) async {
+    String gpc,
+  ) async {
     final url = "${AppUrls.baseUrl}api/gpc/searchGpcForCodification?gpc=$gpc";
     final uri = Uri.parse(url);
 
