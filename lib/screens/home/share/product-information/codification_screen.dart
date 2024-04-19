@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'dart:convert';
 import 'dart:developer' as dev;
 
@@ -364,7 +366,11 @@ class _CodificationScreenState extends State<CodificationScreen> {
                                       ),
                                     ),
                                   )
-                                : Container();
+                                : Center(
+                                    child: Container(
+                                      child: const Text("No Data Found"),
+                                    ),
+                                  );
                           },
                         ),
                 ],
