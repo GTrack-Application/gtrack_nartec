@@ -68,157 +68,103 @@ class _CodificationScreenState extends State<CodificationScreen> {
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 2,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            setState(() {
-                              isTapedContainer = index;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(5),
-                              color: isTapedContainer == index
-                                  ? Colors.yellow
-                                  : index == 0
-                                      ? Colors.blue
-                                      : Colors.blue[200],
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: 2,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            isTapedContainer = index;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                children: [
-                                  CachedNetworkImage(
-                                    imageUrl:
-                                        "https://gs1ksa.org:3093/assets/gs1logowhite-QWHdyWZd.png",
-                                    height: 50,
-                                    width: 100,
-                                    fit: BoxFit.fill,
-                                  ),
-                                  Expanded(
-                                    child: AutoSizeText(
-                                      index == 0 ? "GS1 GPC" : "HS CODES",
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                            borderRadius: BorderRadius.circular(5),
+                            color: isTapedContainer == index
+                                ? Colors.yellow
+                                : index == 0
+                                    ? Colors.blue
+                                    : Colors.blue[200],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl:
+                                      "https://gs1ksa.org:3093/assets/gs1logowhite-QWHdyWZd.png",
+                                  height: 50,
+                                  width: 100,
+                                  fit: BoxFit.fill,
+                                ),
+                                Expanded(
+                                  child: AutoSizeText(
+                                    index == 0 ? "GS1 GPC" : "HS CODES",
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      },
-                    ),
-                    20.height,
-                    isTapedContainer == 0 || isTapedContainer == -1
-                        ? BlocConsumer<CodificationCubit, CodificationState>(
-                            bloc: codificationCubit,
-                            listener: (context, st) {
-                              if (st is CodificationError) {
-                                toast(st.error);
-                              }
-                              if (st is CodificationLoaded) {}
-                            },
-                            builder: (context, state) {
-                              return state is CodificationLoaded
-                                  ? SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: TreeView(
-                                        nodes: [
-                                          TreeNode(
-                                            content: Text(
-                                              "Segment: - ${state.data.segmentTitle}",
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            children: [
-                                              TreeNode(
-                                                content: Text(
-                                                  "Family: - ${state.data.familyTitle}",
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                children: [
-                                                  TreeNode(
-                                                    content: Text(
-                                                      "Class: - ${state.data.classTitle}",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    children: [
-                                                      TreeNode(
-                                                        content: Text(
-                                                          "Brick: - ${state.data.brickTitle}",
-                                                          style:
-                                                              const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        children: [
-                                                          TreeNode(
-                                                            content:
-                                                                const Text(""),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : TreeView(
+                        ),
+                      );
+                    },
+                  ),
+                  20.height,
+                  isTapedContainer == 0 || isTapedContainer == -1
+                      ? BlocConsumer<CodificationCubit, CodificationState>(
+                          bloc: codificationCubit,
+                          listener: (context, st) {
+                            if (st is CodificationError) {
+                              toast(st.error);
+                            }
+                            if (st is CodificationLoaded) {}
+                          },
+                          builder: (context, state) {
+                            return state is CodificationLoaded
+                                ? SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: TreeView(
                                       nodes: [
                                         TreeNode(
-                                          content: const Text(
-                                            "Segment: -",
-                                            style: TextStyle(
+                                          content: Text(
+                                            "Segment: - ${state.data.segmentTitle}",
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           children: [
                                             TreeNode(
-                                              content: const Text(
-                                                "Family: -",
-                                                style: TextStyle(
+                                              content: Text(
+                                                "Family: - ${state.data.familyTitle}",
+                                                style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                               children: [
                                                 TreeNode(
-                                                  content: const Text(
-                                                    "Class: -",
-                                                    style: TextStyle(
+                                                  content: Text(
+                                                    "Class: - ${state.data.classTitle}",
+                                                    style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
                                                   ),
                                                   children: [
                                                     TreeNode(
-                                                      content: const Text(
-                                                        "Brick: -",
-                                                        style: TextStyle(
+                                                      content: Text(
+                                                        "Brick: - ${state.data.brickTitle}",
+                                                        style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
@@ -237,22 +183,72 @@ class _CodificationScreenState extends State<CodificationScreen> {
                                           ],
                                         ),
                                       ],
-                                    );
-                            },
-                          )
-                        : BlocConsumer<RecordCubit, RecordsState>(
-                            bloc: recordsCubit,
-                            listener: (context, stt) {
-                              if (stt is RecordsError) {
-                                toast(stt.error);
-                              }
-                              if (stt is RecordsLoaded) {
-                                dev.log("RecordsLoaded ${stt.data}");
-                              }
-                            },
-                            builder: (context, stt) {
-                              return stt is RecordsLoaded
-                                  ? SizedBox(
+                                    ),
+                                  )
+                                : TreeView(
+                                    nodes: [
+                                      TreeNode(
+                                        content: const Text(
+                                          "Segment: -",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        children: [
+                                          TreeNode(
+                                            content: const Text(
+                                              "Family: -",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            children: [
+                                              TreeNode(
+                                                content: const Text(
+                                                  "Class: -",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                children: [
+                                                  TreeNode(
+                                                    content: const Text(
+                                                      "Brick: -",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    children: [
+                                                      TreeNode(
+                                                        content: const Text(""),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                          },
+                        )
+                      : BlocConsumer<RecordCubit, RecordsState>(
+                          bloc: recordsCubit,
+                          listener: (context, stt) {
+                            if (stt is RecordsError) {
+                              toast(stt.error);
+                            }
+                            if (stt is RecordsLoaded) {
+                              dev.log("RecordsLoaded ${stt.data}");
+                            }
+                          },
+                          builder: (context, stt) {
+                            return stt is RecordsLoaded
+                                ? Expanded(
+                                    child: SizedBox(
                                       child: ListView.builder(
                                         itemCount: stt.data.length,
                                         shrinkWrap: true,
@@ -263,12 +259,12 @@ class _CodificationScreenState extends State<CodificationScreen> {
                                           );
                                         },
                                       ),
-                                    )
-                                  : Container();
-                            },
-                          ),
-                  ],
-                ),
+                                    ),
+                                  )
+                                : Container();
+                          },
+                        ),
+                ],
               ),
             ),
           ),
