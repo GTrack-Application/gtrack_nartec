@@ -12,7 +12,7 @@ class GetAllTableZoneController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWithPort}getAllTblRZones";
+    String url = "${AppUrls.baseUrlWith7000}getAllTblRZones";
 
     final uri = Uri.parse(url);
 

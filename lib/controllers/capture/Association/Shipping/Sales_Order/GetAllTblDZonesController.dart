@@ -11,7 +11,7 @@ class GetAllTblDZonesController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWithPort}getAllTblDZones";
+    String url = "${AppUrls.baseUrlWith7000}getAllTblDZones";
     print("url: $url");
 
     final uri = Uri.parse(url);

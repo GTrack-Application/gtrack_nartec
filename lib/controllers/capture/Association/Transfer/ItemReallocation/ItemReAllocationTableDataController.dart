@@ -12,7 +12,7 @@ class ItemReAllocationTableDataController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWithPort}getItemInfoByPalletCode";
+    String url = "${AppUrls.baseUrlWith7000}getItemInfoByPalletCode";
     print("url: $url");
 
     final uri = Uri.parse(url);

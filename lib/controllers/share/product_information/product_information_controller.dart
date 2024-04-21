@@ -16,7 +16,7 @@ class ProductInformationController {
     List<PromotionalOfferModel> promotionalOffers = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/getPromotionalOffersByGtin/$gtin'));
+          '${AppUrls.baseUrlWith7000}/getPromotionalOffersByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -37,7 +37,7 @@ class ProductInformationController {
     List<ProductContentsModel> productContents = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/getProductContentByGtin/$gtin'));
+          '${AppUrls.baseUrlWith7000}/getProductContentByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -59,7 +59,7 @@ class ProductInformationController {
     List<LocationOriginModel> productLocationOrigin = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/getProductLocationOriginByGtin/$gtin'));
+          '${AppUrls.baseUrlWith7000}/getProductLocationOriginByGtin/$gtin'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseBody = jsonDecode(response.body);
@@ -82,7 +82,7 @@ class ProductInformationController {
     List<ProductRecallModel> productRecall = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/getProductLocationOriginByGtin/$gtin'));
+          '${AppUrls.baseUrlWith7000}/getProductLocationOriginByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -103,7 +103,7 @@ class ProductInformationController {
     List<RecipeModel> recipe = [];
     try {
       var response = await http.get(
-          Uri.parse('${AppUrls.baseUrlWithPort}/getRecipeDataByGtin/$gtin'));
+          Uri.parse('${AppUrls.baseUrlWith7000}/getRecipeDataByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -125,7 +125,7 @@ class ProductInformationController {
     List<PackagingCompositionModel> packagingCompositionModel = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/getAlltblPkgCompositionDataByGtin/$gtin'));
+          '${AppUrls.baseUrlWith7000}/getAlltblPkgCompositionDataByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -147,7 +147,7 @@ class ProductInformationController {
     List<LeafletsModel> leafletsModel = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/getProductLeafLetsDataByGtin/$gtin'));
+          '${AppUrls.baseUrlWith7000}/getProductLeafLetsDataByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);

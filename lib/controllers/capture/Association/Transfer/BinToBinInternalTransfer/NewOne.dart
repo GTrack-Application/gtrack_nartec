@@ -16,7 +16,7 @@ class NewOne {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWithPort}getMappedBarcodedsByItemCodeAndBinLocation";
+        "${AppUrls.baseUrlWith7000}getMappedBarcodedsByItemCodeAndBinLocation";
 
     final uri = Uri.parse(url);
 

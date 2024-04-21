@@ -12,7 +12,7 @@ class WIPToFgController {
     String? token;
     await AppPreferences.getToken().then((value) => token = value);
 
-    const endPoint = "${AppUrls.baseUrlWithPort}/getItemsLnWIPs";
+    const endPoint = "${AppUrls.baseUrlWith7000}/getItemsLnWIPs";
 
     List<GetItemsLnWipsModel> items = [];
 
@@ -34,7 +34,7 @@ class WIPToFgController {
   }
 
   static Future<void> insertManyIntoMappedBarcode(List records) async {
-    const endPoint = "${AppUrls.baseUrlWithPort}insertManyIntoMappedBarcode";
+    const endPoint = "${AppUrls.baseUrlWith7000}insertManyIntoMappedBarcode";
 
     String? token;
     await AppPreferences.getToken().then((value) => token = value);

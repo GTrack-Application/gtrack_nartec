@@ -12,7 +12,7 @@ class GetAlltblBinLocationsController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWithPort}getAlltblPalletMaster";
+    String url = "${AppUrls.baseUrlWith7000}getAlltblPalletMaster";
 
     print("url: $url");
 

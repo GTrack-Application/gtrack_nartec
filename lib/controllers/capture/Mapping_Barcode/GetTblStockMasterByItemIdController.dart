@@ -13,7 +13,7 @@ class GetTblStockMasterByItemIdController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWithPort}getTblStockMasterByItemId?itemid=$itemId";
+        "${AppUrls.baseUrlWith7000}getTblStockMasterByItemId?itemid=$itemId";
 
     final uri = Uri.parse(url);
 

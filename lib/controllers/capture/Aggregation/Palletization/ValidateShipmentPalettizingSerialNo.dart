@@ -14,7 +14,7 @@ class ValidateShipmentPalettizingSerialNoController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWithPort}vaildatehipmentPalletizingSerialNumber?ItemSerialNo=$serialNo&SHIPMENTID=$shipmentId";
+        "${AppUrls.baseUrlWith7000}vaildatehipmentPalletizingSerialNumber?ItemSerialNo=$serialNo&SHIPMENTID=$shipmentId";
 
     final uri = Uri.parse(url);
 

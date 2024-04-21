@@ -11,7 +11,7 @@ class GenerateSerialNumberforRecevingController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWithPort}generateSerialNumberforReceving";
+    String url = "${AppUrls.baseUrlWith7000}generateSerialNumberforReceving";
 
     final body = {"ITEMID": itemId};
 

@@ -13,7 +13,7 @@ class getWmsReturnSalesOrderByReturnItemNumController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWithPort}getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=$rmaValue";
+        "${AppUrls.baseUrlWith7000}getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=$rmaValue";
     print("url: $url");
 
     final uri = Uri.parse(url);

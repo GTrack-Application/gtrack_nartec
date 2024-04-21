@@ -15,7 +15,7 @@ class GetFirstTableData {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWithPort}getMappedBarcodedsByItemCodeAndBinLocation";
+        "${AppUrls.baseUrlWith7000}getMappedBarcodedsByItemCodeAndBinLocation";
     print("url: $url");
 
     final uri = Uri.parse(url);
