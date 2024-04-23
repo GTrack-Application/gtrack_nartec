@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
+import 'package:gtrack_mobile_app/controllers/auth/auth_controller.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
@@ -10,10 +11,8 @@ import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
-import 'package:gtrack_mobile_app/old/pages/login/activities_and_password_page.dart';
-import 'package:gtrack_mobile_app/old/providers/login/login_provider.dart';
+import 'package:gtrack_mobile_app/screens/home/auth/cr_activity_screen.dart';
 import 'package:gtrack_mobile_app/screens/home_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class UserLoginPage extends StatefulWidget {
@@ -54,31 +53,53 @@ class _UserLoginPageState extends State<UserLoginPage> {
     super.dispose();
   }
 
-  login() {
+  // login() {
+  //   if (formKey.currentState?.validate() ?? false) {
+  //     AppDialogs.loadingDialog(context);
+  //     LoginServices.login(email: emailController.text).then((response) {
+  //       AppDialogs.closeDialog();
+  //       final activities = response;
+
+  //       // add email and activities to login provider
+  //       Provider.of<LoginProvider>(context, listen: false)
+  //           .setEmail(emailController.text);
+  //       Provider.of<LoginProvider>(context, listen: false)
+  //           .setActivities(activities);
+
+  //       AppPreferences.setCurrentUser("Admin").then((_) {});
+
+  //       AppNavigator.goToPage(
+  //         context: context,
+  //         screen: ActivitiesAndPasswordPage(
+  //           email: emailController.text.trim(),
+  //           activities: activities,
+  //         ),
+  //       );
+  //     }).catchError((error) {
+  //       AppDialogs.closeDialog();
+  //       AppSnackbars.danger(context, error.toString());
+  //     });
+  //   }
+  // }
+
+  login() async {
     if (formKey.currentState?.validate() ?? false) {
       AppDialogs.loadingDialog(context);
-      LoginServices.login(email: emailController.text).then((response) {
+      await AuthController.login(emailController.text.trim()).then((value) {
+        List<String> dp = value.map((e) => e.crActivity!).toList();
+
         AppDialogs.closeDialog();
-        final activities = response;
-
-        // add email and activities to login provider
-        Provider.of<LoginProvider>(context, listen: false)
-            .setEmail(emailController.text);
-        Provider.of<LoginProvider>(context, listen: false)
-            .setActivities(activities);
-
-        AppPreferences.setCurrentUser("Admin").then((_) {});
-
         AppNavigator.goToPage(
-          context: context,
-          screen: ActivitiesAndPasswordPage(
-            email: emailController.text.trim(),
-            activities: activities,
-          ),
-        );
-      }).catchError((error) {
+            context: context,
+            screen: CrActivityScreen(
+              dropdownList: dp,
+              dropdownValue: dp[0],
+              email: emailController.text.trim(),
+            ));
+      }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
-        AppSnackbars.danger(context, error.toString());
+        AppSnackbars.danger(
+            context, error.toString().replaceAll("Exeption", ""));
       });
     }
   }
@@ -178,7 +199,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   const Text(
                     'User Type',
                     style: TextStyle(
-                      fontSize: 23,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white,
                     ),
@@ -201,7 +222,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   const Text(
                     'Enter your login ID',
                     style: TextStyle(
-                      fontSize: 23,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white,
                     ),
@@ -273,7 +294,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     child: const Text(
                       'Stakeholder Type',
                       style: TextStyle(
-                        fontSize: 23,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: AppColors.white,
                       ),
@@ -294,7 +315,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   ),
                   const SizedBox(height: 20),
                   PrimaryButtonWidget(
-                    // rgba(66, 0, 255, 1)
                     backgroungColor: const Color(0xFF4200FF),
                     onPressed: () {
                       if (dropdownValue.toString() == "Normal User") {
@@ -326,6 +346,10 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           children: [
                             Checkbox(
                               value: rememberMe,
+                              fillColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              activeColor: Colors.white,
+                              checkColor: Colors.black,
                               onChanged: (value) {
                                 setState(() {
                                   rememberMe = value!;
