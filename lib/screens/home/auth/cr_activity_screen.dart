@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/cubit/auth/auth_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/auth/auth_state.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
@@ -131,8 +134,15 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                   const SizedBox(height: 50),
                   BlocConsumer<LoginCubit, LoginState>(
                     bloc: loginCubit,
-                    listener: (context, state) {
+                    listener: (context, state) async {
                       if (state is LoginSuccess) {
+                        await AppPreferences.setToken(
+                            state.loginResponseModel.token.toString());
+                        await AppPreferences.setUserId(state
+                            .loginResponseModel.memberData!.userId
+                            .toString());
+                        await AppPreferences.setCurrentUser("Member User");
+
                         AppNavigator.replaceTo(
                           context: context,
                           screen: const HomeScreen(),
@@ -177,44 +187,48 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                             );
                     },
                   ).box.width(context.width * 0.85).makeCentered(),
-                  // const SizedBox(height: 20),
-                  // Container(
-                  //   margin: const EdgeInsets.only(right: 5),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: <Widget>[
-                  //       Row(
-                  //         children: [
-                  //           Checkbox(
-                  //             value: rememberMe,
-                  //             onChanged: (value) {
-                  //               setState(() {
-                  //                 rememberMe = value!;
-                  //               });
-                  //             },
-                  //           ),
-                  //           const Text(
-                  //             'Remember Me',
-                  //             style: TextStyle(
-                  //               color: AppColors.grey,
-                  //               fontSize: 13,
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       GestureDetector(
-                  //         onTap: () {},
-                  //         child: const Text(
-                  //           'Need Help?',
-                  //           style: TextStyle(
-                  //             color: AppColors.grey,
-                  //             fontSize: 13,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  const SizedBox(height: 20),
+                  Container(
+                    margin: const EdgeInsets.only(right: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: rememberMe,
+                              fillColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              activeColor: Colors.white,
+                              checkColor: Colors.black,
+                              onChanged: (value) {
+                                setState(() {
+                                  rememberMe = value!;
+                                });
+                              },
+                            ),
+                            const Text(
+                              'Remember Me',
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const Text(
+                            'Need Help?',
+                            style: TextStyle(
+                              color: AppColors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

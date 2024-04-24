@@ -69,8 +69,8 @@ class _RawMaterialsScreenState extends State<RawMaterialsScreen> {
                         },
                         child: Image.asset(
                           AppImages.finder,
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          height: 50,
+                          width: 45,
+                          height: 45,
                           fit: BoxFit.fill,
                         ),
                       ),

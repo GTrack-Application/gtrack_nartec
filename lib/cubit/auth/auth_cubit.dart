@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/controllers/auth/auth_controller.dart';
 import 'package:gtrack_mobile_app/cubit/auth/auth_state.dart';
+import 'package:gtrack_mobile_app/models/auth/LoginResponseModel.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -18,8 +19,9 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginFailure('No Internet Connection'));
         return;
       }
-      await AuthController.completeLogin(email, password, activity);
-      emit(LoginSuccess());
+      LoginResponseModel model =
+          await AuthController.completeLogin(email, password, activity);
+      emit(LoginSuccess(model));
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }

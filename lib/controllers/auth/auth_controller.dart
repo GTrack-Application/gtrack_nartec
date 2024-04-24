@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/auth/CRLoginModel.dart';
+import 'package:gtrack_mobile_app/models/auth/LoginResponseModel.dart';
 import 'package:http/http.dart' as http;
 
 class AuthController {
@@ -23,14 +24,9 @@ class AuthController {
     }
   }
 
-  static Future<void> completeLogin(
-    String email,
-    String password,
-    String activity,
-  ) async {
+  static Future<LoginResponseModel> completeLogin(
+      String email, String password, String activity) async {
     final url = Uri.parse('${AppUrls.baseUrlWith3091}api/users/memberLogin');
-
-    print(url);
 
     final headers = <String, String>{'Content-Type': 'application/json'};
 
@@ -38,16 +34,12 @@ class AuthController {
       {"email": email, "password": password, "activity": activity},
     );
 
-    print(body);
-
     final response = await http.post(url, headers: headers, body: body);
 
     var data = json.decode(response.body);
 
-    print(data);
-
     if (response.statusCode == 200) {
-      return data;
+      return LoginResponseModel.fromJson(data);
     } else {
       final msg = data['error'];
       throw Exception(msg);
