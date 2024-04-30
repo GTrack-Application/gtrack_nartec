@@ -98,6 +98,7 @@ class _MappingRFIDScreenState extends State<MappingRFIDScreen> {
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: PrimaryButtonWidget(
                     backgroungColor: AppColors.green,
+                    fontSize: 15,
                     text: "Read",
                     onPressed: () async {
                       ZebraRfidSdkPlugin.setEventHandler(
@@ -123,18 +124,20 @@ class _MappingRFIDScreenState extends State<MappingRFIDScreen> {
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: PrimaryButtonWidget(
                     backgroungColor: Colors.amber,
+                    fontSize: 15,
+                    text: "Clear",
                     onPressed: () async {
                       setState(() {
                         rfidDatas = {};
                       });
                     },
-                    text: "Clear",
                   ),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: PrimaryButtonWidget(
                     backgroungColor: AppColors.danger,
+                    fontSize: 15,
                     text: "Stop",
                     onPressed: () async {
                       ZebraRfidSdkPlugin.disconnect();
