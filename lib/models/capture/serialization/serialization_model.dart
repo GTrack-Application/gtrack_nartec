@@ -7,10 +7,10 @@ class SerializationModel {
 
   SerializationModel(
       {this.gTIN,
-        this.serialNo,
-        this.eXPIRYDATE,
-        this.bATCH,
-        this.mANUFACTURINGDATE});
+      this.serialNo,
+      this.eXPIRYDATE,
+      this.bATCH,
+      this.mANUFACTURINGDATE});
 
   SerializationModel.fromJson(Map<String, dynamic> json) {
     gTIN = json['GTIN'];
@@ -21,12 +21,12 @@ class SerializationModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['GTIN'] = this.gTIN;
-    data['SerialNo'] = this.serialNo;
-    data['EXPIRY_DATE'] = this.eXPIRYDATE;
-    data['BATCH'] = this.bATCH;
-    data['MANUFACTURING_DATE'] = this.mANUFACTURINGDATE;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['GTIN'] = gTIN;
+    data['SerialNo'] = serialNo;
+    data['EXPIRY_DATE'] = eXPIRYDATE;
+    data['BATCH'] = bATCH;
+    data['MANUFACTURING_DATE'] = mANUFACTURINGDATE;
     return data;
   }
 }

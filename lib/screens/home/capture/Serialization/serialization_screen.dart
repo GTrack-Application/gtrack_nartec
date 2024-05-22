@@ -80,7 +80,7 @@ class SerializationScreen extends StatelessWidget {
                     }).toList(),
                     inputDecoration: const InputDecoration(
                       hintText: 'Search',
-                      prefixIcon: const Icon(Icons.search),
+                      prefixIcon: Icon(Icons.search),
                     ),
                     initialList: CaptureCubit.get(context).serializationData,
                     itemBuilder: (item) => Card(

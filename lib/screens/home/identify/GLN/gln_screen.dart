@@ -1,13 +1,17 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
+import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_information_screen.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -25,7 +29,6 @@ class _GLNScreenState extends State<GLNScreen> {
 
   GlnCubit glnCubit = GlnCubit();
 
-  List<bool> isMarked = [];
   List<GLNProductsModel> table = [];
 
   List<double> longitude = [];
@@ -56,21 +59,8 @@ class _GLNScreenState extends State<GLNScreen> {
     );
   }
 
-  // late GoogleMapController mapController;
-
-  // void onMapCreated(GoogleMapController controller) {
-  //   mapController = controller;
-  // }
-
   @override
   void dispose() {
-    // mapController.dispose();
-
-    // markers.clear();
-    // latitude.clear();
-    // longitude.clear();
-    // table.clear();
-
     searchController.clear();
 
     super.dispose();
@@ -209,114 +199,81 @@ class _GLNScreenState extends State<GLNScreen> {
                             ),
                           ),
                         )
-                      : PaginatedDataTable(
-                          rowsPerPage: 5,
-                          headingRowColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.blue),
-                          arrowHeadColor: Colors.blue,
-                          columns: const [
-                            DataColumn(
-                                label: Text(
-                              'GLN ID',
-                              style: TextStyle(color: AppColors.white),
-                              textAlign: TextAlign.center,
-                            )),
-                            DataColumn(
-                                label: Text(
-                              'GCP GLNID',
-                              style: TextStyle(color: AppColors.white),
-                              textAlign: TextAlign.center,
-                            )),
-                            DataColumn(
-                                label: Text(
-                              'location Name En',
-                              style: TextStyle(color: AppColors.white),
-                              textAlign: TextAlign.center,
-                            )),
-                            DataColumn(
-                                label: Text(
-                              'location Name Ar',
-                              style: TextStyle(color: AppColors.white),
-                              textAlign: TextAlign.center,
-                            )),
-                            DataColumn(
-                                label: Text(
-                              'GLN Barcode Number',
-                              style: TextStyle(color: AppColors.white),
-                              textAlign: TextAlign.center,
-                            )),
-                            DataColumn(
-                                label: Text(
-                              'Status',
-                              style: TextStyle(color: AppColors.white),
-                              textAlign: TextAlign.center,
-                            )),
-                          ],
-                          source: TableDataSource(table, context),
-                          showCheckboxColumn: false,
-                          showFirstLastButtons: true,
+                      : Container(
+                          // border
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListView.builder(
+                            itemCount: table.length,
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: context.width() * 0.9,
+                                alignment: Alignment.center,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.2)),
+                                ),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(10),
+                                  title: Text(
+                                    table[index].locationNameAr ?? "",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    table[index].gLNBarcodeNumber ?? "",
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
+                                  leading: Hero(
+                                    tag: table[index].id ?? "",
+                                    child: ClipOval(
+                                      child: CachedNetworkImage(
+                                        imageUrl: table[index].image == null
+                                            ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
+                                            : "${AppUrls.baseUrl}${table[index].image?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  trailing: GestureDetector(
+                                    onTap: () {
+                                      AppNavigator.goToPage(
+                                        context: context,
+                                        screen: GLNInformationScreen(
+                                            employees: table[index]),
+                                      );
+                                    },
+                                    child: Image.asset("assets/icons/view.png"),
+                                  ),
+                                  onTap: () {},
+                                ),
+                              );
+                            },
+                          ),
                         ),
                   const SizedBox(height: 10),
-                  // Container(
-                  //   height: MediaQuery.of(context).size.height * 0.5,
-                  //   width: MediaQuery.of(context).size.width,
-                  //   margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(20),
-                  //     border: Border.all(
-                  //       color: AppColors.grey,
-                  //       width: 1,
-                  //     ),
-                  //   ),
-                  //   child: isLoaded == false
-                  //       ? SizedBox.shrink()
-                  //       : ClipRRect(
-                  //           borderRadius: BorderRadius.circular(20),
-                  //           child: GoogleMap(
-                  //             onMapCreated: (GoogleMapController controller) {
-                  //               mapController = controller;
-                  //             },
-                  //             initialCameraPosition: CameraPosition(
-                  //               // with current position using geolocator
-                  //               target: latitude.isEmpty
-                  //                   ? LatLng(currentLat, currentLong)
-                  //                   : LatLng(
-                  //                       latitude[0],
-                  //                       longitude[0],
-                  //                     ),
-                  //               zoom: -14,
-                  //             ),
-                  //             // each marker will connect to each other and will show the route to the next marker
-                  //             polylines: {
-                  //               Polyline(
-                  //                 polylineId: PolylineId('route'),
-                  //                 color: AppColors.skyBlue,
-                  //                 width: 5,
-                  //                 points: latitude.isEmpty
-                  //                     ? [
-                  //                         LatLng(currentLat, currentLong),
-                  //                         LatLng(currentLat, currentLong),
-                  //                       ]
-                  //                     : latitude
-                  //                         .asMap()
-                  //                         .map((index, value) => MapEntry(
-                  //                             index,
-                  //                             LatLng(
-                  //                               latitude[index],
-                  //                               longitude[index],
-                  //                             )))
-                  //                         .values
-                  //                         .toList(),
-                  //               ),
-                  //             },
-                  //             markers: markers,
-                  //             buildingsEnabled: true,
-                  //             compassEnabled: true,
-                  //             indoorViewEnabled: true,
-                  //             mapToolbarEnabled: true,
-                  //           ),
-                  //         ),
-                  // ),
                 ],
               ),
             ),
@@ -327,43 +284,43 @@ class _GLNScreenState extends State<GLNScreen> {
   }
 }
 
-class TableDataSource extends DataTableSource {
-  List<GLNProductsModel> data;
-  BuildContext ctx;
+// class TableDataSource extends DataTableSource {
+//   List<GLNProductsModel> data;
+//   BuildContext ctx;
 
-  TableDataSource(
-    this.data,
-    this.ctx,
-  );
+//   TableDataSource(
+//     this.data,
+//     this.ctx,
+//   );
 
-  @override
-  DataRow? getRow(int index) {
-    if (index >= data.length) {
-      return null;
-    }
+//   @override
+//   DataRow? getRow(int index) {
+//     if (index >= data.length) {
+//       return null;
+//     }
 
-    final instance = data[index];
+//     final instance = data[index];
 
-    return DataRow.byIndex(
-      index: index,
-      onSelectChanged: (value) {},
-      cells: [
-        DataCell(SelectableText(instance.id ?? '')),
-        DataCell(SelectableText(instance.gcpGLNID ?? '')),
-        DataCell(SelectableText(instance.locationNameEn ?? '')),
-        DataCell(SelectableText(instance.locationNameAr ?? '')),
-        DataCell(SelectableText(instance.gLNBarcodeNumber ?? '')),
-        DataCell(SelectableText(instance.status ?? '')),
-      ],
-    );
-  }
+//     return DataRow.byIndex(
+//       index: index,
+//       onSelectChanged: (value) {},
+//       cells: [
+//         DataCell(SelectableText(instance.id ?? '')),
+//         DataCell(SelectableText(instance.gcpGLNID ?? '')),
+//         DataCell(SelectableText(instance.locationNameEn ?? '')),
+//         DataCell(SelectableText(instance.locationNameAr ?? '')),
+//         DataCell(SelectableText(instance.gLNBarcodeNumber ?? '')),
+//         DataCell(SelectableText(instance.status ?? '')),
+//       ],
+//     );
+//   }
 
-  @override
-  bool get isRowCountApproximate => false;
+//   @override
+//   bool get isRowCountApproximate => false;
 
-  @override
-  int get rowCount => data.length;
+//   @override
+//   int get rowCount => data.length;
 
-  @override
-  int get selectedRowCount => 0;
-}
+//   @override
+//   int get selectedRowCount => 0;
+// }
