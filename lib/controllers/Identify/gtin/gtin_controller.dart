@@ -12,8 +12,6 @@ class GTINController {
 
     String url = "${AppUrls.baseUrl}/api/products?user_id=$userId";
 
-    print(url);
-
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -22,8 +20,6 @@ class GTINController {
         'Authorization': 'Bearer $token',
       },
     );
-
-    print(json.decode(response.body));
 
     var data = json.decode(response.body) as List;
 
