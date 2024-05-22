@@ -174,66 +174,60 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                           ),
                         ),
                       )
-                    : PaginatedDataTable(
-                        rowsPerPage: 5,
-                        headingRowColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.blue),
-                        arrowHeadColor: Colors.blue,
-                        columns: const [
-                          DataColumn(
-                              label: Text(
-                            'SSCC ID',
-                            style: TextStyle(color: AppColors.white),
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Type',
-                            style: TextStyle(color: AppColors.white),
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'SSCC Barcode Number',
-                            style: TextStyle(color: AppColors.white),
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Decription',
-                            style: TextStyle(color: AppColors.white),
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Qty',
-                            style: TextStyle(color: AppColors.white),
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Ship to',
-                            style: TextStyle(color: AppColors.white),
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Carton',
-                            style: TextStyle(color: AppColors.white),
-                            textAlign: TextAlign.center,
-                          )),
-                          DataColumn(
-                              label: Text(
-                            'Decription',
-                            style: TextStyle(color: AppColors.white),
-                            textAlign: TextAlign.center,
-                          )),
-                        ],
-                        source: TableDataSource(table, context),
-                        showCheckboxColumn: false,
-                        showFirstLastButtons: true,
-                      ),
-                const SizedBox(height: 10),
+                    : state is SsccLoadedState
+                        ? Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            child: ListView.builder(
+                              itemCount: table.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  width: context.width() * 0.9,
+                                  height: 40,
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    bottom: 5,
+                                    top: 5,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: AppColors.skyBlue,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${index + 1}",
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      Text(
+                                        table[index].ssccType ?? "",
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      Text(
+                                        table[index].id ?? "",
+                                        style: const TextStyle(fontSize: 10),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
               ],
             ),
           );

@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
+import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/GTIN/gtin_information_screen.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
@@ -257,113 +261,83 @@ class _GTINScreenState extends State<GTINScreen> {
                   ),
                   const SizedBox(height: 10),
                   Expanded(
-                    child: ListView.separated(
-                      itemCount: productsFiltered.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
-                      itemBuilder: (context, index) {
-                        if (productsFiltered.isEmpty) {
-                          return const Center(
-                            child: Text('No products found'),
-                          );
-                        }
-
-                        final productName =
-                            productsFiltered[index].productnameenglish;
-                        final barcode = productsFiltered[index].barcode;
-
-                        // Remove any leading or trailing slashes from the cleaned path
-                        final frontImage =
-                            "https://gs1ksa.org:3093/${productsFiltered[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}";
-
-                        return ListTile(
-                          leading: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(
-                              frontImage.toString(),
+                    child: Container(
+                      // border
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListView.builder(
+                        itemCount: productsFiltered.length,
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            width: context.width() * 0.9,
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
                             ),
-                            onBackgroundImageError: (exception, stackTrace) =>
-                                const Icon(Ionicons.image_outline),
-                          ),
-                          title: Text(
-                            productName.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                              border: Border.all(
+                                  color: Colors.grey.withOpacity(0.2)),
                             ),
-                          ),
-                          subtitle: Text(barcode.toString()),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green[50],
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: Image.asset(
-                                    'assets/icons/add_Icon.png',
-                                    width: 20,
-                                    height: 20,
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(10),
+                              title: Text(
+                                productsFiltered[index].productnameenglish ??
+                                    "",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                productsFiltered[index].barcode ?? "",
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                              leading: Hero(
+                                tag: productsFiltered[index].id ?? "",
+                                child: ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: productsFiltered[index]
+                                                .frontImage ==
+                                            null
+                                        ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
+                                        : "${AppUrls.baseUrl}${productsFiltered[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 5),
-                              GestureDetector(
+                              trailing: GestureDetector(
                                 onTap: () {
-                                  showDialog(
+                                  AppNavigator.goToPage(
                                     context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Remove Product'),
-                                        content: const Text(
-                                            'Are you sure you want to remove this product?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              gtinBloc.deleteGtinProductById(
-                                                  productsFiltered[index]
-                                                      .id
-                                                      .toString());
-                                              // setState(() {
-                                              //   products.removeAt(index);
-                                              // });
-                                            },
-                                            child: const Text('Remove'),
-                                          ),
-                                        ],
-                                      );
-                                    },
+                                    screen: GTINInformationScreen(
+                                      employees: productsFiltered[index],
+                                    ),
                                   );
                                 },
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red[50],
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: Image.asset(
-                                    'assets/icons/remove_icon.png',
-                                    width: 20,
-                                    height: 20,
-                                  ),
-                                ),
+                                child: Image.asset("assets/icons/view.png"),
                               ),
-                            ],
-                          ),
-                        );
-                      },
+                              onTap: () {},
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
