@@ -11,13 +11,13 @@ class IconButtonWidget extends StatelessWidget {
   final double? fontSize;
 
   const IconButtonWidget({
-    Key? key,
+    super.key,
     required this.icon,
     required this.onPressed,
     required this.text,
     this.description,
     this.fontSize,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Column(

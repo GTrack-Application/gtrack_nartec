@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +17,7 @@ import 'package:gtrack_mobile_app/screens/home_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CrActivityScreen extends StatefulWidget {
-  const CrActivityScreen({
+  CrActivityScreen({
     super.key,
     required this.dropdownList,
     required this.dropdownValue,
@@ -25,7 +25,7 @@ class CrActivityScreen extends StatefulWidget {
   });
 
   final List<String> dropdownList;
-  final String dropdownValue;
+  String dropdownValue;
   final String email;
 
   @override
@@ -96,7 +96,11 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                   DropDownWidget(
                     items: widget.dropdownList,
                     value: widget.dropdownValue,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      setState(() {
+                        widget.dropdownValue = value!;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 20),
@@ -138,9 +142,10 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                       if (state is LoginSuccess) {
                         await AppPreferences.setToken(
                             state.loginResponseModel.token.toString());
-                        await AppPreferences.setUserId(state
-                            .loginResponseModel.memberData!.userId
-                            .toString());
+
+                        await AppPreferences.setUserId(
+                            state.loginResponseModel.memberData!.id.toString());
+
                         await AppPreferences.setCurrentUser("Member User");
 
                         AppNavigator.replaceTo(
@@ -152,7 +157,7 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content:
-                                Text(state.error.replaceAll("Expection", "")),
+                                Text(state.error.replaceAll("Exception:", "")),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -160,7 +165,9 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                     },
                     builder: (context, state) {
                       return state is LoginLoading
-                          ? const CircularProgressIndicator().centered()
+                          ? const CircularProgressIndicator(
+                                  color: AppColors.white)
+                              .centered()
                           : PrimaryButtonWidget(
                               backgroungColor: const Color(0xFF4200FF),
                               onPressed: () {

@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 class GLNController {
   static Future<List<GLNProductsModel>> getData() async {
     String? userId = await AppPreferences.getUserId();
+    String? token = await AppPreferences.getToken();
     String url = "${AppUrls.baseUrl}/api/gln?user_id=$userId";
 
     print(url);
@@ -19,13 +20,14 @@ class GLNController {
     final headers = <String, String>{
       "Content-Type": "application/json",
       "Host": AppUrls.host,
+      "Authorization": "Bearer $token",
     };
 
     var response = await http.get(uri, headers: headers);
 
-    var data = json.decode(response.body) as List;
+    print(json.decode(response.body));
 
-    print(data);
+    var data = json.decode(response.body) as List;
 
     if (response.statusCode == 200) {
       List<GLNProductsModel> products = data
