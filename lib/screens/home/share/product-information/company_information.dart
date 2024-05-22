@@ -26,7 +26,8 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
 
   @override
   void initState() {
-    gtinInformationBloc.add(GlobalDataEvent(widget.gtin));
+    gtinInformationBloc = gtinInformationBloc
+      ..add(GlobalDataEvent(widget.gtin));
     super.initState();
   }
 
@@ -40,7 +41,7 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
             gtinInformationDataModel = state.data as GtinInformationDataModel;
           } else if (state.data is GtinInformationModel) {
             gtinInformationModel = state.data as GtinInformationModel;
-          } else {}
+          }
         }
       },
       builder: (context, state) {
@@ -60,7 +61,7 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
                           children: [
                             const Center(
                               child: Text(
-                                "Information about the company that licenced this GTIN",
+                                "Information about the company\nthat licenced this GTIN",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -72,18 +73,14 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
                             BorderedRowWidget(
                               value1: "Company Name",
                               value2: gtinInformationDataModel == null
-                                  ? gtinInformationModel!
-                                      .companyInfo!.companyName!
-                                      .toString()
+                                  ? "${gtinInformationModel?.companyInfo?.companyName}"
                                   : gtinInformationDataModel!.data!.companyName
                                       .toString(),
                             ),
                             BorderedRowWidget(
                               value1: "Address",
                               value2: gtinInformationDataModel == null
-                                  ? gtinInformationModel!
-                                      .companyInfo!.formattedAddress!
-                                      .toString()
+                                  ? "${gtinInformationModel?.companyInfo?.formattedAddress}"
                                   : gtinInformationDataModel!
                                       .data!.formattedAddress!
                                       .toString(),
@@ -91,9 +88,7 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
                             BorderedRowWidget(
                               value1: "Website",
                               value2: gtinInformationDataModel == null
-                                  ? gtinInformationModel!
-                                      .companyInfo!.contactWebsite!
-                                      .toString()
+                                  ? "${gtinInformationModel?.companyInfo?.contactWebsite}"
                                   : gtinInformationDataModel!
                                       .data!.contactWebsite!
                                       .toString(),
@@ -101,26 +96,21 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
                             BorderedRowWidget(
                               value1: "Licence Key",
                               value2: gtinInformationDataModel == null
-                                  ? gtinInformationModel!
-                                      .companyInfo!.licenceKey!
-                                      .toString()
+                                  ? "${gtinInformationModel?.companyInfo?.licenceKey}"
                                   : gtinInformationDataModel!.data!.licenceKey
                                       .toString(),
                             ),
                             BorderedRowWidget(
                               value1: "Licence Type",
                               value2: gtinInformationDataModel == null
-                                  ? gtinInformationModel!
-                                      .companyInfo!.licenceType!
-                                      .toString()
-                                  : gtinInformationDataModel!.data!.licenceKey
+                                  ? "${gtinInformationModel?.companyInfo?.licenceType}"
+                                  : gtinInformationDataModel!.data!.licenceType
                                       .toString(),
                             ),
                             BorderedRowWidget(
                               value1: "Global Location Number (GLN)",
                               value2: gtinInformationDataModel == null
-                                  ? gtinInformationModel!.companyInfo!.gtin!
-                                      .toString()
+                                  ? "${gtinInformationModel?.companyInfo?.gtin}"
                                   : gtinInformationDataModel!
                                       .data!.gpcCategoryCode
                                       .toString(),
@@ -128,13 +118,10 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
                             // const BorderedRowWidget(
                             //     value1: "Net Content", value2: gtinInformationDataModel!.data!.),
                             BorderedRowWidget(
-                              value1: "Licensing GS1 Member Organisation",
-                              value2: gtinInformationDataModel == null
-                                  ? "	GS1 SAUDI ARABIA"
-                                  : gtinInformationDataModel!
-                                      .data!.countryOfSaleName
-                                      .toString(),
-                            ),
+                                value1: "Licensing GS1 Member Organisation",
+                                value2: gtinInformationDataModel == null
+                                    ? "${gtinInformationModel?.companyInfo?.primaryMOName}"
+                                    : "${gtinInformationDataModel!.data!.countryOfSaleName}"),
                             30.height,
                             // const Divider(thickness: 2),
                             10.height,

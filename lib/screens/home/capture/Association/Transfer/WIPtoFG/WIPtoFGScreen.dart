@@ -14,10 +14,7 @@ import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/SSCC/SsccProductsModel.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Transfer/WipToFG/get_items_ln_wips_model.dart';
-
-List<GetItemsLnWipsModel> tableData = [];
 
 class WIPtoFGScreen extends StatefulWidget {
   const WIPtoFGScreen({super.key});
@@ -32,7 +29,7 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
 
   String total = "0";
   List<bool> isMarked = [];
-  List<SsccProductsModel> table = [];
+  List<GetItemsLnWipsModel> tableData = [];
 
   String? dropDownValue = "Raw Material Warehouse";
   List<String> dropDownList = [
@@ -97,28 +94,27 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
         dropDownValue.toString(),
       ),
     ).then((value) {
-      setState(() {
-        locationToController.clear();
-      });
-      AppSnackbars.normal(context, 'Successfully Inserted');
       RawMaterialsToWIPController.insertEPCISEvent(
         "OBSERVE", // OBSERVE, ADD, DELETE
-        table.length,
+        tableData.length,
         "TRANSFER EVENT",
         "Internal Transfer",
         "Transfer",
         "urn:epc:id:sgln:6285084.00002.1",
-        table[0].ssccId.toString(),
-        table[0].sSCCBarcodeNumber.toString(),
+        tableData[0].id!.toString(),
+        tableData[0].itemId!.toString(),
       ).then((value) {
         AppDialogs.closeDialog();
-        locationToController.clear();
         AppSnackbars.normal(context, 'Successfully Inserted');
       }).onError((error1, stackTrace) {
         AppDialogs.closeDialog();
         AppSnackbars.danger(
             context, error1.toString().replaceAll("Exception:", ""));
       });
+      setState(() {
+        locationToController.clear();
+      });
+      AppSnackbars.normal(context, 'Successfully Inserted');
     }).onError((error2, stackTrace) {
       AppDialogs.closeDialog();
       // AppSnackbars.danger(

@@ -33,7 +33,7 @@ class InsertShipmentReceivedDataController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWithPort}insertShipmentRecievedDataCL";
+    String url = "${AppUrls.baseUrlWith7000}insertShipmentRecievedDataCL";
 
     print("url: $url");
 

@@ -25,7 +25,7 @@ class InsertAllDataController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWithPort}insertTblTransferBinToBinCL";
+    String url = "${AppUrls.baseUrlWith7000}insertTblTransferBinToBinCL";
     print("url: $url");
 
     final uri = Uri.parse(url);

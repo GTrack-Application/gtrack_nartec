@@ -17,7 +17,7 @@ class RawMaterialsToWIPController {
     print(userId);
     print(vendorId);
     final url = Uri.parse(
-        '${AppUrls.baseUrlWithPort}getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId');
+        '${AppUrls.baseUrlWith7000}getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId');
     print(url);
     String? token;
     await AppPreferences.getToken().then((value) => token = value);
@@ -56,7 +56,7 @@ class RawMaterialsToWIPController {
     String? token;
     await AppPreferences.getToken().then((value) => token = value.toString());
     final url = Uri.parse(
-        '${AppUrls.baseUrlWithPort}getMappedBarcodesRMByItemIdAndQty?item_id=$itemId&qty=$qty');
+        '${AppUrls.baseUrlWith7000}getMappedBarcodesRMByItemIdAndQty?item_id=$itemId&qty=$qty');
     print(url);
     final headers = <String, String>{
       'Host': AppUrls.host,
@@ -87,7 +87,7 @@ class RawMaterialsToWIPController {
     String? token;
     await AppPreferences.getToken().then((value) => token = value.toString());
 
-    final url = Uri.parse('${AppUrls.baseUrlWithPort}insertItemsLnWIP');
+    final url = Uri.parse('${AppUrls.baseUrlWith7000}insertItemsLnWIP');
     final headers = {
       'Host': AppUrls.host,
       'Authorization': '$token',
@@ -108,8 +108,6 @@ class RawMaterialsToWIPController {
 
     // convert the list to jsonQuery
     var body = jsonEncode(bodyData);
-
-    print("$body");
 
     try {
       var response = await http.post(url, headers: headers, body: body);
@@ -136,19 +134,18 @@ class RawMaterialsToWIPController {
     String bizTransactionList,
     String parentId,
   ) async {
-    String? token;
+    // String? token;
+    // await AppPreferences.getToken().then((value) => token = value.toString());
 
-    await AppPreferences.getToken().then((value) => token = value.toString());
+    final url = Uri.parse('${AppUrls.baseUrlWith7000}insertEPCISEvent');
 
-    final url = Uri.parse('${AppUrls.baseUrlWithPort}insertEPCISEvent');
+    print(url);
 
     final headers = {
+      'Authorization': 'Bearer token',
       'Host': AppUrls.host,
-      'Authorization': '$token',
       'Content-Type': 'application/json',
     };
-
-    print(headers);
 
     String eventTime = DateTime.now().toIso8601String();
     String eventTimeZoneOffSet = DateTime.now().timeZoneOffset.toString();
@@ -161,21 +158,16 @@ class RawMaterialsToWIPController {
     await AppPreferences.getUserId().then((value) => userId = value.toString());
 
     final body = {
-      "EventType": "$eventAction",
-      "EventAction": "$EventAction", // observe, add, or delete
-      "EventTime": "$eventTime",
-      "EventTimeZoneOffSet": "$eventTimeZoneOffSet",
-      "epcList": ["urn:epc:id:sgtin:0614141.107346.2018"],
-      // "bizLocation": "urn:epcglobal:cbv:loc:0614141.00001.0",
-      "bizStep": "$bizStep",
-      "disposition": "$disposition",
-      "bizTransactionList": "$bizTransactionList",
-      "readPoint": {
-        "id":
-            "urn:epc:id:sgln:6285084.00002.1", // "readPoint" will be pass here...
-      },
-      "sourceList":
-          "urn:epcglobal:cbv:sdt:owning_party", // "urn:epcglobal:cbv:sdt:owning_party",
+      "EventType": eventAction,
+      "EventAction": EventAction,
+      "EventTime": eventTime,
+      "EventTimeZoneOffSet": eventTimeZoneOffSet,
+      "epcList": ["urn:epc:id:sgtin:6287.028930005"],
+      "bizStep": bizStep,
+      "disposition": disposition,
+      "bizTransactionList": bizTransactionList,
+      "readPoint": {"id": "urn:epc:id:sgln:6285084.00002.1"},
+      "sourceList": "urn:epcglobal:cbv:sdt:owning_party",
       "destinationList": "urn:epcglobal:cbv:sdt:possessing_party",
       "sensorElementList": "temperature, humidity",
       "childQuantityList": [
@@ -196,30 +188,22 @@ class RawMaterialsToWIPController {
       "errorDeclaration": "",
       "quantityList": "$totalRows",
       "persistentDisposition": "urn:epcglobal:cbv:disp:in_progress",
-      "creationDate": "$createDate",
-      "sender": "$userId",
-      "receiver": "$userId",
-      "instanceIdentifer": "$uniqueEventID"
+      "creationDate": createDate,
+      "sender": userId,
+      "receiver": userId,
+      "instanceIdentifer": uniqueEventID
     };
 
-    print("Hello......");
+    var response =
+        await http.post(url, headers: headers, body: jsonEncode(body));
 
-    try {
-      var response =
-          await http.post(url, headers: headers, body: jsonEncode(body));
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print("Status Code: ${response.statusCode}");
-        print("Response Body: ${response.body}");
-      } else {
-        print("Status Code: ${response.statusCode}");
-        print("Response Body: ${response.body}");
-        var jsonString = jsonDecode(response.body);
+    var data = jsonDecode(response.body);
 
-        var msg = jsonString['message'];
-        throw Exception(msg);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return data;
+    } else {
+      var msg = data['error'];
+      throw Exception(msg);
     }
   }
 }

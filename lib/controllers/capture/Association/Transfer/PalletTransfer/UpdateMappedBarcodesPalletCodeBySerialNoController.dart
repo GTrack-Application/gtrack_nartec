@@ -15,7 +15,7 @@ class UpdateMappedBarcodesPalletCodeBySerialNoController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        '${AppUrls.baseUrlWithPort}updateMappedBarcodesPalletCodeBySerialNo';
+        '${AppUrls.baseUrlWith7000}updateMappedBarcodesPalletCodeBySerialNo';
 
     print("url : $url");
 

@@ -11,7 +11,7 @@ class DispatchManagementServices {
       String jobOrder) async {
     try {
       final response = await http.get(
-          Uri.parse('${AppUrls.baseUrlWithPort}getJobOrderDetails/$jobOrder'));
+          Uri.parse('${AppUrls.baseUrlWith7000}getJobOrderDetails/$jobOrder'));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as List;
         return responseBody
@@ -28,7 +28,7 @@ class DispatchManagementServices {
   static Future<List<GlnModel>> getGlnByMemberId(String memberId) async {
     try {
       final response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/api/getGlinIdByMemberId/$memberId'));
+          '${AppUrls.baseUrlWith7000}/api/getGlinIdByMemberId/$memberId'));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as List;
         return responseBody.map((e) => GlnModel.fromJson(e)).toList();
@@ -46,7 +46,7 @@ class DispatchManagementServices {
       String refNo) async {
     try {
       final response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWithPort}/api/getJobOrderDetailsByItemRefNo/$refNo'));
+          '${AppUrls.baseUrlWith7000}/api/getJobOrderDetailsByItemRefNo/$refNo'));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as List;
         return responseBody.map((e) => JobDetailsModel.fromJson(e)).toList();
@@ -66,7 +66,7 @@ class DispatchManagementServices {
     String? gpc,
     String? qty,
   }) async {
-    const String url = "${AppUrls.baseUrlWithPort}/api/postTblGLNTagIDEvents";
+    const String url = "${AppUrls.baseUrlWith7000}/api/postTblGLNTagIDEvents";
     try {
       final response = await http.post(Uri.parse(url),
           body: json.encode({

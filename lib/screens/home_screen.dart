@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, must_be_immutable
+// ignore_for_file: file_names, must_be_immutable, deprecated_member_use
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        // do not go to the previous screen
         return Future.value(false);
       },
       child: Scaffold(
@@ -108,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         // Drawer from right side that contains the identity, capture and share screens
-        // endDrawer: MyDrawerWidget(currentUser: currentUser),
+        endDrawer: MyDrawerWidget(currentUser: currentUser),
 
         body: SafeArea(
           child: SizedBox(

@@ -18,7 +18,7 @@ class GenerateAndUpdatePalletIdController {
     print(serialNoListString);
 
     String url =
-        "${AppUrls.baseUrlWithPort}generateAndUpdatePalletIds?serialNumberList[]=$serialNoListString&binLocation=$dropdownValue";
+        "${AppUrls.baseUrlWith7000}generateAndUpdatePalletIds?serialNumberList[]=$serialNoListString&binLocation=$dropdownValue";
 
     print(url);
 

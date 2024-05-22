@@ -11,7 +11,7 @@ class GetMapBarcodeDataByItemCodeController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWithPort}getAllTblLocationsCL";
+    String url = "${AppUrls.baseUrlWith7000}getAllTblLocationsCL";
     print("url: $url");
 
     final uri = Uri.parse(url);

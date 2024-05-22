@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/variables/global_variable.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/product_information_screen.dart';
 import 'package:native_barcode_scanner/barcode_scanner.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:page_transition/page_transition.dart';
 
 class BarcodeScanningScreen extends StatefulWidget {
   const BarcodeScanningScreen({super.key});
@@ -20,14 +21,14 @@ class _BarcodeScanningScreenState extends State<BarcodeScanningScreen> {
     String? gtinCode = extractGtin(barcodeValue, codeType);
 
     if (gtinCode == null) {
-      AppSnackbars.danger(context, "Invalid Barcode");
+      toast("Invalid barcode");
       return;
     }
 
-    AppNavigator.goToPage(
-      context: context,
-      screen: ProductInformationScreen(
-        gtin: barcodeValue.toString(),
+    Navigator.of(context).pushReplacement(
+      PageTransition(
+        child: ProductInformationScreen(gtin: gtinCode),
+        type: PageTransitionType.rightToLeftWithFade,
       ),
     );
   }
@@ -62,7 +63,6 @@ class _BarcodeScanningScreenState extends State<BarcodeScanningScreen> {
         onTextDetected: (textResult) {},
         scannerType: ScannerType.barcode,
         onBarcodeDetected: (barcode) {
-          print(barcode.format.name);
           GlobalVariable.barcodeType.text = barcode.format.name;
           GlobalVariable.barcodeValue.text = barcode.value;
           navigate();

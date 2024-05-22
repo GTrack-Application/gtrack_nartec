@@ -3,14 +3,17 @@ import 'package:get/get.dart';
 
 class PrimaryButtonWidget extends StatelessWidget {
   const PrimaryButtonWidget({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.backgroungColor,
-  }) : super(key: key);
+    this.fontSize,
+  });
   final String text;
   final VoidCallback onPressed;
   final Color? backgroungColor;
+  final double? fontSize;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -26,8 +29,8 @@ class PrimaryButtonWidget extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: const TextStyle(
-            fontSize: 20,
+          style: TextStyle(
+            fontSize: fontSize ?? 20,
             fontWeight: FontWeight.w600,
           ),
         ),
