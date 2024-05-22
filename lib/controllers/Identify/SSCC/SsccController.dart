@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 class SsccController {
   static Future<List<SsccModel>> getProducts() async {
     final userId = await AppPreferences.getUserId();
+    final token = await AppPreferences.getToken();
     // cluzof0sl000fbxonvfcedb16 userId
     String url = '${AppUrls.baseUrl}/api/sscc?user_id=$userId';
 
@@ -18,8 +19,11 @@ class SsccController {
       headers: {
         'Content-Type': 'application/json',
         'Host': AppUrls.host,
+        'Authorization': 'Bearer $token',
       },
     );
+
+    print(json.decode(response.body));
 
     var data = json.decode(response.body) as List;
 

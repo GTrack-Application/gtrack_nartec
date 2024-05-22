@@ -8,16 +8,22 @@ import 'package:http/http.dart' as http;
 class GTINController {
   static Future<List<GTIN_Model>> getProducts() async {
     final userId = await AppPreferences.getUserId();
+    final token = await AppPreferences.getToken();
 
     String url = "${AppUrls.baseUrl}/api/products?user_id=$userId";
+
+    print(url);
 
     final response = await http.get(
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
         'Host': AppUrls.host,
+        'Authorization': 'Bearer $token',
       },
     );
+
+    print(json.decode(response.body));
 
     var data = json.decode(response.body) as List;
 
