@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
@@ -7,6 +9,7 @@ import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/aggregation_s
 import 'package:gtrack_mobile_app/screens/home/capture/Association/association_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/MappingRFID/mapping_rfid_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Mapping_Barcode/BarcodeMappingScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Transformation/transformation_screen.dart';
 
 class CaptureScreen extends StatefulWidget {
@@ -58,6 +61,14 @@ class _CaptureScreenState extends State<CaptureScreen> {
         context: context, screen: const TransformationScreen());
     data[2]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const AggregationScreen());
+    data[3]["onTap"] = () => AppNavigator.goToPage(
+          context: context,
+          screen: BlocProvider<GtinCubit>(
+            create: (context) => GtinCubit(),
+            child: const SerializationScreen(),
+          ),
+        );
+
     data[4]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: BarcodeMappingScreen());
     data[5]["onTap"] = () => AppNavigator.goToPage(
