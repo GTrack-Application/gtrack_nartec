@@ -16,7 +16,8 @@ class CaptureController {
     if (response.statusCode == 200) {
       print("Status Code: ${response.statusCode}");
 
-      var data = json.decode(response.body) as List;
+      var data = json.decode(response.body)['data'] as List;
+
       List<SerializationModel> serializationData =
           data.map((e) => SerializationModel.fromJson(e)).toList();
       return serializationData;
