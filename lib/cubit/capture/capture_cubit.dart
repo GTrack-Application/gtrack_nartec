@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/controllers/capture/capture_controller.dart';
@@ -9,6 +10,7 @@ import 'package:gtrack_mobile_app/screens/home/capture/MappingRFID/mapping_rfid_
 import 'package:gtrack_mobile_app/screens/home/capture/Mapping_Barcode/BarcodeMappingScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Transformation/transformation_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 part 'capture_states.dart';
@@ -62,6 +64,37 @@ class CaptureCubit extends Cubit<CaptureState> {
   // Lists
   List<SerializationModel> serializationData = [];
 
+  // Create serials variables
+  int? quantity;
+  String? batchNumber;
+  var expiryDate = TextEditingController();
+  var manufacturingDate = TextEditingController();
+
+  // Create serials helper functions
+  Future<void> setExpiryDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      expiryDate.text = DateFormat('yyyy-MM-dd').format(picked);
+    }
+  }
+
+  Future<void> setManufacturingDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      manufacturingDate.text = DateFormat('yyyy-MM-dd').format(picked);
+    }
+  }
+
   // * Serialization ***
   getSerializationData() async {
     try {
@@ -75,6 +108,27 @@ class CaptureCubit extends Cubit<CaptureState> {
       }
     } catch (error) {
       emit(CaptureSerializationError(error.toString()));
+    }
+  }
+
+  createNewSerial() async {
+    try {
+      var network = await isNetworkAvailable();
+      if (network) {
+        emit(CaptureCreateSerializationLoading());
+        final data = await CaptureController().createNewSerial(
+          gtin: gtin,
+          quantity: quantity!,
+          batchNumber: batchNumber.toString(),
+          expiryDate: expiryDate.text,
+          manufacturingDate: manufacturingDate.text,
+        );
+        emit(CaptureCreateSerializationSuccess(data));
+      } else {
+        emit(CaptureCreateSerializationError('No Internet Connection'));
+      }
+    } catch (error) {
+      emit(CaptureCreateSerializationError(error.toString()));
     }
   }
 }

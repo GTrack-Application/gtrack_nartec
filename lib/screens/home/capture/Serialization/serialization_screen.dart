@@ -26,6 +26,7 @@ class SerializationScreen extends StatelessWidget {
             const SizedBox(height: 8),
             _buildGTINText(context),
             _buildSerializationList(context),
+            // if (CaptureCubit.get(context).serializationData.isNotEmpty)
             _buildCreateSerialsButton(context),
           ],
         ),

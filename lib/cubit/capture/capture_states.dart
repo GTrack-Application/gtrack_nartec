@@ -8,6 +8,8 @@ class CaptureInitial extends CaptureState {}
 
 class CaptureSerializationLoading extends CaptureState {}
 
+class CaptureCreateSerializationLoading extends CaptureState {}
+
 // * SUCCESS ***
 
 class CaptureSerializationSuccess extends CaptureState {
@@ -16,10 +18,22 @@ class CaptureSerializationSuccess extends CaptureState {
   CaptureSerializationSuccess(this.data);
 }
 
+class CaptureCreateSerializationSuccess extends CaptureState {
+  final String message;
+
+  CaptureCreateSerializationSuccess(this.message);
+}
+
 // * ERROR ***
 
 class CaptureSerializationError extends CaptureState {
   final String message;
 
   CaptureSerializationError(this.message);
+}
+
+class CaptureCreateSerializationError extends CaptureState {
+  final String message;
+
+  CaptureCreateSerializationError(this.message);
 }
