@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/capture/association/transfer/capture_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Serialization/create_serial_screen.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 class SerializationScreen extends StatelessWidget {
@@ -24,7 +26,7 @@ class SerializationScreen extends StatelessWidget {
             const SizedBox(height: 8),
             _buildGTINText(context),
             _buildSerializationList(context),
-            _buildCreateSerialsButton(),
+            _buildCreateSerialsButton(context),
           ],
         ),
       ),
@@ -154,13 +156,15 @@ class SerializationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCreateSerialsButton() {
+  Widget _buildCreateSerialsButton(context) {
     return Expanded(
       child: Row(
         children: [
           ElevatedButton(
             onPressed: () {
               // Implement the create serials functionality
+              AppNavigator.goToPage(
+                  context: context, screen: const CreateSerialScreen());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.pink,
