@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 
 class CreateSerialScreen extends StatefulWidget {
   const CreateSerialScreen({super.key});
@@ -69,6 +70,7 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                   FieldWidget(
                     controller: CaptureCubit.get(context).expiryDate,
                     labelText: "Expiry Date",
+                    readOnly: true,
                     suffixIcon: IconButton(
                       onPressed: () async {
                         await CaptureCubit.get(context).setExpiryDate(context);
@@ -89,6 +91,7 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                   FieldWidget(
                     controller: CaptureCubit.get(context).manufacturingDate,
                     labelText: "Manufecturing Date",
+                    readOnly: true,
                     suffixIcon: IconButton(
                       onPressed: () async {
                         await CaptureCubit.get(context)
@@ -105,7 +108,10 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                       BlocConsumer<CaptureCubit, CaptureState>(
                         listener: (context, state) {
                           if (state is CaptureCreateSerializationSuccess) {
+                            AppSnackbars.success(context, state.message, 3);
                             Navigator.pop(context);
+                          } else if (state is CaptureCreateSerializationError) {
+                            print(state.message);
                           }
                         },
                         builder: (context, state) {

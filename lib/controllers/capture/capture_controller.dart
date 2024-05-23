@@ -46,7 +46,7 @@ class CaptureController {
     });
 
     log(response.body);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       var msg = data['message'];
       return msg;
