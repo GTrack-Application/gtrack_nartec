@@ -41,12 +41,7 @@ class CaptureCubit extends Cubit<CaptureState> {
           "text": "SERIALIZATION",
           "icon": AppIcons.serialization,
           "onTap": () => AppNavigator.goToPage(
-                context: context,
-                screen: BlocProvider<CaptureCubit>(
-                  create: (context) => CaptureCubit(),
-                  child: const SerializationScreen(),
-                ),
-              ),
+              context: context, screen: const SerializationScreen()),
         },
         {
           "text": "MAPPING BARCODE",
