@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/blocs/capture/association/transfer/capture_cubit.dart';
+import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 
