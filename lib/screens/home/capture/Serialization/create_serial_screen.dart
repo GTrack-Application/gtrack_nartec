@@ -21,7 +21,7 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
         foregroundColor: AppColors.background,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: CaptureCubit.get(context).gtin == ""
             ? const Center(
                 child: Text("Please scan GTIN first"),
@@ -111,7 +111,7 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                             AppSnackbars.success(context, state.message, 3);
                             Navigator.pop(context);
                           } else if (state is CaptureCreateSerializationError) {
-                            print(state.message);
+                            AppSnackbars.danger(context, state.message);
                           }
                         },
                         builder: (context, state) {
