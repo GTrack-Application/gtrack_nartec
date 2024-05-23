@@ -13,7 +13,6 @@ import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.da
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/screens/home/auth/cr_activity_screen.dart';
 import 'package:gtrack_mobile_app/screens/home_screen.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -253,7 +252,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       // }
                       return null;
                     },
-                  ).box.width(context.width * 0.9).make(),
+                  ),
+                  // .box.width(context.width * 0.9).make(),
                   const SizedBox(height: 20),
                   Visibility(
                     visible: dropdownValue == "Admin User" ? false : true,
@@ -334,7 +334,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       }
                     },
                     text: "Login Now",
-                  ).box.width(context.width * 0.85).makeCentered(),
+                  ),
+                  // .box.width(context.width * 0.85).makeCentered(),
                   const SizedBox(height: 20),
                   // remember me and neeed help
                   Container(

@@ -12,7 +12,6 @@ import 'package:gtrack_mobile_app/old/pages/login/user_login_page.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/capture_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/identify/identify_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/share_screen.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -93,17 +92,23 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              AppIcons.iosLogo,
-              width: 50,
-              height: 50,
-            ).pOnly(left: 20),
-            Image.asset(
-              AppIcons.gs1Logo,
-              width: 100,
-              height: 50,
-              fit: BoxFit.contain,
-            ).pOnly(right: 20),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Image.asset(
+                AppIcons.iosLogo,
+                width: 50,
+                height: 50,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: Image.asset(
+                AppIcons.gs1Logo,
+                width: 100,
+                height: 50,
+                fit: BoxFit.contain,
+              ),
+            ),
           ],
         ),
         // Drawer from right side that contains the identity, capture and share screens

@@ -13,7 +13,6 @@ import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.da
 import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/old/pages/login/otp_page.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class ActivitiesAndPasswordPage extends StatefulWidget {
   final String email;
@@ -256,7 +255,8 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                 PrimaryButtonWidget(
                   onPressed: login,
                   text: "Login Now",
-                ).box.width(context.width * 0.85).makeCentered(),
+                ),
+                // .box.width(context.width * 0.85).makeCentered(),
               ],
             ),
           ),

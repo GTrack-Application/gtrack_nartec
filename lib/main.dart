@@ -9,7 +9,6 @@ import 'package:gtrack_mobile_app/old/providers/dispatch_management/gln_provider
 import 'package:gtrack_mobile_app/old/providers/login/login_provider.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +29,8 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: ScreenUtilInit(
-        designSize: Size(context.screenWidth, context.screenHeight),
+        designSize: Size(MediaQuery.sizeOf(context).width,
+            MediaQuery.sizeOf(context).height),
         builder: (context, child) => GestureDetector(
           onTap: () {
             hideKeyboard(context);

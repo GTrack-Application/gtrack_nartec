@@ -1,6 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetAllTableZoneController.dart';
 import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetAllTblShipmentReceivedCLController.dart';
@@ -11,7 +10,6 @@ import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import 'save_screen.dart';
 import 'shipment_dispatching_screen.dart';
@@ -496,7 +494,7 @@ class _ScanSerialNumberScreenState extends State<ScanSerialNumberScreen> {
                       ),
                     );
                   },
-                ).box.width(context.width * 0.9).make(),
+                ),
               ),
               const SizedBox(height: 20),
             ],

@@ -14,8 +14,6 @@ import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_mobile_app/screens/home_screen.dart';
 
-import 'package:velocity_x/velocity_x.dart';
-
 class CrActivityScreen extends StatefulWidget {
   CrActivityScreen({
     super.key,
@@ -165,9 +163,10 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                     },
                     builder: (context, state) {
                       return state is LoginLoading
-                          ? const CircularProgressIndicator(
-                                  color: AppColors.white)
-                              .centered()
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                  color: AppColors.white),
+                            )
                           : PrimaryButtonWidget(
                               backgroungColor: const Color(0xFF4200FF),
                               onPressed: () {
@@ -193,7 +192,8 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                               text: "Login Now",
                             );
                     },
-                  ).box.width(context.width * 0.85).makeCentered(),
+                  ),
+                  // .box.width(context.width * 0.85).makeCentered(),
                   const SizedBox(height: 20),
                   Container(
                     margin: const EdgeInsets.only(right: 5),
