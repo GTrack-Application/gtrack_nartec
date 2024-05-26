@@ -10,7 +10,7 @@ class GTINController {
     final userId = await AppPreferences.getUserId();
     final token = await AppPreferences.getToken();
 
-    String url = "${AppUrls.baseUrl}/api/products?user_id=$userId";
+    String url = "${AppUrls.baseUrlWith3093}/api/products?user_id=$userId";
 
     final response = await http.get(
       Uri.parse(url),
@@ -35,7 +35,7 @@ class GTINController {
 
   static Future<void> deleteProductById(String productId) async {
     final token = await AppPreferences.getToken();
-    String url = "${AppUrls.baseUrl}api/products/gtin/$productId";
+    String url = "${AppUrls.baseUrlWith3093}api/products/gtin/$productId";
     final response = await http.delete(
       Uri.parse(url),
       headers: {

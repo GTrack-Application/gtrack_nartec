@@ -187,7 +187,7 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
                       child: CachedNetworkImage(
                         imageUrl: widget.employees.image == null
                             ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
-                            : "${AppUrls.baseUrl}${widget.employees.image?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                            : "${AppUrls.baseUrlWith3093}${widget.employees.image?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,

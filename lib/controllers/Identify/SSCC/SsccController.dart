@@ -12,7 +12,7 @@ class SsccController {
     final userId = await AppPreferences.getUserId();
     final token = await AppPreferences.getToken();
     // cluzof0sl000fbxonvfcedb16 userId
-    String url = '${AppUrls.baseUrl}/api/sscc?user_id=$userId';
+    String url = '${AppUrls.baseUrlWith3093}/api/sscc?user_id=$userId';
 
     final response = await http.get(
       Uri.parse(url),

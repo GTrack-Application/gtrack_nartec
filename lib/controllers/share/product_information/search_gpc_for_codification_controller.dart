@@ -9,7 +9,8 @@ class SearchGpcForCodificationController {
   static Future<SearchGpcForCodification> searchGpcForCodification(
     String gpc,
   ) async {
-    final url = "${AppUrls.baseUrl}api/gpc/searchGpcForCodification?gpc=$gpc";
+    final url =
+        "${AppUrls.baseUrlWith3093}api/gpc/searchGpcForCodification?gpc=$gpc";
     final uri = Uri.parse(url);
 
     final token = await AppPreferences.getToken();

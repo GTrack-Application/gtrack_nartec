@@ -11,7 +11,7 @@ class GLNController {
   static Future<List<GLNProductsModel>> getData() async {
     String? userId = await AppPreferences.getUserId();
     String? token = await AppPreferences.getToken();
-    String url = "${AppUrls.baseUrl}/api/gln?user_id=$userId";
+    String url = "${AppUrls.baseUrlWith3093}/api/gln?user_id=$userId";
 
     print(url);
 

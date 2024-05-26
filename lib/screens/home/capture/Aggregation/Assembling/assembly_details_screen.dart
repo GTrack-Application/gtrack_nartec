@@ -6,23 +6,23 @@ import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
-class GTINInformationScreen extends StatefulWidget {
-  const GTINInformationScreen({super.key, required this.employees});
+class AssemblyDetailsScreen extends StatefulWidget {
+  const AssemblyDetailsScreen({super.key, required this.employees});
 
   final GTIN_Model employees;
 
   @override
-  State<GTINInformationScreen> createState() => _GTINInformationScreenState();
+  State<AssemblyDetailsScreen> createState() => _AssemblyDetailsScreenState();
 }
 
-class _GTINInformationScreenState extends State<GTINInformationScreen> {
+class _AssemblyDetailsScreenState extends State<AssemblyDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
               width: double.infinity,
@@ -32,9 +32,9 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppColors.skyBlue,
-                    AppColors.skyBlue.withOpacity(0.5),
-                    AppColors.skyBlue.withOpacity(0.1),
+                    AppColors.pink,
+                    AppColors.pink.withOpacity(0.5),
+                    Colors.pinkAccent.withOpacity(0.1),
                   ],
                 ),
               ),
@@ -42,7 +42,10 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
             Container(
               width: double.infinity,
               height: 40,
-              decoration: const BoxDecoration(color: AppColors.skyBlue),
+              decoration: const BoxDecoration(
+                // gradient color
+                color: AppColors.pink,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -53,7 +56,7 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
                     },
                   ),
                   const Text(
-                    'View GTIN',
+                    'Product Information',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -66,40 +69,11 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
             ),
             10.height,
             Container(
-              width: double.infinity,
-              height: context.height() * 0.1,
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(151, 235, 159, 1),
-              ),
-              child: ListTile(
-                title: const Text(
-                  'Complete Data',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  'This number is registered to company:\nPlastic Corner Factory Company',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                leading: Image.asset(
-                  'assets/icons/gs1_check.png',
-                  width: 40,
-                  height: 40,
-                ),
-              ),
-            ),
-            10.height,
-            Container(
               height: context.height() * 0.2,
               width: context.width() * 1,
               decoration: const BoxDecoration(color: Colors.white),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Hero(
@@ -107,6 +81,7 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
                     child: Container(
                       width: 100,
                       height: 100,
+                      margin: const EdgeInsets.only(top: 5),
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         border: Border.all(
@@ -131,29 +106,10 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       SizedBox(
-                        width: 50,
-                        height: 50,
+                        width: 80,
+                        height: 80,
                         child: PrettyQrView.data(
                           data: widget.employees.barcode ?? "null",
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Certificate",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: GestureDetector(
-                          child: Image.asset('assets/icons/certificate.png'),
                         ),
                       ),
                     ],
@@ -161,49 +117,82 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
                 ],
               ),
             ),
-            KeyValueInfoWidget(
-              keyy: 'Name English',
-              value: widget.employees.productnameenglish ?? "null",
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              width: context.width() * 0.98,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                children: [
+                  KeyValueInfoWidget(
+                    keyy: 'Name English',
+                    value: widget.employees.productnameenglish ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Name Arabic',
+                    value: widget.employees.productnamearabic ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Brand Eng',
+                    value: widget.employees.brandName ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Brand Arabic',
+                    value: widget.employees.brandNameAr ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Barcode',
+                    value: widget.employees.barcode ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'URL',
+                    value: widget.employees.productUrl ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Product Type',
+                    value: widget.employees.productType ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Origin',
+                    value: widget.employees.origin ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Package Type',
+                    value: widget.employees.packagingType ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Unit',
+                    value: widget.employees.unit ?? "null",
+                  ),
+                  KeyValueInfoWidget(
+                    keyy: 'Size Type',
+                    value: widget.employees.size ?? "null",
+                  ),
+                ],
+              ),
             ),
-            KeyValueInfoWidget(
-              keyy: 'Name Arabic',
-              value: widget.employees.productnamearabic ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'Brand Eng',
-              value: widget.employees.brandName ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'Brand Arabic',
-              value: widget.employees.brandNameAr ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'Barcode',
-              value: widget.employees.barcode ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'URL',
-              value: widget.employees.productUrl ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'Product Type',
-              value: widget.employees.productType ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'Origin',
-              value: widget.employees.origin ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'Package Type',
-              value: widget.employees.packagingType ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'Unit',
-              value: widget.employees.unit ?? "null",
-            ),
-            KeyValueInfoWidget(
-              keyy: 'Size Type',
-              value: widget.employees.size ?? "null",
+            10.height,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  // rgba(249, 75, 0, 1)
+                  backgroundColor: const Color.fromRGBO(249, 75, 0, 1),
+                ),
+                child: const Text(
+                  'Print Barcode',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
