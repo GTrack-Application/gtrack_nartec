@@ -121,6 +121,8 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     ),
                   ),

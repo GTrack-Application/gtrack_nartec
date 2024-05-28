@@ -319,6 +319,8 @@ class _GTINScreenState extends State<GTINScreen> {
                                     width: 50,
                                     height: 50,
                                     fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
                                 ),
                               ),

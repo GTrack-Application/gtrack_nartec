@@ -6,6 +6,7 @@ import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Assembling/assembling_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/bundling_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization/new_palletization_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/packing/packing_screen.dart';
 
 class AggregationScreen extends StatefulWidget {
   const AggregationScreen({super.key});
@@ -71,12 +72,14 @@ class _AggregationScreenState extends State<AggregationScreen> {
   @override
   void initState() {
     super.initState();
-    data[8]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const NewPalletizationScreen());
-    data[5]["onTap"] = () =>
-        AppNavigator.goToPage(context: context, screen: const BundlingScreen());
+    data[1]["onTap"] = () =>
+        AppNavigator.goToPage(context: context, screen: const PackingScreen());
     data[3]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const AssemblingScreen());
+    data[5]["onTap"] = () =>
+        AppNavigator.goToPage(context: context, screen: const BundlingScreen());
+    data[8]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const NewPalletizationScreen());
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(

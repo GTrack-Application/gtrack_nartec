@@ -9,22 +9,25 @@ import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling/assembling
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/capture/aggregation/assembling/products_model.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Assembling/assembly_details_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/gtin_details_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
-class AssemblingScreen extends StatefulWidget {
-  const AssemblingScreen({super.key});
+class PackingScreen extends StatefulWidget {
+  const PackingScreen({super.key});
 
   @override
-  State<AssemblingScreen> createState() => _AssemblingScreenState();
+  State<PackingScreen> createState() => _PackingScreenState();
 }
 
-class _AssemblingScreenState extends State<AssemblingScreen> {
+class _PackingScreenState extends State<PackingScreen> {
   TextEditingController searchController = TextEditingController();
 
   AssemblingCubit assembleCubit = AssemblingCubit();
   List<ProductsModel> products = [];
+
+  List<String> dropdownList = ['All', 'GTIN', 'Product Name', 'Barcode'];
+  String dropdownValue = 'All';
 
   @override
   void initState() {
@@ -35,7 +38,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assembling'),
+        title: const Text('Packing'),
         backgroundColor: AppColors.pink,
       ),
       body: SafeArea(
@@ -55,51 +58,38 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: SizedBox(
-                          height: 40,
-                          child: TextField(
-                            controller: searchController,
-                            onSubmitted: (value) {
-                              FocusScope.of(context).unfocus();
-                              assembleCubit.getProductsByGtin(
-                                  searchController.text.trim());
-                            },
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.only(left: 10, top: 5),
-                              hintText: 'Scan GTIN',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
+                  //
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    width: double.infinity,
+                    height: 50,
+                    decoration: const BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      border: Border.fromBorderSide(
+                          BorderSide(color: AppColors.grey)),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: dropdownValue,
+                        icon: const Icon(Icons.arrow_drop_down),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.black),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                        },
+                        items: dropdownList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
                       ),
-                      5.width,
-                      Expanded(
-                        flex: 1,
-                        child: GestureDetector(
-                          onTap: () {
-                            FocusScope.of(context).unfocus();
-                            assembleCubit.getProductsByGtin(
-                                searchController.text.trim());
-                          },
-                          child: SizedBox(
-                            height: 30,
-                            child: Image.asset(
-                              'assets/icons/qr_code.png',
-                              width: 20,
-                              height: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Container(
@@ -109,7 +99,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                     height: 40,
                     decoration: const BoxDecoration(color: AppColors.primary),
                     child: const Text(
-                      'Raw Materials Products',
+                      'List of Pack Items',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -236,7 +226,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                                       onTap: () {
                                         AppNavigator.goToPage(
                                           context: context,
-                                          screen: AssemblyDetailsScreen(
+                                          screen: GTINDetailsScreen(
                                             employees: products[index],
                                           ),
                                         );
@@ -252,23 +242,21 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                   ),
                   const SizedBox(height: 10),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          // rgba(249, 75, 0, 1)
                           backgroundColor: const Color.fromRGBO(249, 75, 0, 1),
                         ),
                         child: const Text(
-                          'Generate',
+                          'Start Packing',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 13,
                           ),
                         ),
                       ),
-                      Text("Total Of GTIN: ${products.length}"),
                     ],
                   ),
                 ],
