@@ -1,9 +1,4 @@
 {
 "java.configuration.updateBuildConfiguration": "interactive",
-"CodeGPT.apiKey": "CodeGPT Plus Beta",
-"workbench.colorCustomizations": {
-    "activityBar.background": "#19295F",
-    "titleBar.activeBackground": "#243A85",
-    "titleBar.activeForeground": "#F9FAFE"
-}
+"CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

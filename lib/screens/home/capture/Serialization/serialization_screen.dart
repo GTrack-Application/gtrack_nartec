@@ -165,7 +165,9 @@ class SerializationScreen extends StatelessWidget {
             onPressed: () {
               // Implement the create serials functionality
               AppNavigator.goToPage(
-                  context: context, screen: const CreateSerialScreen());
+                context: context,
+                screen: const CreateSerialScreen(),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.pink,

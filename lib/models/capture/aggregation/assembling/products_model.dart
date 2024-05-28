@@ -31,12 +31,14 @@ class ProductsModel {
   String? prodLang;
   String? detailsPage;
   String? detailsPageAr;
-  int? status;
+  // int? status;
+  String? status;
   String? deletedAt;
   String? createdAt;
   String? updatedAt;
   String? memberID;
-  int? adminId;
+  // int? adminId;
+  String? adminId;
   String? saveAs;
   String? gtinType;
   String? productUrl;
@@ -45,7 +47,8 @@ class ProductsModel {
   String? brandNameAr;
   String? digitalInfoType;
   String? readyForGepir;
-  int? gepirPosted;
+  // int? gepirPosted;
+  String? gepirPosted;
   String? image1;
   String? image2;
   String? image3;
@@ -102,7 +105,7 @@ class ProductsModel {
   });
 
   ProductsModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id'].toString();
     userId = json['user_id'];
     gcpGLNID = json['gcpGLNID'];
     importCode = json['import_code'];

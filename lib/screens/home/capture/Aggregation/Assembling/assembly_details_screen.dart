@@ -2,14 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/assembling/products_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class AssemblyDetailsScreen extends StatefulWidget {
   const AssemblyDetailsScreen({super.key, required this.employees});
 
-  final GTIN_Model employees;
+  final ProductsModel employees;
 
   @override
   State<AssemblyDetailsScreen> createState() => _AssemblyDetailsScreenState();
@@ -96,6 +96,9 @@ class _AssemblyDetailsScreenState extends State<AssemblyDetailsScreen> {
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,
+                        errorWidget: (context, url, error) => CachedNetworkImage(
+                            imageUrl:
+                                "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"),
                       ),
                     ),
                   ),

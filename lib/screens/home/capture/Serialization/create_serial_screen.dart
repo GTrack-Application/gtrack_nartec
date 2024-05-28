@@ -24,7 +24,7 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
         padding: const EdgeInsets.all(16.0),
         child: CaptureCubit.get(context).gtin == ""
             ? const Center(
-                child: Text("Please scan GTIN first"),
+                child: Text("Please scan GTIN first to create serials"),
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,11 +32,12 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                   const Text(
                     "Quantity",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.primary,
                     ),
                   ),
+                  const SizedBox(height: 8),
                   FieldWidget(
                     labelText: "Quantity",
                     onChanged: (p0) {
@@ -47,11 +48,12 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                   const Text(
                     "Batch Number",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.primary,
                     ),
                   ),
+                  const SizedBox(height: 8),
                   FieldWidget(
                     labelText: "Batch Number",
                     onChanged: (p0) {
@@ -62,11 +64,12 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                   const Text(
                     "Expiry Date",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.primary,
                     ),
                   ),
+                  const SizedBox(height: 8),
                   FieldWidget(
                     controller: CaptureCubit.get(context).expiryDate,
                     labelText: "Expiry Date",
@@ -81,16 +84,17 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    "Manufecturing Date",
+                    "Manufacturing Date",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.primary,
                     ),
                   ),
+                  const SizedBox(height: 8),
                   FieldWidget(
                     controller: CaptureCubit.get(context).manufacturingDate,
-                    labelText: "Manufecturing Date",
+                    labelText: "Manufacturing Date",
                     readOnly: true,
                     suffixIcon: IconButton(
                       onPressed: () async {
@@ -173,7 +177,7 @@ class FieldWidget extends StatelessWidget {
         readOnly: readOnly ?? false,
         onChanged: onChanged,
         decoration: InputDecoration(
-          labelText: labelText ?? '',
+          // labelText: labelText ?? '',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(5)),
             borderSide: BorderSide.none,
