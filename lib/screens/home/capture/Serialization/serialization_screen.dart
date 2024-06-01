@@ -173,7 +173,13 @@ class SerializationScreen extends StatelessWidget {
               backgroundColor: AppColors.pink,
               foregroundColor: AppColors.white,
             ),
-            child: const Text("Create Serials"),
+            child: const Text(
+              "Create Serials",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
           ),
         ],
       ),

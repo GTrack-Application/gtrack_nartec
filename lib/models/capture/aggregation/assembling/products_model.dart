@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 class ProductsModel {
-  String? id;
   String? userId;
   String? gcpGLNID;
   String? importCode;
@@ -23,7 +22,6 @@ class ProductsModel {
   String? barcode;
   String? gpc;
   String? gpcCode;
-  String? gpcType;
   String? countrySale;
   String? hSCODES;
   String? hsDescription;
@@ -31,81 +29,78 @@ class ProductsModel {
   String? prodLang;
   String? detailsPage;
   String? detailsPageAr;
-  // int? status;
   String? status;
   String? deletedAt;
   String? createdAt;
   String? updatedAt;
   String? memberID;
-  // int? adminId;
   String? adminId;
   String? saveAs;
   String? gtinType;
   String? productUrl;
   String? productLinkUrl;
-  String? product_Type;
   String? brandNameAr;
   String? digitalInfoType;
   String? readyForGepir;
-  // int? gepirPosted;
   String? gepirPosted;
   String? image1;
   String? image2;
   String? image3;
+  String? gpcType;
+  String? product_Type;
+  int? id;
 
-  ProductsModel({
-    this.id,
-    this.userId,
-    this.gcpGLNID,
-    this.importCode,
-    this.productnameenglish,
-    this.productnamearabic,
-    this.brandName,
-    this.productType,
-    this.origin,
-    this.packagingType,
-    this.mnfCode,
-    this.mnfGLN,
-    this.provGLN,
-    this.unit,
-    this.size,
-    this.frontImage,
-    this.backImage,
-    this.childProduct,
-    this.quantity,
-    this.barcode,
-    this.gpc,
-    this.gpcCode,
-    this.gpcType,
-    this.countrySale,
-    this.hSCODES,
-    this.hsDescription,
-    this.gcpType,
-    this.prodLang,
-    this.detailsPage,
-    this.detailsPageAr,
-    this.status,
-    this.deletedAt,
-    this.createdAt,
-    this.updatedAt,
-    this.memberID,
-    this.adminId,
-    this.saveAs,
-    this.gtinType,
-    this.productUrl,
-    this.productLinkUrl,
-    this.product_Type,
-    this.brandNameAr,
-    this.digitalInfoType,
-    this.readyForGepir,
-    this.gepirPosted,
-    this.image1,
-    this.image2,
-    this.image3,
-  });
+  ProductsModel(
+      {this.userId,
+      this.gcpGLNID,
+      this.importCode,
+      this.productnameenglish,
+      this.productnamearabic,
+      this.brandName,
+      this.productType,
+      this.origin,
+      this.packagingType,
+      this.mnfCode,
+      this.mnfGLN,
+      this.provGLN,
+      this.unit,
+      this.size,
+      this.frontImage,
+      this.backImage,
+      this.childProduct,
+      this.quantity,
+      this.barcode,
+      this.gpc,
+      this.gpcCode,
+      this.countrySale,
+      this.hSCODES,
+      this.hsDescription,
+      this.gcpType,
+      this.prodLang,
+      this.detailsPage,
+      this.detailsPageAr,
+      this.status,
+      this.deletedAt,
+      this.createdAt,
+      this.updatedAt,
+      this.memberID,
+      this.adminId,
+      this.saveAs,
+      this.gtinType,
+      this.productUrl,
+      this.productLinkUrl,
+      this.brandNameAr,
+      this.digitalInfoType,
+      this.readyForGepir,
+      this.gepirPosted,
+      this.image1,
+      this.image2,
+      this.image3,
+      this.gpcType,
+      this.product_Type,
+      this.id});
 
   ProductsModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'].toString();
     userId = json['user_id'];
     gcpGLNID = json['gcpGLNID'];
     importCode = json['import_code'];
@@ -127,7 +122,6 @@ class ProductsModel {
     barcode = json['barcode'];
     gpc = json['gpc'];
     gpcCode = json['gpc_code'];
-    gpcType = json['gpc_type'];
     countrySale = json['countrySale'];
     hSCODES = json['HSCODES'];
     hsDescription = json['HsDescription'];
@@ -145,7 +139,6 @@ class ProductsModel {
     gtinType = json['gtin_type'];
     productUrl = json['product_url'];
     productLinkUrl = json['product_link_url'];
-    productType = json['product_type'];
     brandNameAr = json['BrandNameAr'];
     digitalInfoType = json['digitalInfoType'];
     readyForGepir = json['readyForGepir'];
@@ -153,11 +146,13 @@ class ProductsModel {
     image1 = json['image_1'];
     image2 = json['image_2'];
     image3 = json['image_3'];
+    gpcType = json['gpc_type'];
+    productType = json['product_type'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['user_id'] = userId;
     data['gcpGLNID'] = gcpGLNID;
     data['import_code'] = importCode;
@@ -179,7 +174,6 @@ class ProductsModel {
     data['barcode'] = barcode;
     data['gpc'] = gpc;
     data['gpc_code'] = gpcCode;
-    data['gpc_type'] = gpcType;
     data['countrySale'] = countrySale;
     data['HSCODES'] = hSCODES;
     data['HsDescription'] = hsDescription;
@@ -197,7 +191,6 @@ class ProductsModel {
     data['gtin_type'] = gtinType;
     data['product_url'] = productUrl;
     data['product_link_url'] = productLinkUrl;
-    data['product_type'] = productType;
     data['BrandNameAr'] = brandNameAr;
     data['digitalInfoType'] = digitalInfoType;
     data['readyForGepir'] = readyForGepir;
@@ -205,6 +198,9 @@ class ProductsModel {
     data['image_1'] = image1;
     data['image_2'] = image2;
     data['image_3'] = image3;
+    data['gpc_type'] = gpcType;
+    data['product_type'] = productType;
+    data['id'] = id;
     return data;
   }
 }

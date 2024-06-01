@@ -9,15 +9,19 @@ import 'package:http/http.dart' as http;
 class AssemblingController {
   static Future<List<ProductsModel>> getProductsByGtin(String gtin) async {
     String? userId = await AppPreferences.getUserId();
-    String? token = await AppPreferences.getToken();
+    // String? token = await AppPreferences.getToken();
+    // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    // String url =
-    //     "${AppUrls.baseUrlWith3091}api/products?user_id=$userId&barcode=$gtin";
+    Map<String, dynamic> parameters = {
+      "user_id": userId,
+      "field": gtin,
+    };
 
     final url =
-        "${AppUrls.baseUrlWith7000}getAssemblingsByUserAndBarcode?user_id=12";
+        "${AppUrls.baseUrlWith7000}getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
 
     final uri = Uri.parse(url);
+    uri.replace(queryParameters: parameters);
 
     final headers = <String, String>{
       "Content-Type": "application/json",
@@ -27,7 +31,7 @@ class AssemblingController {
 
     var response = await http.get(uri, headers: headers);
 
-    log(response.body);
+    log(response.statusCode.toString());
 
     var data = json.decode(response.body) as List;
 

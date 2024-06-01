@@ -203,25 +203,29 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                                       color: AppColors.skyBlue,
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${index + 1}",
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      Text(
-                                        table[index].ssccType ?? "",
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      Text(
-                                        table[index].id ?? "",
-                                        style: const TextStyle(fontSize: 10),
-                                      ),
-                                    ],
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "${index + 1}",
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                        Text(
+                                          table[index].ssccType ?? "",
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                        Text(
+                                          table[index].sSCCBarcodeNumber ?? "",
+                                          style: const TextStyle(fontSize: 10),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
