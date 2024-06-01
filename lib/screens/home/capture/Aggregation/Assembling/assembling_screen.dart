@@ -22,6 +22,7 @@ class AssemblingScreen extends StatefulWidget {
 
 class _AssemblingScreenState extends State<AssemblingScreen> {
   TextEditingController searchController = TextEditingController();
+  FocusNode searchFocusNode = FocusNode();
 
   AssemblingCubit assembleCubit = AssemblingCubit();
   List<ProductsModel> products = [];
@@ -64,10 +65,15 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                           height: 40,
                           child: TextField(
                             controller: searchController,
+                            focusNode: searchFocusNode,
                             onSubmitted: (value) {
-                              FocusScope.of(context).unfocus();
                               assembleCubit.getProductsByGtin(
                                   searchController.text.trim());
+                              searchController.clear();
+
+                              // focus again on the textfield
+                              FocusScope.of(context)
+                                  .requestFocus(searchFocusNode);
                             },
                             decoration: InputDecoration(
                               contentPadding:
@@ -85,9 +91,13 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                         flex: 1,
                         child: GestureDetector(
                           onTap: () {
-                            FocusScope.of(context).unfocus();
                             assembleCubit.getProductsByGtin(
                                 searchController.text.trim());
+                            searchController.clear();
+
+                            // focus again on the textfield
+                            FocusScope.of(context)
+                                .requestFocus(searchFocusNode);
                           },
                           child: SizedBox(
                             height: 30,
@@ -254,17 +264,21 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          // rgba(249, 75, 0, 1)
-                          backgroundColor: const Color.fromRGBO(249, 75, 0, 1),
-                        ),
-                        child: const Text(
-                          'Generate',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
+                      Visibility(
+                        visible: products.isNotEmpty,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            // rgba(249, 75, 0, 1)
+                            backgroundColor:
+                                const Color.fromRGBO(249, 75, 0, 1),
+                          ),
+                          child: const Text(
+                            'Generate',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
                       ),

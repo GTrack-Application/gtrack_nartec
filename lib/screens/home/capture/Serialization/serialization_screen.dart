@@ -4,6 +4,7 @@ import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Serialization/create_serial_screen.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 class SerializationScreen extends StatelessWidget {
@@ -23,11 +24,14 @@ class SerializationScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSearchBar(context),
-            const SizedBox(height: 8),
+            10.height,
             _buildGTINText(context),
+            10.height,
             _buildSerializationList(context),
-            // if (CaptureCubit.get(context).serializationData.isNotEmpty)
-            _buildCreateSerialsButton(context),
+            10.height,
+            Visibility(
+                visible: CaptureCubit.get(context).serializationData.isNotEmpty,
+                child: _buildCreateSerialsButton(context)),
           ],
         ),
       ),
@@ -43,6 +47,9 @@ class SerializationScreen extends StatelessWidget {
             child: TextField(
               onChanged: (value) {
                 CaptureCubit.get(context).gtin = value;
+              },
+              onSubmitted: (value) {
+                CaptureCubit.get(context).getSerializationData();
               },
               decoration: InputDecoration(
                 hintText: 'Enter GTIN',
@@ -77,11 +84,12 @@ class SerializationScreen extends StatelessWidget {
             "GTIN: $gtin",
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 25,
+              fontSize: 15,
               color: AppColors.primary,
             ),
           );
         }
+
         return const SizedBox.shrink();
       },
     );
@@ -158,31 +166,29 @@ class SerializationScreen extends StatelessWidget {
   }
 
   Widget _buildCreateSerialsButton(context) {
-    return Expanded(
-      child: Row(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              // Implement the create serials functionality
-              AppNavigator.goToPage(
-                context: context,
-                screen: const CreateSerialScreen(),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.pink,
-              foregroundColor: AppColors.white,
-            ),
-            child: const Text(
-              "Create Serials",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.normal,
-              ),
+    return Row(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            // Implement the create serials functionality
+            AppNavigator.goToPage(
+              context: context,
+              screen: const CreateSerialScreen(),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.pink,
+            foregroundColor: AppColors.white,
+          ),
+          child: const Text(
+            "Create Serials",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.normal,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

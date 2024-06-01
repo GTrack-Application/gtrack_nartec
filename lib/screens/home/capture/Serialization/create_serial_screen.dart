@@ -126,7 +126,18 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                             onPressed: () {
                               CaptureCubit.get(context).createNewSerial();
                             },
-                            child: const Text("Create Serials"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.pink,
+                              foregroundColor: AppColors.white,
+                            ),
+                            child: const Text(
+                              "Create Serials",
+                              style: TextStyle(
+                                color: AppColors.background,
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
                           );
                         },
                       ),
