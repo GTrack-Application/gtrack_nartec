@@ -110,7 +110,7 @@ class _GLNScreenState extends State<GLNScreen> {
                       ),
                     ),
                     Text(
-                      gcp.toString(),
+                      gcp ?? "",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,

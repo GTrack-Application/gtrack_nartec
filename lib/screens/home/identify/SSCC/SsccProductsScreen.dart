@@ -87,7 +87,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                         ),
                       ),
                       Text(
-                        gcp.toString(),
+                        gcp ?? "",
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,

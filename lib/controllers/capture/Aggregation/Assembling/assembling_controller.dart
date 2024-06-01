@@ -20,6 +20,8 @@ class AssemblingController {
     final url =
         "${AppUrls.baseUrlWith7000}getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
 
+    log(url);
+
     final uri = Uri.parse(url);
     uri.replace(queryParameters: parameters);
 
@@ -31,7 +33,7 @@ class AssemblingController {
 
     var response = await http.get(uri, headers: headers);
 
-    log(response.statusCode.toString());
+    log(response.body.toString());
 
     var data = json.decode(response.body) as List;
 
