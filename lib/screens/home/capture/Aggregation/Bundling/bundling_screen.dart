@@ -45,8 +45,8 @@ class _BundlingScreenState extends State<BundlingScreen> {
             if (state is AssemblingError) {
               toast(state.message);
             }
-            if (state is AssemblingLoaded) {
-              products.addAll(state.assemblings);
+            if (state is BundlingLoaded) {
+              products.addAll(state.bundlings);
             }
           },
           builder: (context, state) {
@@ -66,7 +66,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                             controller: searchController,
                             onSubmitted: (value) {
                               FocusScope.of(context).unfocus();
-                              assembleCubit.getProductsByGtin(
+                              assembleCubit.getBundlingProductsByGtin(
                                   searchController.text.trim());
                             },
                             decoration: InputDecoration(
@@ -86,7 +86,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                         child: GestureDetector(
                           onTap: () {
                             FocusScope.of(context).unfocus();
-                            assembleCubit.getProductsByGtin(
+                            assembleCubit.getAssemblyProductsByGtin(
                                 searchController.text.trim());
                           },
                           child: SizedBox(

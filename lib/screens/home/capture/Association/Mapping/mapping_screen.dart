@@ -3,6 +3,7 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/MappingRFID/mapping_rfid_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Mapping_Barcode/BarcodeMappingScreen.dart';
 
 class MappingScreen extends StatefulWidget {
@@ -31,6 +32,8 @@ class _MappingScreenState extends State<MappingScreen> {
     super.initState();
     data[0]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: BarcodeMappingScreen());
+    data[1]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const MappingRFIDScreen());
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(

@@ -21,7 +21,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
       "onTap": () {},
     },
     {
-      "text": "Warehouse Transfer",
+      "text": "Job Order",
       "icon": AppIcons.shippingWarehouse,
       "onTap": () {},
     },

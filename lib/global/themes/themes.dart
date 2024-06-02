@@ -3,194 +3,135 @@ import 'package:flutter/services.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 
 class Themes {
-  static ThemeData? lightTheme() {
+  static const MaterialColor primarySwatch = MaterialColor(
+    0xFF0D117F,
+    <int, Color>{
+      50: Color(0xFFE2E4F7),
+      100: Color(0xFFB6BAE8),
+      200: Color(0xFF898FD8),
+      300: Color(0xFF5D64C8),
+      400: Color(0xFF3A43BB),
+      500: Color(0xFF0D117F),
+      600: Color(0xFF0C0F6D),
+      700: Color(0xFF0A0D5A),
+      800: Color(0xFF080B47),
+      900: Color(0xFF060935),
+    },
+  );
+
+  static const double _appBarIconSize = 24.0;
+  static const TextStyle _appBarTitleTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 16, // Adjust this value to make the text smaller
+    fontWeight: FontWeight.w600,
+  );
+
+  static ThemeData lightTheme() {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: AppColors.background,
       primaryColor: AppColors.primary,
-      primarySwatch: const MaterialColor(
-        0xFF0D117F, // The primary color value in hexadecimal
-        <int, Color>{
-          50: Color(0xFFE2E4F7),
-          100: Color(0xFFB6BAE8),
-          200: Color(0xFF898FD8),
-          300: Color(0xFF5D64C8),
-          400: Color(0xFF3A43BB),
-          500: Color(0xFF0D117F), // The primary color value in hexadecimal
-          600: Color(0xFF0C0F6D),
-          700: Color(0xFF0A0D5A),
-          800: Color(0xFF080B47),
-          900: Color(0xFF060935),
-        },
-      ),
+      primarySwatch: primarySwatch,
       brightness: Brightness.light,
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: AppColors.white,
-          backgroundColor: AppColors.primary,
-          textStyle: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-      ),
-      buttonTheme: const ButtonThemeData(
-        buttonColor: AppColors.primary,
-        textTheme: ButtonTextTheme.primary,
-        padding: EdgeInsets.all(5),
-      ),
-      appBarTheme: AppBarTheme(
-        color: AppColors.primary,
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-          size: 30,
-        ),
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        toolbarTextStyle: const TextTheme(
-          titleLarge: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ).bodyMedium,
-        titleTextStyle: const TextTheme(
-          titleLarge: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ).titleLarge,
-      ),
+      elevatedButtonTheme:
+          _elevatedButtonTheme(AppColors.white, AppColors.primary),
+      buttonTheme: _buttonTheme(AppColors.primary),
+      appBarTheme: _appBarTheme(AppColors.primary, Brightness.light),
+      textTheme: _textTheme(),
+      textButtonTheme: _textButtonTheme(AppColors.primary),
+    );
+  }
 
-      // Define the default `TextTheme`. Use this to specify the default
-      // text styling for headlines, titles, bodies of text, and more.
+  static ThemeData darkTheme() {
+    return ThemeData(
+      useMaterial3: true,
+      primaryColor: AppColors.primary,
+      primarySwatch: primarySwatch,
+      brightness: Brightness.dark,
+      elevatedButtonTheme:
+          _elevatedButtonTheme(Colors.white, AppColors.primary),
+      buttonTheme: _buttonTheme(AppColors.primary),
+      appBarTheme: _appBarTheme(AppColors.primary, Brightness.dark),
+      textTheme: _textTheme(),
+      textButtonTheme: _textButtonTheme(Colors.white),
+    );
+  }
 
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 72.0,
-          fontWeight: FontWeight.bold,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 20.0,
-          fontStyle: FontStyle.italic,
+  static ElevatedButtonThemeData _elevatedButtonTheme(
+      Color foregroundColor, Color backgroundColor) {
+    return ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: foregroundColor,
+        backgroundColor: backgroundColor,
+        textStyle: const TextStyle(
+          fontSize: 15,
           fontWeight: FontWeight.w700,
         ),
-        bodyMedium: TextStyle(
-          fontSize: 14.0,
-          fontFamily: 'Inter',
-        ),
-        bodySmall: TextStyle(
-          fontSize: 12.0,
-          fontFamily: 'Inter',
-        ),
-      ),
-
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
     );
   }
 
-  static ThemeData? darkTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      primaryColor: AppColors.primary,
-      primarySwatch: const MaterialColor(
-        0xFF0D117F, // The primary color value in hexadecimal
-        <int, Color>{
-          50: Color(0xFFE2E4F7),
-          100: Color(0xFFB6BAE8),
-          200: Color(0xFF898FD8),
-          300: Color(0xFF5D64C8),
-          400: Color(0xFF3A43BB),
-          500: Color(0xFF0D117F), // The primary color value in hexadecimal
-          600: Color(0xFF0C0F6D),
-          700: Color(0xFF0A0D5A),
-          800: Color(0xFF080B47),
-          900: Color(0xFF060935),
-        },
-      ),
-      brightness: Brightness.dark,
-      appBarTheme: AppBarTheme(
-        color: const Color(0xFF0D117F),
-        elevation: 0,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        toolbarTextStyle: const TextTheme(
-          titleLarge: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ).bodyMedium,
-        titleTextStyle: const TextTheme(
-          titleLarge: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ).titleLarge,
-      ),
+  static ButtonThemeData _buttonTheme(Color buttonColor) {
+    return ButtonThemeData(
+      buttonColor: buttonColor,
+      textTheme: ButtonTextTheme.primary,
+      padding: const EdgeInsets.all(5),
+    );
+  }
 
-      // Define the default `TextTheme`. Use this to specify the default
-      // text styling for headlines, titles, bodies of text, and more.
+  static AppBarTheme _appBarTheme(Color color, Brightness statusBarBrightness) {
+    return AppBarTheme(
+      color: color,
+      elevation: 0,
+      centerTitle: true,
+      iconTheme: const IconThemeData(
+        color: Colors.white,
+        size: _appBarIconSize,
+      ),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: statusBarBrightness,
+      ),
+      toolbarTextStyle: _appBarTitleTextStyle,
+      titleTextStyle: _appBarTitleTextStyle,
+    );
+  }
 
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 72.0,
-          fontWeight: FontWeight.bold,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 20.0,
-          fontStyle: FontStyle.italic,
+  static TextTheme _textTheme() {
+    return const TextTheme(
+      displayLarge: TextStyle(
+        fontSize: 72.0,
+        fontWeight: FontWeight.bold,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 20.0,
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.w700,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14.0,
+        fontFamily: 'Inter',
+      ),
+      bodySmall: TextStyle(
+        fontSize: 12.0,
+        fontFamily: 'Inter',
+      ),
+    );
+  }
+
+  static TextButtonThemeData _textButtonTheme(Color foregroundColor) {
+    return TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: foregroundColor,
+        textStyle: const TextStyle(
+          fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
-        bodyMedium: TextStyle(
-          fontSize: 14.0,
-          fontFamily: 'Inter',
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: const Color(0xFF0D117F),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-      ),
-      buttonTheme: const ButtonThemeData(
-        buttonColor: Color(0xFF0D117F),
-        textTheme: ButtonTextTheme.primary,
-        padding: EdgeInsets.all(5),
-      ),
-
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: Colors.white,
-          textStyle: const TextStyle(
-            fontWeight: FontWeight.w700,
-            decoration: TextDecoration.underline,
-            fontSize: 16,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
     );

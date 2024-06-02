@@ -40,7 +40,7 @@ class DropDownWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: AppColors.primary,
-                      fontSize: 15,
+                      fontSize: 14,
                     ),
                   ),
                 ))

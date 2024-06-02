@@ -30,7 +30,7 @@ class PrimaryButtonWidget extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: fontSize ?? 20,
+            fontSize: fontSize ?? 15,
             fontWeight: FontWeight.w600,
           ),
         ),

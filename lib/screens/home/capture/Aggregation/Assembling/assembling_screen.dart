@@ -67,7 +67,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                             controller: searchController,
                             focusNode: searchFocusNode,
                             onSubmitted: (value) {
-                              assembleCubit.getProductsByGtin(
+                              assembleCubit.getAssemblyProductsByGtin(
                                   searchController.text.trim());
                               searchController.clear();
 
@@ -91,7 +91,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                         flex: 1,
                         child: GestureDetector(
                           onTap: () {
-                            assembleCubit.getProductsByGtin(
+                            assembleCubit.getAssemblyProductsByGtin(
                                 searchController.text.trim());
                             searchController.clear();
 

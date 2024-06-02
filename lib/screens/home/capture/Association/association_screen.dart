@@ -59,7 +59,7 @@ class _AssociationScreenState extends State<AssociationScreen> {
       "onTap": () {},
     },
     {
-      "text": "Transfer",
+      "text": "Internal Transfer",
       "icon": AppIcons.assoTransfer,
       "onTap": () {},
     },

@@ -66,9 +66,7 @@ class TextFieldWidget extends StatelessWidget {
           hintText: hintText,
           fillColor: AppColors.fields,
           filled: true,
-          hintStyle: const TextStyle(
-            color: AppColors.grey,
-          ),
+          hintStyle: const TextStyle(color: AppColors.grey, fontSize: 13),
           suffixIcon: suffixIcon ?? const SizedBox.shrink(),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 10,

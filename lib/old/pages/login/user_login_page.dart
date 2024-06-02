@@ -335,7 +335,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     },
                     text: "Login Now",
                   ),
-                  // .box.width(context.width * 0.85).makeCentered(),
                   const SizedBox(height: 20),
                   // remember me and neeed help
                   Container(
