@@ -7,7 +7,7 @@ class AppNavigator {
       context,
       PageTransition(
         duration: const Duration(milliseconds: 400),
-        type: PageTransitionType.rightToLeft,
+        type: PageTransitionType.fade,
         child: screen,
       ),
     );
@@ -18,7 +18,7 @@ class AppNavigator {
       context,
       PageTransition(
         duration: const Duration(milliseconds: 400),
-        type: PageTransitionType.bottomToTop,
+        type: PageTransitionType.fade,
         child: screen,
       ),
     );

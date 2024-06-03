@@ -4,11 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling/assembling_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling/assembling_state.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_cubit.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_state.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_cubit.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_state.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling/products_model.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/gtin_details_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
@@ -22,6 +24,8 @@ class BundlingScreen extends StatefulWidget {
 
 class _BundlingScreenState extends State<BundlingScreen> {
   TextEditingController searchController = TextEditingController();
+
+  CreateBundleCubit createBundleCubit = CreateBundleCubit();
 
   AssemblingCubit assembleCubit = AssemblingCubit();
   List<ProductsModel> products = [];
@@ -86,7 +90,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                         child: GestureDetector(
                           onTap: () {
                             FocusScope.of(context).unfocus();
-                            assembleCubit.getAssemblyProductsByGtin(
+                            assembleCubit.getBundlingProductsByGtin(
                                 searchController.text.trim());
                           },
                           child: SizedBox(
@@ -223,7 +227,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                                                       .frontImage ==
                                                   null
                                               ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
-                                              : "${AppUrls.baseUrlWith3093}${products[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                                              : "${AppUrls.baseUrlWith3093}${products[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
                                           width: 50,
                                           height: 50,
                                           fit: BoxFit.cover,
@@ -254,19 +258,43 @@ class _BundlingScreenState extends State<BundlingScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          // rgba(249, 75, 0, 1)
-                          backgroundColor: const Color.fromRGBO(249, 75, 0, 1),
-                        ),
-                        child: const Text(
-                          'Create Bundle',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
+                      BlocConsumer<CreateBundleCubit, CreateBundleState>(
+                        bloc: createBundleCubit,
+                        listener: (context, state) {
+                          if (state is CreateBundleError) {
+                            toast(state.message);
+                          }
+                          if (state is CreateBundleLoaded) {
+                            searchController.clear();
+                            products = [];
+                            toast("Bundle Created Successfully");
+                          }
+                        },
+                        builder: (context, state) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              createBundleCubit
+                                  .createBundle(searchController.text.trim());
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromRGBO(249, 75, 0, 1),
+                            ),
+                            child: state is CreateBundleLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white)))
+                                : const Text(
+                                    'Create Bundle',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                          );
+                        },
                       ),
                       Text("Total Of GTIN: ${products.length}"),
                     ],

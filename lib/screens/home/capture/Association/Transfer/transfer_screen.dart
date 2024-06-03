@@ -3,8 +3,8 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/PalletTransfer/PalletTransferScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/goods_issue_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_receipt/goods_receipt.dart';
 
 class TransferScreen extends StatefulWidget {
   const TransferScreen({super.key});
@@ -15,6 +15,16 @@ class TransferScreen extends StatefulWidget {
 
 class _TransferScreenState extends State<TransferScreen> {
   final List<Map> data = [
+    {
+      "text": "Goods Receipt",
+      "icon": AppIcons.goodsReceipt,
+      "onTap": () {},
+    },
+    {
+      "text": "Goods Issue",
+      "icon": AppIcons.goodsIssue,
+      "onTap": () {},
+    },
     // {
     //   "text": "Raw Materials to WIP",
     //   "icon": AppIcons.transferRaw,
@@ -25,16 +35,16 @@ class _TransferScreenState extends State<TransferScreen> {
     //   "icon": AppIcons.transferWarehouse,
     //   "onTap": () {},
     // },
-    {
-      "text": "Bin to Bin Transfer",
-      "icon": AppIcons.transferBinToBin,
-      "onTap": () {},
-    },
-    {
-      "text": "Pallet Transfer",
-      "icon": AppIcons.transferPallet,
-      "onTap": () {},
-    },
+    // {
+    //   "text": "Bin to Bin Transfer",
+    //   "icon": AppIcons.transferBinToBin,
+    //   "onTap": () {},
+    // },
+    // {
+    //   "text": "Pallet Transfer",
+    //   "icon": AppIcons.transferPallet,
+    //   "onTap": () {},
+    // },
     // {
     //   "text": "Pallet Re-Allocation",
     //   "icon": AppIcons.aggPackaging,
@@ -50,14 +60,18 @@ class _TransferScreenState extends State<TransferScreen> {
   @override
   void initState() {
     super.initState();
+    data[0]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const GoodsReceiptScreen());
+    data[1]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const GoodsIssueScreen());
     // data[0]["onTap"] = () => AppNavigator.goToPage(
     //     context: context, screen: RawMaterialsToWIPScreen1());
     // data[1]["onTap"] = () => AppNavigator.goToPage(
     //     context: context, screen: const BinToBinAxaptaScreen());
-    data[0]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const BinToBinInternalScreen());
-    data[1]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const PalletTransferScreen());
+    // data[0]["onTap"] = () => AppNavigator.goToPage(
+    //     context: context, screen: const BinToBinInternalScreen());
+    // data[1]["onTap"] = () => AppNavigator.goToPage(
+    //     context: context, screen: const PalletTransferScreen());
     // data[4]["onTap"] = () => AppNavigator.goToPage(
     //     context: context, screen: const ItemReAllocationScreen());
     // data[5]["onTap"] = () =>

@@ -4,8 +4,8 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/CustomerReturns/ReturnRMAScreen1.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/RawMaterials/RawMaterialsScreen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/SupplierReceipt/shipment_dispatching_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/SupplierReceipt/supplier_receipt_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/raw_material/raw_materials_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
 
 class ReceivingScreen extends StatefulWidget {
@@ -59,7 +59,7 @@ class _ReceivingScreenState extends State<ReceivingScreen> {
     };
     data[3]['onTap'] = () {
       AppNavigator.goToPage(
-          context: context, screen: const ShipmentDispatchingScreen());
+          context: context, screen: const SupplierReveiptScreen());
     };
     super.initState();
   }

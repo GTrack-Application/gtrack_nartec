@@ -5,8 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
+import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packed_items/packed_items_state.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Assembling/assembly_details_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/packing/complete_packing_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -26,15 +32,21 @@ class _PackingScreenState extends State<PackingScreen> {
   List<String> dropdownList = [];
   String? dropdownValue;
 
+  List<String> gln = [];
+
   @override
   void initState() {
     super.initState();
     glnCubit.identifyGln();
   }
 
+  PackedItemsCubit packedItemsCubit = PackedItemsCubit();
+  List<ProductsModel> products = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Packing'),
         backgroundColor: AppColors.pink,
@@ -49,6 +61,7 @@ class _PackingScreenState extends State<PackingScreen> {
             if (state is GlnLoadedState) {
               table = state.data;
               dropdownList = table.map((e) => e.locationNameAr ?? "").toList();
+              gln = table.map((e) => e.gcpGLNID ?? "").toList();
               dropdownList = dropdownList.toSet().toList();
               dropdownValue = dropdownList[0];
             }
@@ -80,6 +93,8 @@ class _PackingScreenState extends State<PackingScreen> {
                           setState(() {
                             dropdownValue = newValue;
                           });
+                          packedItemsCubit.getPackedItems(
+                              gln[dropdownList.indexOf(newValue!)]);
                         },
                         items: dropdownList
                             .map<DropdownMenuItem<String>>((String? value) {
@@ -114,63 +129,86 @@ class _PackingScreenState extends State<PackingScreen> {
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: ListView.builder(
-                        itemCount: 4,
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            width: context.width() * 0.9,
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: const Offset(0, 3),
+                      child: BlocConsumer<PackedItemsCubit, PackedItemsState>(
+                        bloc: packedItemsCubit,
+                        listener: (context, state) {
+                          if (state is PackedItemsError) {
+                            toast(state.message);
+                          }
+                          if (state is PackedItemsLoaded) {
+                            products = state.data;
+                          }
+                        },
+                        builder: (context, state) {
+                          return ListView.builder(
+                            itemCount: products.length,
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: context.width() * 0.9,
+                                alignment: Alignment.center,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
                                 ),
-                              ],
-                              border: Border.all(
-                                  color: Colors.grey.withOpacity(0.2)),
-                            ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.all(10),
-                              title: const Text(
-                                "asldkf",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.2)),
                                 ),
-                              ),
-                              subtitle: const Text(
-                                "askdf",
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              leading: Hero(
-                                tag: "abc",
-                                child: ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: "Fakdjflsa",
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(10),
+                                  title: Text(
+                                    products[index].productnameenglish ?? "",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    products[index].barcode ?? "",
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
+                                  leading: Hero(
+                                    tag: products[index].id ?? "",
+                                    child: ClipOval(
+                                      child: CachedNetworkImage(
+                                        imageUrl: products[index].frontImage ==
+                                                null
+                                            ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
+                                            : "${AppUrls.baseUrlWith3093}${products[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                    ),
+                                  ),
+                                  trailing: GestureDetector(
+                                    onTap: () {
+                                      AppNavigator.goToPage(
+                                        context: context,
+                                        screen: AssemblyDetailsScreen(
+                                          employees: products[index],
+                                        ),
+                                      );
+                                    },
+                                    child: Image.asset("assets/icons/view.png"),
                                   ),
                                 ),
-                              ),
-                              trailing: GestureDetector(
-                                onTap: () {},
-                                child: Image.asset("assets/icons/view.png"),
-                              ),
-                            ),
+                              );
+                            },
                           );
                         },
                       ),

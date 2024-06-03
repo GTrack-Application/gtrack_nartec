@@ -115,12 +115,37 @@ class AppIcons {
   static const String transRefining = 'assets/icons/trans_refining.png';
   static const String transCustomizing = 'assets/icons/trans_customizing.png';
 
-  // Transfer Screen
+  // Internal Transfer Screen
   static const String transferBinToBin = 'assets/icons/transfer_bin.png';
   static const String transferItem = 'assets/icons/transfer_item.png';
   static const String transferPallet = 'assets/icons/transfer_pallet.png';
   static const String transferRaw = 'assets/icons/transfer_raw.png';
   static const String transferWarehouse = 'assets/icons/transfer_warehouse.png';
+  static const String goodsReceipt = 'assets/icons/goods_issue.png';
+  static const String goodsIssue = 'assets/icons/goods_receipt.png';
+
+  // Goods Screens
+  static const String productionJobOrder =
+      'assets/icons/production_job_order.png';
+  static const String rawMaterials = 'assets/icons/raw_materials.png';
+  static const String finishGoods = 'assets/icons/finish_goods.png';
+  static const String fgSample = 'assets/icons/fg_sample.png';
+  static const String stockReturns = 'assets/icons/stock_returns.png';
+  static const String damages = 'assets/icons/damages.png';
+
+  // Raw Materials and Supplier Receipts
+  static const String directReceipt = 'assets/icons/direct_receipt.png';
+  static const String asn = 'assets/icons/asn.png';
+  static const String purchaseOrderReceipt =
+      'assets/icons/purchase_order_receipt.png';
+  static const String returnReceipt = 'assets/icons/return_receipt.png';
+  static const String internalReceipt = 'assets/icons/internal_receipt.png';
+  static const String dropshipReceipt = 'assets/icons/dropship_receipt.png';
+  static const String qaReceipt = 'assets/icons/qa_receipt.png';
+  static const String backorderReceipt = 'assets/icons/backorder_receipt.png';
+  static const String crossDocking = 'assets/icons/cross_docking.png';
+  static const String batchLotReceipt = 'assets/icons/batch_lot_receipt.png';
+  static const String blindReceipt = 'assets/icons/blind_receipt.png';
 
   // Shipping Screen
   static const String shippingSales = 'assets/icons/shipping_sales.png';
