@@ -13,7 +13,7 @@ class GetAxaptaTableDataController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}getExpectedTransferOrderByTransferId?TRANSFERID=$transferID";
+        "${AppUrls.baseUrlWith7000}/api/getExpectedTransferOrderByTransferId?TRANSFERID=$transferID";
     print("url: $url");
 
     final uri = Uri.parse(url);

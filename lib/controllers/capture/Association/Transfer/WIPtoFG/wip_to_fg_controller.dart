@@ -12,7 +12,7 @@ class WIPToFgController {
     String? token;
     await AppPreferences.getToken().then((value) => token = value);
 
-    const endPoint = "${AppUrls.baseUrlWith7000}/getItemsLnWIPs";
+    const endPoint = "${AppUrls.baseUrlWith7000}/api/getItemsLnWIPs";
 
     List<GetItemsLnWipsModel> items = [];
 

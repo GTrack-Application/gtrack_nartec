@@ -13,7 +13,7 @@ class GetShipmentPalletizingController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}getTransferDistributionByTransferId?TRANSFERID=$id";
+        "${AppUrls.baseUrlWith7000}/api/getTransferDistributionByTransferId?TRANSFERID=$id";
 
     print("url: $url");
 

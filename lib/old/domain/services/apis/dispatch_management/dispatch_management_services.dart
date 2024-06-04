@@ -10,8 +10,8 @@ class DispatchManagementServices {
   static Future<List<JobOrderDetailsModel>> getJobOrderDetails(
       String jobOrder) async {
     try {
-      final response = await http.get(
-          Uri.parse('${AppUrls.baseUrlWith7000}getJobOrderDetails/$jobOrder'));
+      final response = await http.get(Uri.parse(
+          '${AppUrls.baseUrlWith7000}/api/getJobOrderDetails/$jobOrder'));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body) as List;
         return responseBody

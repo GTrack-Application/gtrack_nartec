@@ -17,7 +17,7 @@ class RawMaterialsToWIPController {
     print(userId);
     print(vendorId);
     final url = Uri.parse(
-        '${AppUrls.baseUrlWith7000}getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId');
+        '${AppUrls.baseUrlWith7000}/api/getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId');
     print(url);
     String? token;
     await AppPreferences.getToken().then((value) => token = value);

@@ -15,7 +15,7 @@ class GetPickListTableDataController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}getMappedBarcodedsByItemCodeAndBinLocation";
+        "${AppUrls.baseUrlWith7000}/api/getMappedBarcodedsByItemCodeAndBinLocation";
     print("url: $url");
 
     final uri = Uri.parse(url);

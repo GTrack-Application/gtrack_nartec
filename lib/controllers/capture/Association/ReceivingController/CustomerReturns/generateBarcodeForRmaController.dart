@@ -16,7 +16,7 @@ class GenerateBarcodeForRmaController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}generateBarcodeForRma";
+    String url = "${AppUrls.baseUrlWith7000}/api/generateBarcodeForRma";
     print("url: $url");
 
     final uri = Uri.parse(url);

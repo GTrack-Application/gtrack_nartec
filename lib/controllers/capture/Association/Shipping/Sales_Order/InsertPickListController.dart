@@ -14,7 +14,7 @@ class InsertPickListController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl?PICKINGROUTEID=$pICKINGROUTEID";
+        "${AppUrls.baseUrlWith7000}/api/insertIntoPackingSlipTableClAndUpdateWmsSalesPickingListCl?PICKINGROUTEID=$pICKINGROUTEID";
 
     print("url: $url");
 

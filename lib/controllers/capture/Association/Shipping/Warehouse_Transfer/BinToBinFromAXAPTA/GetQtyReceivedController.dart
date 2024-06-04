@@ -11,7 +11,7 @@ class GetQtyReceivedController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}getQtyReceivedFromTransferBinToBinCl?TRANSFERID=$transferID&ITEMID=$itemID";
+        "${AppUrls.baseUrlWith7000}/api/getQtyReceivedFromTransferBinToBinCl?TRANSFERID=$transferID&ITEMID=$itemID";
     print("url: $url");
 
     final uri = Uri.parse(url);

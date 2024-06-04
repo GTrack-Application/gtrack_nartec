@@ -14,7 +14,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7000}getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
+        "${AppUrls.baseUrlWith7000}/api/getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
 
     final uri = Uri.parse(url);
 
@@ -44,7 +44,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7000}getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
+        "${AppUrls.baseUrlWith7000}/api/getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
 
     final uri = Uri.parse(url);
 
@@ -72,7 +72,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
     String? userId = await AppPreferences.getUserId();
 
-    const url = "${AppUrls.baseUrlWith7000}createnewbundling";
+    const url = "${AppUrls.baseUrlWith7000}/api/createnewbundling";
 
     final uri = Uri.parse(url);
 
@@ -105,7 +105,7 @@ class AssemblingController {
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    final url = "${AppUrls.baseUrlWith7000}getPackedItemsByGLN?GLN=$gln";
+    final url = "${AppUrls.baseUrlWith7000}/api/getPackedItemsByGLN?GLN=$gln";
 
     final uri = Uri.parse(url);
 
@@ -134,7 +134,8 @@ class AssemblingController {
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    final url = "${AppUrls.baseUrlWith7000}getBundlingByUserId?user_id=$userId";
+    final url =
+        "${AppUrls.baseUrlWith7000}/api/getBundlingByUserId?user_id=$userId";
 
     final uri = Uri.parse(url);
 

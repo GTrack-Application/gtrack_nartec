@@ -16,7 +16,7 @@ class GetPickingListController {
     await AppPreferences.getUserId().then((value) => userId = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}getSalesPickingListByAssignToUserIdAndPurchaseOrder?assign_to_user_id=$userId&purchase_order=$pickingRouteId";
+        "${AppUrls.baseUrlWith7000}/api/getSalesPickingListByAssignToUserIdAndPurchaseOrder?assign_to_user_id=$userId&purchase_order=$pickingRouteId";
 
     print(url);
 

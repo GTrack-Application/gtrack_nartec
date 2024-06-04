@@ -14,7 +14,7 @@ class GetShipmentDataController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}getShipmentDataFromShipmentExpectedR?SHIPMENTID=$id";
+        "${AppUrls.baseUrlWith7000}/api/getShipmentDataFromShipmentExpectedR?SHIPMENTID=$id";
 
     print(url);
 

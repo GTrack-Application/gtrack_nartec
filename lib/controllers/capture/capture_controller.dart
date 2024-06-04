@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 
 class CaptureController {
   Future<List<SerializationModel>> getSerializationData(gtin) async {
-    String url = "${AppUrls.baseUrlWith7000}/getAllRecordsByGTIN?GTIN=$gtin";
+    String url =
+        "${AppUrls.baseUrlWith7000}/api/getAllRecordsByGTIN?GTIN=$gtin";
     final uri = Uri.parse(url);
     var response = await http.get(uri);
     if (response.statusCode == 200) {
@@ -30,7 +31,7 @@ class CaptureController {
     required String expiryDate,
     required String manufacturingDate,
   }) async {
-    String url = "${AppUrls.baseUrlWith7000}/insertControlledSerials";
+    String url = "${AppUrls.baseUrlWith7000}/api/insertControlledSerials";
     final uri = Uri.parse(url);
     var body = jsonEncode({
       "GTIN": gtin,

@@ -9,7 +9,7 @@ class GetItemInfoByItemSerialNoController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}getItemInfoByItemSerialNo";
+    String url = "${AppUrls.baseUrlWith7000}/api/getItemInfoByItemSerialNo";
 
     final uri = Uri.parse(url);
 

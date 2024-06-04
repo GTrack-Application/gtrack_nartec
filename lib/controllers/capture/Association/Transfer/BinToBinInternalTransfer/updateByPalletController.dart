@@ -15,7 +15,7 @@ class updateByPalletController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        '${AppUrls.baseUrlWith7000}updateMappedBarcodesBinLocationByPalletCode';
+        '${AppUrls.baseUrlWith7000}/api/updateMappedBarcodesBinLocationByPalletCode';
 
     print("url : $url");
 
