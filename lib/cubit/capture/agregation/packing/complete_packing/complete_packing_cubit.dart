@@ -15,6 +15,8 @@ class CompletePackingCubit extends Cubit<CompletePackingState> {
     String gln,
     double netWeight,
     String unitOfMeasure,
+    String itemImage,
+    String itemName,
   ) async {
     emit(CompletePackingLoading());
 
@@ -32,6 +34,8 @@ class CompletePackingCubit extends Cubit<CompletePackingState> {
         gln,
         netWeight,
         unitOfMeasure,
+        itemImage,
+        itemName,
       );
       emit(CompletePackingLoaded());
     } catch (e) {

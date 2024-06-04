@@ -30,12 +30,12 @@ class ProductsModel {
   String? prodLang;
   String? detailsPage;
   String? detailsPageAr;
-  int? status;
+  String? status;
   String? deletedAt;
   String? createdAt;
   String? updatedAt;
   String? memberID;
-  int? adminId;
+  String? adminId;
   String? saveAs;
   String? gtinType;
   String? productUrl;
@@ -43,7 +43,7 @@ class ProductsModel {
   String? brandNameAr;
   String? digitalInfoType;
   String? readyForGepir;
-  int? gepirPosted;
+  String? gepirPosted;
   String? image1;
   String? image2;
   String? image3;
@@ -102,7 +102,7 @@ class ProductsModel {
   });
 
   ProductsModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id'].toString();
     userId = json['user_id'];
     gcpGLNID = json['gcpGLNID'];
     importCode = json['import_code'];
@@ -131,12 +131,12 @@ class ProductsModel {
     prodLang = json['prod_lang'];
     detailsPage = json['details_page'];
     detailsPageAr = json['details_page_ar'];
-    status = json['status'];
+    status = json['status'].toString();
     deletedAt = json['deleted_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     memberID = json['memberID'];
-    adminId = json['admin_id'];
+    adminId = json['admin_id'].toString();
     saveAs = json['save_as'];
     gtinType = json['gtin_type'];
     productUrl = json['product_url'];
@@ -144,7 +144,7 @@ class ProductsModel {
     brandNameAr = json['BrandNameAr'];
     digitalInfoType = json['digitalInfoType'];
     readyForGepir = json['readyForGepir'];
-    gepirPosted = json['gepirPosted'];
+    gepirPosted = json['gepirPosted'].toString();
     image1 = json['image_1'];
     image2 = json['image_2'];
     image3 = json['image_3'];

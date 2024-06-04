@@ -6,7 +6,7 @@ import 'package:nb_utils/nb_utils.dart';
 class CreateBundleCubit extends Cubit<CreateBundleState> {
   CreateBundleCubit() : super(CreateBundleInitial());
 
-  void createBundle(String field) async {
+  void createBundle(List<String> field) async {
     emit(CreateBundleLoading());
 
     try {

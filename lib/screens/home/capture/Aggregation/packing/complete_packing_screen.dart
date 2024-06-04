@@ -59,6 +59,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
   GtinProductDetailsModel? product;
 
   CompletePackingCubit completePackingCubit = CompletePackingCubit();
+  PackedItemsCubit packedItemsCubit = PackedItemsCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -401,21 +402,6 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                     }
                     if (state is CompletePackingLoaded) {
                       toast("Packing Completed Successfully!");
-                      // searchController.clear();
-                      // quantityController.clear();
-                      // batchNoController.clear();
-                      // expiryDateController.clear();
-                      // manufactureDateController.clear();
-                      // netWeightController.clear();
-                      // unitController.clear();
-
-                      // setState(() {
-                      //   product = null;
-                      // });
-                      context
-                          .read<PackedItemsCubit>()
-                          .getPackedItems(product!.data!.gcpGLNID.toString());
-                      Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }
                   },
@@ -435,6 +421,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                               toast("Please fill all the above fields!");
                               return;
                             }
+
                             completePackingCubit.completePacking(
                               product?.data?.gtin ?? "",
                               batchNoController.text.trim(),
@@ -444,6 +431,8 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                               product?.data?.gcpGLNID ?? "",
                               double.parse(netWeightController.text.trim()),
                               unitController.text.trim(),
+                              product?.data?.productImageUrl?.value ?? "",
+                              product?.data?.productName ?? "",
                             );
                           },
                           style: ElevatedButton.styleFrom(

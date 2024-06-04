@@ -42,6 +42,8 @@ class GtinProductDetailsController {
     String gln,
     double netWeight,
     String unitOfMeasure,
+    String itemImage,
+    String itemName,
   ) async {
     // String? token = await AppPreferences.getToken();
     String? userId = await AppPreferences.getUserId();
@@ -66,7 +68,9 @@ class GtinProductDetailsController {
       "GLN": gln,
       "NetWeight": netWeight,
       "UnitOfMeasure": unitOfMeasure,
-      "ExpiryDate": expiryDate
+      "ExpiryDate": expiryDate,
+      "ItemImage": itemImage,
+      "ItemName": itemName
     });
 
     var response = await http.post(uri, body: body, headers: headers);

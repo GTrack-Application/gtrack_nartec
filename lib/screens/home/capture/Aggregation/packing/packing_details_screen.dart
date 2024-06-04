@@ -2,20 +2,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
-class AssemblyDetailsScreen extends StatefulWidget {
-  const AssemblyDetailsScreen({super.key, required this.employees});
+class PackingDetailsScreen extends StatefulWidget {
+  const PackingDetailsScreen({super.key, required this.employees});
 
-  final ProductsModel employees;
+  final PackedItemsModel employees;
 
   @override
-  State<AssemblyDetailsScreen> createState() => _AssemblyDetailsScreenState();
+  State<PackingDetailsScreen> createState() => _PackingDetailsScreenState();
 }
 
-class _AssemblyDetailsScreenState extends State<AssemblyDetailsScreen> {
+class _PackingDetailsScreenState extends State<PackingDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +91,7 @@ class _AssemblyDetailsScreenState extends State<AssemblyDetailsScreen> {
                       ),
                       child: CachedNetworkImage(
                         imageUrl:
-                            "${AppUrls.baseUrlWith3093}${widget.employees.frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                            "${AppUrls.baseUrlWith3093}${widget.employees.itemImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,
@@ -110,7 +110,7 @@ class _AssemblyDetailsScreenState extends State<AssemblyDetailsScreen> {
                         width: 80,
                         height: 80,
                         child: PrettyQrView.data(
-                          data: widget.employees.barcode ?? "null",
+                          data: widget.employees.gTIN ?? "null",
                         ),
                       ),
                     ],
@@ -131,68 +131,42 @@ class _AssemblyDetailsScreenState extends State<AssemblyDetailsScreen> {
               child: Column(
                 children: [
                   KeyValueInfoWidget(
-                    keyy: 'Name English',
-                    value: widget.employees.productnameenglish ?? "null",
+                    keyy: 'Item Name',
+                    value: widget.employees.itemName ?? "null",
                   ),
                   KeyValueInfoWidget(
-                    keyy: 'Name Arabic',
-                    value: widget.employees.productnamearabic ?? "null",
+                    keyy: 'GTIN',
+                    value: widget.employees.gTIN ?? "null",
                   ),
                   KeyValueInfoWidget(
-                    keyy: 'Brand Eng',
-                    value: widget.employees.brandName ?? "null",
+                    keyy: 'New Weight',
+                    value: widget.employees.netWeight.toString(),
                   ),
                   KeyValueInfoWidget(
-                    keyy: 'Brand Arabic',
-                    value: widget.employees.brandNameAr ?? "null",
+                    keyy: 'Unit of Measure',
+                    value: widget.employees.unitOfMeasure ?? "null",
                   ),
                   KeyValueInfoWidget(
-                    keyy: 'Barcode',
-                    value: widget.employees.barcode ?? "null",
+                    keyy: 'Quantity',
+                    value: widget.employees.quantity.toString(),
                   ),
                   KeyValueInfoWidget(
-                    keyy: 'URL',
-                    value: widget.employees.productUrl ?? "null",
+                    keyy: 'Batch Number',
+                    value: widget.employees.bATCH ?? "null",
                   ),
                   KeyValueInfoWidget(
-                    keyy: 'Product Type',
-                    value: widget.employees.productType ?? "null",
+                    keyy: 'GLN',
+                    value: widget.employees.gLN ?? "null",
                   ),
                   KeyValueInfoWidget(
-                    keyy: 'Origin',
-                    value: widget.employees.origin ?? "null",
+                    keyy: 'Expiry Date',
+                    value: widget.employees.expiryDate ?? "null",
                   ),
                   KeyValueInfoWidget(
-                    keyy: 'Package Type',
-                    value: widget.employees.packagingType ?? "null",
-                  ),
-                  KeyValueInfoWidget(
-                    keyy: 'Unit',
-                    value: widget.employees.unit ?? "null",
-                  ),
-                  KeyValueInfoWidget(
-                    keyy: 'Size Type',
-                    value: widget.employees.size ?? "null",
+                    keyy: 'Manufacture Date',
+                    value: widget.employees.manufacturingDate ?? "null",
                   ),
                 ],
-              ),
-            ),
-            10.height,
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  // rgba(249, 75, 0, 1)
-                  backgroundColor: const Color.fromRGBO(249, 75, 0, 1),
-                ),
-                child: const Text(
-                  'Print Barcode',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                  ),
-                ),
               ),
             ),
           ],

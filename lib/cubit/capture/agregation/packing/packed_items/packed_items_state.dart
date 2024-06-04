@@ -1,4 +1,4 @@
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/packing/PackedItemsModel.dart';
 
 abstract class PackedItemsState {}
 
@@ -7,7 +7,7 @@ class PackedItemsInitial extends PackedItemsState {}
 class PackedItemsLoading extends PackedItemsState {}
 
 class PackedItemsLoaded extends PackedItemsState {
-  final List<ProductsModel> data;
+  final List<PackedItemsModel> data;
 
   PackedItemsLoaded({required this.data});
 }

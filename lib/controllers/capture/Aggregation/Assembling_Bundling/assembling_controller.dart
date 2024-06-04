@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:http/http.dart' as http;
 
 class AssemblingController {
@@ -65,13 +67,12 @@ class AssemblingController {
     }
   }
 
-  static Future<void> createBundle(String field) async {
+  static Future<void> createBundle(List<String> field) async {
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
     String? userId = await AppPreferences.getUserId();
 
-    final url =
-        "${AppUrls.baseUrlWith7000}createnewbundling?user_id=$userId&field=$field";
+    const url = "${AppUrls.baseUrlWith7000}createnewbundling";
 
     final uri = Uri.parse(url);
 
@@ -81,7 +82,14 @@ class AssemblingController {
       // "Authorization": "Bearer $token",
     };
 
-    var response = await http.post(uri, headers: headers);
+    jsonEncode(field);
+
+    final body = jsonEncode({
+      "user_id": userId,
+      "field": field,
+    });
+
+    var response = await http.post(uri, body: body, headers: headers);
 
     var data = json.decode(response.body);
 
@@ -92,7 +100,7 @@ class AssemblingController {
     }
   }
 
-  static Future<List<ProductsModel>> getPackedItems(String gln) async {
+  static Future<List<PackedItemsModel>> getPackedItems(String gln) async {
     // String? userId = await AppPreferences.getUserId();
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
@@ -108,6 +116,37 @@ class AssemblingController {
     };
 
     var response = await http.get(uri, headers: headers);
+
+    var data = json.decode(response.body) as List;
+
+    if (response.statusCode == 200) {
+      List<PackedItemsModel> products =
+          data.map((e) => PackedItemsModel.fromJson(e)).toList();
+      return products;
+    } else {
+      return [];
+    }
+  }
+
+  // get bundling by userid
+  static Future<List<ProductsModel>> getBundlingByUserId() async {
+    String? userId = await AppPreferences.getUserId();
+    // String? token = await AppPreferences.getToken();
+    // String url = "${AppUrls.baseUrlWith3091}api/products";
+
+    final url = "${AppUrls.baseUrlWith7000}getBundlingByUserId?user_id=$userId";
+
+    final uri = Uri.parse(url);
+
+    final headers = <String, String>{
+      "Content-Type": "application/json",
+      "Host": AppUrls.host,
+      // "Authorization": "Bearer $token",
+    };
+
+    var response = await http.get(uri, headers: headers);
+
+    log(jsonDecode(response.body).toString());
 
     var data = json.decode(response.body) as List;
 
