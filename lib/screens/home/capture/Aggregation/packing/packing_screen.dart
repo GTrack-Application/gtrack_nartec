@@ -194,7 +194,7 @@ class _PackingScreenState extends State<PackingScreen> {
                                           height: 50,
                                           fit: BoxFit.cover,
                                           errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
+                                              const Icon(Icons.image_outlined),
                                         ),
                                       ),
                                     ),

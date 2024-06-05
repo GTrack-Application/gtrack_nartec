@@ -38,7 +38,6 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSearchBar(context),
             10.height,
             _buildGTINText(context, widget.gtinModel.barcode ?? ''),
             10.height,
@@ -48,44 +47,6 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildSearchBar(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: SizedBox(
-            height: 45,
-            child: TextField(
-              controller: CaptureCubit.get(context).gtin,
-              onSubmitted: (value) {
-                CaptureCubit.get(context).getGtinProducts();
-              },
-              decoration: InputDecoration(
-                hintText: 'Enter GTIN',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Hero(
-          tag: widget.gtinModel.id ?? '',
-          child: CircleAvatar(
-            backgroundColor: AppColors.pink,
-            foregroundColor: AppColors.white,
-            child: IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                CaptureCubit.get(context).getGtinProducts();
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -110,22 +71,15 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
         if (state is CaptureSerializationSuccess) {
           CaptureCubit.get(context).serializationData = state.data;
         }
+        if (state is CaptureSerializationError) {
+          toast(state.message);
+        }
+        if (state is CaptureSerializationEmpty) {
+          toast("No data found");
+        }
       }, builder: (context, state) {
         if (state is CaptureSerializationLoading) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state is CaptureSerializationError) {
-          return Center(child: Text(state.message));
-        } else if (state is CaptureSerializationEmpty) {
-          return Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.primary),
-            ),
-            child: Center(
-              child: Text(
-                "No data found with ${CaptureCubit.get(context).gtin.text} GTIN",
-              ),
-            ),
-          );
         }
         final serializationData = CaptureCubit.get(context).serializationData;
         return RefreshIndicator(
@@ -168,7 +122,10 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("$index", style: const TextStyle(fontSize: 12)),
+                      Text(
+                        "$index",
+                        style: const TextStyle(fontSize: 12),
+                      ),
                       Text("${item.serialNo}",
                           style: const TextStyle(fontSize: 12)),
                       const SizedBox.shrink(),
@@ -192,7 +149,7 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
             AppNavigator.goToPage(
               context: context,
               screen: CreateSerialScreen(
-                gtin: CaptureCubit.get(context).gtin.text,
+                gtin: widget.gtinModel.barcode ?? '',
               ),
             );
           },

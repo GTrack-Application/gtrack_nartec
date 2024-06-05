@@ -5,6 +5,7 @@ import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_details_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_gtin_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -86,22 +87,16 @@ class _SerializationScreenState extends State<SerializationScreen> {
         if (state is CaptureGetGtinProductsSuccess) {
           CaptureCubit.get(context).gtinProducts.addAll(state.data);
         }
+        if (state is CaptureGetGtinProductsError) {
+          toast(state.message);
+        }
+        if (state is CaptureGetGtinProductsEmpty) {
+          toast(
+              "No data found with ${CaptureCubit.get(context).gtin.text} GTIN");
+        }
       }, builder: (context, state) {
         if (state is CaptureGetGtinProductsLoading) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state is CaptureGetGtinProductsError) {
-          return Center(child: Text(state.message));
-        } else if (state is CaptureGetGtinProductsEmpty) {
-          return Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.primary),
-            ),
-            child: Center(
-              child: Text(
-                "No data found with ${CaptureCubit.get(context).gtin.text} GTIN",
-              ),
-            ),
-          );
         }
         return RefreshIndicator(
           onRefresh: () async {
@@ -114,7 +109,9 @@ class _SerializationScreenState extends State<SerializationScreen> {
             child: Column(
               children: [
                 Container(
-                  height: 30,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.all(5),
+                  height: 40,
                   width: double.infinity,
                   color: AppColors.pink,
                   child: const Text(
@@ -194,12 +191,13 @@ class _SerializationScreenState extends State<SerializationScreen> {
                         ),
                         trailing: GestureDetector(
                           onTap: () {
-                            // AppNavigator.goToPage(
-                            //   context: context,
-                            //   screen: GTINDetailsScreen(
-                            //     employees: CaptureCubit.get(context).gtinProducts[index],
-                            //   ),
-                            // );
+                            AppNavigator.goToPage(
+                              context: context,
+                              screen: SerializationDetailsScreen(
+                                employees: CaptureCubit.get(context)
+                                    .gtinProducts[index],
+                              ),
+                            );
                           },
                           child: Image.asset("assets/icons/view.png"),
                         ),

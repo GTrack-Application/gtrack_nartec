@@ -194,7 +194,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                           height: context.height() * 0.1,
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                              const Icon(Icons.image_outlined),
                         ),
                       ),
                       10.width,

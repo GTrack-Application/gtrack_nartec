@@ -96,7 +96,7 @@ class _AssemblyDetailsScreenState extends State<AssemblyDetailsScreen> {
                         height: 50,
                         fit: BoxFit.cover,
                         errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                            const Icon(Icons.image_outlined),
                       ),
                     ),
                   ),
