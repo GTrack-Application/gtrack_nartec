@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/controllers/capture/capture_controller.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/assembling/products_model.dart';
 import 'package:gtrack_mobile_app/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/aggregation_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/association_screen.dart';
@@ -67,6 +68,7 @@ class CaptureCubit extends Cubit<CaptureState> {
 
   // Lists
   List<SerializationModel> serializationData = [];
+  List<ProductsModel> gtinProducts = [];
 
   // Create serials variables
   int? quantity;
@@ -137,6 +139,26 @@ class CaptureCubit extends Cubit<CaptureState> {
       }
     } catch (error) {
       emit(CaptureCreateSerializationError(error.toString()));
+    }
+  }
+
+  // * GTIN ***
+  getGtinProducts() async {
+    try {
+      var network = await isNetworkAvailable();
+      if (network) {
+        emit(CaptureGetGtinProductsLoading());
+        final data = await CaptureController().getProducts(gtin: gtin.text);
+        if (data.isEmpty) {
+          emit(CaptureGetGtinProductsEmpty());
+        } else {
+          emit(CaptureGetGtinProductsSuccess(data));
+        }
+      } else {
+        emit(CaptureGetGtinProductsError('No Internet Connection'));
+      }
+    } catch (error) {
+      emit(CaptureGetGtinProductsError(error.toString()));
     }
   }
 }

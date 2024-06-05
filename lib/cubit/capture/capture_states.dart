@@ -10,9 +10,13 @@ class CaptureSerializationLoading extends CaptureState {}
 
 class CaptureCreateSerializationLoading extends CaptureState {}
 
+class CaptureGetGtinProductsLoading extends CaptureState {}
+
 // * EMPTY ***
 
 class CaptureSerializationEmpty extends CaptureState {}
+
+class CaptureGetGtinProductsEmpty extends CaptureState {}
 
 // * SUCCESS ***
 
@@ -28,6 +32,12 @@ class CaptureCreateSerializationSuccess extends CaptureState {
   CaptureCreateSerializationSuccess(this.message);
 }
 
+class CaptureGetGtinProductsSuccess extends CaptureState {
+  final List<ProductsModel> data;
+
+  CaptureGetGtinProductsSuccess(this.data);
+}
+
 // * ERROR ***
 
 class CaptureSerializationError extends CaptureState {
@@ -40,4 +50,10 @@ class CaptureCreateSerializationError extends CaptureState {
   final String message;
 
   CaptureCreateSerializationError(this.message);
+}
+
+class CaptureGetGtinProductsError extends CaptureState {
+  final String message;
+
+  CaptureGetGtinProductsError(this.message);
 }

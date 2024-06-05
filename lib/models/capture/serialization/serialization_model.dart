@@ -5,12 +5,13 @@ class SerializationModel {
   String? bATCH;
   String? mANUFACTURINGDATE;
 
-  SerializationModel(
-      {this.gTIN,
-      this.serialNo,
-      this.eXPIRYDATE,
-      this.bATCH,
-      this.mANUFACTURINGDATE});
+  SerializationModel({
+    this.gTIN,
+    this.serialNo,
+    this.eXPIRYDATE,
+    this.bATCH,
+    this.mANUFACTURINGDATE,
+  });
 
   SerializationModel.fromJson(Map<String, dynamic> json) {
     gTIN = json['GTIN'];
