@@ -123,7 +123,6 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                         BlocConsumer<CaptureCubit, CaptureState>(
                           listener: (context, state) {
                             if (state is CaptureCreateSerializationSuccess) {
-                              CaptureCubit.get(context).getSerializationData();
                               AppSnackbars.success(context, state.message, 3);
                               Navigator.pop(context);
                             } else if (state

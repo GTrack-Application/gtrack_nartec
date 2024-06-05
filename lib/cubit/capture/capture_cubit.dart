@@ -102,12 +102,12 @@ class CaptureCubit extends Cubit<CaptureState> {
   }
 
   // * Serialization ***
-  getSerializationData() async {
+  getSerializationData(String barcode) async {
     try {
       var network = await isNetworkAvailable();
       if (network) {
         emit(CaptureSerializationLoading());
-        final data = await CaptureController().getSerializationData(gtin.text);
+        final data = await CaptureController().getSerializationData(barcode);
         if (data.isEmpty) {
           emit(CaptureSerializationEmpty());
         } else {
@@ -149,7 +149,6 @@ class CaptureCubit extends Cubit<CaptureState> {
       if (network) {
         emit(CaptureGetGtinProductsLoading());
         final data = await CaptureController().getProducts(gtin: gtin.text);
-        gtinProducts = data;
         if (data.isEmpty) {
           emit(CaptureGetGtinProductsEmpty());
         } else {
