@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_mobile_app/models/capture/serialization/serialization_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -60,7 +60,7 @@ class CaptureController {
     }
   }
 
-  Future<List<ProductsModel>> getProducts({String? gtin}) async {
+  Future<List<GTIN_Model>> getProducts({String? gtin}) async {
     final userId = await AppPreferences.getUserId();
     final token = await AppPreferences.getToken();
 
@@ -80,8 +80,8 @@ class CaptureController {
     var data = json.decode(response.body) as List;
 
     if (response.statusCode == 200) {
-      List<ProductsModel> products =
-          data.map((e) => ProductsModel.fromJson(e)).toList();
+      List<GTIN_Model> products =
+          data.map((e) => GTIN_Model.fromJson(e)).toList();
 
       return products;
     } else {

@@ -106,30 +106,81 @@ class _SerializationScreenState extends State<SerializationScreen> {
     return Expanded(
       flex: 4,
       child: BlocConsumer<CaptureCubit, CaptureState>(
-        listener: (context, state) {
-          if (state is CaptureSerializationSuccess) {
-            CaptureCubit.get(context).serializationData = state.data;
-          }
-        },
-        builder: (context, state) {
-          if (state is CaptureSerializationLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is CaptureSerializationError) {
-            return Center(child: Text(state.message));
-          } else if (state is CaptureSerializationEmpty) {
-            return Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.primary),
+          listener: (context, state) {
+        if (state is CaptureGetGtinProductsSuccess) {
+          CaptureCubit.get(context).gtinProducts.addAll(state.data);
+        }
+      }, builder: (context, state) {
+        if (state is CaptureGetGtinProductsLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is CaptureGetGtinProductsError) {
+          return Center(child: Text(state.message));
+        } else if (state is CaptureGetGtinProductsEmpty) {
+          return Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.primary),
+            ),
+            child: Center(
+              child: Text(
+                "No data found with ${CaptureCubit.get(context).gtin} GTIN",
               ),
-              child: Center(
-                child: Text(
-                  "No data found with ${CaptureCubit.get(context).gtin} GTIN",
+            ),
+          );
+        }
+        return RefreshIndicator(
+          onRefresh: () async {
+            CaptureCubit.get(context).getSerializationData();
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.primary),
+            ),
+            child: ListView.builder(
+              itemBuilder: (context, index) => ListTile(
+                contentPadding: const EdgeInsets.all(10),
+                title: Text(
+                  CaptureCubit.get(context).gtinProducts[index].barcode ?? "",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  CaptureCubit.get(context).gtinProducts[index].barcode ?? "",
+                  style: const TextStyle(fontSize: 13),
+                ),
+                leading: Hero(
+                  tag: CaptureCubit.get(context).gtinProducts[index].id ?? "",
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "${AppUrls.baseUrlWith3093}${CaptureCubit.get(context).gtinProducts[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
+                ),
+                trailing: GestureDetector(
+                  onTap: () {
+                    // AppNavigator.goToPage(
+                    //   context: context,
+                    //   screen: GTINDetailsScreen(
+                    //     employees: CaptureCubit.get(context).gtinProducts[index],
+                    //   ),
+                    // );
+                  },
+                  child: Image.asset("assets/icons/view.png"),
                 ),
               ),
-            );
-          }
-
-          final serializationData = CaptureCubit.get(context).serializationData;
+              itemCount: CaptureCubit.get(context).serializationData.length,
+            ),
+          ),
+        );
+      }
+          // final serializationData = CaptureCubit.get(context).serializationData;
           // if (serializationData.isNotEmpty) {
           //   return RefreshIndicator(
           //     onRefresh: () async {
@@ -182,68 +233,7 @@ class _SerializationScreenState extends State<SerializationScreen> {
           //     ),
           //   );
           // }
-          if (CaptureCubit.get(context).gtinProducts.isNotEmpty) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                CaptureCubit.get(context).getSerializationData();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.primary),
-                ),
-                child: ListView.builder(
-                  itemBuilder: (context, index) => ListTile(
-                    contentPadding: const EdgeInsets.all(10),
-                    title: Text(
-                      CaptureCubit.get(context)
-                              .gtinProducts[index]
-                              .productnameenglish ??
-                          "",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      CaptureCubit.get(context).gtinProducts[index].barcode ??
-                          "",
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                    leading: Hero(
-                      tag: CaptureCubit.get(context).gtinProducts[index].id ??
-                          "",
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              "${AppUrls.baseUrlWith3093}${CaptureCubit.get(context).gtinProducts[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
-                      ),
-                    ),
-                    trailing: GestureDetector(
-                      onTap: () {
-                        // AppNavigator.goToPage(
-                        //   context: context,
-                        //   screen: GTINDetailsScreen(
-                        //     employees: CaptureCubit.get(context).gtinProducts[index],
-                        //   ),
-                        // );
-                      },
-                      child: Image.asset("assets/icons/view.png"),
-                    ),
-                  ),
-                  itemCount: CaptureCubit.get(context).serializationData.length,
-                ),
-              ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+          ),
     );
   }
 

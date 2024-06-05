@@ -33,7 +33,7 @@ class CaptureCreateSerializationSuccess extends CaptureState {
 }
 
 class CaptureGetGtinProductsSuccess extends CaptureState {
-  final List<ProductsModel> data;
+  final List<GTIN_Model> data;
 
   CaptureGetGtinProductsSuccess(this.data);
 }

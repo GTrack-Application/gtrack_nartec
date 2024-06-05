@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/controllers/capture/capture_controller.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_mobile_app/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/aggregation_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/association_screen.dart';
@@ -68,7 +68,7 @@ class CaptureCubit extends Cubit<CaptureState> {
 
   // Lists
   List<SerializationModel> serializationData = [];
-  List<ProductsModel> gtinProducts = [];
+  List<GTIN_Model> gtinProducts = [];
 
   // Create serials variables
   int? quantity;
@@ -149,6 +149,7 @@ class CaptureCubit extends Cubit<CaptureState> {
       if (network) {
         emit(CaptureGetGtinProductsLoading());
         final data = await CaptureController().getProducts(gtin: gtin.text);
+        gtinProducts = data;
         if (data.isEmpty) {
           emit(CaptureGetGtinProductsEmpty());
         } else {
