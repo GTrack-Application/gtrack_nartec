@@ -7,8 +7,18 @@ import 'package:gtrack_mobile_app/screens/home/capture/Serialization/create_seri
 import 'package:nb_utils/nb_utils.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
-class SerializationScreen extends StatelessWidget {
+class SerializationScreen extends StatefulWidget {
   const SerializationScreen({super.key});
+
+  @override
+  State<SerializationScreen> createState() => _SerializationScreenState();
+}
+
+class _SerializationScreenState extends State<SerializationScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +39,7 @@ class SerializationScreen extends StatelessWidget {
             10.height,
             _buildSerializationList(context),
             10.height,
-            Visibility(
-                visible: CaptureCubit.get(context).serializationData.isNotEmpty,
-                child: _buildCreateSerialsButton(context)),
+            _buildCreateSerialsButton(context),
           ],
         ),
       ),
@@ -45,9 +53,7 @@ class SerializationScreen extends StatelessWidget {
           child: SizedBox(
             height: 45,
             child: TextField(
-              onChanged: (value) {
-                CaptureCubit.get(context).gtin = value;
-              },
+              controller: CaptureCubit.get(context).gtin,
               onSubmitted: (value) {
                 CaptureCubit.get(context).getSerializationData();
               },
@@ -79,9 +85,9 @@ class SerializationScreen extends StatelessWidget {
     return BlocBuilder<CaptureCubit, CaptureState>(
       builder: (context, state) {
         final gtin = CaptureCubit.get(context).gtin;
-        if (gtin.isNotEmpty) {
+        if (gtin.text.isNotEmpty) {
           return Text(
-            "GTIN: $gtin",
+            "GTIN: ${gtin.text}",
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 15,
@@ -109,53 +115,69 @@ class SerializationScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is CaptureSerializationError) {
             return Center(child: Text(state.message));
-          }
-
-          final serializationData = CaptureCubit.get(context).serializationData;
-          if (serializationData.isNotEmpty) {
+          } else if (state is CaptureSerializationEmpty) {
             return Container(
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.primary),
               ),
-              child: SearchableList(
-                shrinkWrap: true,
-                filter: (query) {
-                  return serializationData.where((item) {
-                    return item.bATCH!.contains(query) ||
-                        item.eXPIRYDATE!.contains(query) ||
-                        item.serialNo!.contains(query);
-                  }).toList();
-                },
-                inputDecoration: const InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(Icons.search),
+              child: Center(
+                child: Text(
+                  "No data found with ${CaptureCubit.get(context).gtin} GTIN",
                 ),
-                initialList: serializationData,
-                itemBuilder: (item) {
-                  final index = serializationData.indexOf(item) + 1;
-                  return Container(
-                    height: 40,
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.skyBlue),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("$index", style: const TextStyle(fontSize: 12)),
-                        Text("${item.serialNo}",
-                            style: const TextStyle(fontSize: 12)),
-                        const SizedBox.shrink(),
-                      ],
-                    ),
-                  );
-                },
+              ),
+            );
+          }
+
+          final serializationData = CaptureCubit.get(context).serializationData;
+          if (serializationData.isNotEmpty) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                CaptureCubit.get(context).getSerializationData();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.primary),
+                ),
+                child: SearchableList(
+                  shrinkWrap: true,
+                  filter: (query) {
+                    return serializationData.where((item) {
+                      return item.bATCH!.contains(query) ||
+                          item.eXPIRYDATE!.contains(query) ||
+                          item.serialNo!.contains(query);
+                    }).toList();
+                  },
+                  inputDecoration: const InputDecoration(
+                    hintText: 'Search',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  initialList: serializationData,
+                  itemBuilder: (item) {
+                    final index = serializationData.indexOf(item) + 1;
+                    return Container(
+                      height: 40,
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColors.primary),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text("$index", style: const TextStyle(fontSize: 12)),
+                          Text("${item.serialNo}",
+                              style: const TextStyle(fontSize: 12)),
+                          const SizedBox.shrink(),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             );
           }
@@ -173,7 +195,9 @@ class SerializationScreen extends StatelessWidget {
             // Implement the create serials functionality
             AppNavigator.goToPage(
               context: context,
-              screen: const CreateSerialScreen(),
+              screen: CreateSerialScreen(
+                gtin: CaptureCubit.get(context).gtin.text,
+              ),
             );
           },
           style: ElevatedButton.styleFrom(

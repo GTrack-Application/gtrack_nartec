@@ -43,7 +43,11 @@ class CaptureCubit extends Cubit<CaptureState> {
           "text": "SERIALIZATION",
           "icon": AppIcons.serialization,
           "onTap": () => AppNavigator.goToPage(
-              context: context, screen: const SerializationScreen()),
+              context: context,
+              screen: BlocProvider<CaptureCubit>(
+                create: (context) => CaptureCubit(),
+                child: const SerializationScreen(),
+              )),
         },
         {
           "text": "MAPPING BARCODE",
@@ -59,7 +63,7 @@ class CaptureCubit extends Cubit<CaptureState> {
         },
       ];
 
-  String gtin = '';
+  TextEditingController gtin = TextEditingController();
 
   // Lists
   List<SerializationModel> serializationData = [];
@@ -101,8 +105,12 @@ class CaptureCubit extends Cubit<CaptureState> {
       var network = await isNetworkAvailable();
       if (network) {
         emit(CaptureSerializationLoading());
-        final data = await CaptureController().getSerializationData(gtin);
-        emit(CaptureSerializationSuccess(data));
+        final data = await CaptureController().getSerializationData(gtin.text);
+        if (data.isEmpty) {
+          emit(CaptureSerializationEmpty());
+        } else {
+          emit(CaptureSerializationSuccess(data));
+        }
       } else {
         emit(CaptureSerializationError('No Internet Connection'));
       }
@@ -111,7 +119,7 @@ class CaptureCubit extends Cubit<CaptureState> {
     }
   }
 
-  createNewSerial() async {
+  createNewSerial(String gtin) async {
     try {
       var network = await isNetworkAvailable();
       if (network) {

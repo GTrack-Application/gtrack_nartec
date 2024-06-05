@@ -10,6 +10,10 @@ class CaptureSerializationLoading extends CaptureState {}
 
 class CaptureCreateSerializationLoading extends CaptureState {}
 
+// * EMPTY ***
+
+class CaptureSerializationEmpty extends CaptureState {}
+
 // * SUCCESS ***
 
 class CaptureSerializationSuccess extends CaptureState {
