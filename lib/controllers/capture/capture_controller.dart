@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling/products_model.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
 import 'package:gtrack_mobile_app/models/capture/serialization/serialization_model.dart';
 import 'package:http/http.dart' as http;
 

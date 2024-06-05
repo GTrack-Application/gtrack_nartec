@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/controllers/capture/capture_controller.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling/products_model.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
 import 'package:gtrack_mobile_app/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/aggregation_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/association_screen.dart';
