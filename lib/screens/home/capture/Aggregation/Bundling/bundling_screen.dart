@@ -380,6 +380,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                                               const SizedBox(height: 10),
                                               ElevatedButton(
                                                 onPressed: () {
+                                                  Navigator.of(context).pop();
                                                   createBundleCubit
                                                       .createBundle(
                                                     products
