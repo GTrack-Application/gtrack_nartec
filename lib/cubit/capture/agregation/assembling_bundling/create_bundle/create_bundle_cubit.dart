@@ -6,7 +6,8 @@ import 'package:nb_utils/nb_utils.dart';
 class CreateBundleCubit extends Cubit<CreateBundleState> {
   CreateBundleCubit() : super(CreateBundleInitial());
 
-  void createBundle(List<String> field) async {
+  void createBundle(
+      List<String> field, String glnLocation, String bundleName) async {
     emit(CreateBundleLoading());
 
     try {
@@ -14,7 +15,7 @@ class CreateBundleCubit extends Cubit<CreateBundleState> {
       if (!network) {
         emit(CreateBundleError(message: "No Internet Connection"));
       }
-      await AssemblingController.createBundle(field);
+      await AssemblingController.createBundle(field, glnLocation, bundleName);
       emit(CreateBundleLoaded());
     } catch (e) {
       emit(CreateBundleError(message: e.toString()));

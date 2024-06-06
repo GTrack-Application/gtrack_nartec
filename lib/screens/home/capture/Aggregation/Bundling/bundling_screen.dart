@@ -28,6 +28,7 @@ class BundlingScreen extends StatefulWidget {
 
 class _BundlingScreenState extends State<BundlingScreen> {
   TextEditingController searchController = TextEditingController();
+  TextEditingController bundleNameController = TextEditingController();
 
   CreateBundleCubit createBundleCubit = CreateBundleCubit();
 
@@ -87,7 +88,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                             .map((e) =>
                                 "${e.locationNameEn ?? ""} - ${e.gLNBarcodeNumber}")
                             .toList();
-                        gln = table.map((e) => e.gcpGLNID ?? "").toList();
+                        gln = table.map((e) => e.locationNameEn ?? "").toList();
                         dropdownList = dropdownList.toSet().toList();
                         dropdownValue = dropdownList[0];
                       }
@@ -347,9 +348,77 @@ class _BundlingScreenState extends State<BundlingScreen> {
                               builder: (context, state) {
                                 return ElevatedButton(
                                   onPressed: () {
-                                    createBundleCubit.createBundle(products
-                                        .map((e) => e.barcode!)
-                                        .toList());
+                                    // show dialog
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text('Create Bundle'),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                icon: const Icon(Icons.cancel),
+                                              )
+                                            ],
+                                          ),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextField(
+                                                controller:
+                                                    bundleNameController,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: 'Bundle Name',
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  createBundleCubit
+                                                      .createBundle(
+                                                    products
+                                                        .map((e) => e.barcode!)
+                                                        .toList(),
+                                                    dropdownValue
+                                                        .toString()
+                                                        .trim(),
+                                                    bundleNameController.text
+                                                        .trim(),
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      const Color.fromRGBO(
+                                                          249, 75, 0, 1),
+                                                ),
+                                                child: state
+                                                        is CreateBundleLoading
+                                                    ? const Center(
+                                                        child: CircularProgressIndicator(
+                                                            valueColor:
+                                                                AlwaysStoppedAnimation<
+                                                                        Color>(
+                                                                    Colors
+                                                                        .white)))
+                                                    : const Text(
+                                                        'Create Bundle',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:

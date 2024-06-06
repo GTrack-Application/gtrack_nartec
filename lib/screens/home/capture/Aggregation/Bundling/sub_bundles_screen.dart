@@ -1,31 +1,36 @@
 // ignore_for_file: collection_methods_unrelated_type
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/get_bundle_items/bundle_items_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/get_bundle_items/bundle_items_state.dart';
+import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/get_sub_bundle_items/sub_bundle_items_cubit.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/get_sub_bundle_items/sub_bundle_items_state.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/BundleItemsModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/sub_bundles_screen.dart';
+import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/gtin_details_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
-class CreatedBundleScreen extends StatefulWidget {
-  const CreatedBundleScreen({super.key});
+class SubBundlesScreen extends StatefulWidget {
+  const SubBundlesScreen({super.key, required this.gitn, required this.name});
+
+  final String gitn;
+  final String name;
 
   @override
-  State<CreatedBundleScreen> createState() => _CreatedBundleScreenState();
+  State<SubBundlesScreen> createState() => _SubBundlesScreenState();
 }
 
-class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
-  BundleItemsCubit bundleItemsCubit = BundleItemsCubit();
-  List<BundleItemsModel> products = [];
+class _SubBundlesScreenState extends State<SubBundlesScreen> {
+  SubBundleItemsCubit subBundleCubit = SubBundleItemsCubit();
+  List<ProductsModel> products = [];
 
   @override
   void initState() {
     super.initState();
-    bundleItemsCubit.getBundleItems();
+    subBundleCubit.getSubBundleItems(widget.gitn);
   }
 
   @override
@@ -40,17 +45,17 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text('Created Bundles'),
+        title: Text(widget.name),
         backgroundColor: AppColors.pink,
       ),
       body: SafeArea(
-        child: BlocConsumer<BundleItemsCubit, BundleItemsState>(
-          bloc: bundleItemsCubit,
+        child: BlocConsumer<SubBundleItemsCubit, SubBundleItemsState>(
+          bloc: subBundleCubit,
           listener: (context, state) {
-            if (state is BundleItemsError) {
+            if (state is SubBundleItemsError) {
               toast(state.message);
             }
-            if (state is BundleItemsLoaded) {
+            if (state is SubBundleItemsLoaded) {
               products.addAll(state.items);
             }
           },
@@ -60,29 +65,13 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    width: context.width() * 1,
-                    height: 40,
-                    decoration: const BoxDecoration(color: AppColors.primary),
-                    child: Text(
-                      'List of Created Bundle Products (${products.length})',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: state is BundleItemsLoading
+                      child: state is SubBundleItemsLoading
                           ? ListView.builder(
                               itemCount: 5,
                               shrinkWrap: true,
@@ -161,30 +150,39 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.all(10),
                                     title: Text(
-                                      products[index].bundlingName ?? "",
+                                      products[index].productnameenglish ?? "",
                                       style: const TextStyle(
-                                        fontSize: 13,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     subtitle: Text(
-                                      products[index].gtin ?? "",
-                                      style: const TextStyle(fontSize: 12),
+                                      products[index].barcode ?? "",
+                                      style: const TextStyle(fontSize: 13),
                                     ),
-                                    leading:
-                                        const Icon(Icons.shopping_bag_outlined),
+                                    leading: Hero(
+                                      tag: products[index].id ?? "",
+                                      child: ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: products[index]
+                                                      .frontImage ==
+                                                  null
+                                              ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
+                                              : "${AppUrls.baseUrlWith3093}${products[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.image_outlined),
+                                        ),
+                                      ),
+                                    ),
                                     trailing: GestureDetector(
                                       onTap: () {
                                         AppNavigator.goToPage(
                                             context: context,
-                                            screen: SubBundlesScreen(
-                                              gitn: products[index]
-                                                  .gtin!
-                                                  .trim()
-                                                  .toString(),
-                                              name:
-                                                  products[index].bundlingName!,
-                                            ));
+                                            screen: GTINDetailsScreen(
+                                                employees: products[index]));
                                       },
                                       child:
                                           Image.asset("assets/icons/view.png"),
