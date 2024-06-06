@@ -52,7 +52,7 @@ class _SerializationScreenState extends State<SerializationScreen> {
             height: 45,
             child: TextField(
               controller: CaptureCubit.get(context).gtin,
-              onSubmitted: (value) {
+              onEditingComplete: () {
                 CaptureCubit.get(context).getGtinProducts();
               },
               decoration: InputDecoration(

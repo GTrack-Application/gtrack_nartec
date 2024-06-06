@@ -3,6 +3,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_state.dart';
@@ -10,6 +12,7 @@ import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/c
 import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_state.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/created_bundle_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/gtin_details_screen.dart';
@@ -31,9 +34,19 @@ class _BundlingScreenState extends State<BundlingScreen> {
   AssemblingCubit assembleCubit = AssemblingCubit();
   List<ProductsModel> products = [];
 
+  GlnCubit glnCubit = GlnCubit();
+
+  List<GLNProductsModel> table = [];
+
+  List<String> dropdownList = [];
+  String? dropdownValue;
+
+  List<String> gln = [];
+
   @override
   void initState() {
     super.initState();
+    glnCubit.identifyGln();
   }
 
   @override
@@ -62,6 +75,59 @@ class _BundlingScreenState extends State<BundlingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  BlocConsumer<GlnCubit, GlnState>(
+                    bloc: glnCubit,
+                    listener: (context, state) {
+                      if (state is GlnErrorState) {
+                        toast(state.message);
+                      }
+                      if (state is GlnLoadedState) {
+                        table = state.data;
+                        dropdownList = table
+                            .map((e) =>
+                                "${e.locationNameEn ?? ""} - ${e.gLNBarcodeNumber}")
+                            .toList();
+                        gln = table.map((e) => e.gcpGLNID ?? "").toList();
+                        dropdownList = dropdownList.toSet().toList();
+                        dropdownValue = dropdownList[0];
+                      }
+                    },
+                    builder: (context, state) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        width: double.infinity,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          border: Border.fromBorderSide(
+                              BorderSide(color: AppColors.grey)),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            icon: const Icon(Icons.arrow_drop_down),
+                            iconSize: 24,
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.black),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: dropdownList
+                                .map<DropdownMenuItem<String>>((String? value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value!),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  10.height,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [

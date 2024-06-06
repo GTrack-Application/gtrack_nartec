@@ -13,8 +13,6 @@ class GLNController {
     String? token = await AppPreferences.getToken();
     String url = "${AppUrls.baseUrlWith3093}/api/gln?user_id=$userId";
 
-    print(url);
-
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
@@ -24,8 +22,6 @@ class GLNController {
     };
 
     var response = await http.get(uri, headers: headers);
-
-    print(json.decode(response.body));
 
     var data = json.decode(response.body) as List;
 

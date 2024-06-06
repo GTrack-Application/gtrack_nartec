@@ -146,7 +146,6 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
                             )
                           : ListView.builder(
                               itemCount: products.length,
-                              reverse: true,
                               shrinkWrap: true,
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
@@ -154,9 +153,7 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
                                   width: context.width() * 0.9,
                                   alignment: Alignment.center,
                                   margin: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
-                                  ),
+                                      horizontal: 20, vertical: 10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),

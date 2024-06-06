@@ -1,11 +1,16 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_gtin_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class CreateSerialScreen extends StatefulWidget {
-  final String gtin;
+  final GTIN_Model gtin;
   const CreateSerialScreen({super.key, required this.gtin});
 
   @override
@@ -130,7 +135,13 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                           listener: (context, state) {
                             if (state is CaptureCreateSerializationSuccess) {
                               toast("Serials created successfully");
-                              Navigator.pop(context);
+                              CaptureCubit.get(context).getSerializationData(
+                                  widget.gtin.barcode ?? "");
+                              AppNavigator.replaceTo(
+                                  context: context,
+                                  screen: SerializationGtinScreen(
+                                    gtinModel: widget.gtin,
+                                  ));
                             } else if (state
                                 is CaptureCreateSerializationError) {
                               toast(state.message);
@@ -139,9 +150,8 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                           builder: (context, state) {
                             return ElevatedButton(
                               onPressed: () {
-                                CaptureCubit.get(context).createNewSerial(
-                                  widget.gtin,
-                                );
+                                CaptureCubit.get(context)
+                                    .createNewSerial(widget.gtin.barcode ?? "");
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.pink,

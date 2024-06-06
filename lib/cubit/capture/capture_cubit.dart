@@ -148,7 +148,8 @@ class CaptureCubit extends Cubit<CaptureState> {
       var network = await isNetworkAvailable();
       if (network) {
         emit(CaptureGetGtinProductsLoading());
-        final data = await CaptureController().getProducts(gtin: gtin.text);
+        final data =
+            await CaptureController().getProducts(gtin: gtin.text.trim());
         if (data.isEmpty) {
           emit(CaptureGetGtinProductsEmpty());
         } else {

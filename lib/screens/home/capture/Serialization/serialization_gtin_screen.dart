@@ -20,9 +20,9 @@ class SerializationGtinScreen extends StatefulWidget {
 class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
   @override
   void initState() {
-    CaptureCubit.get(context)
-        .getSerializationData(widget.gtinModel.barcode ?? '');
     super.initState();
+    // clear the list of serials
+    CaptureCubit.get(context).serializationData = [];
   }
 
   @override
@@ -41,6 +41,19 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
             10.height,
             _buildGTINText(context, widget.gtinModel.barcode ?? ''),
             10.height,
+            Container(
+              alignment: Alignment.centerLeft,
+              width: double.infinity,
+              height: 40,
+              color: AppColors.pink,
+              child: const Text(
+                "  List of Generated Serials",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             _buildSerializationList(context),
             10.height,
             _buildCreateSerialsButton(context),
@@ -146,11 +159,9 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
         ElevatedButton(
           onPressed: () {
             // Implement the create serials functionality
-            AppNavigator.goToPage(
+            AppNavigator.replaceTo(
               context: context,
-              screen: CreateSerialScreen(
-                gtin: widget.gtinModel.barcode ?? '',
-              ),
+              screen: CreateSerialScreen(gtin: widget.gtinModel),
             );
           },
           style: ElevatedButton.styleFrom(
