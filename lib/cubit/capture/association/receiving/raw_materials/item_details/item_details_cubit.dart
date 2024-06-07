@@ -181,4 +181,25 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
       emit(ItemDetailsAssetDetailsError(e.toString()));
     }
   }
+
+  void clearEverything() {
+    emit(ItemDetailsInitial());
+    shipmentIdController.clear();
+    quantityController.clear();
+    batchNoController.clear();
+    expiryDateController.clear();
+    manufactureDateController.clear();
+    netWeightController.clear();
+    unitController.clear();
+    transpoGLNController.clear();
+    putAwayLocation.clear();
+    glnIdFrom = null;
+    typeOfTransaction = null;
+    assetIdController.clear();
+    tagNoController.clear();
+    descriptionController.clear();
+    classController.clear();
+    locationController.clear();
+    assets.clear();
+  }
 }

@@ -405,6 +405,8 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                     listener: (context, state) {
                       if (state is ItemDetailsSuccess) {
                         toast("Item details saved successfully!");
+                        ItemDetailsCubit.get(context).clearEverything();
+                        Navigator.pop(context);
                       } else if (state is ItemDetailsError) {
                         toast(state.message.toString());
                       }
