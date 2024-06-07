@@ -114,6 +114,8 @@ class AssemblingController {
 
     final url = "${AppUrls.baseUrlWith7000}/api/getPackedItemsByGLN?GLN=$gln";
 
+    print(url);
+
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
@@ -131,7 +133,8 @@ class AssemblingController {
           data.map((e) => PackedItemsModel.fromJson(e)).toList();
       return products;
     } else {
-      return [];
+      var msg = json.decode(response.body)['message'];
+      throw Exception(msg);
     }
   }
 

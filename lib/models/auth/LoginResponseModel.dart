@@ -68,7 +68,7 @@ class MemberData {
   String? addressImage;
   String? status;
   String? paymentType;
-  int? paymentStatus;
+  String? paymentStatus;
   String? onlinePayment;
   String? rememberToken;
   String? parentMemberID;
@@ -87,192 +87,193 @@ class MemberData {
   String? remarks;
   String? assignTo;
   String? membershipCategory;
-  int? upgradationDisc;
-  int? upgradationDiscAmount;
-  int? renewalDisc;
-  int? renewalDiscAmount;
+  String? upgradationDisc;
+  String? upgradationDiscAmount;
+  String? renewalDisc;
+  String? renewalDiscAmount;
   String? membershipOtherCategory;
-  int? activityID;
+  String? activityID;
   String? registrationType;
   String? city;
   String? country;
   String? state;
   String? zipCode;
-  int? oldMemberRecheck;
-  int? isLogin;
+  String? oldMemberRecheck;
+  String? isLogin;
   String? membershipCategoryId;
   String? industryTypes;
-  int? isproductApproved;
+  String? isproductApproved;
   String? pendingInvoices;
   String? memberType;
-  int? gepirPosted;
+  String? gepirPosted;
   String? apiKey;
   List<Carts>? carts;
 
-  MemberData(
-      {this.id,
-      this.userType,
-      this.slug,
-      this.locationUk,
-      this.haveCr,
-      this.crDocumentID,
-      this.documentNumber,
-      this.fname,
-      this.lname,
-      this.email,
-      this.mobile,
-      this.image,
-      this.poBox,
-      this.mblExtension,
-      this.website,
-      this.noOfStaff,
-      this.companyID,
-      this.district,
-      this.buildingNo,
-      this.additionalNumber,
-      this.otherLandline,
-      this.unitNumber,
-      this.qrCorde,
-      this.emailVerifiedAt,
-      this.verificationCode,
-      this.crNumber,
-      this.crActivity,
-      this.companyNameEng,
-      this.companyNameArabic,
-      this.bussinessActivity,
-      this.memberCategory,
-      this.otherProducts,
-      this.gpc,
-      this.productAddons,
-      this.total,
-      this.contactPerson,
-      this.companyLandLine,
-      this.documents,
-      this.addressImage,
-      this.status,
-      this.paymentType,
-      this.paymentStatus,
-      this.onlinePayment,
-      this.rememberToken,
-      this.parentMemberID,
-      this.invoiceFile,
-      this.otpStatus,
-      this.transactionId,
-      this.createdAt,
-      this.updatedAt,
-      this.gcpGLNID,
-      this.gln,
-      this.gcpType,
-      this.deletedAt,
-      this.gcpExpiry,
-      this.memberID,
-      this.userId,
-      this.remarks,
-      this.assignTo,
-      this.membershipCategory,
-      this.upgradationDisc,
-      this.upgradationDiscAmount,
-      this.renewalDisc,
-      this.renewalDiscAmount,
-      this.membershipOtherCategory,
-      this.activityID,
-      this.registrationType,
-      this.city,
-      this.country,
-      this.state,
-      this.zipCode,
-      this.oldMemberRecheck,
-      this.isLogin,
-      this.membershipCategoryId,
-      this.industryTypes,
-      this.isproductApproved,
-      this.pendingInvoices,
-      this.memberType,
-      this.gepirPosted,
-      this.apiKey,
-      this.carts});
+  MemberData({
+    this.id,
+    this.userType,
+    this.slug,
+    this.locationUk,
+    this.haveCr,
+    this.crDocumentID,
+    this.documentNumber,
+    this.fname,
+    this.lname,
+    this.email,
+    this.mobile,
+    this.image,
+    this.poBox,
+    this.mblExtension,
+    this.website,
+    this.noOfStaff,
+    this.companyID,
+    this.district,
+    this.buildingNo,
+    this.additionalNumber,
+    this.otherLandline,
+    this.unitNumber,
+    this.qrCorde,
+    this.emailVerifiedAt,
+    this.verificationCode,
+    this.crNumber,
+    this.crActivity,
+    this.companyNameEng,
+    this.companyNameArabic,
+    this.bussinessActivity,
+    this.memberCategory,
+    this.otherProducts,
+    this.gpc,
+    this.productAddons,
+    this.total,
+    this.contactPerson,
+    this.companyLandLine,
+    this.documents,
+    this.addressImage,
+    this.status,
+    this.paymentType,
+    this.paymentStatus,
+    this.onlinePayment,
+    this.rememberToken,
+    this.parentMemberID,
+    this.invoiceFile,
+    this.otpStatus,
+    this.transactionId,
+    this.createdAt,
+    this.updatedAt,
+    this.gcpGLNID,
+    this.gln,
+    this.gcpType,
+    this.deletedAt,
+    this.gcpExpiry,
+    this.memberID,
+    this.userId,
+    this.remarks,
+    this.assignTo,
+    this.membershipCategory,
+    this.upgradationDisc,
+    this.upgradationDiscAmount,
+    this.renewalDisc,
+    this.renewalDiscAmount,
+    this.membershipOtherCategory,
+    this.activityID,
+    this.registrationType,
+    this.city,
+    this.country,
+    this.state,
+    this.zipCode,
+    this.oldMemberRecheck,
+    this.isLogin,
+    this.membershipCategoryId,
+    this.industryTypes,
+    this.isproductApproved,
+    this.pendingInvoices,
+    this.memberType,
+    this.gepirPosted,
+    this.apiKey,
+    this.carts,
+  });
 
   MemberData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userType = json['user_type'];
-    slug = json['slug'];
-    locationUk = json['location_uk'];
-    haveCr = json['have_cr'];
-    crDocumentID = json['cr_documentID'];
-    documentNumber = json['document_number'];
-    fname = json['fname'];
-    lname = json['lname'];
-    email = json['email'];
-    mobile = json['mobile'];
-    image = json['image'];
-    poBox = json['po_box'];
-    mblExtension = json['mbl_extension'];
-    website = json['website'];
-    noOfStaff = json['no_of_staff'];
-    companyID = json['companyID'];
-    district = json['district'];
-    buildingNo = json['building_no'];
-    additionalNumber = json['additional_number'];
-    otherLandline = json['other_landline'];
-    unitNumber = json['unit_number'];
-    qrCorde = json['qr_corde'];
-    emailVerifiedAt = json['email_verified_at'];
-    verificationCode = json['verification_code'];
-    crNumber = json['cr_number'];
-    crActivity = json['cr_activity'];
-    companyNameEng = json['company_name_eng'];
-    companyNameArabic = json['company_name_arabic'];
-    bussinessActivity = json['bussiness_activity'];
-    memberCategory = json['member_category'];
-    otherProducts = json['other_products'];
-    gpc = json['gpc'];
-    productAddons = json['product_addons'];
-    total = json['total'];
-    contactPerson = json['contactPerson'];
-    companyLandLine = json['companyLandLine'];
-    documents = json['documents'];
-    addressImage = json['address_image'];
-    status = json['status'];
-    paymentType = json['payment_type'];
-    paymentStatus = json['payment_status'];
-    onlinePayment = json['online_payment'];
-    rememberToken = json['remember_token'];
-    parentMemberID = json['parent_memberID'];
-    invoiceFile = json['invoice_file'];
-    otpStatus = json['otp_status'];
-    transactionId = json['transaction_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    gcpGLNID = json['gcpGLNID'];
-    gln = json['gln'];
-    gcpType = json['gcp_type'];
-    deletedAt = json['deleted_at'];
-    gcpExpiry = json['gcp_expiry'];
-    memberID = json['memberID'];
-    userId = json['user_id'];
-    remarks = json['remarks'];
-    assignTo = json['assign_to'];
-    membershipCategory = json['membership_category'];
-    upgradationDisc = json['upgradation_disc'];
-    upgradationDiscAmount = json['upgradation_disc_amount'];
-    renewalDisc = json['renewal_disc'];
-    renewalDiscAmount = json['renewal_disc_amount'];
-    membershipOtherCategory = json['membership_otherCategory'];
-    activityID = json['activityID'];
-    registrationType = json['registration_type'];
-    city = json['city'];
-    country = json['country'];
-    state = json['state'];
-    zipCode = json['zip_code'];
-    oldMemberRecheck = json['old_member_recheck'];
-    isLogin = json['is_login'];
-    membershipCategoryId = json['membership_category_id'];
-    industryTypes = json['industryTypes'];
-    isproductApproved = json['isproductApproved'];
-    pendingInvoices = json['pending_invoices'];
-    memberType = json['member_type'];
-    gepirPosted = json['gepirPosted'];
-    apiKey = json['api_key'];
+    id = json['id'].toString();
+    userType = json['user_type'].toString();
+    slug = json['slug'].toString();
+    locationUk = json['location_uk'].toString();
+    haveCr = json['have_cr'].toString();
+    crDocumentID = json['cr_documentID'].toString();
+    documentNumber = json['document_number'].toString();
+    fname = json['fname'].toString();
+    lname = json['lname'].toString();
+    email = json['email'].toString();
+    mobile = json['mobile'].toString();
+    image = json['image'].toString();
+    poBox = json['po_box'].toString();
+    mblExtension = json['mbl_extension'].toString();
+    website = json['website'].toString();
+    noOfStaff = json['no_of_staff'].toString();
+    companyID = json['companyID'].toString();
+    district = json['district'].toString();
+    buildingNo = json['building_no'].toString();
+    additionalNumber = json['additional_number'].toString();
+    otherLandline = json['other_landline'].toString();
+    unitNumber = json['unit_number'].toString();
+    qrCorde = json['qr_corde'].toString();
+    emailVerifiedAt = json['email_verified_at'].toString();
+    verificationCode = json['verification_code'].toString();
+    crNumber = json['cr_number'].toString();
+    crActivity = json['cr_activity'].toString();
+    companyNameEng = json['company_name_eng'].toString();
+    companyNameArabic = json['company_name_arabic'].toString();
+    bussinessActivity = json['bussiness_activity'].toString();
+    memberCategory = json['member_category'].toString();
+    otherProducts = json['other_products'].toString();
+    gpc = json['gpc'].toString();
+    productAddons = json['product_addons'].toString();
+    total = json['total'].toString();
+    contactPerson = json['contactPerson'].toString();
+    companyLandLine = json['companyLandLine'].toString();
+    documents = json['documents'].toString();
+    addressImage = json['address_image'].toString();
+    status = json['status'].toString();
+    paymentType = json['payment_type'].toString();
+    paymentStatus = json['payment_status'].toString();
+    onlinePayment = json['online_payment'].toString();
+    rememberToken = json['remember_token'].toString();
+    parentMemberID = json['parent_memberID'].toString();
+    invoiceFile = json['invoice_file'].toString();
+    otpStatus = json['otp_status'].toString();
+    transactionId = json['transaction_id'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
+    gcpGLNID = json['gcpGLNID'].toString();
+    gln = json['gln'].toString();
+    gcpType = json['gcp_type'].toString();
+    deletedAt = json['deleted_at'].toString();
+    gcpExpiry = json['gcp_expiry'].toString();
+    memberID = json['memberID'].toString();
+    userId = json['user_id'].toString();
+    remarks = json['remarks'].toString();
+    assignTo = json['assign_to'].toString();
+    membershipCategory = json['membership_category'].toString();
+    upgradationDisc = json['upgradation_disc'].toString();
+    upgradationDiscAmount = json['upgradation_disc_amount'].toString();
+    renewalDisc = json['renewal_disc'].toString();
+    renewalDiscAmount = json['renewal_disc_amount'].toString();
+    membershipOtherCategory = json['membership_otherCategory'].toString();
+    activityID = json['activityID'].toString();
+    registrationType = json['registration_type'].toString();
+    city = json['city'].toString();
+    country = json['country'].toString();
+    state = json['state'].toString();
+    zipCode = json['zip_code'].toString();
+    oldMemberRecheck = json['old_member_recheck'].toString();
+    isLogin = json['is_login'].toString();
+    membershipCategoryId = json['membership_category_id'].toString();
+    industryTypes = json['industryTypes'].toString();
+    isproductApproved = json['isproductApproved'].toString();
+    pendingInvoices = json['pending_invoices'].toString();
+    memberType = json['member_type'].toString();
+    gepirPosted = json['gepirPosted'].toString();
+    apiKey = json['api_key'].toString();
     if (json['carts'] != null) {
       carts = <Carts>[];
       json['carts'].forEach((v) {
@@ -386,49 +387,50 @@ class Carts {
   String? rejectBy;
   String? receipt;
   String? receiptPath;
-  int? adminId;
-  int? assignTo;
-  int? discount;
+  String? adminId;
+  String? assignTo;
+  String? discount;
 
-  Carts(
-      {this.id,
-      this.transactionId,
-      this.cartItems,
-      this.total,
-      this.documents,
-      this.requestType,
-      this.paymentType,
-      this.userId,
-      this.createdAt,
-      this.updatedAt,
-      this.deletedAt,
-      this.rejectReason,
-      this.rejectBy,
-      this.receipt,
-      this.receiptPath,
-      this.adminId,
-      this.assignTo,
-      this.discount});
+  Carts({
+    this.id,
+    this.transactionId,
+    this.cartItems,
+    this.total,
+    this.documents,
+    this.requestType,
+    this.paymentType,
+    this.userId,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.rejectReason,
+    this.rejectBy,
+    this.receipt,
+    this.receiptPath,
+    this.adminId,
+    this.assignTo,
+    this.discount,
+  });
 
   Carts.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    transactionId = json['transaction_id'];
-    cartItems = json['cart_items'];
-    total = json['total'];
-    documents = json['documents'];
-    requestType = json['request_type'];
-    paymentType = json['payment_type'];
-    userId = json['user_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    deletedAt = json['deleted_at'];
-    rejectReason = json['reject_reason'];
-    rejectBy = json['reject_by'];
-    receipt = json['receipt'];
-    receiptPath = json['receipt_path'];
-    adminId = json['admin_id'];
-    assignTo = json['assign_to'];
-    discount = json['discount'];
+    id = json['id'].toString();
+    transactionId = json['transaction_id'].toString();
+    cartItems = json['cart_items'].toString();
+    total = json['total'].toString();
+    documents = json['documents'].toString();
+    requestType = json['request_type'].toString();
+    paymentType = json['payment_type'].toString();
+    userId = json['user_id'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
+    deletedAt = json['deleted_at'].toString();
+    rejectReason = json['reject_reason'].toString();
+    rejectBy = json['reject_by'].toString();
+    receipt = json['receipt'].toString();
+    receiptPath = json['receipt_path'].toString();
+    adminId = json['admin_id'].toString();
+    assignTo = json['assign_to'].toString();
+    discount = json['discount'].toString();
   }
 
   Map<String, dynamic> toJson() {

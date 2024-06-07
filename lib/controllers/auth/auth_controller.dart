@@ -38,6 +38,8 @@ class AuthController {
 
     var data = json.decode(response.body);
 
+    print(data);
+
     if (response.statusCode == 200) {
       return LoginResponseModel.fromJson(data);
     } else {

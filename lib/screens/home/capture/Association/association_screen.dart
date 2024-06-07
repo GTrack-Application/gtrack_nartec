@@ -7,6 +7,7 @@ import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Mapping/mapping_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/receiving_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/shipping_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/ItemReallocation/ItemReAllocationScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/transfer_screen.dart';
 
 class AssociationScreen extends StatefulWidget {
@@ -86,6 +87,8 @@ class _AssociationScreenState extends State<AssociationScreen> {
         context: context, screen: const ConsignmentScreen());
     data[8]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const TransferScreen());
+    data[9]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const ItemReAllocationScreen());
     data[10]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const MappingScreen());
   }

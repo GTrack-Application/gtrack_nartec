@@ -67,187 +67,207 @@ class _PackingScreenState extends State<PackingScreen> {
             }
           },
           builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    width: double.infinity,
-                    height: 50,
-                    decoration: const BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      border: Border.fromBorderSide(
-                          BorderSide(color: AppColors.grey)),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: dropdownValue,
-                        icon: const Icon(Icons.arrow_drop_down),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: const TextStyle(color: Colors.black),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue;
-                          });
-                          packedItemsCubit.getPackedItems(
-                              gln[dropdownList.indexOf(newValue!)]);
-                        },
-                        items: dropdownList
-                            .map<DropdownMenuItem<String>>((String? value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value!),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    width: context.width() * 1,
-                    height: 40,
-                    decoration: const BoxDecoration(color: AppColors.primary),
-                    child: const Text(
-                      'List of Pack Items',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: BlocConsumer<PackedItemsCubit, PackedItemsState>(
-                        bloc: packedItemsCubit,
-                        listener: (context, state) {
-                          if (state is PackedItemsError) {
-                            toast(state.message);
-                          }
-                          if (state is PackedItemsLoaded) {
-                            products = state.data;
-                          }
-                        },
-                        builder: (context, state) {
-                          return RefreshIndicator(
-                            onRefresh: () async {
-                              packedItemsCubit.getPackedItems(
-                                  gln[dropdownList.indexOf(dropdownValue!)]);
-                            },
-                            child: ListView.builder(
-                              itemCount: products.length,
-                              shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  width: context.width() * 0.9,
-                                  alignment: Alignment.center,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 5,
-                                        blurRadius: 7,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                    border: Border.all(
-                                        color: Colors.grey.withOpacity(0.2)),
-                                  ),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.all(10),
-                                    title: Text(
-                                      products[index].itemName ?? "",
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      products[index].gTIN ?? "",
-                                      style: const TextStyle(fontSize: 13),
-                                    ),
-                                    leading: Hero(
-                                      tag: products[index].id ?? "",
-                                      child: ClipOval(
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              "${AppUrls.baseUrlWith3093}${products[index].itemImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
-                                          width: 50,
-                                          height: 50,
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.image_outlined),
-                                        ),
-                                      ),
-                                    ),
-                                    trailing: GestureDetector(
-                                      onTap: () {
-                                        AppNavigator.goToPage(
-                                          context: context,
-                                          screen: PackingDetailsScreen(
-                                            employees: products[index],
-                                          ),
-                                        );
-                                      },
-                                      child:
-                                          Image.asset("assets/icons/view.png"),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+            return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CompletePackingScreen(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(249, 75, 0, 1),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        width: double.infinity,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          border: Border.fromBorderSide(
+                              BorderSide(color: AppColors.grey)),
                         ),
-                        child: const Text(
-                          'Start Packing',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            icon: const Icon(Icons.arrow_drop_down),
+                            iconSize: 24,
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.black),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                              packedItemsCubit.getPackedItems(
+                                  gln[dropdownList.indexOf(newValue!)]);
+                            },
+                            items: dropdownList
+                                .map<DropdownMenuItem<String>>((String? value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value!),
+                              );
+                            }).toList(),
                           ),
                         ),
                       ),
+                      const SizedBox(height: 20),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        width: context.width() * 1,
+                        height: 40,
+                        decoration:
+                            const BoxDecoration(color: AppColors.primary),
+                        child: const Text(
+                          'List of Pack Items',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child:
+                              BlocConsumer<PackedItemsCubit, PackedItemsState>(
+                            bloc: packedItemsCubit,
+                            listener: (context, state) {
+                              if (state is PackedItemsError) {
+                                toast(state.message);
+                              }
+                              if (state is PackedItemsLoaded) {
+                                products = state.data;
+                              }
+                            },
+                            builder: (context, state) {
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  packedItemsCubit.getPackedItems(
+                                    gln[dropdownList.indexOf(dropdownValue!)],
+                                  );
+                                },
+                                child: ListView.builder(
+                                  itemCount: products.length,
+                                  shrinkWrap: true,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      width: context.width() * 0.9,
+                                      alignment: Alignment.center,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                        border: Border.all(
+                                            color:
+                                                Colors.grey.withOpacity(0.2)),
+                                      ),
+                                      child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.all(10),
+                                        title: Text(
+                                          products[index].itemName ?? "",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          products[index].gTIN ?? "",
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                        leading: Hero(
+                                          tag: products[index].id ?? "",
+                                          child: ClipOval(
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  "${AppUrls.baseUrlWith3093}${products[index].itemImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(
+                                                          Icons.image_outlined),
+                                            ),
+                                          ),
+                                        ),
+                                        trailing: GestureDetector(
+                                          onTap: () {
+                                            AppNavigator.goToPage(
+                                              context: context,
+                                              screen: PackingDetailsScreen(
+                                                employees: products[index],
+                                              ),
+                                            );
+                                          },
+                                          child: Image.asset(
+                                              "assets/icons/view.png"),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const CompletePackingScreen(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromRGBO(249, 75, 0, 1),
+                            ),
+                            child: const Text(
+                              'Start Packing',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                Visibility(
+                  visible: state is GlnLoadingState,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
             );
           },
         ),
