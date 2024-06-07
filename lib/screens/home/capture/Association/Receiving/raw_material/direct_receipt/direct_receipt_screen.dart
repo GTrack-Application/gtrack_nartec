@@ -318,7 +318,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                     title: Text(
                                       products[index].brandName ?? "",
                                       style: const TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
