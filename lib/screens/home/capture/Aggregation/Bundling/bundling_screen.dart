@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_state.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_cubit.dart';
@@ -339,6 +340,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                                     products = [];
                                   });
                                   toast("Bundle Created Successfully");
+                                  insertGtrackEPCISLog();
                                   AppNavigator.goToPage(
                                     context: context,
                                     screen: const CreatedBundleScreen(),
@@ -451,5 +453,14 @@ class _BundlingScreenState extends State<BundlingScreen> {
         ),
       ),
     );
+  }
+
+  insertGtrackEPCISLog() async {
+    RawMaterialsToWIPController.insertGtrackEPCISLog(
+        "Bundling",
+        products[0].barcode.toString(),
+        products[0].gcpGLNID.toString(),
+        products[0].gcpGLNID.toString(),
+        'Manufacturing');
   }
 }

@@ -125,10 +125,10 @@ class RawMaterialsToWIPController {
   }
 
   static Future<void> insertEPCISEvent(
-    String EventAction,
+    String EventAction, // OBSERVE
     int totalRows,
     String eventAction,
-    String disposition,
+    String disposition, // // Internal Transfer
     String bizStep,
     String readPoint,
     String bizTransactionList,
@@ -196,6 +196,50 @@ class RawMaterialsToWIPController {
 
     var response =
         await http.post(url, headers: headers, body: jsonEncode(body));
+
+    var data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return data;
+    } else {
+      var msg = data['error'];
+      throw Exception(msg);
+    }
+  }
+
+  static Future<void> insertGtrackEPCISLog(
+    String transactionType,
+    String gtin,
+    String glnFrom,
+    String glnTo,
+    String industryType,
+  ) async {
+    // // String? token;
+    // await AppPreferences.getToken().then((value) => token = value.toString());
+    String? userId;
+    await AppPreferences.getUserId().then((value) => userId = value.toString());
+
+    final url =
+        Uri.parse('${AppUrls.baseUrlWith7000}/api/insertGtrackEPCISLog');
+
+    print(url);
+
+    final headers = {
+      'Authorization': 'Bearer token',
+      'Host': AppUrls.host,
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      "gs1_user_id": userId.toString(),
+      "TransactionType": transactionType,
+      "GTIN": gtin,
+      "GLNFrom": glnFrom,
+      "GLNTo": glnTo,
+      "IndustryType": industryType
+    });
+
+    var response = await http.post(url, headers: headers, body: body);
 
     var data = jsonDecode(response.body);
 

@@ -11,7 +11,7 @@ import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/BinToBinAXAPTA/BinToBinAxapta2Screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials_RM/BinToBinAXAPTA/BinToBinAxapta2Screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials_RM/BinToBinAXAPTA/bin_to_bin_details_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 

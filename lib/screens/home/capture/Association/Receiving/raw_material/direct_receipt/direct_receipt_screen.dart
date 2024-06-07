@@ -15,6 +15,7 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/raw_material/direct_receipt/direct_receipt_details_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/raw_material/direct_receipt/direct_receipt_save_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -204,6 +205,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
                               }
+                              FocusScope.of(context).requestFocus(FocusNode());
                               getShipmentCubit.getShipmentData(
                                 receivingTypeValueId.toString(),
                                 ItemDetailsCubit.get(context)
@@ -289,6 +291,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                         builder: (context, state) {
                           return RefreshIndicator(
                             onRefresh: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
                               getShipmentCubit.getShipmentData(
                                 receivingTypeValueId.toString(),
                                 ItemDetailsCubit.get(context)
@@ -337,7 +340,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                     title: Text(
                                       products[index].brandName ?? "",
                                       style: const TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -361,12 +364,12 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                     ),
                                     trailing: GestureDetector(
                                       onTap: () {
-                                        // AppNavigator.goToPage(
-                                        //   context: context,
-                                        //   screen: AssemblyDetailsScreen(
-                                        //     employees: products[index],
-                                        //   ),
-                                        // );
+                                        AppNavigator.goToPage(
+                                          context: context,
+                                          screen: DirectReceiptDetailsScreen(
+                                            employees: products[index],
+                                          ),
+                                        );
                                       },
                                       child:
                                           Image.asset("assets/icons/view.png"),

@@ -1,3 +1,4 @@
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/complete_packing/complete_packing_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/complete_packing/complete_packing_state.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
@@ -402,6 +403,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                     }
                     if (state is CompletePackingLoaded) {
                       toast("Packing Completed Successfully!");
+                      insertGtrackEPCISLog();
                       Navigator.of(context).pop();
                     }
                   },
@@ -463,5 +465,14 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
         ),
       ),
     );
+  }
+
+  insertGtrackEPCISLog() async {
+    RawMaterialsToWIPController.insertGtrackEPCISLog(
+        "Packing",
+        product!.data!.gtin.toString(),
+        product!.data!.gcpGLNID.toString(),
+        product!.data!.gcpGLNID.toString(),
+        'Manufacturing');
   }
 }
