@@ -6,16 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packed_items/packed_items_state.dart';
 import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/direct_receipt_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/direct_receipt_state.dart';
+import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/get_shipment_data/get_shipment_cubit.dart';
+import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/get_shipment_data/get_shipment_state.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/packing/PackedItemsModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/packing/complete_packing_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/packing/packing_details_screen.dart';
+import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/raw_material/direct_receipt/direct_receipt_save_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DirectReceiptScreen extends StatefulWidget {
@@ -30,6 +29,9 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
 
   GlnCubit glnCubit = GlnCubit();
   DirectReceiptCubit directReceiptCubit = DirectReceiptCubit();
+
+  GetShipmentCubit getShipmentCubit = GetShipmentCubit();
+  List<ShipmentDataModel> products = [];
 
   List<GLNProductsModel> table = [];
   List<Map<String, dynamic>> data = [];
@@ -51,15 +53,12 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
     directReceiptCubit.getReceivingTypes();
   }
 
-  PackedItemsCubit packedItemsCubit = PackedItemsCubit();
-  List<PackedItemsModel> products = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Packing'),
+        title: const Text('Direct Receipts'),
         backgroundColor: AppColors.pink,
       ),
       body: SafeArea(
@@ -107,8 +106,6 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                           setState(() {
                             dropdownValue = newValue;
                           });
-                          packedItemsCubit.getPackedItems(
-                              gln[dropdownList.indexOf(newValue!)]);
                         },
                         items: dropdownList
                             .map<DropdownMenuItem<String>>((String? value) {
@@ -177,6 +174,13 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                     },
                   ),
                   const SizedBox(height: 10),
+                  Text(
+                    receivingTypeValue.toString(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -185,13 +189,21 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                           height: 40,
                           child: TextField(
                             controller: searchController,
-                            onSubmitted: (value) {
-                              FocusScope.of(context).unfocus();
+                            onEditingComplete: () {
+                              if (searchController.text.isEmpty) {
+                                // hide keyboard
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                              }
+                              getShipmentCubit.getShipmentData(
+                                receivingTypeValueId.toString(),
+                                searchController.text.trim().toString(),
+                              );
                             },
                             decoration: InputDecoration(
                               contentPadding:
                                   const EdgeInsets.only(left: 10, top: 5),
-                              hintText: 'Search',
+                              hintText: '$receivingTypeValue Number',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -201,7 +213,12 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                       ),
                       5.width,
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          getShipmentCubit.getShipmentData(
+                            receivingTypeValueId.toString(),
+                            searchController.text.trim().toString(),
+                          );
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             color: AppColors.white,
@@ -242,21 +259,23 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: BlocConsumer<PackedItemsCubit, PackedItemsState>(
-                        bloc: packedItemsCubit,
+                      child: BlocConsumer<GetShipmentCubit, GetShipmentState>(
+                        bloc: getShipmentCubit,
                         listener: (context, state) {
-                          if (state is PackedItemsError) {
+                          if (state is GetShipmentError) {
                             toast(state.message);
                           }
-                          if (state is PackedItemsLoaded) {
-                            products = state.data;
+                          if (state is GetShipmentLoaded) {
+                            products.add(state.shipment);
                           }
                         },
                         builder: (context, state) {
                           return RefreshIndicator(
                             onRefresh: () async {
-                              packedItemsCubit.getPackedItems(
-                                  gln[dropdownList.indexOf(dropdownValue!)]);
+                              getShipmentCubit.getShipmentData(
+                                receivingTypeValueId.toString(),
+                                searchController.text.trim().toString(),
+                              );
                             },
                             child: ListView.builder(
                               itemCount: products.length,
@@ -285,16 +304,23 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                         color: Colors.grey.withOpacity(0.2)),
                                   ),
                                   child: ListTile(
+                                    onTap: () {
+                                      AppNavigator.goToPage(
+                                        context: context,
+                                        screen: DirectReceiptSaveScreen(
+                                            productsModel: products[index]),
+                                      );
+                                    },
                                     contentPadding: const EdgeInsets.all(10),
                                     title: Text(
-                                      products[index].itemName ?? "",
+                                      products[index].brandName ?? "",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     subtitle: Text(
-                                      products[index].gTIN ?? "",
+                                      products[index].brandName ?? "",
                                       style: const TextStyle(fontSize: 13),
                                     ),
                                     leading: Hero(
@@ -302,7 +328,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                       child: ClipOval(
                                         child: CachedNetworkImage(
                                           imageUrl:
-                                              "${AppUrls.baseUrlWith3093}${products[index].itemImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
+                                              "${AppUrls.baseUrlWith3093}${products[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
                                           width: 50,
                                           height: 50,
                                           fit: BoxFit.cover,
@@ -313,12 +339,12 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                     ),
                                     trailing: GestureDetector(
                                       onTap: () {
-                                        AppNavigator.goToPage(
-                                          context: context,
-                                          screen: PackingDetailsScreen(
-                                            employees: products[index],
-                                          ),
-                                        );
+                                        // AppNavigator.goToPage(
+                                        //   context: context,
+                                        //   screen: AssemblyDetailsScreen(
+                                        //     employees: products[index],
+                                        //   ),
+                                        // );
                                       },
                                       child:
                                           Image.asset("assets/icons/view.png"),
@@ -331,33 +357,6 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                         },
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CompletePackingScreen(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(249, 75, 0, 1),
-                        ),
-                        child: const Text(
-                          'Start Packing',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
