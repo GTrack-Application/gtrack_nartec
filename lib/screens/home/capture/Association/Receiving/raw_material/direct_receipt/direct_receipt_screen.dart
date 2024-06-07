@@ -10,6 +10,7 @@ import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materi
 import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/direct_receipt_state.dart';
 import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/get_shipment_data/get_shipment_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/get_shipment_data/get_shipment_state.dart';
+import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
@@ -25,8 +26,6 @@ class DirectReceiptScreen extends StatefulWidget {
 }
 
 class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
-  TextEditingController searchController = TextEditingController();
-
   GlnCubit glnCubit = GlnCubit();
   DirectReceiptCubit directReceiptCubit = DirectReceiptCubit();
 
@@ -77,6 +76,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
               gln = table.map((e) => e.gcpGLNID ?? "").toList();
               dropdownList = dropdownList.toSet().toList();
               dropdownValue = dropdownList[0];
+              ItemDetailsCubit.get(context).glnIdFrom = dropdownValue;
             }
           },
           builder: (context, state) {
@@ -105,6 +105,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                         onChanged: (String? newValue) {
                           setState(() {
                             dropdownValue = newValue;
+                            ItemDetailsCubit.get(context).glnIdFrom = newValue;
                           });
                         },
                         items: dropdownList
@@ -129,6 +130,8 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                             .map((e) => e['ReceivingType'].toString())
                             .toList();
                         receivingTypeValue = receivingType[0];
+                        ItemDetailsCubit.get(context).typeOfTransaction =
+                            receivingTypeValue;
                         receivingTypeValueIdList = state.directReceiptModel
                             .map((e) => e['id'].toString())
                             .toList();
@@ -156,6 +159,8 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 receivingTypeValue = newValue;
+                                ItemDetailsCubit.get(context)
+                                    .typeOfTransaction = newValue;
                                 receivingTypeValueId = receivingTypeValueIdList[
                                     receivingType.indexOf(newValue!)];
                               });
@@ -188,16 +193,24 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                         child: SizedBox(
                           height: 40,
                           child: TextField(
-                            controller: searchController,
+                            controller: ItemDetailsCubit.get(context)
+                                .shipmentIdController,
                             onEditingComplete: () {
-                              if (searchController.text.isEmpty) {
+                              if (ItemDetailsCubit.get(context)
+                                  .shipmentIdController
+                                  .text
+                                  .isEmpty) {
                                 // hide keyboard
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
                               }
                               getShipmentCubit.getShipmentData(
                                 receivingTypeValueId.toString(),
-                                searchController.text.trim().toString(),
+                                ItemDetailsCubit.get(context)
+                                    .shipmentIdController
+                                    .text
+                                    .trim()
+                                    .toString(),
                               );
                             },
                             decoration: InputDecoration(
@@ -216,7 +229,11 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                         onTap: () {
                           getShipmentCubit.getShipmentData(
                             receivingTypeValueId.toString(),
-                            searchController.text.trim().toString(),
+                            ItemDetailsCubit.get(context)
+                                .shipmentIdController
+                                .text
+                                .trim()
+                                .toString(),
                           );
                         },
                         child: Container(
@@ -274,7 +291,11 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                             onRefresh: () async {
                               getShipmentCubit.getShipmentData(
                                 receivingTypeValueId.toString(),
-                                searchController.text.trim().toString(),
+                                ItemDetailsCubit.get(context)
+                                    .shipmentIdController
+                                    .text
+                                    .trim()
+                                    .toString(),
                               );
                             },
                             child: ListView.builder(
@@ -308,7 +329,8 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                       AppNavigator.goToPage(
                                         context: context,
                                         screen: DirectReceiptSaveScreen(
-                                            productsModel: products[index]),
+                                          productsModel: products[index],
+                                        ),
                                       );
                                     },
                                     contentPadding: const EdgeInsets.all(10),

@@ -29,7 +29,7 @@ class ItemDetailsController {
         "glnIdTo": "GLN67890",
         "refNum": "REF123456789",
         "transpoGLN": "TRANSGLN123",
-        "status": "Pending",
+        // "status": "Pending",
         "details": {
           "GTIN": "GTIN1234567890",
           "ProductNameEn": "Product 1",
@@ -39,7 +39,7 @@ class ItemDetailsController {
           "NetWeight": 10.5,
           "UnitOfMeasure": "kg",
           "Quantity": 100,
-          "SSCC": "SSCC1234567890",
+          "SSCC": "",
           "ManufacturingDate": "2024-01-01T00:00:00Z",
           "ExpiryDate": "2025-01-01T00:00:00Z",
           "TranspoGLN": "TRANSGLN123"
@@ -53,6 +53,31 @@ class ItemDetailsController {
                   "AssetGLNLocation": asset.location
                 })
             .toList()
+      };
+    } else {
+      body = {
+        "userId": userId,
+        "typeOfTransaction": "Purchase",
+        "glnIdFrom": "GLN12345",
+        "glnIdTo": "GLN67890",
+        "refNum": "REF123456789",
+        "transpoGLN": "TRANSGLN123",
+        "status": "Picked",
+        /* Picked, Partial Picked */
+        "details": {
+          "GTIN": "GTIN1234567890",
+          "ProductNameEn": "Product 1",
+          "ProductNameAr": "منتج 1",
+          "BrandName": "Brand A",
+          "Batch": "Batch001",
+          "NetWeight": 10.5,
+          "UnitOfMeasure": "kg",
+          "Quantity": 100,
+          "SSCC": "",
+          "ManufacturingDate": "2024-01-01T00:00:00Z",
+          "ExpiryDate": "2025-01-01T00:00:00Z",
+          "TranspoGLN": "TRANSGLN123"
+        }
       };
     }
 

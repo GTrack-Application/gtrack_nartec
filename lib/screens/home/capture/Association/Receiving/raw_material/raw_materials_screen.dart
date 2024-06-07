@@ -70,7 +70,9 @@ class _RawMaterialsScreenState extends State<RawMaterialsScreen> {
   void initState() {
     super.initState();
     data[0]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const DirectReceiptScreen());
+          context: context,
+          screen: const DirectReceiptScreen(),
+        );
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(

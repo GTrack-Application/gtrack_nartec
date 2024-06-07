@@ -6,9 +6,13 @@ class ItemDetailsInitial extends ItemDetailsState {}
 
 // Loading
 
+class ItemDetailsLoading extends ItemDetailsState {}
+
 class ItemDetailsAssetDetailsLoading extends ItemDetailsState {}
 
 // * Success
+
+class ItemDetailsSuccess extends ItemDetailsState {}
 
 class ItemDetailsAssetDetailsSuccess extends ItemDetailsState {
   final AssetDetailsModel asset;
@@ -16,6 +20,11 @@ class ItemDetailsAssetDetailsSuccess extends ItemDetailsState {
 }
 
 // ! Error
+class ItemDetailsError extends ItemDetailsState {
+  final String message;
+
+  ItemDetailsError(this.message);
+}
 
 class ItemDetailsAssetDetailsError extends ItemDetailsState {
   final String message;

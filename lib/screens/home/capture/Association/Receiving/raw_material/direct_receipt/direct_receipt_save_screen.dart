@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
+import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:nb_utils/nb_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/raw_material/direct_receipt/asset_details_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class DirectReceiptSaveScreen extends StatefulWidget {
   const DirectReceiptSaveScreen({super.key, required this.productsModel});
@@ -17,15 +20,6 @@ class DirectReceiptSaveScreen extends StatefulWidget {
 }
 
 class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
-  TextEditingController quantityController = TextEditingController();
-  TextEditingController batchNoController = TextEditingController();
-  TextEditingController expiryDateController = TextEditingController();
-  TextEditingController manufactureDateController = TextEditingController();
-  TextEditingController netWeightController = TextEditingController();
-  TextEditingController unitController = TextEditingController();
-  TextEditingController transpoGLNController = TextEditingController();
-  TextEditingController putAwayLocation = TextEditingController();
-
   FocusNode searchFocusNode = FocusNode();
   FocusNode quantityFocusNode = FocusNode();
   FocusNode batchNoFocusNode = FocusNode();
@@ -37,16 +31,21 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
   FocusNode putAwayLocationFocusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     super.dispose();
-    quantityController.dispose();
-    batchNoController.dispose();
-    expiryDateController.dispose();
-    manufactureDateController.dispose();
-    netWeightController.dispose();
-    unitController.dispose();
-    transpoGLNController.dispose();
-    putAwayLocation.dispose();
+    // quantityController.dispose();
+    // batchNoController.dispose();
+    // expiryDateController.dispose();
+    // manufactureDateController.dispose();
+    // netWeightController.dispose();
+    // unitController.dispose();
+    // transpoGLNController.dispose();
+    // putAwayLocation.dispose();
 
     quantityFocusNode.dispose();
     batchNoFocusNode.dispose();
@@ -147,7 +146,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               SizedBox(
                 height: 40,
                 child: TextField(
-                  controller: quantityController,
+                  controller: ItemDetailsCubit.get(context).quantityController,
                   focusNode: quantityFocusNode,
                   onSubmitted: (value) {
                     batchNoFocusNode.requestFocus();
@@ -173,7 +172,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               SizedBox(
                 height: 40,
                 child: TextField(
-                  controller: batchNoController,
+                  controller: ItemDetailsCubit.get(context).batchNoController,
                   focusNode: batchNoFocusNode,
                   onSubmitted: (value) {
                     expiryDateFocusNode.requestFocus();
@@ -199,7 +198,8 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               SizedBox(
                 height: 40,
                 child: TextField(
-                  controller: expiryDateController,
+                  controller:
+                      ItemDetailsCubit.get(context).expiryDateController,
                   focusNode: expiryDateFocusNode,
                   onSubmitted: (value) {
                     manufactureDateFocusNode.requestFocus();
@@ -215,8 +215,9 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                           lastDate: DateTime(2100),
                         ).then((value) {
                           if (value != null) {
-                            expiryDateController.text =
-                                DateFormat('yyyy-MM-dd').format(value);
+                            ItemDetailsCubit.get(context)
+                                .expiryDateController
+                                .text = DateFormat('yyyy-MM-dd').format(value);
                           }
                         });
                       },
@@ -242,7 +243,8 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               SizedBox(
                 height: 40,
                 child: TextField(
-                  controller: manufactureDateController,
+                  controller:
+                      ItemDetailsCubit.get(context).manufactureDateController,
                   focusNode: manufactureDateFocusNode,
                   onSubmitted: (value) {
                     netWeightFocusNode.requestFocus();
@@ -257,8 +259,9 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                           lastDate: DateTime(2100),
                         ).then((value) {
                           if (value != null) {
-                            manufactureDateController.text =
-                                DateFormat('yyyy-MM-dd').format(value);
+                            ItemDetailsCubit.get(context)
+                                .manufactureDateController
+                                .text = DateFormat('yyyy-MM-dd').format(value);
                           }
                         });
                       },
@@ -284,7 +287,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               SizedBox(
                 height: 40,
                 child: TextField(
-                  controller: netWeightController,
+                  controller: ItemDetailsCubit.get(context).netWeightController,
                   focusNode: netWeightFocusNode,
                   onSubmitted: (value) {
                     unitFocusNode.requestFocus();
@@ -310,7 +313,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               SizedBox(
                 height: 40,
                 child: TextField(
-                  controller: unitController,
+                  controller: ItemDetailsCubit.get(context).unitController,
                   focusNode: unitFocusNode,
                   onSubmitted: (value) {
                     unitFocusNode.unfocus();
@@ -336,7 +339,8 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               SizedBox(
                 height: 40,
                 child: TextField(
-                  controller: transpoGLNController,
+                  controller:
+                      ItemDetailsCubit.get(context).transpoGLNController,
                   focusNode: transpoGLNFocusNode,
                   onSubmitted: (value) {
                     putAwayLocationFocusNode.requestFocus();
@@ -362,7 +366,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               SizedBox(
                 height: 40,
                 child: TextField(
-                  controller: putAwayLocation,
+                  controller: ItemDetailsCubit.get(context).putAwayLocation,
                   focusNode: putAwayLocationFocusNode,
                   onSubmitted: (value) {
                     putAwayLocationFocusNode.unfocus();
@@ -383,7 +387,9 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ElevatedButton(
                     onPressed: () {
                       AppNavigator.goToPage(
-                          context: context, screen: const AssetDetailsScreen());
+                        context: context,
+                        screen: const AssetDetailsScreen(),
+                      );
                     },
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.green),
@@ -395,27 +401,64 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (quantityController.text.isEmpty ||
-                          batchNoController.text.isEmpty ||
-                          expiryDateController.text.isEmpty ||
-                          manufactureDateController.text.isEmpty ||
-                          netWeightController.text.isEmpty ||
-                          unitController.text.isEmpty) {
-                        toast("Please fill all the above fields!");
-                        return;
+                  BlocConsumer<ItemDetailsCubit, ItemDetailsState>(
+                    listener: (context, state) {
+                      if (state is ItemDetailsSuccess) {
+                        toast("Item details saved successfully!");
+                      } else if (state is ItemDetailsError) {
+                        toast(state.message.toString());
                       }
                     },
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                    child: const Text(
-                      'Submit and Save',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                      ),
-                    ),
+                    builder: (context, state) {
+                      if (state is ItemDetailsLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return ElevatedButton(
+                        onPressed: () {
+                          if (ItemDetailsCubit.get(context)
+                                  .quantityController
+                                  .text
+                                  .isEmpty ||
+                              ItemDetailsCubit.get(context)
+                                  .batchNoController
+                                  .text
+                                  .isEmpty ||
+                              ItemDetailsCubit.get(context)
+                                  .expiryDateController
+                                  .text
+                                  .isEmpty ||
+                              ItemDetailsCubit.get(context)
+                                  .manufactureDateController
+                                  .text
+                                  .isEmpty ||
+                              ItemDetailsCubit.get(context)
+                                  .netWeightController
+                                  .text
+                                  .isEmpty ||
+                              ItemDetailsCubit.get(context)
+                                  .unitController
+                                  .text
+                                  .isEmpty) {
+                            toast("Please fill all the above fields!");
+                            return;
+                          }
+                          ItemDetailsCubit.get(context).saveItemDetails(
+                            widget.productsModel,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue),
+                        child: const Text(
+                          'Submit and Save',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

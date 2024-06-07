@@ -40,23 +40,33 @@ class AssetDetailsScreen extends StatelessWidget {
                 labelText: 'Asset GLNLocation',
               ),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (!ItemDetailsCubit.get(context).isEmptyTextField()) {
-                    ItemDetailsCubit.get(context).addAssetDetails();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
-                child: const Text('Add'),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      if (!ItemDetailsCubit.get(context).isEmptyTextField()) {
+                        ItemDetailsCubit.get(context).addAssetDetails();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: const Text('Add'),
+                  ),
+                ],
               ),
               const SizedBox(height: 16.0),
-              const Text(
-                'List of Assets',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              Container(
+                height: 40,
+                width: double.infinity,
+                alignment: Alignment.center,
+                color: AppColors.pink,
+                child: const Text(
+                  'List of Assets',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               BlocConsumer<ItemDetailsCubit, ItemDetailsState>(
