@@ -3,6 +3,7 @@ import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_mater
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/raw_material/direct_receipt/asset_details_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -383,7 +384,9 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ElevatedButton(
                     onPressed: () {
                       AppNavigator.goToPage(
-                          context: context, screen: const AssetDetailsScreen());
+                        context: context,
+                        screen: const AssetDetailsScreen(),
+                      );
                     },
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.green),
