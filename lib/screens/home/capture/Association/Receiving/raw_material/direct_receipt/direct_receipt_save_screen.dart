@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
@@ -404,6 +405,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   BlocConsumer<ItemDetailsCubit, ItemDetailsState>(
                     listener: (context, state) {
                       if (state is ItemDetailsSuccess) {
+                        insertGtrackEPCISLog();
                         toast("Item details saved successfully!");
                         ItemDetailsCubit.get(context).clearEverything();
                         Navigator.pop(context);
@@ -469,6 +471,16 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  insertGtrackEPCISLog() async {
+    RawMaterialsToWIPController.insertGtrackEPCISLog(
+      "Receiving (Direct Receipt)",
+      widget.productsModel.barcode.toString(),
+      widget.productsModel.gcpGLNID.toString(),
+      widget.productsModel.gcpGLNID.toString(),
+      'Manufacturing',
     );
   }
 }
