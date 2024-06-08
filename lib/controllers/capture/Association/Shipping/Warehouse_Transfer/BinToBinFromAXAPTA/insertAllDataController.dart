@@ -76,4 +76,64 @@ class InsertAllDataController {
       throw Exception(e);
     }
   }
+
+  static Future<void> postDataToWIPtoFG(
+    String transferId,
+    int transferStatus,
+    String inventLocationFrom,
+    String inventLocationTo,
+    String itemId,
+    int qtyTransfer,
+    int qtyReceived,
+    String journalId,
+    String binLocation,
+    String dateTimeTransaction,
+    String config,
+  ) async {
+    String? userId;
+    await AppPreferences.getToken().then((value) => userId = value);
+
+    String url = "${AppUrls.baseUrlWith7000}/api/insertTblTransferBinToBinCL";
+    print("url: $url");
+
+    final uri = Uri.parse(url);
+
+    final headers = <String, String>{
+      "Host": AppUrls.host,
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    };
+
+    var body = {
+      "TRANSFERID": transferId,
+      "TRANSFERSTATUS": transferStatus,
+      "INVENTLOCATIONIDFROM": inventLocationFrom,
+      "INVENTLOCATIONIDTO": inventLocationTo,
+      "ITEMID": itemId,
+      "QTYTRANSFER": qtyTransfer,
+      "QTYRECEIVED": qtyReceived,
+      "JournalId": journalId,
+      "BinLocation": binLocation,
+      "DateTimeTransaction": dateTimeTransaction,
+      "CONFIG": config,
+      "USERID": userId
+    };
+
+    try {
+      var response =
+          await http.post(uri, headers: headers, body: jsonEncode(body));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Status Code: ${response.statusCode}");
+      } else {
+        print("Status Code: ${response.statusCode}");
+        var data = json.decode(response.body);
+        var msg = data["message"];
+        throw Exception(msg);
+      }
+    } catch (e) {
+      print(e);
+      throw Exception(e);
+    }
+  }
 }

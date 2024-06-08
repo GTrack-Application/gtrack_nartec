@@ -2,12 +2,10 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/cubit/share/share_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/old/pages/login/user_login_page.dart';
@@ -74,12 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       AppNavigator.goToPage(context: context, screen: const CaptureScreen());
     };
     data['onTap']?[2] = () {
-      AppNavigator.goToPage(
-          context: context,
-          screen: BlocProvider(
-            create: (context) => ShareCubit(),
-            child: const ShareScreen(),
-          ));
+      AppNavigator.goToPage(context: context, screen: const ShareScreen());
     };
   }
 

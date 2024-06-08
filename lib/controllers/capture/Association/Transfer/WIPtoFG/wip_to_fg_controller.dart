@@ -34,7 +34,8 @@ class WIPToFgController {
   }
 
   static Future<void> insertManyIntoMappedBarcode(List records) async {
-    const endPoint = "${AppUrls.baseUrlWith7000}insertManyIntoMappedBarcode";
+    const endPoint =
+        "${AppUrls.baseUrlWith7000}/api/insertManyIntoMappedBarcode";
 
     String? token;
     await AppPreferences.getToken().then((value) => token = value);

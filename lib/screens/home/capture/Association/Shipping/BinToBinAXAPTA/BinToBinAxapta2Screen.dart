@@ -6,6 +6,7 @@ import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getPalletTableController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getSerialTableController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/insertAllDataController.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
@@ -677,6 +678,13 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Data inserted and updated successfully."),
       ));
+      RawMaterialsToWIPController.insertGtrackEPCISLog(
+        "Association",
+        widget.ITEMID,
+        dropDownValue.toString(),
+        "",
+        'Manufacturing',
+      );
       setState(() {
         table.clear();
         _scanSerialandPalletController.clear();

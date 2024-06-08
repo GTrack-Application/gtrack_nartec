@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_mobile_app/cubit/share/share_cubit.dart';
@@ -15,7 +16,8 @@ String cleanCoordinate(String coordinate) {
 }
 
 class TraceabilityScreen extends StatefulWidget {
-  const TraceabilityScreen({super.key});
+  final String? gtin;
+  const TraceabilityScreen({super.key, this.gtin});
 
   @override
   State<TraceabilityScreen> createState() => _TraceabilityScreenState();
@@ -31,46 +33,59 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.gtin != null) {
+      ShareCubit.get(context).gtinController.text = widget.gtin!;
+      ShareCubit.get(context).getTraceabilityData();
+    }
     _setMarkersAndPolylines();
   }
 
   void _setMarkersAndPolylines() {
-    for (var i = 0; i < ShareCubit.get(context).traceabilityData.length; i++) {
-      var current = ShareCubit.get(context).traceabilityData[i];
+    final traceabilityData = ShareCubit.get(context).traceabilityData;
+
+    for (var i = 0; i < traceabilityData.length; i++) {
+      var current = traceabilityData[i];
       var fromDetails = current.gLNFromDetails;
       var toDetails = current.gLNToDetails;
 
-      var fromLatitude = double.parse(cleanCoordinate(fromDetails!.latitude!));
-      var fromLongitude = double.parse(cleanCoordinate(fromDetails.longitude!));
-      _markers.add(
-        Marker(
-          markerId: MarkerId('from_${current.id}'),
-          position: LatLng(fromLatitude, fromLongitude),
-          infoWindow: InfoWindow(title: fromDetails.locationNameEn),
-        ),
-      );
-
-      if (toDetails != null) {
-        var toLatitude = double.parse(cleanCoordinate(toDetails.latitude!));
-        var toLongitude = double.parse(cleanCoordinate(toDetails.longitude!));
+      if (fromDetails != null &&
+          fromDetails.latitude != null &&
+          fromDetails.longitude != null) {
+        var fromLatitude = double.parse(cleanCoordinate(fromDetails.latitude!));
+        var fromLongitude =
+            double.parse(cleanCoordinate(fromDetails.longitude!));
         _markers.add(
           Marker(
-            markerId: MarkerId('to_${current.id}'),
-            position: LatLng(toLatitude, toLongitude),
-            infoWindow: InfoWindow(title: toDetails.locationNameEn),
+            markerId: MarkerId('from_${current.id}'),
+            position: LatLng(fromLatitude, fromLongitude),
+            infoWindow: InfoWindow(title: fromDetails.locationNameEn),
           ),
         );
-        _polylines.add(
-          Polyline(
-            polylineId: PolylineId('polyline_${current.id}'),
-            points: [
-              LatLng(fromLatitude, fromLongitude),
-              LatLng(toLatitude, toLongitude)
-            ],
-            color: Colors.blue,
-            width: 5,
-          ),
-        );
+
+        if (toDetails != null &&
+            toDetails.latitude != null &&
+            toDetails.longitude != null) {
+          var toLatitude = double.parse(cleanCoordinate(toDetails.latitude!));
+          var toLongitude = double.parse(cleanCoordinate(toDetails.longitude!));
+          _markers.add(
+            Marker(
+              markerId: MarkerId('to_${current.id}'),
+              position: LatLng(toLatitude, toLongitude),
+              infoWindow: InfoWindow(title: toDetails.locationNameEn),
+            ),
+          );
+          _polylines.add(
+            Polyline(
+              polylineId: PolylineId('polyline_${current.id}'),
+              points: [
+                LatLng(fromLatitude, fromLongitude),
+                LatLng(toLatitude, toLongitude)
+              ],
+              color: Colors.blue,
+              width: 5,
+            ),
+          );
+        }
       }
     }
   }
@@ -88,28 +103,33 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Traceability Map'),
-        backgroundColor: Colors.green[700],
-      ),
+      appBar: widget.gtin != null
+          ? null
+          : AppBar(
+              title: const Text('Traceability Map'),
+              backgroundColor: Colors.green[700],
+            ),
       body: Column(
         children: [
-          TextField(
-            controller: ShareCubit.get(context).gtinController,
-            onChanged: (value) {
-              ShareCubit.get(context).gtinController.text = value;
-            },
-            onEditingComplete: () {
-              ShareCubit.get(context).getTraceabilityData();
-            },
-            decoration: InputDecoration(
-              hintText: 'Search for a location',
-              contentPadding: const EdgeInsets.all(10),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  ShareCubit.get(context).getTraceabilityData();
-                },
+          Visibility(
+            visible: widget.gtin == null,
+            child: TextField(
+              controller: ShareCubit.get(context).gtinController,
+              onChanged: (value) {
+                ShareCubit.get(context).gtinController.text = value;
+              },
+              onEditingComplete: () {
+                ShareCubit.get(context).getTraceabilityData();
+              },
+              decoration: InputDecoration(
+                hintText: 'Search for a location',
+                contentPadding: const EdgeInsets.all(10),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    ShareCubit.get(context).getTraceabilityData();
+                  },
+                ),
               ),
             ),
           ),
@@ -121,16 +141,18 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
                     _markers.clear();
                     _polylines.clear();
                     _setMarkersAndPolylines();
-                    _center = LatLng(
-                      double.parse(
-                        cleanCoordinate(state
-                            .traceabilityData[0].gLNFromDetails!.latitude!),
-                      ),
-                      double.parse(
-                        cleanCoordinate(state
-                            .traceabilityData[0].gLNFromDetails!.longitude!),
-                      ),
-                    );
+                    if (ShareCubit.get(context).traceabilityData.isNotEmpty) {
+                      _center = LatLng(
+                        double.parse(
+                          cleanCoordinate(state
+                              .traceabilityData[0].gLNFromDetails!.latitude!),
+                        ),
+                        double.parse(
+                          cleanCoordinate(state
+                              .traceabilityData[0].gLNFromDetails!.longitude!),
+                        ),
+                      );
+                    }
                   });
                 }
               },

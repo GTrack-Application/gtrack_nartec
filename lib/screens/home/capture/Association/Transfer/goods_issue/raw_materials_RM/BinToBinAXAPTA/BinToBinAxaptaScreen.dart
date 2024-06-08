@@ -40,7 +40,7 @@ class _BinToBinAxaptaScreenState extends State<BinToBinAxaptaScreen> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          title: "RM to WIP",
+          title: "WIP to FG",
           actions: [
             GestureDetector(
               onTap: () {

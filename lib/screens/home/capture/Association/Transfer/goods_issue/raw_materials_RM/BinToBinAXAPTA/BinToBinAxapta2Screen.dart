@@ -6,6 +6,7 @@ import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getPalletTableController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getSerialTableController.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/insertAllDataController.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
@@ -658,10 +659,7 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
     }
 
     AppDialogs.loadingDialog(context);
-    InsertAllDataController.postData(
-      dropDownValue.toString(),
-      _site,
-      table,
+    InsertAllDataController.postDataToWIPtoFG(
       widget.TRANSFERID,
       widget.TRANSFERSTATUS,
       widget.INVENTLOCATIONIDFROM,
@@ -669,14 +667,22 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
       widget.ITEMID,
       widget.QTYTRANSFER,
       widget.QTYRECEIVED,
-      widget.CREATEDDATETIME,
+      widget.TRANSFERID,
+      dropDownValue.toString(),
+      DateTime.now().toString(),
       widget.GROUPID,
-      dropDownValue.toString().substring(0, 2),
     ).then((value) {
       AppDialogs.closeDialog();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Data inserted and updated successfully."),
       ));
+      RawMaterialsToWIPController.insertGtrackEPCISLog(
+        "Association",
+        widget.ITEMID,
+        dropDownValue.toString(),
+        "",
+        'Manufacturing',
+      );
       setState(() {
         table.clear();
         _scanSerialandPalletController.clear();
