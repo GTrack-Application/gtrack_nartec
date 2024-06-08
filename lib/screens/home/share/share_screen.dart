@@ -4,6 +4,7 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_mobile_app/screens/home/share/Scanning/scanning_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/share/traceability/traceability_screen.dart';
 
 class ShareScreen extends StatefulWidget {
   const ShareScreen({super.key});
@@ -67,6 +68,9 @@ class _ShareScreenState extends State<ShareScreen> {
   void initState() {
     data[0]["onPressed"] = () {
       AppNavigator.goToPage(context: context, screen: const ScanningScreen());
+    };
+    data[7]["onPressed"] = () {
+      AppNavigator.goToPage(context: context, screen: TraceabilityScreen());
     };
     super.initState();
   }
