@@ -221,10 +221,12 @@ class TraceabilityScreenState extends State<TraceabilityScreen> {
       var fromDetails = current['GLNFromDetails'];
       var toDetails = current['GLNToDetails'];
 
-      var fromLatitude =
-          double.parse(fromDetails['latitude'].replaceAll('° N', '').trim());
-      var fromLongitude =
-          double.parse(fromDetails['longitude'].replaceAll('° E', '').trim());
+      var fromLatitude = double.parse(
+        fromDetails['latitude'].replaceAll('° N', '').trim(),
+      );
+      var fromLongitude = double.parse(
+        fromDetails['longitude'].replaceAll('° E', '').trim(),
+      );
       _markers.add(
         Marker(
           markerId: MarkerId('from_${current['id']}'),
