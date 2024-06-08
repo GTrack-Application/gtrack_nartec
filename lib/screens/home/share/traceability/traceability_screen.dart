@@ -3,6 +3,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_mobile_app/models/share/traceability/TraceabilityModel.dart';
 
 class TraceabilityScreen extends StatefulWidget {
+  const TraceabilityScreen({super.key});
+
   @override
   State<TraceabilityScreen> createState() => TraceabilityScreenState();
 }

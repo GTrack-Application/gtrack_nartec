@@ -81,6 +81,7 @@ class _ShareScreenState extends State<ShareScreen> {
       appBar: AppBar(
         title: const Text('Share'),
         backgroundColor: AppColors.green,
+        automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
         child: Column(
