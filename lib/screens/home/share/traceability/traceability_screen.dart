@@ -273,14 +273,31 @@ class TraceabilityScreenState extends State<TraceabilityScreen> {
         title: const Text('Traceability Map'),
         backgroundColor: Colors.green[700],
       ),
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          target: _center,
-          zoom: 6.0,
-        ),
-        markers: _markers,
-        polylines: _polylines,
+      body: Column(
+        children: [
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Search for a location',
+              contentPadding: const EdgeInsets.all(10),
+              // prefixIcon: const Icon(Icons.search),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {},
+              ),
+            ),
+          ),
+          Expanded(
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: _center,
+                zoom: 6.0,
+              ),
+              markers: _markers,
+              polylines: _polylines,
+            ),
+          ),
+        ],
       ),
     );
   }
