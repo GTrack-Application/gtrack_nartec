@@ -69,7 +69,9 @@ class _ShareScreenState extends State<ShareScreen> {
     data[0]["onPressed"] = () {
       AppNavigator.goToPage(context: context, screen: const ScanningScreen());
     };
-
+    data[7]["onPressed"] = () {
+      AppNavigator.goToPage(context: context, screen: TraceabilityScreen());
+    };
     super.initState();
   }
 

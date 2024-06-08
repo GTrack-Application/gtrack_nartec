@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TraceabilityScreen extends StatefulWidget {
+  const TraceabilityScreen({super.key});
+
   @override
   State<TraceabilityScreen> createState() => TraceabilityScreenState();
 }
