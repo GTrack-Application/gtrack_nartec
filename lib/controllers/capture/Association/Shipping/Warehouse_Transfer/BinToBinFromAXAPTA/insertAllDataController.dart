@@ -57,8 +57,6 @@ class InsertAllDataController {
       },
     );
 
-    print(jsonEncode([...data]));
-
     try {
       var response =
           await http.post(uri, headers: headers, body: jsonEncode([...data]));
@@ -78,6 +76,7 @@ class InsertAllDataController {
   }
 
   static Future<void> postDataToWIPtoFG(
+    List<GetShipmentReceivedTableModel> table,
     String transferId,
     int transferStatus,
     String inventLocationFrom,
@@ -119,9 +118,26 @@ class InsertAllDataController {
       "USERID": userId
     };
 
+    final data = table.map((e) {
+      return {
+        "TRANSFERID": transferId,
+        "TRANSFERSTATUS": transferStatus,
+        "INVENTLOCATIONIDFROM": inventLocationFrom,
+        "INVENTLOCATIONIDTO": inventLocationTo,
+        "ITEMID": itemId,
+        "QTYTRANSFER": qtyTransfer,
+        "QTYRECEIVED": qtyReceived,
+        "JournalId": journalId,
+        "BinLocation": binLocation,
+        "DateTimeTransaction": dateTimeTransaction,
+        "CONFIG": config,
+        "USERID": userId
+      };
+    });
+
     try {
       var response =
-          await http.post(uri, headers: headers, body: jsonEncode(body));
+          await http.post(uri, headers: headers, body: jsonEncode([...data]));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Status Code: ${response.statusCode}");

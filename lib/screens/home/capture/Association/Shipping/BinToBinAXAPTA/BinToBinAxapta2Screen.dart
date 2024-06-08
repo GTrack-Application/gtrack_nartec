@@ -680,9 +680,9 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
       ));
       RawMaterialsToWIPController.insertGtrackEPCISLog(
         "Association",
-        widget.ITEMID,
+        table[0].gTIN!,
+        table[0].binLocation!,
         dropDownValue.toString(),
-        "",
         'Manufacturing',
       );
       setState(() {

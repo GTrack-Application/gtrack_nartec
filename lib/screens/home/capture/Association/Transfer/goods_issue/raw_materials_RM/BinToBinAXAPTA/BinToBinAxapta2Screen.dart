@@ -660,6 +660,7 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
 
     AppDialogs.loadingDialog(context);
     InsertAllDataController.postDataToWIPtoFG(
+      table,
       widget.TRANSFERID,
       widget.TRANSFERSTATUS,
       widget.INVENTLOCATIONIDFROM,
@@ -667,7 +668,7 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
       widget.ITEMID,
       widget.QTYTRANSFER,
       widget.QTYRECEIVED,
-      widget.TRANSFERID,
+      table[0].mainLocation.toString(),
       dropDownValue.toString(),
       DateTime.now().toString(),
       widget.GROUPID,
@@ -678,9 +679,9 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
       ));
       RawMaterialsToWIPController.insertGtrackEPCISLog(
         "Association",
-        widget.ITEMID,
+        table[0].gTIN!,
+        table[0].binLocation!,
         dropDownValue.toString(),
-        "",
         'Manufacturing',
       );
       setState(() {
