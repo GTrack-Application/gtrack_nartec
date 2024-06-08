@@ -103,21 +103,6 @@ class InsertAllDataController {
       "Content-Type": "application/json"
     };
 
-    var body = {
-      "TRANSFERID": transferId,
-      "TRANSFERSTATUS": transferStatus,
-      "INVENTLOCATIONIDFROM": inventLocationFrom,
-      "INVENTLOCATIONIDTO": inventLocationTo,
-      "ITEMID": itemId,
-      "QTYTRANSFER": qtyTransfer,
-      "QTYRECEIVED": qtyReceived,
-      "JournalId": journalId,
-      "BinLocation": binLocation,
-      "DateTimeTransaction": dateTimeTransaction,
-      "CONFIG": config,
-      "USERID": userId
-    };
-
     final data = table.map((e) {
       return {
         "TRANSFERID": transferId,
@@ -128,7 +113,7 @@ class InsertAllDataController {
         "QTYTRANSFER": qtyTransfer,
         "QTYRECEIVED": qtyReceived,
         "JournalId": journalId,
-        "BinLocation": binLocation,
+        "BinLocation": e.binLocation,
         "DateTimeTransaction": dateTimeTransaction,
         "CONFIG": config,
         "USERID": userId
