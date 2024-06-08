@@ -330,7 +330,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
               ),
               10.height,
               const Text(
-                "TRANSPORTER GLN",
+                "TRANSPO GLN",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -348,7 +348,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   },
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(left: 10, top: 5),
-                    hintText: 'Transporter GLN',
+                    hintText: 'Transpo GLN',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

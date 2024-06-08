@@ -19,7 +19,8 @@ class PackedItemsCubit extends Cubit<PackedItemsState> {
           await AssemblingController.getPackedItems(gtin);
       emit(PackedItemsLoaded(data: data));
     } catch (e) {
-      emit(PackedItemsError(message: e.toString()));
+      emit(
+          PackedItemsError(message: "No Packed items found for this Location"));
     }
   }
 }

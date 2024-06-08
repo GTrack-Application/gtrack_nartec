@@ -69,9 +69,8 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                           image: DecorationImage(
                             alignment: Alignment.center,
                             fit: BoxFit.contain,
-                            onError: (exception, stackTrace) => const Icon(
-                              Ionicons.image_outline,
-                            ),
+                            onError: (exception, stackTrace) =>
+                                const Icon(Ionicons.image_outline),
                             image: CachedNetworkImageProvider(
                               gtinInformationDataModel == null
                                   ? ""

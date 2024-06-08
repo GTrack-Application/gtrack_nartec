@@ -3,6 +3,7 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/codification_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/company_information.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/digital_link_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/share/product-information/events_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_information_screen.dart';
 
 class ProductInformationScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
     Tab(text: 'GTIN Information'),
     Tab(text: 'Company Information'),
     Tab(text: 'Digital Links'),
-    // Tab(text: 'Events'),
+    Tab(text: 'Traceability'),
     Tab(text: "Codification"),
   ];
 
@@ -71,8 +72,8 @@ class _ProductInformationScreenState extends State<ProductInformationScreen> {
             GtinInformationScreen(gtin: widget.gtin),
             CompanyInformationScreen(gtin: widget.gtin),
             DigitalLinkScreen(gtin: widget.gtin),
+            EventsScreen(gtin: widget.gtin),
             CodificationScreen(gtin: widget.gtin),
-            // EventsScreen(gtin: widget.gtin),
           ],
         ),
       ),

@@ -50,10 +50,7 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
     ].request();
 
     if (statuses[Permission.location]!.isGranted) {
-      print('Location permission granted');
-    } else {
-      print('Location permission denied');
-    }
+    } else {}
   }
 
   @override
@@ -123,7 +120,7 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
                     },
                   ),
                   const Text(
-                    'View GTIN',
+                    'View GLN',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -136,6 +133,7 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
             ),
             10.height,
             Container(
+              alignment: Alignment.centerLeft,
               width: double.infinity,
               height: context.height() * 0.1,
               decoration: const BoxDecoration(
@@ -143,16 +141,9 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
               ),
               child: ListTile(
                 title: const Text(
-                  'Complete Data',
+                  'Verifired By GS1',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  'This number is registered to company:\nPlastic Corner Factory Company',
-                  style: TextStyle(
-                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

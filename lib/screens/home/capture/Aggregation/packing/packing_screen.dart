@@ -64,6 +64,8 @@ class _PackingScreenState extends State<PackingScreen> {
               gln = table.map((e) => e.gcpGLNID ?? "").toList();
               dropdownList = dropdownList.toSet().toList();
               dropdownValue = dropdownList[0];
+              packedItemsCubit
+                  .getPackedItems(gln[dropdownList.indexOf(dropdownValue!)]);
             }
           },
           builder: (context, state) {
@@ -90,6 +92,7 @@ class _PackingScreenState extends State<PackingScreen> {
                             icon: const Icon(Icons.arrow_drop_down),
                             iconSize: 24,
                             elevation: 16,
+                            isExpanded: true,
                             style: const TextStyle(color: Colors.black),
                             onChanged: (String? newValue) {
                               setState(() {

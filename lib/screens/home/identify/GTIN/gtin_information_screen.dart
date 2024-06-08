@@ -66,6 +66,7 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
             ),
             10.height,
             Container(
+              alignment: Alignment.centerLeft,
               width: double.infinity,
               height: context.height() * 0.1,
               decoration: const BoxDecoration(
@@ -73,16 +74,9 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
               ),
               child: ListTile(
                 title: const Text(
-                  'Complete Data',
+                  'Verifired By GS1',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  'This number is registered to company:\nPlastic Corner Factory Company',
-                  style: TextStyle(
-                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

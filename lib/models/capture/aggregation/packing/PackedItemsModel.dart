@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 class PackedItemsModel {
-  int? id;
+  String? id;
   String? gTIN;
   String? bATCH;
   String? manufacturingDate;
@@ -32,19 +32,19 @@ class PackedItemsModel {
   });
 
   PackedItemsModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    gTIN = json['GTIN'];
-    bATCH = json['BATCH'];
-    manufacturingDate = json['ManufacturingDate'];
-    userId = json['User_id'];
+    id = json['id'].toString();
+    gTIN = json['GTIN'].toString();
+    bATCH = json['BATCH'].toString();
+    manufacturingDate = json['ManufacturingDate'].toString();
+    userId = json['User_id'].toString();
     quantity = json['Quantity'];
-    gLN = json['GLN'];
+    gLN = json['GLN'].toString();
     netWeight = json['NetWeight'];
-    unitOfMeasure = json['UnitOfMeasure'];
-    expiryDate = json['ExpiryDate'];
-    timestamp = json['Timestamp'];
-    itemImage = json['ItemImage'];
-    itemName = json['ItemName'];
+    unitOfMeasure = json['UnitOfMeasure'].toString();
+    expiryDate = json['ExpiryDate'].toString();
+    timestamp = json['Timestamp'].toString();
+    itemImage = json['ItemImage'].toString();
+    itemName = json['ItemName'].toString();
   }
 
   Map<String, dynamic> toJson() {

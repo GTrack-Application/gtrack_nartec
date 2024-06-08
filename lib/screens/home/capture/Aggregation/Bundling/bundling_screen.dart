@@ -65,10 +65,10 @@ class _BundlingScreenState extends State<BundlingScreen> {
             if (state is AssemblingError) {
               toast(state.message);
             }
-            if (state is BundlingLoaded) {
+            if (state is AssemblingLoaded) {
               FocusNode().unfocus();
               searchController.clear();
-              products.addAll(state.bundlings);
+              products.addAll(state.assemblings);
             }
           },
           builder: (context, state) {
@@ -111,6 +111,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                             icon: const Icon(Icons.arrow_drop_down),
                             iconSize: 24,
                             elevation: 16,
+                            isExpanded: true,
                             style: const TextStyle(color: Colors.black),
                             onChanged: (String? newValue) {
                               setState(() {
@@ -282,7 +283,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                                     title: Text(
                                       products[index].productnameenglish ?? "",
                                       style: const TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

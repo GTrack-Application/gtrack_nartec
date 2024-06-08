@@ -43,7 +43,7 @@ class AuthController {
     if (response.statusCode == 200) {
       return LoginResponseModel.fromJson(data);
     } else {
-      final msg = data['error'];
+      final msg = data['message'];
       throw Exception(msg);
     }
   }

@@ -11,6 +11,7 @@ import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class NewPalletizationScreen extends StatefulWidget {
   const NewPalletizationScreen({super.key});
@@ -407,6 +408,9 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(error.toString().replaceAll("Exception:", ""))));
       });
+    } else {
+      toast(
+          "Please scan the serial values equal to the total No of items in the boxes");
     }
   }
 }

@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names, file_names, unused_local_variable
 
+import 'dart:developer';
+
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
@@ -55,8 +57,10 @@ class GeneratePalletController {
     String? userId;
     await AppPreferences.getUserId().then((value) => userId = value);
 
-    String url = "${AppUrls.baseUrlWith7000}insertPalletData";
+    String url = "${AppUrls.baseUrlWith7000}/api/insertPalletData";
     final uri = Uri.parse(url);
+
+    log(uri.toString());
 
     final headers = <String, String>{
       "Host": AppUrls.host,
@@ -72,17 +76,13 @@ class GeneratePalletController {
       "serial_numbers": serialNo
     });
 
-    print(body);
+    log(body);
 
     try {
       var response = await http.post(uri, headers: headers, body: body);
 
-      print(response.body);
-      print("Status Code: ${response.statusCode}");
-
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = json.decode(response.body);
-        print("Status Code: ${response.statusCode}");
         String message = data["message"];
       } else {
         var data = json.decode(response.body);

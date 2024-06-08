@@ -22,14 +22,15 @@ class AssemblingCubit extends Cubit<AssemblingState> {
   }
 
   getBundlingProductsByGtin(String gtin) async {
-    emit(BundlingLoading());
+    emit(AssemblingLoading());
     try {
       var network = await isNetworkAvailable();
       if (!network) {
         emit(AssemblingError("No Internet Connection"));
       }
-      final data = await AssemblingController.getBundlingByUserAndBarcode(gtin);
-      emit(BundlingLoaded(data));
+      final data =
+          await AssemblingController.getAssemblingsByUserAndBarcode(gtin);
+      emit(AssemblingLoaded(data));
     } catch (e) {
       emit(AssemblingError(e.toString()));
     }

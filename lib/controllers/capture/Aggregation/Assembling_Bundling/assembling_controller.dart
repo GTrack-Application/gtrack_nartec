@@ -47,7 +47,11 @@ class AssemblingController {
     final url =
         "${AppUrls.baseUrlWith7000}/api/getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
 
+    print(url);
+
     final uri = Uri.parse(url);
+
+    print(userId);
 
     final headers = <String, String>{
       "Content-Type": "application/json",
@@ -57,14 +61,14 @@ class AssemblingController {
 
     var response = await http.get(uri, headers: headers);
 
-    var data = json.decode(response.body) as List;
-
     if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
       List<ProductsModel> products =
           data.map((e) => ProductsModel.fromJson(e)).toList();
       return products;
     } else {
-      return [];
+      var msg = jsonDecode(response.body)['error'];
+      throw Exception(msg);
     }
   }
 
@@ -114,9 +118,9 @@ class AssemblingController {
 
     final url = "${AppUrls.baseUrlWith7000}/api/getPackedItemsByGLN?GLN=$gln";
 
-    print(url);
-
     final uri = Uri.parse(url);
+
+    log(uri.toString());
 
     final headers = <String, String>{
       "Content-Type": "application/json",
@@ -126,6 +130,8 @@ class AssemblingController {
 
     var response = await http.get(uri, headers: headers);
 
+    log(json.decode(response.body));
+
     var data = json.decode(response.body) as List;
 
     if (response.statusCode == 200) {
@@ -133,7 +139,7 @@ class AssemblingController {
           data.map((e) => PackedItemsModel.fromJson(e)).toList();
       return products;
     } else {
-      var msg = json.decode(response.body)['message'];
+      var msg = "No Packed Items Found for This Location";
       throw Exception(msg);
     }
   }

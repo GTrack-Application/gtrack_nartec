@@ -130,7 +130,7 @@ class _GTINScreenState extends State<GTINScreen> {
                             ),
                           ),
                           Text(
-                            gcp.toString(),
+                            gcp ?? "",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -172,9 +172,9 @@ class _GTINScreenState extends State<GTINScreen> {
                             ),
                           ),
                           Text(
-                            memberCategoryDescription
-                                .toString()
-                                .replaceAll("Category C", ""),
+                            memberCategoryDescription?.replaceAll(
+                                    "Category C", "") ??
+                                "",
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -260,88 +260,111 @@ class _GTINScreenState extends State<GTINScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Expanded(
-                    child: Container(
-                      // border
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListView.builder(
-                        itemCount: productsFiltered.length,
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            width: context.width() * 0.9,
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
+                  state is GtinLoadingState
+                      ? Expanded(
+                          child: Shimmer.fromColors(
+                            baseColor: AppColors.grey,
+                            highlightColor: AppColors.white,
+                            child: Container(
+                              height: 350,
+                              width: MediaQuery.of(context).size.width,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: AppColors.grey,
+                                  width: 1,
+                                ),
+                                color: Colors.black38,
+                              ),
                             ),
+                          ),
+                        )
+                      : Expanded(
+                          child: Container(
+                            // border
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                              border: Border.all(
-                                  color: Colors.grey.withOpacity(0.2)),
                             ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.all(10),
-                              title: Text(
-                                productsFiltered[index].productnameenglish ??
-                                    "",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                productsFiltered[index].barcode ?? "",
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                              leading: Hero(
-                                tag: productsFiltered[index].id ?? "",
-                                child: ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: productsFiltered[index]
-                                                .frontImage ==
-                                            null
-                                        ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
-                                        : "${AppUrls.baseUrlWith3093}${productsFiltered[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.image_outlined),
+                            child: ListView.builder(
+                              itemCount: productsFiltered.length,
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  width: context.width() * 0.9,
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 10,
                                   ),
-                                ),
-                              ),
-                              trailing: GestureDetector(
-                                onTap: () {
-                                  AppNavigator.goToPage(
-                                    context: context,
-                                    screen: GTINInformationScreen(
-                                      employees: productsFiltered[index],
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                    border: Border.all(
+                                        color: Colors.grey.withOpacity(0.2)),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(10),
+                                    title: Text(
+                                      productsFiltered[index]
+                                              .productnameenglish ??
+                                          "",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  );
-                                },
-                                child: Image.asset("assets/icons/view.png"),
-                              ),
-                              onTap: () {},
+                                    subtitle: Text(
+                                      productsFiltered[index].barcode ?? "",
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
+                                    leading: Hero(
+                                      tag: productsFiltered[index].id ?? "",
+                                      child: ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: productsFiltered[index]
+                                                      .frontImage ==
+                                                  null
+                                              ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
+                                              : "${AppUrls.baseUrlWith3093}${productsFiltered[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.image_outlined),
+                                        ),
+                                      ),
+                                    ),
+                                    trailing: GestureDetector(
+                                      onTap: () {
+                                        AppNavigator.goToPage(
+                                          context: context,
+                                          screen: GTINInformationScreen(
+                                            employees: productsFiltered[index],
+                                          ),
+                                        );
+                                      },
+                                      child:
+                                          Image.asset("assets/icons/view.png"),
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                          ),
+                        ),
                 ],
               ),
             );

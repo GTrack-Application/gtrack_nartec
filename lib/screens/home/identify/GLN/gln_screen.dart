@@ -191,21 +191,23 @@ class _GLNScreenState extends State<GLNScreen> {
               ),
               const SizedBox(height: 20),
               state is GlnLoadingState
-                  ? Shimmer.fromColors(
-                      baseColor: AppColors.grey,
-                      highlightColor: AppColors.white,
-                      child: Container(
-                        height: 350,
-                        width: MediaQuery.of(context).size.width,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: AppColors.grey,
-                            width: 1,
+                  ? Expanded(
+                      child: Shimmer.fromColors(
+                        baseColor: AppColors.grey,
+                        highlightColor: AppColors.white,
+                        child: Container(
+                          height: 350,
+                          width: MediaQuery.of(context).size.width,
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: AppColors.grey,
+                              width: 1,
+                            ),
+                            color: Colors.black38,
                           ),
-                          color: Colors.black38,
                         ),
                       ),
                     )

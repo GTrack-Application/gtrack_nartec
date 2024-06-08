@@ -17,11 +17,3 @@ class AssemblingError extends AssemblingState {
 
   AssemblingError(this.message);
 }
-
-class BundlingLoading extends AssemblingState {}
-
-class BundlingLoaded extends AssemblingState {
-  final List<ProductsModel> bundlings;
-
-  BundlingLoaded(this.bundlings);
-}
