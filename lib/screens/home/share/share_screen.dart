@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
-import 'package:gtrack_mobile_app/cubit/share/share_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
@@ -73,11 +71,7 @@ class _ShareScreenState extends State<ShareScreen> {
     };
     data[7]["onPressed"] = () {
       AppNavigator.goToPage(
-          context: context,
-          screen: BlocProvider(
-            create: (context) => ShareCubit(),
-            child: TraceabilityScreen(),
-          ));
+          context: context, screen: const TraceabilityScreen());
     };
     super.initState();
   }

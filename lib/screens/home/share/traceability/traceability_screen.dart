@@ -80,6 +80,12 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
   }
 
   @override
+  void dispose() {
+    ShareCubit.get(context).clearTraceabilityData();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

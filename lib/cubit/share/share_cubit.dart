@@ -27,10 +27,14 @@ class ShareCubit extends Cubit<ShareState> {
         gtinController.text.trim(),
       );
 
-      print(traceabilityData.length);
       emit(ShareTraceabilitySuccess(traceabilityData));
     } catch (e) {
       emit(ShareTraceabilityError(e.toString()));
     }
+  }
+
+  void clearTraceabilityData() {
+    traceabilityData = [];
+    emit(ShareInitial());
   }
 }
