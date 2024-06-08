@@ -1,48 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gtrack_mobile_app/models/share/traceability/TraceabilityModel.dart';
+import 'package:gtrack_mobile_app/cubit/share/share_cubit.dart';
+
+String cleanCoordinate(String coordinate) {
+  return coordinate
+      .replaceAll('°', '')
+      .replaceAll('N', '')
+      .replaceAll('E', '')
+      .replaceAll('W', '')
+      .replaceAll('S', '')
+      .replaceAll(' ', '')
+      .trim();
+}
 
 class TraceabilityScreen extends StatefulWidget {
   const TraceabilityScreen({super.key});
 
   @override
-  State<TraceabilityScreen> createState() => TraceabilityScreenState();
+  State<TraceabilityScreen> createState() => _TraceabilityScreenState();
 }
 
-class TraceabilityScreenState extends State<TraceabilityScreen> {
+class _TraceabilityScreenState extends State<TraceabilityScreen> {
   late GoogleMapController mapController;
-  final LatLng _center = const LatLng(
-      24.65682, 46.84287); // Center of the map (Riyadh, Saudi Arabia)
-
-  List<TraceabilityModel> apiResponse = [
-    TraceabilityModel(
-      id: 6,
-      gs1UserId: "1808",
-      transactionType: "packing",
-      gTIN: "6285561000186",
-      gLNFrom: "6285561000063",
-      gLNTo: "6285561000032",
-      industryType: "manufacturing",
-      gLNFromDetails: GLNFromDetails(
-        locationNameEn: "Sama Oil Industry Company warehouse - Jeddah",
-        locationNameAr: "مستودع شركة زيت سما للصناعة -جده",
-        addressEn:
-            "Jeddah - Al-Sarawat District - Turki bin Ahmed Al-Sudairi Street - 8512",
-        addressAr: "جده-حي السروات - شارع تركي بن احمد السديري -8512",
-        longitude: "21.37033",
-        latitude: "39.20790",
-      ),
-      gLNToDetails: GLNFromDetails(
-        locationNameEn: "Sama Oil Industrial Company warehouse",
-        locationNameAr: "مستودع شركة زيت سما للصناعة",
-        addressEn: "Al-Qassim - Unayzah - Al-Narjis District - 3186",
-        addressAr: "القصيم -عنيزة -حي النرجس -3186",
-        longitude: "26.14938",
-        latitude: "43.99702",
-      ),
-    ),
-    // Add other TraceabilityModel instances here...
-  ];
+  LatLng _center = const LatLng(24.65682, 46.84287); // Center of the map
 
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
@@ -54,17 +35,13 @@ class TraceabilityScreenState extends State<TraceabilityScreen> {
   }
 
   void _setMarkersAndPolylines() {
-    for (var i = 0; i < apiResponse.length; i++) {
-      var current = apiResponse[i];
-      var next = i < apiResponse.length - 1 ? apiResponse[i + 1] : null;
-
+    for (var i = 0; i < ShareCubit.get(context).traceabilityData.length; i++) {
+      var current = ShareCubit.get(context).traceabilityData[i];
       var fromDetails = current.gLNFromDetails;
       var toDetails = current.gLNToDetails;
 
-      var fromLatitude =
-          double.parse(fromDetails!.latitude!.replaceAll('° N', '').trim());
-      var fromLongitude =
-          double.parse(fromDetails.longitude!.replaceAll('° E', '').trim());
+      var fromLatitude = double.parse(cleanCoordinate(fromDetails!.latitude!));
+      var fromLongitude = double.parse(cleanCoordinate(fromDetails.longitude!));
       _markers.add(
         Marker(
           markerId: MarkerId('from_${current.id}'),
@@ -74,10 +51,8 @@ class TraceabilityScreenState extends State<TraceabilityScreen> {
       );
 
       if (toDetails != null) {
-        var toLatitude =
-            double.parse(toDetails.latitude!.replaceAll('° N', '').trim());
-        var toLongitude =
-            double.parse(toDetails.longitude!.replaceAll('° E', '').trim());
+        var toLatitude = double.parse(cleanCoordinate(toDetails.latitude!));
+        var toLongitude = double.parse(cleanCoordinate(toDetails.longitude!));
         _markers.add(
           Marker(
             markerId: MarkerId('to_${current.id}'),
@@ -114,24 +89,65 @@ class TraceabilityScreenState extends State<TraceabilityScreen> {
       body: Column(
         children: [
           TextField(
+            controller: ShareCubit.get(context).gtinController,
+            onChanged: (value) {
+              ShareCubit.get(context).gtinController.text = value;
+            },
+            onEditingComplete: () {
+              ShareCubit.get(context).getTraceabilityData();
+            },
             decoration: InputDecoration(
               hintText: 'Search for a location',
               contentPadding: const EdgeInsets.all(10),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.search),
-                onPressed: () {},
+                onPressed: () {
+                  ShareCubit.get(context).getTraceabilityData();
+                },
               ),
             ),
           ),
           Expanded(
-            child: GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: _center,
-                zoom: 6.0,
-              ),
-              markers: _markers,
-              polylines: _polylines,
+            child: BlocConsumer<ShareCubit, ShareState>(
+              listener: (context, state) {
+                if (state is ShareTraceabilitySuccess) {
+                  setState(() {
+                    _markers.clear();
+                    _polylines.clear();
+                    _setMarkersAndPolylines();
+                    _center = LatLng(
+                      double.parse(
+                        cleanCoordinate(state
+                            .traceabilityData[0].gLNFromDetails!.latitude!),
+                      ),
+                      double.parse(
+                        cleanCoordinate(state
+                            .traceabilityData[0].gLNFromDetails!.longitude!),
+                      ),
+                    );
+                  });
+                }
+              },
+              builder: (context, state) {
+                if (state is ShareTraceabilityLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is ShareTraceabilityError) {
+                  return Center(
+                    child: Text(state.message),
+                  );
+                }
+                return GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: _center,
+                    zoom: 6.0,
+                  ),
+                  markers: _markers,
+                  polylines: _polylines,
+                );
+              },
             ),
           ),
         ],
