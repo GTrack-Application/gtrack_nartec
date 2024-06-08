@@ -115,10 +115,8 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
             visible: widget.gtin == null,
             child: TextField(
               controller: ShareCubit.get(context).gtinController,
-              onChanged: (value) {
-                ShareCubit.get(context).gtinController.text = value;
-              },
               onEditingComplete: () {
+                FocusNode().unfocus();
                 ShareCubit.get(context).getTraceabilityData();
               },
               decoration: InputDecoration(
@@ -127,6 +125,7 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
+                    FocusNode().unfocus();
                     ShareCubit.get(context).getTraceabilityData();
                   },
                 ),
