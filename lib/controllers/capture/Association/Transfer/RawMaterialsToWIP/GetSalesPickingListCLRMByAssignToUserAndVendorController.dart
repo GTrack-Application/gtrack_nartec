@@ -220,7 +220,7 @@ class RawMaterialsToWIPController {
     await AppPreferences.getUserId().then((value) => userId = value.toString());
 
     final url =
-        Uri.parse('${AppUrls.baseUrlWith7000}/api/insertGtrackEPCISLog');
+        Uri.parse('${AppUrls.baseUrlWith7000}/api/insertTblTransferJournalCL');
 
     print(url);
 
