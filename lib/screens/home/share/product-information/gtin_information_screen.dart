@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
 import 'package:gtrack_mobile_app/blocs/share/product_information/gtin_information_bloc.dart';
+import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_mobile_app/models/share/product_information/gtin_information_model.dart';
@@ -71,14 +72,10 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                             fit: BoxFit.contain,
                             onError: (exception, stackTrace) =>
                                 const Icon(Ionicons.image_outline),
-                            image: CachedNetworkImageProvider(
+                            image: NetworkImage(
                               gtinInformationDataModel == null
                                   ? ""
-                                  : gtinInformationDataModel!
-                                      .data!.productImageUrl!.value
-                                      .toString(),
-                              errorListener: (error) =>
-                                  const Icon(Ionicons.image_outline),
+                                  : "${AppUrls.baseUrlWith3093}${gtinInformationDataModel!.data!.productImageUrl!.value.toString().replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/")}",
                             ),
                           ),
                         ),
