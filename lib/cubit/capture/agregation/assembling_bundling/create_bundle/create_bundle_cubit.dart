@@ -21,4 +21,20 @@ class CreateBundleCubit extends Cubit<CreateBundleState> {
       emit(CreateBundleError(message: e.toString()));
     }
   }
+
+  void createAssemble(
+      List<String> field, String glnLocation, String bundleName) async {
+    emit(CreateBundleLoading());
+
+    try {
+      var network = await isNetworkAvailable();
+      if (!network) {
+        emit(CreateBundleError(message: "No Internet Connection"));
+      }
+      await AssemblingController.createAssemble(field, glnLocation, bundleName);
+      emit(CreateBundleLoaded());
+    } catch (e) {
+      emit(CreateBundleError(message: e.toString()));
+    }
+  }
 }

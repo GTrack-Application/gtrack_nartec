@@ -11,6 +11,11 @@ class BundleItemsLoaded extends BundleItemsState {
   BundleItemsLoaded({required this.items});
 }
 
+class AssembleItemsLoaded extends BundleItemsState {
+  final List<AssembleItemsModel> items;
+  AssembleItemsLoaded({required this.items});
+}
+
 class BundleItemsError extends BundleItemsState {
   final String message;
   BundleItemsError({required this.message});

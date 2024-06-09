@@ -19,6 +19,8 @@ class AssemblingController {
 
     final uri = Uri.parse(url);
 
+    print(uri);
+
     final headers = <String, String>{
       "Content-Type": "application/json",
       "Host": AppUrls.host,
@@ -98,6 +100,45 @@ class AssemblingController {
       "field": field,
       "location": glnLocation,
       "bundling_name": name
+    });
+
+    var response = await http.post(uri, body: body, headers: headers);
+
+    var data = json.decode(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return data;
+    } else {
+      throw Exception(data['error']);
+    }
+  }
+
+  static Future<void> createAssemble(
+    List<String> field,
+    String glnLocation,
+    String name,
+  ) async {
+    // String? token = await AppPreferences.getToken();
+    // String url = "${AppUrls.baseUrlWith3091}api/products";
+    String? userId = await AppPreferences.getUserId();
+
+    const url = "${AppUrls.baseUrlWith7000}/api/createnewassembling";
+
+    final uri = Uri.parse(url);
+
+    final headers = <String, String>{
+      "Content-Type": "application/json",
+      "Host": AppUrls.host,
+      // "Authorization": "Bearer $token",
+    };
+
+    jsonEncode(field);
+
+    final body = jsonEncode({
+      "user_id": userId,
+      "field": field,
+      "location": glnLocation,
+      "assembling_name": name
     });
 
     var response = await http.post(uri, body: body, headers: headers);
@@ -206,6 +247,36 @@ class AssemblingController {
     }
   }
 
+  static Future<List<AssembleItemsModel>> getAssembleItems() async {
+    String? userId = await AppPreferences.getUserId();
+    // String? token = await AppPreferences.getToken();
+    // String url = "${AppUrls.baseUrlWith3091}api/products";
+
+    final url =
+        "${AppUrls.baseUrlWith7000}/api/getadd_assemblingByuser_id?user_id=$userId";
+
+    final uri = Uri.parse(url);
+
+    final headers = <String, String>{
+      "Content-Type": "application/json",
+      "Host": AppUrls.host,
+    };
+
+    var response = await http.get(uri, headers: headers);
+
+    log(jsonDecode(response.body).toString());
+
+    var data = json.decode(response.body) as List;
+
+    if (response.statusCode == 200) {
+      List<AssembleItemsModel> products =
+          data.map((e) => AssembleItemsModel.fromJson(e)).toList();
+      return products;
+    } else {
+      return [];
+    }
+  }
+
   static Future<List<ProductsModel>> getSubBundleItems(String gtin) async {
     String? userId = await AppPreferences.getUserId();
     // String? token = await AppPreferences.getToken();
@@ -213,6 +284,36 @@ class AssemblingController {
 
     final url =
         "${AppUrls.baseUrlWith7000}/api/getBundlingByUserId?user_id=$userId&GTIN=$gtin";
+
+    final uri = Uri.parse(url);
+
+    final headers = <String, String>{
+      "Content-Type": "application/json",
+      "Host": AppUrls.host,
+    };
+
+    var response = await http.get(uri, headers: headers);
+
+    log(jsonDecode(response.body).toString());
+
+    var data = json.decode(response.body) as List;
+
+    if (response.statusCode == 200) {
+      List<ProductsModel> products =
+          data.map((e) => ProductsModel.fromJson(e)).toList();
+      return products;
+    } else {
+      return [];
+    }
+  }
+
+  static Future<List<ProductsModel>> getSubAssembleItems(String gtin) async {
+    String? userId = await AppPreferences.getUserId();
+    // String? token = await AppPreferences.getToken();
+    // String url = "${AppUrls.baseUrlWith3091}api/products";
+
+    final url =
+        "${AppUrls.baseUrlWith7000}/api/get_assembling_By_UserId_list?user_id=$userId&GTIN=$gtin";
 
     final uri = Uri.parse(url);
 

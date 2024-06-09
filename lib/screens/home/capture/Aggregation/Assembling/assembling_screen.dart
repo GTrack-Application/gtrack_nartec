@@ -1,15 +1,22 @@
-// ignore_for_file: collection_methods_unrelated_type
+// ignore_for_file: collection_methods_unrelated_type, avoid_print
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_state.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_cubit.dart';
+import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_state.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
+import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Assembling/assembly_details_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Assembling/created_assembly_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/gtin_details_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -22,14 +29,27 @@ class AssemblingScreen extends StatefulWidget {
 
 class _AssemblingScreenState extends State<AssemblingScreen> {
   TextEditingController searchController = TextEditingController();
-  FocusNode searchFocusNode = FocusNode();
+  TextEditingController bundleNameController = TextEditingController();
+
+  CreateBundleCubit createBundleCubit = CreateBundleCubit();
 
   AssemblingCubit assembleCubit = AssemblingCubit();
   List<ProductsModel> products = [];
 
+  GlnCubit glnCubit = GlnCubit();
+
+  List<GLNProductsModel> table = [];
+
+  List<String> dropdownList = [];
+  String? dropdownValue;
+
+  List<String> gln = [];
+  String? glnValue;
+
   @override
   void initState() {
     super.initState();
+    glnCubit.identifyGln();
   }
 
   @override
@@ -47,6 +67,8 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
               toast(state.message);
             }
             if (state is AssemblingLoaded) {
+              FocusNode().unfocus();
+              searchController.clear();
               products.addAll(state.assemblings);
             }
           },
@@ -56,6 +78,62 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  BlocConsumer<GlnCubit, GlnState>(
+                    bloc: glnCubit,
+                    listener: (context, state) {
+                      if (state is GlnErrorState) {
+                        toast(state.message);
+                      }
+                      if (state is GlnLoadedState) {
+                        table = state.data;
+                        dropdownList = table
+                            .map((e) =>
+                                "${e.locationNameEn ?? ""} - ${e.gLNBarcodeNumber}")
+                            .toList();
+                        gln =
+                            table.map((e) => e.gLNBarcodeNumber ?? "").toList();
+                        dropdownList = dropdownList.toSet().toList();
+                        dropdownValue = dropdownList[0];
+                        glnValue = gln[0];
+                      }
+                    },
+                    builder: (context, state) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          border: Border.fromBorderSide(
+                              BorderSide(color: AppColors.grey)),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            icon: const Icon(Icons.arrow_drop_down),
+                            iconSize: 24,
+                            elevation: 16,
+                            isExpanded: true,
+                            style: const TextStyle(color: Colors.black),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                                glnValue = gln[dropdownList.indexOf(newValue!)];
+                              });
+                            },
+                            items: dropdownList
+                                .map<DropdownMenuItem<String>>((String? value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value!),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  10.height,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -65,15 +143,10 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                           height: 40,
                           child: TextField(
                             controller: searchController,
-                            focusNode: searchFocusNode,
                             onSubmitted: (value) {
-                              assembleCubit.getAssemblyProductsByGtin(
+                              FocusScope.of(context).unfocus();
+                              assembleCubit.getBundlingProductsByGtin(
                                   searchController.text.trim());
-                              searchController.clear();
-
-                              // focus again on the textfield
-                              FocusScope.of(context)
-                                  .requestFocus(searchFocusNode);
                             },
                             decoration: InputDecoration(
                               contentPadding:
@@ -91,13 +164,9 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                         flex: 1,
                         child: GestureDetector(
                           onTap: () {
-                            assembleCubit.getAssemblyProductsByGtin(
+                            FocusScope.of(context).unfocus();
+                            assembleCubit.getBundlingProductsByGtin(
                                 searchController.text.trim());
-                            searchController.clear();
-
-                            // focus again on the textfield
-                            FocusScope.of(context)
-                                .requestFocus(searchFocusNode);
                           },
                           child: SizedBox(
                             height: 30,
@@ -119,7 +188,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                     height: 40,
                     decoration: const BoxDecoration(color: AppColors.primary),
                     child: const Text(
-                      'Raw Materials Products',
+                      'Raw Material Products',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -217,7 +286,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                                     title: Text(
                                       products[index].productnameenglish ?? "",
                                       style: const TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -230,7 +299,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                                       child: ClipOval(
                                         child: CachedNetworkImage(
                                           imageUrl:
-                                              "${AppUrls.baseUrlWith3093}${products[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                                              "${AppUrls.baseUrlWith3093}${products[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
                                           width: 50,
                                           height: 50,
                                           fit: BoxFit.cover,
@@ -243,7 +312,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                                       onTap: () {
                                         AppNavigator.goToPage(
                                           context: context,
-                                          screen: AssemblyDetailsScreen(
+                                          screen: GTINDetailsScreen(
                                             employees: products[index],
                                           ),
                                         );
@@ -258,30 +327,148 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Visibility(
-                        visible: products.isNotEmpty,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            // rgba(249, 75, 0, 1)
-                            backgroundColor:
-                                const Color.fromRGBO(249, 75, 0, 1),
-                          ),
-                          child: const Text(
-                            'Generate',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
+                  products.isEmpty
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            BlocConsumer<CreateBundleCubit, CreateBundleState>(
+                              bloc: createBundleCubit,
+                              listener: (context, state) {
+                                if (state is CreateBundleError) {
+                                  toast(state.message);
+                                }
+                                if (state is CreateBundleLoaded) {
+                                  RawMaterialsToWIPController
+                                          .insertGtrackEPCISLog(
+                                              "packing",
+                                              products[0].barcode.toString(),
+                                              glnValue.toString(),
+                                              products[0].gcpGLNID.toString(),
+                                              'manufacturing')
+                                      .then((value) {
+                                    print("EPCIS Log Inserted");
+                                  }).onError((error, stackTrace) {
+                                    print("EPCIS Log error: $error");
+                                  });
+
+                                  setState(() {
+                                    searchController.clear();
+                                    products = [];
+                                  });
+                                  toast("Assemble Created Successfully");
+
+                                  AppNavigator.goToPage(
+                                    context: context,
+                                    screen: const CreatedAssemblyScreen(),
+                                  );
+                                }
+                              },
+                              builder: (context, state) {
+                                return ElevatedButton(
+                                  onPressed: () {
+                                    // show dialog
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Create Assembling',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                icon: const Icon(Icons.cancel),
+                                              )
+                                            ],
+                                          ),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextField(
+                                                controller:
+                                                    bundleNameController,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: 'Assemble Name',
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  createBundleCubit
+                                                      .createAssemble(
+                                                    products
+                                                        .map((e) => e.barcode!)
+                                                        .toList(),
+                                                    dropdownValue
+                                                        .toString()
+                                                        .trim(),
+                                                    bundleNameController.text
+                                                        .trim(),
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      const Color.fromRGBO(
+                                                          249, 75, 0, 1),
+                                                ),
+                                                child: state
+                                                        is CreateBundleLoading
+                                                    ? const Center(
+                                                        child: CircularProgressIndicator(
+                                                            valueColor:
+                                                                AlwaysStoppedAnimation<
+                                                                        Color>(
+                                                                    Colors
+                                                                        .white)))
+                                                    : const Text(
+                                                        'Create Assemble',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromRGBO(249, 75, 0, 1),
+                                  ),
+                                  child: state is CreateBundleLoading
+                                      ? const Center(
+                                          child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Colors.white)))
+                                      : const Text(
+                                          'Create Assemble',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                );
+                              },
                             ),
-                          ),
+                            Text("Total Of GTIN: ${products.length}"),
+                          ],
                         ),
-                      ),
-                      Text("Total Of GTIN: ${products.length}"),
-                    ],
-                  ),
                 ],
               ),
             );

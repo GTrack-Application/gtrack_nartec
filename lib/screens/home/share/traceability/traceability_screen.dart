@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_mobile_app/cubit/share/share_cubit.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 String cleanCoordinate(String coordinate) {
   return coordinate
@@ -26,8 +27,8 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
   late GoogleMapController mapController;
   LatLng _center = const LatLng(24.65682, 46.84287); // Center of the map
 
-  Set<Marker> _markers = {};
-  Set<Polyline> _polylines = {};
+  final Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
 
   @override
   void initState() {
@@ -39,8 +40,9 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
     _setMarkersAndPolylines();
   }
 
-  void _setMarkersAndPolylines() {
+  void _setMarkersAndPolylines() async {
     final traceabilityData = ShareCubit.get(context).traceabilityData;
+    PolylinePoints polylinePoints = PolylinePoints();
 
     for (var i = 0; i < traceabilityData.length; i++) {
       var current = traceabilityData[i];
@@ -80,20 +82,35 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
               infoWindow: InfoWindow(title: toDetails.locationNameEn),
             ),
           );
-          _polylines.add(
-            Polyline(
-              polylineId: PolylineId('polyline_${current.id}'),
-              points: [
-                LatLng(fromLatitude, fromLongitude),
-                LatLng(toLatitude, toLongitude)
-              ],
-              color: Colors.blue,
-              width: 5,
-            ),
+
+          // Fetching polyline points from Polyline API
+          PolylineResult result =
+              await polylinePoints.getRouteBetweenCoordinates(
+            "AIzaSyCsEUxB9psxb-LxhYx8hJtF248gj4bx49A", // Replace with your API Key
+            PointLatLng(fromLatitude, fromLongitude),
+            PointLatLng(toLatitude, toLongitude),
+            travelMode: TravelMode.driving,
           );
+
+          if (result.points.isNotEmpty) {
+            List<LatLng> polylineCoordinates = [];
+            for (var point in result.points) {
+              polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+            }
+
+            _polylines.add(
+              Polyline(
+                polylineId: PolylineId('polyline_${current.id}'),
+                points: polylineCoordinates,
+                color: Colors.blue,
+                width: 5,
+              ),
+            );
+          }
         }
       }
     }
+    setState(() {});
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -122,7 +139,7 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
             child: TextField(
               controller: ShareCubit.get(context).gtinController,
               onEditingComplete: () {
-                FocusNode().unfocus();
+                FocusScope.of(context).unfocus();
                 ShareCubit.get(context).getTraceabilityData();
               },
               decoration: InputDecoration(
@@ -131,7 +148,8 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
-                    FocusNode().unfocus();
+                    // hide keyboard
+                    FocusScope.of(context).unfocus();
                     ShareCubit.get(context).getTraceabilityData();
                   },
                 ),

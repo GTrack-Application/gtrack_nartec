@@ -13,24 +13,24 @@ import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/gtin
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
-class SubBundlesScreen extends StatefulWidget {
-  const SubBundlesScreen({super.key, required this.gitn, required this.name});
+class SubAssemblesScreen extends StatefulWidget {
+  const SubAssemblesScreen({super.key, required this.gitn, required this.name});
 
   final String gitn;
   final String name;
 
   @override
-  State<SubBundlesScreen> createState() => _SubBundlesScreenState();
+  State<SubAssemblesScreen> createState() => _SubAssemblesScreenState();
 }
 
-class _SubBundlesScreenState extends State<SubBundlesScreen> {
+class _SubAssemblesScreenState extends State<SubAssemblesScreen> {
   SubBundleItemsCubit subBundleCubit = SubBundleItemsCubit();
   List<ProductsModel> products = [];
 
   @override
   void initState() {
     super.initState();
-    subBundleCubit.getSubBundleItems(widget.gitn);
+    subBundleCubit.getSubAssembleItems(widget.gitn);
   }
 
   @override

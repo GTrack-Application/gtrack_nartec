@@ -96,14 +96,13 @@ class _StockTransferBinToBinInternalScreenState
           actions: [
             GestureDetector(
               onTap: () {
-                Get.back();
+                Navigator.of(context).pop();
               },
               child: Container(
-                padding: const EdgeInsets.only(right: 10),
-                child: Image.asset(
-                  AppImages.delete,
-                  width: 30,
-                  height: 30,
+                margin: const EdgeInsets.only(right: 10),
+                child: const Icon(
+                  Icons.cancel_outlined,
+                  color: Colors.white,
                 ),
               ),
             ),

@@ -1,4 +1,4 @@
-// ignore_for_file: collection_methods_unrelated_type
+// ignore_for_file: collection_methods_unrelated_type, avoid_print
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +44,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
   String? dropdownValue;
 
   List<String> gln = [];
+  String? glnValue;
 
   @override
   void initState() {
@@ -89,9 +90,11 @@ class _BundlingScreenState extends State<BundlingScreen> {
                             .map((e) =>
                                 "${e.locationNameEn ?? ""} - ${e.gLNBarcodeNumber}")
                             .toList();
-                        gln = table.map((e) => e.locationNameEn ?? "").toList();
+                        gln =
+                            table.map((e) => e.gLNBarcodeNumber ?? "").toList();
                         dropdownList = dropdownList.toSet().toList();
                         dropdownValue = dropdownList[0];
+                        glnValue = gln[0];
                       }
                     },
                     builder: (context, state) {
@@ -116,6 +119,8 @@ class _BundlingScreenState extends State<BundlingScreen> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 dropdownValue = newValue;
+                                glnValue = gln[dropdownList.indexOf(newValue!)];
+                                print("GLN Value: $glnValue");
                               });
                             },
                             items: dropdownList
@@ -340,7 +345,7 @@ class _BundlingScreenState extends State<BundlingScreen> {
                                           .insertGtrackEPCISLog(
                                               "packing",
                                               products[0].barcode.toString(),
-                                              products[0].gcpGLNID.toString(),
+                                              glnValue.toString(),
                                               products[0].gcpGLNID.toString(),
                                               'manufacturing')
                                       .then((value) {
@@ -373,7 +378,13 @@ class _BundlingScreenState extends State<BundlingScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Text('Create Bundle'),
+                                              const Text(
+                                                'Create Bundle',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                               IconButton(
                                                 onPressed: () {
                                                   Navigator.of(context).pop();

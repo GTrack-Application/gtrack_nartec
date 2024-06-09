@@ -79,7 +79,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                       "${e.locationNameEn ?? ""} - ${e.gLNBarcodeNumber}")
                   .toList();
 
-              gln = table.map((e) => e.gcpGLNID ?? "").toList();
+              gln = table.map((e) => e.gLNBarcodeNumber ?? "").toList();
               dropdownList = dropdownList.toSet().toList();
               dropdownValue = dropdownList[0];
               ItemDetailsCubit.get(context).glnIdFrom = dropdownValue;
@@ -114,6 +114,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 dropdownValue = newValue;
+                                print(gln);
                                 ItemDetailsCubit.get(context).glnIdFrom =
                                     newValue;
                               });
@@ -177,7 +178,6 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                         receivingTypeValueIdList[
                                             receivingType.indexOf(newValue!)];
                                   });
-                                  print(receivingTypeValueId);
                                 },
                                 items: receivingType
                                     .map<DropdownMenuItem<String>>(
@@ -349,8 +349,9 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                           AppNavigator.goToPage(
                                             context: context,
                                             screen: DirectReceiptSaveScreen(
-                                                productsModel: products[index],
-                                                location: gln[index]),
+                                              productsModel: products[index],
+                                              location: gln[index],
+                                            ),
                                           );
                                         },
                                         contentPadding:

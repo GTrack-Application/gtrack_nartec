@@ -20,4 +20,19 @@ class BundleItemsCubit extends Cubit<BundleItemsState> {
       emit(BundleItemsError(message: e.toString()));
     }
   }
+
+  void getAssembleItems() async {
+    emit(BundleItemsLoading());
+
+    try {
+      var network = await isNetworkAvailable();
+      if (!network) {
+        emit(BundleItemsError(message: "No Internet Connection"));
+      }
+      var data = await AssemblingController.getAssembleItems();
+      emit(AssembleItemsLoaded(items: data));
+    } catch (e) {
+      emit(BundleItemsError(message: e.toString()));
+    }
+  }
 }

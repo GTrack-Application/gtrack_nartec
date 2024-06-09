@@ -20,4 +20,19 @@ class SubBundleItemsCubit extends Cubit<SubBundleItemsState> {
       emit(SubBundleItemsError(message: e.toString()));
     }
   }
+
+  void getSubAssembleItems(String gtin) async {
+    emit(SubBundleItemsLoading());
+
+    try {
+      var network = await isNetworkAvailable();
+      if (!network) {
+        emit(SubBundleItemsError(message: "No Internet Connection"));
+      }
+      var data = await AssemblingController.getSubAssembleItems(gtin);
+      emit(SubBundleItemsLoaded(items: data));
+    } catch (e) {
+      emit(SubBundleItemsError(message: e.toString()));
+    }
+  }
 }

@@ -1,7 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, non_constant_identifier_names, sized_box_for_whitespace, file_names
 
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
@@ -98,14 +97,13 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
           actions: [
             GestureDetector(
               onTap: () {
-                Get.back();
+                Navigator.of(context).pop();
               },
               child: Container(
-                padding: const EdgeInsets.only(right: 10),
-                child: Image.asset(
-                  AppImages.delete,
-                  width: 30,
-                  height: 30,
+                margin: const EdgeInsets.only(right: 10),
+                child: const Icon(
+                  Icons.cancel_outlined,
+                  color: Colors.white,
                 ),
               ),
             ),
