@@ -214,13 +214,9 @@ class RawMaterialsToWIPController {
     String glnTo,
     String industryType,
   ) async {
-    // // String? token;
-    // await AppPreferences.getToken().then((value) => token = value.toString());
-    String? userId;
-    await AppPreferences.getUserId().then((value) => userId = value.toString());
-
+    String? userId = await AppPreferences.getUserId();
     final url =
-        Uri.parse('${AppUrls.baseUrlWith7000}/api/insertTblTransferJournalCL');
+        Uri.parse('${AppUrls.baseUrlWith7000}/api/insertGtrackEPCISLog');
 
     print(url);
 
@@ -231,17 +227,18 @@ class RawMaterialsToWIPController {
     };
 
     final body = jsonEncode({
-      "gs1_user_id": userId.toString(),
+      "gs1UserId": userId.toString(),
       "TransactionType": transactionType,
       "GTIN": gtin,
       "GLNFrom": glnFrom,
       "GLNTo": glnTo,
       "IndustryType": industryType
     });
-
     var response = await http.post(url, headers: headers, body: body);
 
     var data = jsonDecode(response.body);
+
+    print(data);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return data;

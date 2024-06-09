@@ -47,6 +47,9 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
   List<String> receivingTypeValueIdList = [];
   String? receivingTypeValueId;
 
+  List<String> glnLocation = [];
+  String? glnLocaitonValue;
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +78,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                   .map((e) =>
                       "${e.locationNameEn ?? ""} - ${e.gLNBarcodeNumber}")
                   .toList();
+
               gln = table.map((e) => e.gcpGLNID ?? "").toList();
               dropdownList = dropdownList.toSet().toList();
               dropdownValue = dropdownList[0];
@@ -345,8 +349,8 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                           AppNavigator.goToPage(
                                             context: context,
                                             screen: DirectReceiptSaveScreen(
-                                              productsModel: products[index],
-                                            ),
+                                                productsModel: products[index],
+                                                location: gln[index]),
                                           );
                                         },
                                         contentPadding:

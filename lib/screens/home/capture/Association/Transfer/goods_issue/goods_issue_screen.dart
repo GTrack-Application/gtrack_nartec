@@ -3,7 +3,8 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials_RM/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials/rm_to_wip/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials/wip_fg/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
 
 class GoodsIssueScreen extends StatefulWidget {
   const GoodsIssueScreen({super.key});
@@ -42,9 +43,9 @@ class _GoodsIssueScreenState extends State<GoodsIssueScreen> {
     // data[0]["onTap"] = () => AppNavigator.goToPage(
     //     context: context, screen: RawMaterialsToWIPScreen1());
     data[1]["onTap"] = () => AppNavigator.goToPage(
-          context: context,
-          screen: const BinToBinAxaptaScreen(),
-        );
+        context: context, screen: const RMtoWIPBinToBinAxaptaScreen());
+    data[2]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const WIPtoFGBinToBinAxaptaScreen());
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(

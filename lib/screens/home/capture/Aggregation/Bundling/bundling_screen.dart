@@ -336,12 +336,25 @@ class _BundlingScreenState extends State<BundlingScreen> {
                                   toast(state.message);
                                 }
                                 if (state is CreateBundleLoaded) {
+                                  RawMaterialsToWIPController
+                                          .insertGtrackEPCISLog(
+                                              "packing",
+                                              products[0].barcode.toString(),
+                                              products[0].gcpGLNID.toString(),
+                                              products[0].gcpGLNID.toString(),
+                                              'manufacturing')
+                                      .then((value) {
+                                    print("EPCIS Log Inserted");
+                                  }).onError((error, stackTrace) {
+                                    print("EPCIS Log error: $error");
+                                  });
+
                                   setState(() {
                                     searchController.clear();
                                     products = [];
                                   });
                                   toast("Bundle Created Successfully");
-                                  insertGtrackEPCISLog();
+
                                   AppNavigator.goToPage(
                                     context: context,
                                     screen: const CreatedBundleScreen(),
@@ -454,14 +467,5 @@ class _BundlingScreenState extends State<BundlingScreen> {
         ),
       ),
     );
-  }
-
-  insertGtrackEPCISLog() async {
-    RawMaterialsToWIPController.insertGtrackEPCISLog(
-        "Bundling",
-        products[0].barcode.toString(),
-        products[0].gcpGLNID.toString(),
-        products[0].gcpGLNID.toString(),
-        'Manufacturing');
   }
 }

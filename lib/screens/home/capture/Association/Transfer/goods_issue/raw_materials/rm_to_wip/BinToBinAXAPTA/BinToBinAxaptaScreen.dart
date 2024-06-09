@@ -11,18 +11,20 @@ import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/BinToBinAXAPTA/BinToBinAxapta2Screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials_RM/BinToBinAXAPTA/bin_to_bin_details_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials/rm_to_wip/BinToBinAXAPTA/BinToBinAxapta2Screen.dart';
+import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials/wip_fg/BinToBinAXAPTA/bin_to_bin_details_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class BinToBinAxaptaScreen extends StatefulWidget {
-  const BinToBinAxaptaScreen({super.key});
+class RMtoWIPBinToBinAxaptaScreen extends StatefulWidget {
+  const RMtoWIPBinToBinAxaptaScreen({super.key});
 
   @override
-  State<BinToBinAxaptaScreen> createState() => _BinToBinAxaptaScreenState();
+  State<RMtoWIPBinToBinAxaptaScreen> createState() =>
+      _RMtoWIPBinToBinAxaptaScreenState();
 }
 
-class _BinToBinAxaptaScreenState extends State<BinToBinAxaptaScreen> {
+class _RMtoWIPBinToBinAxaptaScreenState
+    extends State<RMtoWIPBinToBinAxaptaScreen> {
   TextEditingController _transferController = TextEditingController();
   String total = "0";
 
@@ -177,7 +179,7 @@ class _BinToBinAxaptaScreenState extends State<BinToBinAxaptaScreen> {
                             }
                             AppNavigator.goToPage(
                               context: context,
-                              screen: BinToBinAxapta2Screen(
+                              screen: RMtoWIPBinToBinAxapta2Screen(
                                 TRANSFERID: table[index].tRANSFERID ?? "",
                                 TRANSFERSTATUS: int.parse(
                                     table[index].tRANSFERSTATUS.toString()),

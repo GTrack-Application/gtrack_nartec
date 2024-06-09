@@ -15,7 +15,7 @@ import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widg
 import 'package:gtrack_mobile_app/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class BinToBinAxapta2Screen extends StatefulWidget {
+class RMtoWIPBinToBinAxapta2Screen extends StatefulWidget {
   String TRANSFERID;
   int TRANSFERSTATUS;
   String INVENTLOCATIONIDFROM;
@@ -26,7 +26,7 @@ class BinToBinAxapta2Screen extends StatefulWidget {
   String CREATEDDATETIME;
   String GROUPID;
 
-  BinToBinAxapta2Screen({
+  RMtoWIPBinToBinAxapta2Screen({
     super.key,
     required this.TRANSFERID,
     required this.TRANSFERSTATUS,
@@ -40,10 +40,12 @@ class BinToBinAxapta2Screen extends StatefulWidget {
   });
 
   @override
-  State<BinToBinAxapta2Screen> createState() => _BinToBinAxapta2ScreenState();
+  State<RMtoWIPBinToBinAxapta2Screen> createState() =>
+      _RMtoWIPBinToBinAxapta2ScreenState();
 }
 
-class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
+class _RMtoWIPBinToBinAxapta2ScreenState
+    extends State<RMtoWIPBinToBinAxapta2Screen> {
   final TextEditingController _transferIdController = TextEditingController();
   final TextEditingController _locationReferenceController =
       TextEditingController();
@@ -659,7 +661,9 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
     }
 
     AppDialogs.loadingDialog(context);
-    InsertAllDataController.postDataToWIPtoFG(
+    InsertAllDataController.postData(
+      dropDownValue.toString(),
+      _site,
       table,
       widget.TRANSFERID,
       widget.TRANSFERSTATUS,
@@ -668,22 +672,26 @@ class _BinToBinAxapta2ScreenState extends State<BinToBinAxapta2Screen> {
       widget.ITEMID,
       widget.QTYTRANSFER,
       widget.QTYRECEIVED,
-      table[0].mainLocation.toString(),
-      dropDownValue.toString(),
-      DateTime.now().toString(),
+      widget.CREATEDDATETIME,
       widget.GROUPID,
+      dropDownValue.toString().substring(0, 2),
     ).then((value) {
       AppDialogs.closeDialog();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Data inserted and updated successfully."),
       ));
       RawMaterialsToWIPController.insertGtrackEPCISLog(
-        "Association",
+        "stock_transfer",
         table[0].gTIN!,
         table[0].binLocation!,
         dropDownValue.toString(),
-        'Manufacturing',
-      );
+        'manufacturing',
+      ).then((value) {
+        print("EPCIS Log Inserted");
+      }).onError((error, stackTrace) {
+        print("EPCIS Log error: $error");
+      });
+
       setState(() {
         table.clear();
         _scanSerialandPalletController.clear();

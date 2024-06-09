@@ -12,8 +12,10 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DirectReceiptSaveScreen extends StatefulWidget {
-  const DirectReceiptSaveScreen({super.key, required this.productsModel});
+  const DirectReceiptSaveScreen(
+      {super.key, required this.productsModel, required this.location});
   final ShipmentDataModel productsModel;
+  final String location;
 
   @override
   State<DirectReceiptSaveScreen> createState() =>
@@ -405,7 +407,17 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   BlocConsumer<ItemDetailsCubit, ItemDetailsState>(
                     listener: (context, state) {
                       if (state is ItemDetailsSuccess) {
-                        insertGtrackEPCISLog();
+                        RawMaterialsToWIPController.insertGtrackEPCISLog(
+                          "receiving",
+                          widget.productsModel.barcode.toString(),
+                          widget.location,
+                          widget.productsModel.gcpGLNID.toString(),
+                          'manufacturing',
+                        ).then((value) {
+                          print("EPCIS Log Inserted");
+                        }).onError((error, stackTrace) {
+                          print("EPCIS Log error: $error");
+                        });
                         toast("Item details saved successfully!");
                         ItemDetailsCubit.get(context).clearEverything();
                         Navigator.pop(context);
@@ -471,16 +483,6 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  insertGtrackEPCISLog() async {
-    RawMaterialsToWIPController.insertGtrackEPCISLog(
-      "Receiving (Direct Receipt)",
-      widget.productsModel.barcode.toString(),
-      widget.productsModel.gcpGLNID.toString(),
-      widget.productsModel.gcpGLNID.toString(),
-      'Manufacturing',
     );
   }
 }

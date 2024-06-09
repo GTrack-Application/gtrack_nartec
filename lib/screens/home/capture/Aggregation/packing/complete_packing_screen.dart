@@ -403,7 +403,17 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                     }
                     if (state is CompletePackingLoaded) {
                       toast("Packing Completed Successfully!");
-                      insertGtrackEPCISLog();
+                      RawMaterialsToWIPController.insertGtrackEPCISLog(
+                              "packing",
+                              product!.data!.gtin.toString(),
+                              product!.data!.gcpGLNID.toString(),
+                              product!.data!.gcpGLNID.toString(),
+                              'manufacturing')
+                          .then((value) {
+                        print("EPCIS Log Inserted");
+                      }).onError((error, stackTrace) {
+                        print("EPCIS Log error: $error");
+                      });
                       Navigator.of(context).pop();
                     }
                   },
@@ -465,14 +475,5 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
         ),
       ),
     );
-  }
-
-  insertGtrackEPCISLog() async {
-    RawMaterialsToWIPController.insertGtrackEPCISLog(
-        "Packing",
-        product!.data!.gtin.toString(),
-        product!.data!.gcpGLNID.toString(),
-        product!.data!.gcpGLNID.toString(),
-        'Manufacturing');
   }
 }

@@ -3,7 +3,6 @@ import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/buttons/card_icon_button.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/Sales_Order/PickListAssigned/PickListAssignedScreen.dart';
 
 class ShippingScreen extends StatefulWidget {
@@ -32,8 +31,6 @@ class _ShippingScreenState extends State<ShippingScreen> {
     super.initState();
     data[0]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: PickListAssignedScreen());
-    data[1]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const BinToBinAxaptaScreen());
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(

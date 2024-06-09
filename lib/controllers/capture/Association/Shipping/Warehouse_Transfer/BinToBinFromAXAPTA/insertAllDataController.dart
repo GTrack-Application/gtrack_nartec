@@ -10,7 +10,7 @@ class InsertAllDataController {
   static Future<void> postData(
     String BIN,
     String SELECTTYPE,
-    List<GetShipmentReceivedTableModel> getItemInfoByPalletCodeModel,
+    List<GetShipmentReceivedTableModel> table,
     String TRANSFERID,
     int TRANSFERSTATUS,
     String INVENTLOCATIONIDFROM,
@@ -26,7 +26,6 @@ class InsertAllDataController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url = "${AppUrls.baseUrlWith7000}/api/insertTblTransferBinToBinCL";
-    print("url: $url");
 
     final uri = Uri.parse(url);
 
@@ -37,7 +36,7 @@ class InsertAllDataController {
       "Content-Type": "application/json"
     };
 
-    final data = getItemInfoByPalletCodeModel.map(
+    final data = table.map(
       (e) {
         return {
           ...e.toJson(),
@@ -56,6 +55,8 @@ class InsertAllDataController {
         };
       },
     );
+
+    print("Data: $data");
 
     try {
       var response =
@@ -92,8 +93,7 @@ class InsertAllDataController {
     String? userId;
     await AppPreferences.getToken().then((value) => userId = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/insertTblTransferBinToBinCL";
-    print("url: $url");
+    String url = "${AppUrls.baseUrlWith7000}/api/insertTblTransferJournalCL";
 
     final uri = Uri.parse(url);
 
@@ -104,25 +104,30 @@ class InsertAllDataController {
     };
 
     final data = table.map((e) {
-      return {
-        "TRANSFERID": transferId,
-        "TRANSFERSTATUS": transferStatus,
-        "INVENTLOCATIONIDFROM": inventLocationFrom,
-        "INVENTLOCATIONIDTO": inventLocationTo,
-        "ITEMID": itemId,
-        "QTYTRANSFER": qtyTransfer,
-        "QTYRECEIVED": qtyReceived,
-        "JournalId": journalId,
-        "BinLocation": e.binLocation,
-        "DateTimeTransaction": dateTimeTransaction,
-        "CONFIG": config,
-        "USERID": userId
-      };
+      return [
+        {
+          "TRANSFERID": transferId,
+          "TRANSFERSTATUS": transferStatus,
+          "INVENTLOCATIONIDFROM": inventLocationFrom,
+          "INVENTLOCATIONIDTO": inventLocationTo,
+          "ITEMID": itemId,
+          "QTYTRANSFER": qtyTransfer,
+          "QTYRECEIVED": qtyReceived,
+          "JournalId": journalId,
+          "BinLocation": e.binLocation,
+          "DateTimeTransaction": dateTimeTransaction,
+          "CONFIG": config,
+          "USERID": userId
+        }
+      ];
     });
 
+    var body = jsonEncode([...data]);
+
+    print("Data: $data");
+
     try {
-      var response =
-          await http.post(uri, headers: headers, body: jsonEncode([...data]));
+      var response = await http.post(uri, headers: headers, body: body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("Status Code: ${response.statusCode}");
