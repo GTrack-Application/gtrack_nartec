@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_mobile_app/cubit/share/share_cubit.dart';
@@ -59,6 +58,13 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
             markerId: MarkerId('from_${current.id}'),
             position: LatLng(fromLatitude, fromLongitude),
             infoWindow: InfoWindow(title: fromDetails.locationNameEn),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+              current.industryType?.toLowerCase() == 'manufacturing'
+                  ? BitmapDescriptor.hueGreen
+                  : current.industryType?.toLowerCase() == 'logistics'
+                      ? BitmapDescriptor.hueBlue
+                      : BitmapDescriptor.hueRed,
+            ),
           ),
         );
 
@@ -136,6 +142,8 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
             child: BlocConsumer<ShareCubit, ShareState>(
               listener: (context, state) {
                 if (state is ShareTraceabilitySuccess) {
+                  ShareCubit.get(context).traceabilityData =
+                      state.traceabilityData;
                   setState(() {
                     _markers.clear();
                     _polylines.clear();
