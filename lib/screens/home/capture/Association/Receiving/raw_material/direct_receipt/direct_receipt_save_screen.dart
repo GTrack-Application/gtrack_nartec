@@ -1,8 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_cubit.dart';
+import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_state.dart';
 import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
@@ -12,8 +16,11 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class DirectReceiptSaveScreen extends StatefulWidget {
-  const DirectReceiptSaveScreen(
-      {super.key, required this.productsModel, required this.location});
+  const DirectReceiptSaveScreen({
+    super.key,
+    required this.productsModel,
+    required this.location,
+  });
   final ShipmentDataModel productsModel;
   final String location;
 
@@ -29,35 +36,25 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
   FocusNode expiryDateFocusNode = FocusNode();
   FocusNode manufactureDateFocusNode = FocusNode();
   FocusNode netWeightFocusNode = FocusNode();
-  FocusNode unitFocusNode = FocusNode();
   FocusNode transpoGLNFocusNode = FocusNode();
-  FocusNode putAwayLocationFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    ItemDetailsCubit.get(context).unitCubit.getUnits();
+    ItemDetailsCubit.get(context).countryCubit.getCountries();
   }
 
   @override
   void dispose() {
     super.dispose();
-    // quantityController.dispose();
-    // batchNoController.dispose();
-    // expiryDateController.dispose();
-    // manufactureDateController.dispose();
-    // netWeightController.dispose();
-    // unitController.dispose();
-    // transpoGLNController.dispose();
-    // putAwayLocation.dispose();
 
     quantityFocusNode.dispose();
     batchNoFocusNode.dispose();
     expiryDateFocusNode.dispose();
     manufactureDateFocusNode.dispose();
     netWeightFocusNode.dispose();
-    unitFocusNode.dispose();
     transpoGLNFocusNode.dispose();
-    putAwayLocationFocusNode.dispose();
   }
 
   @override
@@ -216,13 +213,19 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
-                        ).then((value) {
-                          if (value != null) {
-                            ItemDetailsCubit.get(context)
-                                .expiryDateController
-                                .text = DateFormat('yyyy-MM-dd').format(value);
-                          }
-                        });
+                        ).then(
+                          (value) {
+                            if (value != null) {
+                              ItemDetailsCubit.get(context)
+                                      .expiryDateController
+                                      .text =
+                                  DateFormat('dd-MM-yyyy').format(value);
+
+                              ItemDetailsCubit.get(context).expiryDate =
+                                  DateFormat('yyyy-MM-dd').format(value);
+                            }
+                          },
+                        );
                       },
                       icon: const Icon(Icons.calendar_today),
                     ),
@@ -260,13 +263,19 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
-                        ).then((value) {
-                          if (value != null) {
-                            ItemDetailsCubit.get(context)
-                                .manufactureDateController
-                                .text = DateFormat('yyyy-MM-dd').format(value);
-                          }
-                        });
+                        ).then(
+                          (value) {
+                            if (value != null) {
+                              ItemDetailsCubit.get(context)
+                                      .manufactureDateController
+                                      .text =
+                                  DateFormat("dd-MM-yyyy").format(value);
+
+                              ItemDetailsCubit.get(context).manufactureDate =
+                                  DateFormat("yyyy-MM-dd").format(value);
+                            }
+                          },
+                        );
                       },
                       icon: const Icon(Icons.calendar_today),
                     ),
@@ -292,9 +301,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                 child: TextField(
                   controller: ItemDetailsCubit.get(context).netWeightController,
                   focusNode: netWeightFocusNode,
-                  onSubmitted: (value) {
-                    unitFocusNode.requestFocus();
-                  },
+                  onSubmitted: (value) {},
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(left: 10, top: 5),
                     hintText: 'Net Weight',
@@ -313,22 +320,51 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   color: AppColors.primary,
                 ),
               ),
-              SizedBox(
-                height: 40,
-                child: TextField(
-                  controller: ItemDetailsCubit.get(context).unitController,
-                  focusNode: unitFocusNode,
-                  onSubmitted: (value) {
-                    unitFocusNode.unfocus();
-                  },
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.only(left: 10, top: 5),
-                    hintText: 'Unit of Measure',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+              // dropdown for unit of measure
+              BlocConsumer<UnitCountryCubit, UnitCountryState>(
+                bloc: ItemDetailsCubit.get(context).unitCubit,
+                listener: (context, state) {
+                  print(state);
+
+                  if (state is UnitLoaded) {
+                    ItemDetailsCubit.get(context).unitList =
+                        state.units.map((e) => e.unitName ?? "").toList();
+                    // remove empty and null values from list
+                    ItemDetailsCubit.get(context)
+                        .unitList
+                        .removeWhere((element) => element == "");
+                    ItemDetailsCubit.get(context).unitValue =
+                        ItemDetailsCubit.get(context).unitList.first;
+                  }
+                  if (state is UnitError) {
+                    toast(state.message.toString().replaceAll("Exception", ""));
+                  }
+                },
+                builder: (context, state) {
+                  return DropdownButtonFormField<String>(
+                    value: ItemDetailsCubit.get(context).unitValue,
+                    items: ItemDetailsCubit.get(context)
+                        .unitList
+                        .map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        ItemDetailsCubit.get(context).unitValue = value;
+                      });
+                    },
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.only(left: 10, top: 5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               10.height,
               const Text(
@@ -345,9 +381,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   controller:
                       ItemDetailsCubit.get(context).transpoGLNController,
                   focusNode: transpoGLNFocusNode,
-                  onSubmitted: (value) {
-                    putAwayLocationFocusNode.requestFocus();
-                  },
+                  onSubmitted: (value) {},
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(left: 10, top: 5),
                     hintText: 'Transpo GLN',
@@ -366,22 +400,52 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   color: AppColors.primary,
                 ),
               ),
-              SizedBox(
-                height: 40,
-                child: TextField(
-                  controller: ItemDetailsCubit.get(context).putAwayLocation,
-                  focusNode: putAwayLocationFocusNode,
-                  onSubmitted: (value) {
-                    putAwayLocationFocusNode.unfocus();
-                  },
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.only(left: 10, top: 5),
-                    hintText: 'Put Away Location',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+              // dropdown for put away location
+              BlocConsumer<UnitCountryCubit, UnitCountryState>(
+                bloc: ItemDetailsCubit.get(context).countryCubit,
+                listener: (context, state) {
+                  print(state);
+                  if (state is CountryLoaded) {
+                    ItemDetailsCubit.get(context).locationList = state.countries
+                        .map((e) => e.countryName ?? "")
+                        .toList();
+                    // remove empty and null values from list
+                    ItemDetailsCubit.get(context)
+                        .locationList
+                        .removeWhere((element) => element == "");
+
+                    ItemDetailsCubit.get(context).locationValue =
+                        ItemDetailsCubit.get(context).locationList.first;
+                  }
+                  if (state is CountryError) {
+                    toast(state.message.toString().replaceAll("Exception", ""));
+                  }
+                },
+                builder: (context, state) {
+                  return DropdownButtonFormField<String>(
+                    value: ItemDetailsCubit.get(context).locationValue,
+                    items: ItemDetailsCubit.get(context)
+                        .locationList
+                        .map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        ItemDetailsCubit.get(context).locationValue = value;
+                      });
+                    },
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.only(left: 10, top: 5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               10.height,
               Row(
@@ -453,10 +517,9 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                                   .netWeightController
                                   .text
                                   .isEmpty ||
-                              ItemDetailsCubit.get(context)
-                                  .unitController
-                                  .text
-                                  .isEmpty) {
+                              ItemDetailsCubit.get(context).unitValue == "" ||
+                              ItemDetailsCubit.get(context).locationValue ==
+                                  "") {
                             toast("Please fill all the above fields!");
                             return;
                           }

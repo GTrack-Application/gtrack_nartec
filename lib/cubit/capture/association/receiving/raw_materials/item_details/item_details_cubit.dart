@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_cubit.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/item_details/asset_details_model.dart';
 import 'package:http/http.dart' as http;
@@ -23,11 +24,21 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
   TextEditingController expiryDateController = TextEditingController();
   TextEditingController manufactureDateController = TextEditingController();
   TextEditingController netWeightController = TextEditingController();
-  TextEditingController unitController = TextEditingController();
   TextEditingController transpoGLNController = TextEditingController();
-  TextEditingController putAwayLocation = TextEditingController();
   String? glnIdFrom;
   String? typeOfTransaction;
+
+  List<String> locationList = [];
+  String? locationValue;
+
+  List<String> unitList = [];
+  String? unitValue;
+
+  String expiryDate = "";
+  String manufactureDate = "";
+
+  UnitCountryCubit unitCubit = UnitCountryCubit();
+  UnitCountryCubit countryCubit = UnitCountryCubit();
 
   void saveItemDetails(ShipmentDataModel shipmentModel) async {
     emit(ItemDetailsLoading());
@@ -52,7 +63,7 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
           "userId": userId.toString(),
           "typeOfTransaction": typeOfTransaction.toString(),
           "glnIdFrom": glnIdFrom.toString(),
-          "glnIdTo": putAwayLocation.text.trim(),
+          "glnIdTo": locationValue.toString().trim(),
           "refNum": shipmentIdController.text.trim(),
           "transpoGLN": transpoGLNController.text.trim(),
           "status": "Picked",
@@ -63,11 +74,11 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
             "BrandName": shipmentModel.brandName.toString(),
             "Batch": batchNoController.text.trim(),
             "NetWeight": netWeightController.text.trim(),
-            "UnitOfMeasure": unitController.text.trim(),
+            "UnitOfMeasure": unitValue.toString().trim(),
             "Quantity": quantityController.text.trim(),
             "SSCC": "",
-            "ManufacturingDate": manufactureDateController.text.trim(),
-            "ExpiryDate": expiryDateController.text.trim(),
+            "ManufacturingDate": manufactureDate,
+            "ExpiryDate": expiryDate,
             "TranspoGLN": transpoGLNController.text.trim(),
           },
           "assets": assets
@@ -85,7 +96,7 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
           "userId": userId.toString(),
           "typeOfTransaction": typeOfTransaction.toString(),
           "glnIdFrom": glnIdFrom.toString(),
-          "glnIdTo": putAwayLocation.text.trim(),
+          "glnIdTo": locationValue,
           "refNum": shipmentIdController.text.trim(),
           "transpoGLN": transpoGLNController.text.trim(),
           "status": "Picked",
@@ -96,11 +107,11 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
             "BrandName": shipmentModel.brandName.toString(),
             "Batch": batchNoController.text.trim(),
             "NetWeight": netWeightController.text.trim(),
-            "UnitOfMeasure": unitController.text.trim(),
+            "UnitOfMeasure": unitValue.toString().trim(),
             "Quantity": quantityController.text.trim(),
             "SSCC": "",
-            "ManufacturingDate": manufactureDateController.text.trim(),
-            "ExpiryDate": expiryDateController.text.trim(),
+            "ManufacturingDate": manufactureDate.toString().trim(),
+            "ExpiryDate": expiryDate.toString().trim(),
             "TranspoGLN": transpoGLNController.text.trim(),
           }
         };
@@ -190,9 +201,11 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
     expiryDateController.clear();
     manufactureDateController.clear();
     netWeightController.clear();
-    unitController.clear();
+    unitValue = null;
+    unitList.clear();
     transpoGLNController.clear();
-    putAwayLocation.clear();
+    locationValue = null;
+    locationList.clear();
     glnIdFrom = null;
     typeOfTransaction = null;
     assetIdController.clear();

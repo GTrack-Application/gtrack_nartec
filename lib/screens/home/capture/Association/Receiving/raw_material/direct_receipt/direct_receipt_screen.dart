@@ -134,7 +134,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                         bloc: directReceiptCubit,
                         listener: (context, state) {
                           if (state is DirectReceiptError) {
-                            toast(state.message);
+                            toast(state.message.replaceAll("Exception:", ""));
                           }
                           if (state is DirectReceiptLoaded) {
                             receivingType = state.directReceiptModel
@@ -297,7 +297,8 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                             bloc: getShipmentCubit,
                             listener: (context, state) {
                               if (state is GetShipmentError) {
-                                toast(state.message);
+                                toast(
+                                    state.message.replaceAll("Exception:", ""));
                               }
                               if (state is GetShipmentLoaded) {
                                 products.add(state.shipment);

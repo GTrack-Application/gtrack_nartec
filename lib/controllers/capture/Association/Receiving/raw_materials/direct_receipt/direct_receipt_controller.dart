@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/CountryListModel.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/UnitListModel.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -55,6 +58,52 @@ class DirectReceiptController {
 
     if (response.statusCode == 200) {
       return ShipmentDataModel.fromJson(data);
+    } else {
+      throw Exception(jsonDecode(response.body)["message"]);
+    }
+  }
+
+  static Future<List<CountryListModel>> getCountryList() async {
+    // String? userId = await AppPreferences.getUserId();
+    String? token = await AppPreferences.getToken();
+    // String url = "${AppUrls.baseUrlWith3091}api/products";
+
+    final uri = Uri.parse("${AppUrls.baseUrlWith3091}api/getAllcountryofsale");
+
+    final headers = <String, String>{
+      "Content-Type": "application/json",
+      "Host": AppUrls.host,
+      "Authorization": "Bearer $token",
+    };
+
+    var response = await http.get(uri, headers: headers);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = json.decode(response.body) as List;
+      return data.map((e) => CountryListModel.fromJson(e)).toList();
+    } else {
+      throw Exception(jsonDecode(response.body)["message"]);
+    }
+  }
+
+  static Future<List<UnitListModel>> getUnitList() async {
+    // String? userId = await AppPreferences.getUserId();
+    String? token = await AppPreferences.getToken();
+    // String url = "${AppUrls.baseUrlWith3091}api/products";
+
+    final uri = Uri.parse("${AppUrls.baseUrlWith3091}api/getAllunit");
+
+    final headers = <String, String>{
+      "Content-Type": "application/json",
+      "Host": AppUrls.host,
+      "Authorization": "Bearer $token",
+    };
+
+    var response = await http.get(uri, headers: headers);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var dataa = json.decode(response.body) as List;
+      return dataa.map((e) => UnitListModel.fromJson(e)).toList();
     } else {
       throw Exception(jsonDecode(response.body)["message"]);
     }
