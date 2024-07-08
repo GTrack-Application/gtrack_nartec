@@ -70,6 +70,11 @@ class AppPreferences {
     prefs.setString('gcpGLNID', gcpGlnId);
   }
 
+  static Future<void> setMemberId(String memberId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('memberID', memberId);
+  }
+
   // Getters...
 
   /*  Get user id  */
@@ -136,5 +141,10 @@ class AppPreferences {
   static Future<String?> getGcpGlnId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('gcpGLNID');
+  }
+
+  static Future<String?> getMemberId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('memberID');
   }
 }

@@ -52,6 +52,13 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
     super.dispose();
   }
 
+  // a method that deletes all the data from the sharedpreferences
+  void clearData() async {
+    await SharedPreferences.getInstance().then((prefs) {
+      prefs.clear();
+    });
+  }
+
   bool rememberMe = false;
 
   @override
@@ -138,6 +145,7 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                     bloc: loginCubit,
                     listener: (context, state) async {
                       if (state is LoginSuccess) {
+                        clearData();
                         await AppPreferences.setToken(
                             state.loginResponseModel.token.toString());
 
@@ -154,6 +162,10 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
 
                         await AppPreferences.setGcpGlnId(state
                             .loginResponseModel.memberData!.gcpGLNID
+                            .toString());
+
+                        await AppPreferences.setMemberId(state
+                            .loginResponseModel.memberData!.memberID
                             .toString());
 
                         await AppPreferences.setCurrentUser("Member User");

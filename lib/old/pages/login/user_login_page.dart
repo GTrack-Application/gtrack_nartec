@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/controllers/auth/auth_controller.dart';
@@ -13,6 +12,7 @@ import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.da
 import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
 import 'package:gtrack_mobile_app/screens/home/auth/cr_activity_screen.dart';
 import 'package:gtrack_mobile_app/screens/home_screen.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -33,9 +33,22 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   bool obscureText = true;
 
+  // a method that deletes all the data from the sharedpreferences
+  void clearData() async {
+    await SharedPreferences.getInstance().then((prefs) {
+      prefs.clear();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    Future.delayed(
+      const Duration(milliseconds: 100),
+      () async {
+        clearData();
+      },
+    );
   }
 
   @override
@@ -170,8 +183,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: context.width,
-        height: context.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/login_background.png'),

@@ -424,13 +424,13 @@ class _GTINScreenState extends State<GTINScreen> {
                                                   .productnameenglish ??
                                               "",
                                           style: const TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         subtitle: Text(
                                           productsFiltered[index].barcode ?? "",
-                                          style: const TextStyle(fontSize: 13),
+                                          style: const TextStyle(fontSize: 12),
                                         ),
                                         leading: Hero(
                                           tag: productsFiltered[index].id ?? "",
