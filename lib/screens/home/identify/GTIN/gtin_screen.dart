@@ -9,6 +9,7 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/GTIN/add_gtin_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/identify/GTIN/gtin_information_screen.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -24,8 +25,6 @@ class GTINScreen extends StatefulWidget {
 class _GTINScreenState extends State<GTINScreen> {
   TextEditingController searchController = TextEditingController();
 
-  GtinCubit gtinBloc = GtinCubit();
-
   List<GTIN_Model> products = [];
   List<GTIN_Model> productsFiltered = [];
 
@@ -36,7 +35,7 @@ class _GTINScreenState extends State<GTINScreen> {
     AppPreferences.getGcp().then((value) => gcp = value);
     AppPreferences.getMemberCategoryDescription()
         .then((value) => memberCategoryDescription = value);
-    gtinBloc = gtinBloc..getGtinData();
+    context.read<GtinCubit>().getGtinData();
     super.initState();
   }
 
@@ -49,14 +48,13 @@ class _GTINScreenState extends State<GTINScreen> {
       ),
       body: SafeArea(
         child: BlocConsumer<GtinCubit, GtinState>(
-          bloc: gtinBloc,
           listener: (context, state) {
             if (state is GtinLoadedState) {
               products = state.data;
               productsFiltered = state.data;
             } else if (state is GtinDeleteProductLoadedState) {
-              AppSnackbars.success(context, "Product successfully deleted", 2);
-              gtinBloc.getGtinData();
+              AppSnackbars.success(context, "Product Successfully Deleted", 2);
+              context.read<GtinCubit>().getGtinData();
             } else if (state is GtinErrorState) {
               AppSnackbars.danger(context, state.message);
             }
@@ -108,14 +106,14 @@ class _GTINScreenState extends State<GTINScreen> {
                           const Text(
                             "Member ID",
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 14,
                             ),
                           ),
                           Text(
                             gcp ?? "",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ],
@@ -126,14 +124,14 @@ class _GTINScreenState extends State<GTINScreen> {
                           const Text(
                             "GCP",
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 14,
                             ),
                           ),
                           Text(
                             gcp ?? "",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ],
@@ -150,14 +148,14 @@ class _GTINScreenState extends State<GTINScreen> {
                           const Text(
                             "Total Products",
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 14,
                             ),
                           ),
                           Text(
                             productsFiltered.length.toString(),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ],
@@ -168,7 +166,7 @@ class _GTINScreenState extends State<GTINScreen> {
                           const Text(
                             "Category C",
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 14,
                             ),
                           ),
                           Text(
@@ -189,30 +187,38 @@ class _GTINScreenState extends State<GTINScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Container(
-                        width: 100,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/icons/add_Icon.png',
-                              width: 20,
-                              height: 20,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              'Add',
-                              style: TextStyle(
-                                color: Colors.green[700],
-                                fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () {
+                          AppNavigator.goToPage(
+                            context: context,
+                            screen: const AddGtinScreen(),
+                          );
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/icons/add_Icon.png',
+                                width: 20,
+                                height: 20,
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 5),
+                              Text(
+                                'Add',
+                                style: TextStyle(
+                                  color: Colors.green[700],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       10.width,
@@ -288,80 +294,182 @@ class _GTINScreenState extends State<GTINScreen> {
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: ListView.builder(
-                              itemCount: productsFiltered.length,
-                              shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  width: context.width() * 0.9,
-                                  alignment: Alignment.center,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 5,
-                                        blurRadius: 7,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                    border: Border.all(
-                                        color: Colors.grey.withOpacity(0.2)),
-                                  ),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.all(10),
-                                    title: Text(
-                                      productsFiltered[index]
-                                              .productnameenglish ??
-                                          "",
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                            child: RefreshIndicator(
+                              onRefresh: () async {
+                                context.read<GtinCubit>().getGtinData();
+                              },
+                              child: ListView.builder(
+                                itemCount: productsFiltered.length,
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    width: context.width() * 0.9,
+                                    alignment: Alignment.center,
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 10,
                                     ),
-                                    subtitle: Text(
-                                      productsFiltered[index].barcode ?? "",
-                                      style: const TextStyle(fontSize: 13),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
+                                      border: Border.all(
+                                          color: Colors.grey.withOpacity(0.2)),
                                     ),
-                                    leading: Hero(
-                                      tag: productsFiltered[index].id ?? "",
-                                      child: ClipOval(
-                                        child: CachedNetworkImage(
-                                          imageUrl: productsFiltered[index]
-                                                      .frontImage ==
-                                                  null
-                                              ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
-                                              : "${AppUrls.baseUrlWith3093}${productsFiltered[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
-                                          width: 50,
-                                          height: 50,
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.image_outlined),
+                                    child: Dismissible(
+                                      key: UniqueKey(),
+                                      direction: DismissDirection.endToStart,
+                                      movementDuration:
+                                          const Duration(seconds: 1),
+                                      secondaryBackground: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              "Swipe to Delete",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            10.width,
+                                            const Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                    trailing: GestureDetector(
-                                      onTap: () {
-                                        AppNavigator.goToPage(
+                                      background: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              "Swipe to Delete",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            10.width,
+                                            const Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      confirmDismiss: (direction) {
+                                        return showDialog(
                                           context: context,
-                                          screen: GTINInformationScreen(
-                                            employees: productsFiltered[index],
+                                          builder: (context) => AlertDialog(
+                                            title: const Text("Are you sure?"),
+                                            content: const Text(
+                                                "Do you want to delete this product?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(true);
+                                                },
+                                                child: const Text("Yes"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(false);
+                                                },
+                                                child: const Text("No"),
+                                              ),
+                                            ],
                                           ),
                                         );
                                       },
-                                      child:
-                                          Image.asset("assets/icons/view.png"),
+                                      onDismissed: (direction) {
+                                        context
+                                            .read<GtinCubit>()
+                                            .deleteGtinProductById(
+                                                productsFiltered[index].id ??
+                                                    "");
+                                      },
+                                      child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.all(10),
+                                        title: Text(
+                                          productsFiltered[index]
+                                                  .productnameenglish ??
+                                              "",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          productsFiltered[index].barcode ?? "",
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                        leading: Hero(
+                                          tag: productsFiltered[index].id ?? "",
+                                          child: ClipOval(
+                                            child: CachedNetworkImage(
+                                              imageUrl: productsFiltered[index]
+                                                          .frontImage ==
+                                                      null
+                                                  ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
+                                                  : "${AppUrls.baseUrlWith3093}${productsFiltered[index].frontImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(
+                                                          Icons.image_outlined),
+                                            ),
+                                          ),
+                                        ),
+                                        trailing: GestureDetector(
+                                          onTap: () {
+                                            AppNavigator.goToPage(
+                                              context: context,
+                                              screen: GTINInformationScreen(
+                                                employees:
+                                                    productsFiltered[index],
+                                              ),
+                                            );
+                                          },
+                                          child: Image.asset(
+                                              "assets/icons/view.png"),
+                                        ),
+                                        onTap: () {},
+                                      ),
                                     ),
-                                    onTap: () {},
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),

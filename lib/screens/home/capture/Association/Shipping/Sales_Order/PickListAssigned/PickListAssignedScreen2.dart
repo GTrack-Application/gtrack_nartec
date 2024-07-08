@@ -15,6 +15,7 @@ import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/Sales_Order/PickListAssigned/PickListAssignedScreen.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
 class PickListAssingedScreen2 extends StatefulWidget {
@@ -463,35 +464,16 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                               FocusScope.of(context).requestFocus(FocusNode());
                               return;
                             }
-                            // else if (int.parse(widget.QTYPICKED) >=
-                            //     int.parse(widget.QTY)) {
-                            //   ScaffoldMessenger.of(context).showSnackBar(
-                            //     const SnackBar(
-                            //       content: TextWidget(
-                            //         text: "Cannot pick more than remaining qty",
-                            //         color: Colors.white,
-                            //         textAlign: TextAlign.start,
-                            //       ),
-                            //       backgroundColor: Colors.red,
-                            //     ),
-                            //   );
-                            //   return;
-                            // }
 
                             if (table1
                                 .where((element) =>
                                     element.itemSerialNo.toString().trim() ==
                                     _serialNoController.text.trim())
                                 .isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: TextWidget(
-                                    text:
-                                        "This Serial No. is not found in the above Table, Please insert a Valid Serial No.",
-                                    color: Colors.white,
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
+                              toast(
+                                "This Serial No. is not found in the above Table, Please insert a Valid Serial No.",
+                                bgColor: Colors.red,
+                                textColor: Colors.white,
                               );
                               return;
                             }
@@ -866,20 +848,18 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                   title: "Save",
                   onPressed: () {
                     if (dropDownValue == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please Scan Location"),
-                          backgroundColor: Colors.red,
-                        ),
+                      toast(
+                        "Please Scan Location",
+                        bgColor: Colors.red,
+                        textColor: Colors.white,
                       );
                       return;
                     }
                     if (table2.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please Scan Item"),
-                          backgroundColor: Colors.red,
-                        ),
+                      toast(
+                        "Please scan item.",
+                        bgColor: Colors.red,
+                        textColor: Colors.white,
                       );
                       return;
                     }
@@ -918,11 +898,11 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                         widget.packingSlipId,
                       ).then((val) {
                         AppDialogs.closeDialog();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Data Inserted Successfully"),
-                            backgroundColor: Colors.green,
-                          ),
+
+                        toast(
+                          "Data inserted successfully.",
+                          bgColor: Colors.green,
+                          textColor: Colors.white,
                         );
                         Navigator.pushReplacement(context, MaterialPageRoute(
                           builder: (context) {
@@ -933,23 +913,18 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                         ));
                       }).onError((error, stackTrace) {
                         AppDialogs.closeDialog();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              error.toString().replaceAll("Exception:", ""),
-                            ),
-                            duration: const Duration(seconds: 3),
-                          ),
+                        toast(
+                          error.toString().replaceAll("Exception:", ""),
+                          bgColor: Colors.red,
+                          textColor: Colors.white,
                         );
                       });
                     }).onError((error, stackTrace) {
                       AppDialogs.closeDialog();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              error.toString().replaceAll("Exception:", "")),
-                          backgroundColor: Colors.red,
-                        ),
+                      toast(
+                        error.toString().replaceAll("Exception:", ""),
+                        bgColor: Colors.red,
+                        textColor: Colors.white,
                       );
                     });
                   },

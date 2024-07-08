@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
               BlocProvider(create: (context) => PackedItemsCubit()),
               BlocProvider(create: (context) => ItemDetailsCubit()),
               BlocProvider(create: (context) => ShareCubit()),
+              BlocProvider(create: (context) => GtinCubit()..getGtinData())
             ],
             child: GetMaterialApp(
               debugShowCheckedModeBanner: false,

@@ -6,13 +6,16 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />  
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />  
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>  
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
    <application
+        android:requestLegacyExternalStorage="true"
         android:label="GTrack"
         tools:replace="android:label"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"> 
         <activity
             android:name=".MainActivity"
             android:exported="true"

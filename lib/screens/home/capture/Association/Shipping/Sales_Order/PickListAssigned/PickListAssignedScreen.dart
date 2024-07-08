@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/Sales_Order/PickListAssigned/PickListAssignedScreen2.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
 class PickListAssignedScreen extends StatefulWidget {
@@ -58,12 +59,10 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
       });
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            error.toString().replaceAll("Exception:", ""),
-          ),
-        ),
+      toast(
+        error.toString().replaceAll("Exception:", ""),
+        bgColor: Colors.red,
+        textColor: Colors.white,
       );
     });
 
@@ -82,12 +81,10 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
           }).onError(
             (error, stackTrace) {
               AppDialogs.closeDialog();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    error.toString().replaceAll("Exception:", ""),
-                  ),
-                ),
+              toast(
+                error.toString().replaceAll("Exception:", ""),
+                bgColor: Colors.red,
+                textColor: Colors.white,
               );
             },
           );
@@ -633,12 +630,10 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
           isMarked = [];
         });
         AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              error.toString().replaceAll("Exception:", ""),
-            ),
-          ),
+        toast(
+          error.toString().replaceAll("Exception:", ""),
+          bgColor: Colors.red,
+          textColor: Colors.white,
         );
       },
     );

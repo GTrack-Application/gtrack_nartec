@@ -13,6 +13,7 @@ import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 import 'ReturnRMAScreen2.dart';
 
@@ -96,17 +97,10 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                           onEditingComplete: () {
                             FocusScope.of(context).unfocus();
                             if (_searchController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Please enter RMA",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
+                              toast(
+                                "Please enter RMA",
+                                bgColor: Colors.red,
+                                textColor: Colors.white,
                               );
                               return;
                             }
@@ -126,19 +120,10 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                               AppDialogs.closeDialog();
                             }).onError((error, stackTrace) {
                               AppDialogs.closeDialog();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    error
-                                        .toString()
-                                        .replaceAll("Exception", ""),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
+                              toast(
+                                error.toString().replaceAll("Exception:", ""),
+                                bgColor: Colors.red,
+                                textColor: Colors.white,
                               );
                             });
                           },
@@ -154,17 +139,10 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                           onTap: () {
                             FocusScope.of(context).unfocus();
                             if (_searchController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Please enter RMA",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
+                              toast(
+                                "Please enter RMA",
+                                bgColor: Colors.red,
+                                textColor: Colors.white,
                               );
                               return;
                             }
@@ -185,19 +163,10 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                               AppDialogs.closeDialog();
                             }).onError((error, stackTrace) {
                               AppDialogs.closeDialog();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    error
-                                        .toString()
-                                        .replaceAll("Exception", ""),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
+                              toast(
+                                error.toString().replaceAll("Exception:", ""),
+                                bgColor: Colors.red,
+                                textColor: Colors.white,
                               );
                             });
                           },

@@ -40,11 +40,10 @@ class GTINController {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
-        // 'Host': AppUrls.host,
         'authorization': "Bearer $token",
       },
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return;
     } else {
       throw Exception('Failed to delete product');

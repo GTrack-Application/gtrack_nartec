@@ -457,11 +457,7 @@ class _WIPtoFGBinToBinAxaptaScreenState
       AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.toString().replaceAll("Exception:", "")),
-        ),
-      );
+      toast(error.toString().replaceAll("Exception:", ""));
     });
   }
 }

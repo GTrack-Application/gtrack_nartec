@@ -77,7 +77,7 @@ class _GTINDetailsScreenState extends State<GTINDetailsScreen> {
               ),
               child: ListTile(
                 title: const Text(
-                  'Verifired By GS1',
+                  'Verified By GS1',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

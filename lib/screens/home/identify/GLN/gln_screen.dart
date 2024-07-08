@@ -120,57 +120,60 @@ class _GLNScreenState extends State<GLNScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    width: 100,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/icons/add_Icon.png',
-                          width: 20,
-                          height: 20,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Add',
-                          style: TextStyle(
-                            color: Colors.green[700],
-                            fontWeight: FontWeight.bold,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/icons/add_Icon.png',
+                            width: 20,
+                            height: 20,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: searchController,
-                      onChanged: (value) {
-                        setState(() {
-                          filteredTable = table.where((element) {
-                            var nameCondition = element.locationNameAr!
-                                .toLowerCase()
-                                .contains(value.toLowerCase());
-                            var barcodeCondition = element.gLNBarcodeNumber!
-                                .toLowerCase()
-                                .contains(value.toLowerCase());
-                            return nameCondition || barcodeCondition;
-                          }).toList();
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        suffixIcon: Icon(Ionicons.search_outline),
+                          const SizedBox(width: 5),
+                          Text(
+                            'Add',
+                            style: TextStyle(
+                              color: Colors.green[700],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: (value) {
+                          setState(() {
+                            filteredTable = table.where((element) {
+                              var nameCondition = element.locationNameAr!
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase());
+                              var barcodeCondition = element.gLNBarcodeNumber!
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase());
+                              return nameCondition || barcodeCondition;
+                            }).toList();
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(Ionicons.search_outline),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
               const Padding(

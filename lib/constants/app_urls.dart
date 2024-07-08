@@ -13,4 +13,5 @@ abstract class AppUrls {
   static const String baseUrlWith3093 = 'https://gs1ksa.org:3093/';
   static const String baseUrlWith3091 = 'http://gs1ksa.org:3091/';
   static const String vectorEmbeddingUrl = "http://gs1ksa.org:3077/";
+  static const String baseUrlWith4044 = 'https://gs1ksa.org:4044/';
 }

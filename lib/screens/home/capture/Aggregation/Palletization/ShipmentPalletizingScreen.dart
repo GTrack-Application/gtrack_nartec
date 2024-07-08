@@ -14,6 +14,7 @@ import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class ShipmentPalletizingScreen extends StatefulWidget {
   const ShipmentPalletizingScreen({super.key});
@@ -356,8 +357,11 @@ class _ShipmentPalletizingScreenState extends State<ShipmentPalletizingScreen> {
         isShipmentId = false;
       });
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(error.toString().replaceAll("Exception:", ""))));
+      toast(
+        error.toString().replaceAll("Exception:", ""),
+        bgColor: Colors.red,
+        textColor: Colors.white,
+      );
     });
   }
 
@@ -372,21 +376,23 @@ class _ShipmentPalletizingScreenState extends State<ShipmentPalletizingScreen> {
           isShipmentId = true;
         });
         AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Shipment ID is valid."),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 1),
-        ));
+
+        toast(
+          "Shipment ID is valid.",
+          bgColor: Colors.red,
+          textColor: Colors.white,
+        );
       } else {
         setState(() {
           isShipmentId = false;
         });
         AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Shipment ID not found in tbl_Shipment_Received_CL"),
-          backgroundColor: Colors.redAccent,
-          duration: Duration(seconds: 1),
-        ));
+
+        toast(
+          "Shipment ID not found in the tbl_Shipment_Received_CL.",
+          bgColor: Colors.red,
+          textColor: Colors.white,
+        );
       }
     } catch (e) {
       print(e);

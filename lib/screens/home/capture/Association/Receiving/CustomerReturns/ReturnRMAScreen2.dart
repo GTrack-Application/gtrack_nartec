@@ -18,6 +18,7 @@ import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widg
 import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/updateWmsJournalMovementClQtyScannedModel.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
 class ReturnRMAScreen2 extends StatefulWidget {
@@ -145,10 +146,11 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
           });
         } catch (e) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(e.toString().replaceAll("Exception:", "")),
-            backgroundColor: Colors.red,
-          ));
+          toast(
+            e.toString().replaceAll("Exception:", ""),
+            bgColor: Colors.red,
+            textColor: Colors.white,
+          );
         }
       },
     );
@@ -866,22 +868,19 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
                   color: AppColors.pink,
                   onPressed: () {
                     if (dDownValue == null || dDownValue == "") {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please Select Bin Location"),
-                          backgroundColor: Colors.red,
-                        ),
+                      toast(
+                        "Please Select Bin Location.",
+                        bgColor: Colors.red,
+                        textColor: Colors.white,
                       );
                       return;
                     }
 
                     if (tableData.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                              "Please Select At least One Item from table"),
-                          backgroundColor: Colors.red,
-                        ),
+                      toast(
+                        "Please select at least one item from table.",
+                        bgColor: Colors.red,
+                        textColor: Colors.white,
                       );
                       return;
                     }
@@ -914,28 +913,19 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
                       }).onError(
                         (error, stackTrace) {
                           Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: TextWidget(
-                                text: error
-                                    .toString()
-                                    .replaceAll("Exception:", ""),
-                                color: Colors.white,
-                              ),
-                              backgroundColor: Colors.red,
-                              duration: const Duration(seconds: 2),
-                            ),
+                          toast(
+                            error.toString().replaceAll("Exception:", ""),
+                            bgColor: Colors.red,
+                            textColor: Colors.white,
                           );
                         },
                       );
                     }).onError((error, stackTrace) {
                       Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              error.toString().replaceAll("Exception:", "")),
-                          backgroundColor: Colors.red,
-                        ),
+                      toast(
+                        error.toString().replaceAll("Exception:", ""),
+                        bgColor: Colors.red,
+                        textColor: Colors.white,
                       );
                     });
                   },
@@ -953,28 +943,17 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
     var expectedQty = widget.eXPECTEDRETQTY * -1;
 
     if (recQty >= expectedQty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Received Qty has been completed.\nYou can't insert more records.",
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
-        ),
+      toast(
+        "Received Qty has been completed.\nYou can't insert more records.",
+        bgColor: Colors.red,
+        textColor: Colors.white,
       );
       return;
     }
 
     if (dropDownValue == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Please Select a Location.",
-            textAlign: TextAlign.center,
-          ),
-          duration: Duration(seconds: 2),
-        ),
+      toast(
+        "Please select a location.",
       );
       return;
     }
@@ -992,14 +971,8 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
             _serialNoController.text.trim())
         .toList()
         .isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "This Serial No. is already exists in the table.",
-            textAlign: TextAlign.center,
-          ),
-          duration: Duration(seconds: 2),
-        ),
+      toast(
+        "This Serial No. is already exists in the table.",
       );
       return;
     }
@@ -1028,15 +1001,10 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
       },
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Record inserted Successfully.",
-          textAlign: TextAlign.center,
-        ),
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 1),
-      ),
+    toast(
+      "Record inserted Successfully.",
+      bgColor: Colors.green,
+      textColor: Colors.white,
     );
   }
 
@@ -1046,40 +1014,23 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
     var expectedQty = widget.eXPECTEDRETQTY * -1;
 
     if (recQty >= expectedQty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Received Qty has been completed.\nYou can't insert more records.",
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
-        ),
+      toast(
+        "Received Qty has been completed.\nYou can't insert more records.",
+        bgColor: Colors.red,
+        textColor: Colors.white,
       );
       return;
     }
 
     if (_modelNoController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Please Enter a Unique Model No.",
-            textAlign: TextAlign.center,
-          ),
-          duration: Duration(seconds: 2),
-        ),
+      toast(
+        "Please Enter a Unique Model No.",
       );
       return;
     }
     if (dropDownValue == "") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Please Select a Location.",
-            textAlign: TextAlign.center,
-          ),
-          duration: Duration(seconds: 2),
-        ),
+      toast(
+        "Please Select a Location.",
       );
       return;
     }
@@ -1116,27 +1067,15 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
         },
       );
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Record inserted Successfully.",
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
+
+      toast(
+        "Record inserted Successfully.",
+        bgColor: Colors.green,
+        textColor: Colors.white,
       );
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            error.toString().replaceAll("Exception:", ""),
-            textAlign: TextAlign.center,
-          ),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      toast(error.toString().replaceAll("Exception:", ""));
     });
   }
 }

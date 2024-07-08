@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, sized_box_for_whitespace
+// ignore_for_file: avoid_print, sized_box_for_whitespace, file_names
 
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -18,6 +18,7 @@ import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
 import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/BinToBinInternalModel.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class StockTransferBinToBinInternalScreen extends StatefulWidget {
   const StockTransferBinToBinInternalScreen({super.key});
@@ -263,14 +264,10 @@ class _StockTransferBinToBinInternalScreenState
                   onPressed: () {
                     if (dropDownList2.isEmpty ||
                         _locationFromController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            "Please select Item Code and Bin Location",
-                            textAlign: TextAlign.center,
-                          ),
-                          backgroundColor: Colors.red,
-                        ),
+                      toast(
+                        "Please select Item Code and Bin Location",
+                        bgColor: Colors.red,
+                        textColor: Colors.white,
                       );
                       return;
                     }
@@ -738,19 +735,14 @@ class _StockTransferBinToBinInternalScreenState
                               );
                             });
                             AppDialogs.closeDialog();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Updated Successfully"),
-                              ),
-                            );
+
+                            toast("Updated Successfully");
                           }).onError((error, stackTrace) {
                             AppDialogs.closeDialog();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(error
-                                    .toString()
-                                    .replaceAll("Exception:", "")),
-                              ),
+                            toast(
+                              error.toString().replaceAll("Exception:", ""),
+                              bgColor: Colors.red,
+                              textColor: Colors.white,
                             );
                           });
                           return;
@@ -778,22 +770,15 @@ class _StockTransferBinToBinInternalScreenState
                               );
                             });
                             AppDialogs.closeDialog();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Updated Successfully"),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
+
+                            toast("Updated Successfully");
                           }).onError(
                             (error, stackTrace) {
                               AppDialogs.closeDialog();
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(error
-                                      .toString()
-                                      .replaceAll("Exception:", "")),
-                                ),
+                              toast(
+                                error.toString().replaceAll("Exception:", ""),
+                                bgColor: Colors.red,
+                                textColor: Colors.white,
                               );
                             },
                           );
@@ -858,11 +843,10 @@ class _StockTransferBinToBinInternalScreenState
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.toString().replaceAll("Exception:", "")),
-          backgroundColor: Colors.red,
-        ),
+      toast(
+        error.toString().replaceAll("Exception:", ""),
+        bgColor: Colors.red,
+        textColor: Colors.white,
       );
     });
   }
@@ -879,11 +863,10 @@ class _StockTransferBinToBinInternalScreenState
           .map((e) => e.palletCode.toString())
           .toList()
           .contains(_palletIdController.text.trim())) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Pallet ID already exists on the table."),
-            backgroundColor: Colors.red,
-          ),
+        toast(
+          "Pallet ID already exists on the table.",
+          bgColor: Colors.red,
+          textColor: Colors.white,
         );
         FocusScope.of(context).requestFocus(FocusNode());
 
@@ -895,11 +878,10 @@ class _StockTransferBinToBinInternalScreenState
           .map((e) => e.palletCode.toString())
           .toList()
           .contains(_palletIdController.text.trim())) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Pallet ID not found."),
-            backgroundColor: Colors.red,
-          ),
+        toast(
+          "Pallet ID not found.",
+          bgColor: Colors.red,
+          textColor: Colors.white,
         );
         FocusScope.of(context).requestFocus(FocusNode());
 
@@ -933,11 +915,10 @@ class _StockTransferBinToBinInternalScreenState
           .map((e) => e.itemSerialNo.toString())
           .toList()
           .contains(_serialNumberController.text.trim())) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Serial No. already exists on table."),
-            backgroundColor: Colors.red,
-          ),
+        toast(
+          "Serial No. already exists on table.",
+          bgColor: Colors.red,
+          textColor: Colors.white,
         );
         FocusScope.of(context).requestFocus(FocusNode());
 
@@ -949,11 +930,10 @@ class _StockTransferBinToBinInternalScreenState
           .map((e) => e.itemSerialNo.toString())
           .toList()
           .contains(_serialNumberController.text.trim())) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Serial No. not found."),
-            backgroundColor: Colors.red,
-          ),
+        toast(
+          "Serial No. not found.",
+          bgColor: Colors.red,
+          textColor: Colors.white,
         );
         FocusScope.of(context).requestFocus(FocusNode());
 
@@ -1011,11 +991,10 @@ class _StockTransferBinToBinInternalScreenState
       });
 
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.toString().replaceAll("Exception:", "")),
-          backgroundColor: Colors.red,
-        ),
+      toast(
+        error.toString().replaceAll("Exception:", ""),
+        bgColor: Colors.red,
+        textColor: Colors.white,
       );
     });
   }

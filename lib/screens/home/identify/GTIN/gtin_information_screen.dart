@@ -38,6 +38,10 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
                   ],
                 ),
               ),
+              child: Image.asset(
+                'assets/images/warehouse.png',
+                fit: BoxFit.contain,
+              ),
             ),
             Container(
               width: double.infinity,
@@ -74,7 +78,7 @@ class _GTINInformationScreenState extends State<GTINInformationScreen> {
               ),
               child: ListTile(
                 title: const Text(
-                  'Verifired By GS1',
+                  'Verified By GS1',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

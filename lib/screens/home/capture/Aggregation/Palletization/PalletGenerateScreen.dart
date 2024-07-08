@@ -682,6 +682,7 @@ class _PalletGenerateScreenState extends State<PalletGenerateScreen> {
             duration: Duration(seconds: 2),
           ),
         );
+
         return;
       }
 

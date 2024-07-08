@@ -346,8 +346,11 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
     }
 
     if (noOfBoxController.text.isEmpty || qtyPerBoxController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Please enter No of Box and QTY per box")));
+      toast(
+        "Please enter No of Boxes and QTY per Box",
+        bgColor: Colors.red,
+        textColor: Colors.white,
+      );
       return;
     }
 
@@ -362,8 +365,11 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
           table.map((e) => e.serialNo).toList().contains(value[0].serialNo);
       if (test) {
         AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Serial No ${value[0].serialNo} already exists")));
+        toast(
+          "Serial No ${value[0].serialNo} already exists.",
+          bgColor: Colors.red,
+          textColor: Colors.white,
+        );
         return;
       }
 
@@ -378,8 +384,11 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
       AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(error.toString().replaceAll("Exception:", ""))));
+      toast(
+        error.toString().replaceAll("Exception:", ""),
+        bgColor: Colors.red,
+        textColor: Colors.white,
+      );
     });
   }
 
@@ -400,12 +409,18 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
           total = "0";
         });
         AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("SSCC Generated and Details Saved Successfully")));
+        toast(
+          "SSCC Generated and Details Saved Successfully.",
+          bgColor: Colors.red,
+          textColor: Colors.white,
+        );
       }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(error.toString().replaceAll("Exception:", ""))));
+        toast(
+          error.toString().replaceAll("Exception:", ""),
+          bgColor: Colors.red,
+          textColor: Colors.white,
+        );
       });
     } else {
       toast(

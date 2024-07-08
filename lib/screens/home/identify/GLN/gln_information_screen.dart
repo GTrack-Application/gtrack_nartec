@@ -117,6 +117,10 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
                 ],
               ),
             ),
+            child: Image.asset(
+              'assets/images/warehouse.png',
+              fit: BoxFit.contain,
+            ),
           ),
           Container(
             width: double.infinity,
@@ -153,7 +157,7 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
             ),
             child: ListTile(
               title: const Text(
-                'Verifired By GS1',
+                'Verified By GS1',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

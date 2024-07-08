@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_icons.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/cubit/auth/auth_cubit.dart';
@@ -13,6 +12,7 @@ import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_mobile_app/screens/home_screen.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class CrActivityScreen extends StatefulWidget {
   CrActivityScreen({
@@ -58,8 +58,8 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: context.width,
-        height: context.height,
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/login_background.png'),
@@ -144,6 +144,18 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                         await AppPreferences.setUserId(
                             state.loginResponseModel.memberData!.id.toString());
 
+                        await AppPreferences.setGcpType(state
+                            .loginResponseModel.memberData!.gcpType
+                            .toString());
+
+                        await AppPreferences.setGln(state
+                            .loginResponseModel.memberData!.gln
+                            .toString());
+
+                        await AppPreferences.setGcpGlnId(state
+                            .loginResponseModel.memberData!.gcpGLNID
+                            .toString());
+
                         await AppPreferences.setCurrentUser("Member User");
 
                         AppNavigator.replaceTo(
@@ -152,12 +164,10 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                         );
                       }
                       if (state is LoginFailure) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                Text(state.error.replaceAll("Exception:", "")),
-                            backgroundColor: Colors.red,
-                          ),
+                        toast(
+                          state.error.replaceAll("Exception:", ""),
+                          bgColor: Colors.red,
+                          textColor: Colors.white,
                         );
                       }
                     },
@@ -175,12 +185,10 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
 
                                 if (passwordController.text == "" ||
                                     passwordController.text.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text("Please enter your password"),
-                                      backgroundColor: Colors.red,
-                                    ),
+                                  toast(
+                                    "Please enter your password",
+                                    bgColor: Colors.red,
+                                    textColor: Colors.white,
                                   );
                                 }
                                 loginCubit.login(

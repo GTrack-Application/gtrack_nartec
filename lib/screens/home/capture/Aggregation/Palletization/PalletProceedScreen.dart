@@ -10,6 +10,7 @@ import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization/PalletGenerateScreen.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
 class PalletProceedScreen extends StatefulWidget {
@@ -68,10 +69,10 @@ class _PalletProceedScreenState extends State<PalletProceedScreen> {
         AppDialogs.closeDialog();
       }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error.toString()),
-          ),
+        toast(
+          error.toString().replaceAll("Exception:", ""),
+          bgColor: Colors.red,
+          textColor: Colors.white,
         );
       });
     });
@@ -240,10 +241,10 @@ class _PalletProceedScreenState extends State<PalletProceedScreen> {
                   title: "Proceed",
                   onPressed: () {
                     if (dropdownValue == "Select Zone" || dropdownValue == "") {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please select receiving zone"),
-                        ),
+                      toast(
+                        "Please select receiving zone.",
+                        bgColor: Colors.red,
+                        textColor: Colors.white,
                       );
                       return;
                     }

@@ -631,18 +631,20 @@ class _RMtoWIPBinToBinAxapta2ScreenState
 
   void insertData() {
     if (table.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Please Scan Pallet or Serial, Table is empty"),
-        backgroundColor: Colors.red,
-      ));
+      toast(
+        "Please Scan Pallet or Serial, Table is empty",
+        bgColor: Colors.red,
+        textColor: Colors.white,
+      );
       return;
     }
 
     if (widget.QTYRECEIVED >= widget.QTYTRANSFER) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("All Quantities have been received"),
-        backgroundColor: Colors.red,
-      ));
+      toast(
+        "All Quantities have been received",
+        bgColor: Colors.red,
+        textColor: Colors.white,
+      );
       return;
     }
 
@@ -672,9 +674,7 @@ class _RMtoWIPBinToBinAxapta2ScreenState
       dropDownValue.toString().substring(0, 2),
     ).then((value) {
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Data inserted and updated successfully."),
-      ));
+      toast("Data inserted and updated successfully.");
       RawMaterialsToWIPController.insertGtrackEPCISLog(
         "stock_transfer",
         table[0].gTIN!,
@@ -694,9 +694,7 @@ class _RMtoWIPBinToBinAxapta2ScreenState
       });
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(error.toString().replaceAll("Exception:", "")),
-      ));
+      toast(error.toString().replaceAll("Exception:", ""));
     });
   }
 
