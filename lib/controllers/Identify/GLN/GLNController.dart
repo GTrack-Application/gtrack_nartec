@@ -35,4 +35,26 @@ class GLNController {
       return [];
     }
   }
+
+  static Future<void> deleteData(String id) async {
+    String? token = await AppPreferences.getToken();
+    String url = "${AppUrls.baseUrlWith3093}/api/gln/$id";
+
+    final uri = Uri.parse(url);
+
+    final headers = <String, String>{
+      "Content-Type": "application/json",
+      "Host": AppUrls.host,
+      "Authorization": "Bearer $token",
+    };
+
+    var response = await http.delete(uri, headers: headers);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return;
+    } else {
+      var data = json.decode(response.body);
+      throw data['error'];
+    }
+  }
 }

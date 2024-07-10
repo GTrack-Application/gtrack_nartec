@@ -21,4 +21,20 @@ class GlnCubit extends Cubit<GlnState> {
       emit(GlnErrorState(message: e.toString()));
     }
   }
+
+  void deleteGln(String id) async {
+    emit(GlnLoadingState());
+    try {
+      bool networkStatus = await isNetworkAvailable();
+      if (!networkStatus) {
+        emit(GlnErrorState(message: 'No Internet Connection'));
+        return;
+      } else {
+        await GLNController.deleteData(id);
+        emit(GlnDeleteState());
+      }
+    } catch (e) {
+      emit(GlnErrorState(message: e.toString()));
+    }
+  }
 }

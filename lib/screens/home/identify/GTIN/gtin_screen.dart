@@ -31,7 +31,7 @@ class _GTINScreenState extends State<GTINScreen> {
   String? userId, gcp, memberCategoryDescription;
   @override
   void initState() {
-    AppPreferences.getUserId().then((value) => userId = value);
+    AppPreferences.getMemberId().then((value) => userId = value);
     AppPreferences.getGcp().then((value) => gcp = value);
     AppPreferences.getMemberCategoryDescription()
         .then((value) => memberCategoryDescription = value);
@@ -110,7 +110,7 @@ class _GTINScreenState extends State<GTINScreen> {
                             ),
                           ),
                           Text(
-                            gcp ?? "",
+                            userId ?? "",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,

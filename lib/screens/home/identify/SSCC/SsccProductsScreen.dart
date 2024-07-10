@@ -23,8 +23,6 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
   List<bool> isMarked = [];
   List<SsccModel> table = [];
 
-  SsccCubit cubit = SsccCubit();
-
   TextEditingController searchController = TextEditingController();
 
   String? userId, gcp, memberCategoryDescription;
@@ -32,14 +30,14 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
   @override
   void initState() {
     super.initState();
-    AppPreferences.getUserId().then((value) => userId = value);
+
+    AppPreferences.getMemberId().then((value) => userId = value);
     AppPreferences.getGcp().then((value) => gcp = value);
     AppPreferences.getMemberCategoryDescription()
         .then((value) => memberCategoryDescription = value);
+
+    context.read<SsccCubit>().getSsccData();
     super.initState();
-    Future.delayed(Duration.zero, () {
-      cubit.getSsccData();
-    });
   }
 
   @override
@@ -58,7 +56,6 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
         backgroundColor: AppColors.skyBlue,
       ),
       body: BlocConsumer<SsccCubit, SsccState>(
-        bloc: cubit,
         listener: (context, state) {
           if (state is SsccErrorState) {
           } else if (state is SsccLoadedState) {
@@ -69,173 +66,283 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
           }
         },
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Member ID",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                      Text(
-                        gcp ?? "",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/icons/add_Icon.png',
-                              width: 20,
-                              height: 20,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              'Add',
-                              style: TextStyle(
-                                color: Colors.green[700],
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: searchController,
-                          onChanged: (value) {},
-                          decoration: const InputDecoration(
-                            suffixIcon: Icon(Ionicons.search_outline),
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<SsccCubit>().getSsccData();
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 20.0, right: 20.0, top: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Member ID",
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
                         ),
-                      ),
-                    ],
+                        Text(
+                          userId ?? "",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "SSCC List",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      Icon(
-                        Ionicons.filter_outline,
-                        size: 30,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                state is SsccLoadingState
-                    ? Shimmer.fromColors(
-                        baseColor: AppColors.grey,
-                        highlightColor: AppColors.white,
-                        child: Container(
-                          height: 350,
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 5),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 40,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: AppColors.grey,
-                              width: 1,
-                            ),
-                            color: Colors.black38,
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/icons/add_Icon.png',
+                                width: 20,
+                                height: 20,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                'Add',
+                                style: TextStyle(
+                                  color: Colors.green[700],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      )
-                    : state is SsccLoadedState
-                        ? Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
+                        Expanded(
+                          child: TextField(
+                            controller: searchController,
+                            onChanged: (value) {},
+                            decoration: const InputDecoration(
+                              suffixIcon: Icon(Ionicons.search_outline),
                             ),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: ListView.builder(
-                              itemCount: table.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  width: context.width() * 0.9,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  margin: const EdgeInsets.only(
-                                    left: 10,
-                                    right: 10,
-                                    bottom: 5,
-                                    top: 5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: AppColors.skyBlue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "SSCC List",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Icon(
+                          Ionicons.filter_outline,
+                          size: 30,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  state is SsccLoadingState
+                      ? Shimmer.fromColors(
+                          baseColor: AppColors.grey,
+                          highlightColor: AppColors.white,
+                          child: Container(
+                            height: 350,
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: AppColors.grey,
+                                width: 1,
+                              ),
+                              color: Colors.black38,
+                            ),
+                          ),
+                        )
+                      : state is SsccLoadedState
+                          ? Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              margin: const EdgeInsets.only(
+                                bottom: 10,
+                                left: 5,
+                                right: 5,
+                              ),
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: table.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    width: context.width() * 0.9,
+                                    height: 50,
+                                    alignment: Alignment.center,
+                                    margin: const EdgeInsets.only(
+                                      left: 5,
+                                      right: 5,
+                                      bottom: 5,
+                                      top: 5,
                                     ),
-                                  ),
-                                  child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${index + 1}",
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                        Text(
-                                          table[index].ssccType ?? "",
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                        Text(
-                                          table[index].sSCCBarcodeNumber ?? "",
-                                          style: const TextStyle(fontSize: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border:
+                                          Border.all(color: AppColors.skyBlue),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                          offset: const Offset(0, 1),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        : Container(),
-              ],
+                                    child: Dismissible(
+                                      key: UniqueKey(),
+                                      direction: DismissDirection.endToStart,
+                                      movementDuration:
+                                          const Duration(seconds: 1),
+                                      secondaryBackground: Container(
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              "Swipe to Delete",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            10.width,
+                                            const Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      background: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              "Swipe to Delete",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                            10.width,
+                                            const Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      confirmDismiss: (direction) {
+                                        return showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text("Are you sure?"),
+                                            content: const Text(
+                                                "Do you want to delete this product?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(true);
+                                                },
+                                                child: const Text("Yes"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(false);
+                                                },
+                                                child: const Text("No"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      onDismissed: (direction) {},
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "${index + 1}",
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            Text(
+                                              table[index].ssccType ?? "",
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            Text(
+                                              table[index].sSCCBarcodeNumber ??
+                                                  "",
+                                              style:
+                                                  const TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          : Container(),
+                ],
+              ),
             ),
           );
         },

@@ -34,16 +34,20 @@ class AuthController {
       {"email": email, "password": password, "activity": activity},
     );
 
+    print(url);
+    print(body);
+
     final response = await http.post(url, headers: headers, body: body);
 
     var data = json.decode(response.body);
 
     print(data);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return LoginResponseModel.fromJson(data);
     } else {
-      final msg = data['message'];
+      final msg = data['error'];
+      print(msg);
       throw Exception(msg);
     }
   }

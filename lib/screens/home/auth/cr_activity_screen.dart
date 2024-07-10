@@ -93,7 +93,7 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                   const Text(
                     'CR Activity',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white,
                     ),
@@ -108,7 +108,14 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  const SizedBox(height: 20),
+                  const Text(
+                    'Password',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.white,
+                    ),
+                  ),
                   Visibility(
                     visible:
                         widget.dropdownValue == "Admin User" ? false : true,
@@ -120,8 +127,11 @@ class _CrActivityScreenState extends State<CrActivityScreen> {
                         passwordNode.unfocus();
                       },
                       controller: passwordController,
-                      leadingIcon: Image.asset(AppIcons.passwordIcon,
-                          width: 42, height: 42),
+                      leadingIcon: Image.asset(
+                        AppIcons.passwordIcon,
+                        width: 42,
+                        height: 42,
+                      ),
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: obscureText,
                       validator: (p0) {

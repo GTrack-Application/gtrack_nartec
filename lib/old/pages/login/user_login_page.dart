@@ -183,6 +183,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/login_background.png'),
@@ -209,7 +211,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   const Text(
                     'User Type',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white,
                     ),
@@ -232,7 +234,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   const Text(
                     'Enter your login ID',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white,
                     ),
@@ -305,7 +307,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     child: const Text(
                       'Stakeholder Type',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: AppColors.white,
                       ),

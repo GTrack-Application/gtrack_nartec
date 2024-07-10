@@ -168,7 +168,7 @@ class _ActivitiesAndPasswordPageState extends State<ActivitiesAndPasswordPage> {
                       const Text(
                         "Select Activity",
                         style: TextStyle(
-                          fontSize: 23,
+                          fontSize: 16,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),

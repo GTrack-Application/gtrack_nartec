@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/GLN/add_gln_screen.dart';
 import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_information_screen.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -26,8 +28,6 @@ class GLNScreen extends StatefulWidget {
 
 class _GLNScreenState extends State<GLNScreen> {
   TextEditingController searchController = TextEditingController();
-
-  GlnCubit glnCubit = GlnCubit();
 
   List<GLNProductsModel> table = [];
   List<GLNProductsModel> filteredTable = [];
@@ -48,16 +48,12 @@ class _GLNScreenState extends State<GLNScreen> {
   @override
   void initState() {
     super.initState();
-    AppPreferences.getUserId().then((value) => userId = value);
+
+    AppPreferences.getMemberId().then((value) => userId = value);
     AppPreferences.getGcp().then((value) => gcp = value);
     AppPreferences.getMemberCategoryDescription()
         .then((value) => memberCategoryDescription = value);
-    Future.delayed(
-      Duration.zero,
-      () {
-        glnCubit.identifyGln();
-      },
-    );
+    context.read<GlnCubit>().identifyGln();
   }
 
   @override
@@ -76,7 +72,6 @@ class _GLNScreenState extends State<GLNScreen> {
         backgroundColor: AppColors.skyBlue,
       ),
       body: BlocConsumer<GlnCubit, GlnState>(
-        bloc: glnCubit,
         listener: (context, state) {
           if (state is GlnLoadedState) {
             if (state.data.isEmpty) {
@@ -91,6 +86,8 @@ class _GLNScreenState extends State<GLNScreen> {
                 content: Text(state.message),
               ),
             );
+          } else if (state is GlnDeleteState) {
+            context.read<GlnCubit>().identifyGln();
           }
         },
         builder: (context, state) {
@@ -106,73 +103,81 @@ class _GLNScreenState extends State<GLNScreen> {
                     const Text(
                       "Member ID",
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 14,
                       ),
                     ),
                     Text(
-                      gcp ?? "",
+                      userId ?? "",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 16,
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/icons/add_Icon.png',
-                            width: 20,
-                            height: 20,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            'Add',
-                            style: TextStyle(
-                              color: Colors.green[700],
-                              fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: () {
+                  AppNavigator.goToPage(
+                    context: context,
+                    screen: AddGlnScreen(),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/icons/add_Icon.png',
+                              width: 20,
+                              height: 20,
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: searchController,
-                        onChanged: (value) {
-                          setState(() {
-                            filteredTable = table.where((element) {
-                              var nameCondition = element.locationNameAr!
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase());
-                              var barcodeCondition = element.gLNBarcodeNumber!
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase());
-                              return nameCondition || barcodeCondition;
-                            }).toList();
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Ionicons.search_outline),
+                            const SizedBox(width: 5),
+                            Text(
+                              'Add',
+                              style: TextStyle(
+                                color: Colors.green[700],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: TextField(
+                          controller: searchController,
+                          onChanged: (value) {
+                            setState(() {
+                              filteredTable = table.where((element) {
+                                var nameCondition = element.locationNameAr!
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                var barcodeCondition = element.gLNBarcodeNumber!
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                return nameCondition || barcodeCondition;
+                              }).toList();
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            suffixIcon: Icon(Ionicons.search_outline),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -221,75 +226,171 @@ class _GLNScreenState extends State<GLNScreen> {
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: ListView.builder(
-                          itemCount: filteredTable.length,
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Container(
-                              width: context.width() * 0.9,
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                                border: Border.all(
-                                    color: Colors.grey.withOpacity(0.2)),
-                              ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.all(10),
-                                title: Text(
-                                  filteredTable[index].locationNameAr ?? "",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            context.read<GlnCubit>().identifyGln();
+                          },
+                          child: ListView.builder(
+                            itemCount: filteredTable.length,
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: context.width() * 0.9,
+                                alignment: Alignment.center,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
                                 ),
-                                subtitle: Text(
-                                  filteredTable[index].gLNBarcodeNumber ?? "",
-                                  style: const TextStyle(fontSize: 13),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.2)),
                                 ),
-                                leading: Hero(
-                                  tag: filteredTable[index].id ?? "",
-                                  child: ClipOval(
-                                    child: CachedNetworkImage(
-                                      imageUrl: filteredTable[index].image ==
-                                              null
-                                          ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
-                                          : "${AppUrls.baseUrlWith3093}${filteredTable[index].image?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
-                                      width: 50,
-                                      height: 50,
-                                      fit: BoxFit.cover,
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.image_outlined),
+                                child: Dismissible(
+                                  key: UniqueKey(),
+                                  direction: DismissDirection.endToStart,
+                                  movementDuration: const Duration(seconds: 1),
+                                  secondaryBackground: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Text(
+                                          "Swipe to Delete",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                        10.width,
+                                        const Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                trailing: GestureDetector(
-                                  onTap: () {
-                                    AppNavigator.goToPage(
+                                  background: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Text(
+                                          "Swipe to Delete",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                        10.width,
+                                        const Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  confirmDismiss: (direction) {
+                                    return showDialog(
                                       context: context,
-                                      screen: GLNInformationScreen(
-                                          employees: filteredTable[index]),
+                                      builder: (context) => AlertDialog(
+                                        title: const Text("Are you sure?"),
+                                        content: const Text(
+                                            "Do you want to delete this product?"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(true);
+                                            },
+                                            child: const Text("Yes"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false);
+                                            },
+                                            child: const Text("No"),
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   },
-                                  child: Image.asset("assets/icons/view.png"),
+                                  onDismissed: (direction) {
+                                    context
+                                        .read<GlnCubit>()
+                                        .deleteGln(filteredTable[index].id!);
+                                  },
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(10),
+                                    title: Text(
+                                      filteredTable[index].locationNameAr ?? "",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      filteredTable[index].gLNBarcodeNumber ??
+                                          "",
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
+                                    leading: Hero(
+                                      tag: filteredTable[index].id ?? "",
+                                      child: ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: filteredTable[index]
+                                                      .image ==
+                                                  null
+                                              ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
+                                              : "${AppUrls.baseUrlWith3093}${filteredTable[index].image?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.image_outlined),
+                                        ),
+                                      ),
+                                    ),
+                                    trailing: GestureDetector(
+                                      onTap: () {
+                                        AppNavigator.goToPage(
+                                          context: context,
+                                          screen: GLNInformationScreen(
+                                              employees: filteredTable[index]),
+                                        );
+                                      },
+                                      child:
+                                          Image.asset("assets/icons/view.png"),
+                                    ),
+                                    onTap: () {},
+                                  ),
                                 ),
-                                onTap: () {},
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

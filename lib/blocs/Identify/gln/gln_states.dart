@@ -12,6 +12,8 @@ class GlnLoadedState extends GlnState {
   GlnLoadedState({required this.data});
 }
 
+class GlnDeleteState extends GlnState {}
+
 class GlnErrorState extends GlnState {
   final String message;
 
