@@ -395,6 +395,7 @@ class _AddGlnScreenState extends State<AddGlnScreen> {
                               image,
                               _selectedImageText!,
                               glnLocation.toString(),
+                              _locationNameArController.text.trim(),
                             );
                           },
                           child: state is GLNLoading
@@ -492,15 +493,18 @@ class ImageSelectorDialog extends StatelessWidget {
   final List<Map<String, String>> images = [
     {'path': 'assets/glnpop/glnBank.png', 'text': 'Bank'},
     {'path': 'assets/glnpop/glnbarn.png', 'text': 'Barn'},
-    {'path': 'assets/glnpop/glnClinic.png', 'text': 'Clinik'},
+    {'path': 'assets/glnpop/glnClinic.png', 'text': 'Clinic'},
     {
       'path': 'assets/glnpop/glnColdStore.png',
       'text': 'Cold storage within a warehouse'
     },
-    {'path': 'assets/glnpop/glnCorporate.png', 'text': 'Corporate Headquaters'},
+    {
+      'path': 'assets/glnpop/glnCorporate.png',
+      'text': 'Corporate Headquarters'
+    },
     {
       'path': 'assets/glnpop/glnDistribution.png',
-      'text': 'Distribution center'
+      'text': 'Distribution centre'
     },
     {'path': 'assets/glnpop/glndockdoor.png', 'text': 'Dock door'},
     {'path': 'assets/glnpop/glnFactory.png', 'text': 'Factory'},
@@ -518,6 +522,8 @@ class ImageSelectorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      // #EAF7F6
+      backgroundColor: const Color(0xFFEAF7F6),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
@@ -527,33 +533,41 @@ class ImageSelectorDialog extends StatelessWidget {
           shrinkWrap: true,
           itemCount: images.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: 2, // Adjust the number of columns
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
             childAspectRatio: 1,
           ),
           itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.pop(context, images[index]['text']);
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    images[index]['path'].toString(),
-                    width: 100,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(height: 5),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
+            return Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.white),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context, images[index]['text']);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: Image.asset(
+                        images[index]['path'].toString(),
+                        width: 80,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
                       images[index]['text'].toString(),
                       textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12), // Adjust font size
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

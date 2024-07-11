@@ -346,7 +346,7 @@ class _GLNScreenState extends State<GLNScreen> {
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.all(10),
                                     title: Text(
-                                      filteredTable[index].locationNameAr ?? "",
+                                      filteredTable[index].locationNameEn ?? "",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,

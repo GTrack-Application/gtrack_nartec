@@ -20,6 +20,7 @@ class GLNCubit extends Cubit<GLNState> {
     File? glnImage,
     String physicalLocation,
     String glnLocation,
+    String locationNameAr,
   ) async {
     emit(GLNLoading());
     try {
@@ -39,6 +40,7 @@ class GLNCubit extends Cubit<GLNState> {
         glnImage,
         physicalLocation,
         glnLocation,
+        locationNameAr,
       );
       emit(GLNLoaded());
     } catch (e) {

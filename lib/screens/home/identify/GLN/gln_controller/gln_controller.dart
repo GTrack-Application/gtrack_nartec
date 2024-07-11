@@ -22,6 +22,7 @@ class GlnController {
     File? glnImage,
     String physicalLocation,
     String glnLocation,
+    String locationNameAr,
   ) async {
     try {
       String? id = await AppPreferences.getUserId();
@@ -40,6 +41,7 @@ class GlnController {
       // Adding fields
       request.fields['user_id'] = id ?? '';
       request.fields['locationNameEn'] = locationNameEn;
+      request.fields['locationNameAr'] = locationNameAr;
       request.fields['AddressEn'] = addressEn;
       request.fields['AddressAr'] = addressAr;
       request.fields['pobox'] = pobox;
