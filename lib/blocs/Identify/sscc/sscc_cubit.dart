@@ -21,4 +21,18 @@ class SsccCubit extends Cubit<SsccState> {
       emit(SsccErrorState(message: 'No Internet Connection'));
     }
   }
+
+  void deleteSscc(String sscc) async {
+    emit(SsccLoadingState());
+    try {
+      var network = await isNetworkAvailable();
+      if (!network) {
+        emit(SsccErrorState(message: "No Internet Connection"));
+      }
+      await SsccController.deleteSscc(sscc);
+      emit(SsccDeletedState());
+    } catch (e) {
+      emit(SsccErrorState(message: e.toString()));
+    }
+  }
 }

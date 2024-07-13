@@ -1,12 +1,17 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, unused_element, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/sscc/sscc_cubit.dart';
 import 'package:gtrack_mobile_app/blocs/Identify/sscc/sscc_states.dart';
 import 'package:gtrack_mobile_app/constants/app_preferences.dart';
 import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
 import 'package:gtrack_mobile_app/models/IDENTIFY/SSCC/SsccModel.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/SSCC/add_sscc_screen.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/SSCC/sscc_cubit/sscc_cubit.dart';
+import 'package:gtrack_mobile_app/screens/home/identify/SSCC/sscc_cubit/sscc_state.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
@@ -46,9 +51,19 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
     searchController.dispose();
   }
 
+  void _showBarcodeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const BarcodeDialog();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           "SSCC Products".toUpperCase(),
@@ -63,6 +78,9 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
               toast("No data found for this user.");
             }
             table = state.data;
+          } else if (state is SsccDeleted) {
+            context.read<SsccCubit>().getSsccData();
+            toast("SSCC Item deleted successfully.");
           }
         },
         builder: (context, state) {
@@ -78,20 +96,64 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 20.0, right: 20.0, top: 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          "Member ID",
-                          style: TextStyle(
-                            fontSize: 14,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Member ID",
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              userId ?? "",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            AppNavigator.goToPage(
+                              context: context,
+                              screen: const AddSsccFormScreen(),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.grey[200]!,
+                            foregroundColor: Colors.green[700]!,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text(
+                            "Add SSCC",
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
                           ),
                         ),
-                        Text(
-                          userId ?? "",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                        TextButton(
+                          onPressed: () {
+                            _showBarcodeDialog(context);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.grey[200]!,
+                            foregroundColor: Colors.green[700]!,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text(
+                            "Bulk SSCC",
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
                           ),
                         ),
                       ],
@@ -100,48 +162,16 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/icons/add_Icon.png',
-                                width: 20,
-                                height: 20,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                'Add',
-                                style: TextStyle(
-                                  color: Colors.green[700],
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                    child: Expanded(
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: (value) {},
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(Ionicons.search_outline),
                         ),
-                        Expanded(
-                          child: TextField(
-                            controller: searchController,
-                            onChanged: (value) {},
-                            decoration: const InputDecoration(
-                              suffixIcon: Icon(Ionicons.search_outline),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 20),
                   const Padding(
                     padding: EdgeInsets.only(left: 20.0, right: 20.0),
                     child: Row(
@@ -164,7 +194,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                           baseColor: AppColors.grey,
                           highlightColor: AppColors.white,
                           child: Container(
-                            height: 350,
+                            height: 500,
                             width: MediaQuery.of(context).size.width,
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 5),
@@ -185,136 +215,139 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               margin: const EdgeInsets.only(
-                                bottom: 10,
-                                left: 5,
-                                right: 5,
-                              ),
+                                  bottom: 10, left: 5, right: 5),
                               child: ListView.builder(
                                 physics: const BouncingScrollPhysics(),
                                 itemCount: table.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  return Container(
-                                    width: context.width() * 0.9,
-                                    height: 50,
-                                    alignment: Alignment.center,
-                                    margin: const EdgeInsets.only(
-                                      left: 5,
-                                      right: 5,
-                                      bottom: 5,
-                                      top: 5,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border:
-                                          Border.all(color: AppColors.skyBlue),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 1,
-                                          blurRadius: 1,
-                                          offset: const Offset(0, 1),
+                                  return Dismissible(
+                                    key: UniqueKey(),
+                                    direction: DismissDirection.endToStart,
+                                    movementDuration:
+                                        const Duration(seconds: 1),
+                                    secondaryBackground: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          bottomRight: Radius.circular(10),
                                         ),
-                                      ],
-                                    ),
-                                    child: Dismissible(
-                                      key: UniqueKey(),
-                                      direction: DismissDirection.endToStart,
-                                      movementDuration:
-                                          const Duration(seconds: 1),
-                                      secondaryBackground: Container(
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            bottomRight: Radius.circular(10),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              "Swipe to Delete",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                            10.width,
-                                            const Icon(
-                                              Icons.delete,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Swipe to Delete",
+                                            style: TextStyle(
                                               color: Colors.white,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          10.width,
+                                          const Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    background: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            "Swipe to Delete",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                          10.width,
+                                          const Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    confirmDismiss: (direction) {
+                                      return showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text("Are you sure?"),
+                                          content: const Text(
+                                              "Do you want to delete this product?"),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                context
+                                                    .read<SsccCubit>()
+                                                    .deleteSscc(table[index]
+                                                        .id
+                                                        .toString());
+
+                                                context
+                                                    .read<SsccCubit>()
+                                                    .getSsccData();
+                                                Navigator.of(context).pop(true);
+                                              },
+                                              child: const Text("Yes"),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(false);
+                                              },
+                                              child: const Text("No"),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                      background: Container(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10),
+                                      );
+                                    },
+                                    onDismissed: (direction) {
+                                      context.read<SsccCubit>().deleteSscc(
+                                          table[index].id.toString());
+                                    },
+                                    child: Container(
+                                      width: context.width() * 0.9,
+                                      height: 50,
+                                      alignment: Alignment.center,
+                                      margin: const EdgeInsets.only(
+                                          left: 5, right: 5, bottom: 5, top: 5),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: AppColors.skyBlue),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 1,
+                                            blurRadius: 1,
+                                            offset: const Offset(0, 1),
                                           ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              "Swipe to Delete",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                            10.width,
-                                            const Icon(
-                                              Icons.delete,
-                                              color: Colors.white,
-                                            ),
-                                          ],
-                                        ),
+                                        ],
                                       ),
-                                      confirmDismiss: (direction) {
-                                        return showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: const Text("Are you sure?"),
-                                            content: const Text(
-                                                "Do you want to delete this product?"),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(true);
-                                                },
-                                                child: const Text("Yes"),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(false);
-                                                },
-                                                child: const Text("No"),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                      onDismissed: (direction) {},
-                                      child: Padding(
+                                      child: Container(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 5),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               "${index + 1}",
@@ -351,45 +384,130 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
   }
 }
 
-class TableDataSource extends DataTableSource {
-  List<SsccModel> data;
-  BuildContext ctx;
-
-  TableDataSource(
-    this.data,
-    this.ctx,
-  );
+class BarcodeDialog extends StatefulWidget {
+  const BarcodeDialog({super.key});
 
   @override
-  DataRow? getRow(int index) {
-    if (index >= data.length) {
-      return null;
-    }
+  // ignore: library_private_types_in_public_api
+  _BarcodeDialogState createState() => _BarcodeDialogState();
+}
 
-    final instance = data[index];
+class _BarcodeDialogState extends State<BarcodeDialog> {
+  final List<int> extensionDigits = List<int>.generate(10, (i) => i); // 0 to 9
+  int? selectedExtensionDigit;
+  final TextEditingController _quantityController = TextEditingController();
 
-    return DataRow.byIndex(
-      index: index,
-      onSelectChanged: (value) {},
-      cells: [
-        DataCell(SelectableText(instance.id ?? "")),
-        DataCell(SelectableText(instance.ssccType ?? "")),
-        DataCell(SelectableText(instance.sSCCBarcodeNumber ?? "")),
-        DataCell(SelectableText(instance.description ?? "")),
-        DataCell(SelectableText(instance.qty ?? "")),
-        DataCell(SelectableText(instance.shipTo ?? "")),
-        DataCell(SelectableText(instance.carton ?? "")),
-        DataCell(SelectableText(instance.description ?? "")),
+  SSCCCubit ssccCubit = SSCCCubit();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      title: const Text(
+        'Generate Bulk SSCC Barcodes',
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+        ), // Adjusted title size
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            child: DropdownButtonFormField<int>(
+              decoration: const InputDecoration(
+                labelText: 'Extension Digit',
+                border: OutlineInputBorder(),
+              ),
+              value: selectedExtensionDigit,
+              onChanged: (int? newValue) {
+                setState(() {
+                  selectedExtensionDigit = newValue;
+                });
+              },
+              items: extensionDigits.map<DropdownMenuItem<int>>((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text(value.toString()),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            child: TextField(
+              controller: _quantityController,
+              decoration: const InputDecoration(
+                labelText: 'Quantity',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.orange,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          child: const Text('Close'),
+        ),
+        BlocConsumer<SSCCCubit, SSCCState>(
+          bloc: ssccCubit,
+          listener: (context, state) {
+            if (state is SsccError) {
+              Navigator.of(context).pop();
+              toast(state.error);
+            }
+            if (state is SsccLoaded) {
+              context.read<SsccCubit>().getSsccData();
+              Navigator.of(context).pop();
+              toast("Bulk SSCC generated successfully.");
+            }
+          },
+          builder: (context, state) {
+            return ElevatedButton(
+              onPressed: () {
+                print('Extension Digit: $selectedExtensionDigit');
+                print('Quantity: ${_quantityController.text}');
+
+                if (selectedExtensionDigit == null ||
+                    _quantityController.text.isEmpty) {
+                  toast("Please select extension digit and enter quantity.");
+                  return;
+                }
+
+                ssccCubit.postSsccBulk(
+                  selectedExtensionDigit.toString(),
+                  int.parse(_quantityController.text.trim()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: state is SsccLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white)))
+                  : const Text('Generate'),
+            );
+          },
+        ),
       ],
     );
   }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
 }

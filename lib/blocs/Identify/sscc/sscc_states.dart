@@ -12,6 +12,8 @@ class SsccLoadedState extends SsccState {
   SsccLoadedState({required this.data});
 }
 
+class SsccDeletedState extends SsccState {}
+
 class SsccErrorState extends SsccState {
   final String message;
 

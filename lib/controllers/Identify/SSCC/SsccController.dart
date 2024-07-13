@@ -36,4 +36,26 @@ class SsccController {
       return [];
     }
   }
+
+  // delete sscc
+  static Future<void> deleteSscc(String sscc) async {
+    String? token = await AppPreferences.getToken();
+
+    final url = Uri.parse('${AppUrls.baseUrlWith3093}api/sscc/$sscc');
+
+    final headers = {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    };
+
+    final response = await http.delete(url, headers: headers);
+
+    var data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(data);
+    } else {
+      throw Exception(data['error']);
+    }
+  }
 }
