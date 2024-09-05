@@ -563,11 +563,11 @@ class _AddSsccFormScreenState extends State<AddSsccFormScreen> {
                 bloc: addSSCCCubit,
                 listener: (context, state) {
                   if (state is AddSSCCAddedByPallet) {
-                    context.read<SsccCubit>().getSsccData();
+                    BlocProvider.of<SsccCubit>(context).getSsccData();
                     toast("SSCC Added by Pallet Successfully");
                     Navigator.pop(context);
                   } else if (state is AddSSCCAddedByLabel) {
-                    context.read<SsccCubit>().getSsccData();
+                    BlocProvider.of<SsccCubit>(context).getSsccData();
                     toast("SSCC Added by Label Successfully");
                     Navigator.pop(context);
                   } else if (state is AddSSCCError) {

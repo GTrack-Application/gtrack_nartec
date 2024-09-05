@@ -186,7 +186,7 @@ class _PackingScreenState extends State<PackingScreen> {
                                         title: Text(
                                           products[index].itemName ?? "",
                                           style: const TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 13,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -237,12 +237,9 @@ class _PackingScreenState extends State<PackingScreen> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const CompletePackingScreen(),
-                                ),
+                              AppNavigator.goToPage(
+                                context: context,
+                                screen: const CompletePackingScreen(),
                               );
                             },
                             style: ElevatedButton.styleFrom(

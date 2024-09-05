@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AppSnackbars {

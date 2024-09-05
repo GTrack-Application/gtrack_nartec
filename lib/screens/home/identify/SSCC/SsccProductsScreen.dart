@@ -41,7 +41,8 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
     AppPreferences.getMemberCategoryDescription()
         .then((value) => memberCategoryDescription = value);
 
-    context.read<SsccCubit>().getSsccData();
+    BlocProvider.of<SsccCubit>(context).getSsccData();
+
     super.initState();
   }
 
@@ -71,6 +72,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
         backgroundColor: AppColors.skyBlue,
       ),
       body: BlocConsumer<SsccCubit, SsccState>(
+        bloc: BlocProvider.of<SsccCubit>(context),
         listener: (context, state) {
           if (state is SsccErrorState) {
           } else if (state is SsccLoadedState) {
@@ -79,14 +81,14 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
             }
             table = state.data;
           } else if (state is SsccDeleted) {
-            context.read<SsccCubit>().getSsccData();
+            BlocProvider.of<SsccCubit>(context).getSsccData();
             toast("SSCC Item deleted successfully.");
           }
         },
         builder: (context, state) {
           return RefreshIndicator(
             onRefresh: () async {
-              context.read<SsccCubit>().getSsccData();
+              BlocProvider.of<SsccCubit>(context).getSsccData();
             },
             child: SingleChildScrollView(
               child: Column(
@@ -290,14 +292,14 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                                           actions: [
                                             TextButton(
                                               onPressed: () {
-                                                context
-                                                    .read<SsccCubit>()
+                                                BlocProvider.of<SsccCubit>(
+                                                        context)
                                                     .deleteSscc(table[index]
                                                         .id
                                                         .toString());
 
-                                                context
-                                                    .read<SsccCubit>()
+                                                BlocProvider.of<SsccCubit>(
+                                                        context)
                                                     .getSsccData();
                                                 Navigator.of(context).pop(true);
                                               },
@@ -315,8 +317,9 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                                       );
                                     },
                                     onDismissed: (direction) {
-                                      context.read<SsccCubit>().deleteSscc(
-                                          table[index].id.toString());
+                                      BlocProvider.of<SsccCubit>(context)
+                                          .deleteSscc(
+                                              table[index].id.toString());
                                     },
                                     child: Container(
                                       width: context.width() * 0.9,
@@ -469,7 +472,7 @@ class _BarcodeDialogState extends State<BarcodeDialog> {
               toast(state.error);
             }
             if (state is SsccLoaded) {
-              context.read<SsccCubit>().getSsccData();
+              BlocProvider.of<SsccCubit>(context).getSsccData();
               Navigator.of(context).pop();
               toast("Bulk SSCC generated successfully.");
             }

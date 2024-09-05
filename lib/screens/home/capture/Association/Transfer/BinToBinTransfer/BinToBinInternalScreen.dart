@@ -1041,9 +1041,11 @@ class StudentDataSource extends DataTableSource {
         DataCell(SelectableText(student.sID ?? "")),
         DataCell(SelectableText(student.cID ?? "")),
         DataCell(SelectableText(student.pO ?? "")),
-        DataCell(SelectableText(student.trans.toString() == "null"
-            ? "0"
-            : student.trans.toString())),
+        DataCell(
+          SelectableText(
+            student.trans.toString() == "null" ? "0" : student.trans.toString(),
+          ),
+        ),
       ],
     );
   }
