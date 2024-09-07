@@ -14,7 +14,7 @@ import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/SSCC/SsccProductsModel.dart';
+import 'package:gtrack_mobile_app/models/Identify/SSCC/SsccProductsModel.dart';
 import 'package:gtrack_mobile_app/models/capture/Association/Transfer/WipToFG/get_items_ln_wips_model.dart';
 
 List<GetItemsLnWipsModel> tableData = [];

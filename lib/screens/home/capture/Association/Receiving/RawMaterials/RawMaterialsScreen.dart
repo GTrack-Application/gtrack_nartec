@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_mobile_app/constants/app_images.dart';
@@ -5,7 +7,7 @@ import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
 import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
 import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/SSCC/SsccProductsModel.dart';
+import 'package:gtrack_mobile_app/models/Identify/SSCC/SsccProductsModel.dart';
 
 class RawMaterialsScreen extends StatefulWidget {
   const RawMaterialsScreen({super.key});
