@@ -44,14 +44,16 @@ class _EventsScreenState extends State<EventsScreen> {
     origin = PointLatLng(latitude[i], longitude[i]);
     destination = PointLatLng(lat, long);
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyCsEUxB9psxb-LxhYx8hJtF248gj4bx49A", // Replace with your Google Maps API key
-      origin!, // Starting coordinates
-      destination!, // Ending coordinates
-      avoidFerries: true,
-      avoidHighways: false,
-      avoidTolls: true,
-      travelMode: TravelMode.driving,
-      optimizeWaypoints: true,
+      googleApiKey: "AIzaSyCsEUxB9psxb-LxhYx8hJtF248gj4bx49A",
+      request: PolylineRequest(
+        origin: origin!, // Starting coordinates
+        destination: destination!, // Ending coordinates
+        avoidFerries: true,
+        avoidHighways: false,
+        avoidTolls: true,
+        mode: TravelMode.driving,
+        optimizeWaypoints: true,
+      ),
     );
 
     if (result.status == 'OK') {
