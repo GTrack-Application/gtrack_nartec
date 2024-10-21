@@ -1,4 +1,9 @@
 {
   "java.configuration.updateBuildConfiguration": "interactive",
-"dart.flutterSdkPath": ".fvm/versions/3.24.2"
+  "dart.flutterSdkPath": ".fvm/versions/3.24.2",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#4F1E1D",
+    "titleBar.activeBackground": "#6E2A29",
+    "titleBar.activeForeground": "#FEFBFB"
+  }
 }
