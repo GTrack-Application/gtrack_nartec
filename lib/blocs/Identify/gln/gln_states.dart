@@ -1,4 +1,4 @@
-import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 
 abstract class GlnState {}
 

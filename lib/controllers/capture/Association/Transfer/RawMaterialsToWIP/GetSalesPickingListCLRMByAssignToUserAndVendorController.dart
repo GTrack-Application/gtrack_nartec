@@ -2,10 +2,10 @@
 
 import 'dart:convert';
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Transfer/RawMaterialsToWIP/GetMappedBarcodesRMByItemIdAndQtyModel.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorModel.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/RawMaterialsToWIP/GetMappedBarcodesRMByItemIdAndQtyModel.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorModel.dart';
 import 'package:http/http.dart' as http;
 
 class RawMaterialsToWIPController {
@@ -24,7 +24,6 @@ class RawMaterialsToWIPController {
     final headers = <String, String>{
       'Authorization': '$token',
       'Content-Type': 'application/json',
-      'Host': AppUrls.host,
     };
     print(headers);
     try {
@@ -59,7 +58,6 @@ class RawMaterialsToWIPController {
         '${AppUrls.baseUrlWith7000}getMappedBarcodesRMByItemIdAndQty?item_id=$itemId&qty=$qty');
     print(url);
     final headers = <String, String>{
-      'Host': AppUrls.host,
       'Authorization': token!,
     };
     try {
@@ -89,7 +87,6 @@ class RawMaterialsToWIPController {
 
     final url = Uri.parse('${AppUrls.baseUrlWith7000}insertItemsLnWIP');
     final headers = {
-      'Host': AppUrls.host,
       'Authorization': '$token',
       'Content-Type': 'application/json',
     };
@@ -143,7 +140,6 @@ class RawMaterialsToWIPController {
 
     final headers = {
       'Authorization': 'Bearer token',
-      'Host': AppUrls.host,
       'Content-Type': 'application/json',
     };
 
@@ -222,7 +218,6 @@ class RawMaterialsToWIPController {
 
     final headers = {
       'Authorization': 'Bearer token',
-      'Host': AppUrls.host,
       'Content-Type': 'application/json',
     };
 

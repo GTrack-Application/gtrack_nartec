@@ -3,9 +3,8 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/controller/add_gtin_controller.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/cubit/add_gtin_state.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/screens/home/identify/controller/add_gtin_controller.dart';
+import 'package:gtrack_nartec/screens/home/identify/cubit/add_gtin_state.dart';
 
 class AddGtinCubit extends Cubit<AddGtinState> {
   AddGtinCubit() : super(AddGtinInitial());
@@ -13,11 +12,6 @@ class AddGtinCubit extends Cubit<AddGtinState> {
   fetAddGtinData() async {
     emit(AddGtinLoading());
     try {
-      var network = await isNetworkAvailable();
-      if (!network) {
-        emit(AddGtinError(message: "No Internet Connection"));
-      }
-
       final fetchBrands = await AddGtinController.fetchBrandsName();
       final unitData = await AddGtinController.fetchUnit();
       final originData = await AddGtinController.fetchOrigin();
@@ -62,11 +56,6 @@ class AddGtinCubit extends Cubit<AddGtinState> {
   ) async {
     emit(InsertGtinLoading());
     try {
-      var network = await isNetworkAvailable();
-      if (!network) {
-        emit(InsertGtinError(message: "No Internet Connection"));
-      }
-
       await AddGtinController.postProduct(
         productnameenglish,
         productnamearabic,

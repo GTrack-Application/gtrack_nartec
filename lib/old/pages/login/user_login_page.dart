@@ -1,18 +1,19 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/constants/app_icons.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/controllers/auth/auth_controller.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
-import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
-import 'package:gtrack_mobile_app/old/domain/services/apis/login/login_services.dart';
-import 'package:gtrack_mobile_app/screens/home/auth/cr_activity_screen.dart';
-import 'package:gtrack_mobile_app/screens/home_screen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/constants/app_icons.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/controllers/auth/auth_controller.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_nartec/global/widgets/drop_down/drop_down_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
+import 'package:gtrack_nartec/old/domain/services/apis/login/login_services.dart';
+import 'package:gtrack_nartec/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -27,10 +28,11 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController adminPasswordController = TextEditingController();
 
   final FocusNode emailNode = FocusNode();
   final FocusNode passwordNode = FocusNode();
-
+  final FocusNode adminPasswordNode = FocusNode();
   bool obscureText = true;
 
   // a method that deletes all the data from the sharedpreferences
@@ -56,12 +58,13 @@ class _UserLoginPageState extends State<UserLoginPage> {
     //controllers
     emailController.dispose();
     passwordController.dispose();
+    adminPasswordController.dispose();
     formKey.currentState?.dispose();
 
     //focus nodes
     emailNode.dispose();
     passwordNode.dispose();
-
+    adminPasswordNode.dispose();
     super.dispose();
   }
 
@@ -97,21 +100,24 @@ class _UserLoginPageState extends State<UserLoginPage> {
   login() async {
     if (formKey.currentState?.validate() ?? false) {
       AppDialogs.loadingDialog(context);
-      await AuthController.login(emailController.text.trim()).then((value) {
-        List<String> dp = value.map((e) => e.crActivity!).toList();
+      await AuthController.loginWithPassword(
+        emailController.text.trim(),
+        adminPasswordController.text.trim(),
+      ).then((value) {
+        AppPreferences.setToken(value.token.toString()).then((_) {});
+        AppPreferences.setUserId(value.user!.id.toString()).then((_) {});
+        AppPreferences.setCurrentUser("Admin User").then((_) {});
+        AppPreferences.setGln(value.user!.gln.toString()).then((_) {});
+        AppPreferences.setId(value.user!.id.toString()).then((_) {});
 
         AppDialogs.closeDialog();
-        AppNavigator.goToPage(
-            context: context,
-            screen: CrActivityScreen(
-              dropdownList: dp,
-              dropdownValue: dp[0],
-              email: emailController.text.trim(),
-            ));
+        AppNavigator.goToPage(context: context, screen: const HomeScreen());
       }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
         AppSnackbars.danger(
-            context, error.toString().replaceAll("Exeption", ""));
+          context,
+          error.toString().replaceAll("Exeption", ""),
+        );
       });
     }
   }
@@ -239,6 +245,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       color: AppColors.white,
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFieldWidget(
                     hintText: "Login ID",
                     controller: emailController,
@@ -268,6 +275,36 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   ),
                   // .box.width(context.width * 0.9).make(),
                   const SizedBox(height: 20),
+                  TextFieldWidget(
+                    hintText: "Password",
+                    focusNode: adminPasswordNode,
+                    onFieldSubmitted: (p0) {
+                      // hide keyboard
+                      adminPasswordNode.unfocus();
+                    },
+                    controller: adminPasswordController,
+                    leadingIcon: Image.asset(
+                      AppIcons.passwordIcon,
+                      width: 42,
+                      height: 42,
+                    ),
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: obscureText,
+                    validator: (p0) {
+                      if (p0!.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.remove_red_eye),
+                      onPressed: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      },
+                    ),
+                  ),
                   Visibility(
                     visible: dropdownValue == "Admin User" ? false : true,
                     child: TextFieldWidget(
@@ -349,7 +386,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     text: "Login Now",
                   ),
                   const SizedBox(height: 20),
-                  // remember me and neeed help
                   Container(
                     margin: const EdgeInsets.only(right: 5),
                     child: Row(
@@ -359,8 +395,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           children: [
                             Checkbox(
                               value: rememberMe,
-                              fillColor:
-                                  MaterialStateProperty.all(Colors.white),
+                              fillColor: WidgetStateProperty.all(Colors.white),
                               activeColor: Colors.white,
                               checkColor: Colors.black,
                               onChanged: (value) {

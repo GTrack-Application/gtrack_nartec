@@ -5,16 +5,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_cubit/gln_cubit.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_cubit/gln_state.dart';
+import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/screens/home/identify/GLN/gln_cubit/gln_cubit.dart';
+import 'package:gtrack_nartec/screens/home/identify/GLN/gln_cubit/gln_state.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class AddGlnScreen extends StatefulWidget {
   const AddGlnScreen({super.key});
@@ -163,7 +161,7 @@ class _AddGlnScreenState extends State<AddGlnScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  20.height,
+                  SizedBox(height: 20),
                   const Text(
                     "   What does a GLN identify ?",
                     style: TextStyle(
@@ -340,32 +338,43 @@ class _AddGlnScreenState extends State<AddGlnScreen> {
                     child: buildImagePicker(
                       'Image',
                       image,
-                      context.width() * 0.4,
-                      context.height() * 0.2,
-                      context.width() * 0.4,
-                      context.height() * 0.05,
+                      MediaQuery.of(context).size.width * 0.4,
+                      MediaQuery.of(context).size.height * 0.2,
+                      MediaQuery.of(context).size.width * 0.4,
+                      MediaQuery.of(context).size.height * 0.05,
                       15,
                       12,
                     ),
                   ),
-                  20.height,
+                  SizedBox(height: 20),
                   // Save button
                   BlocConsumer<GLNCubit, GLNState>(
                     bloc: glnCubit,
                     listener: (context, state) {
                       if (state is GLNLoaded) {
-                        toast("GLN added successfully");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("GLN added successfully"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
                         context.read<GlnCubit>().identifyGln();
                         Navigator.of(context).pop();
                       }
                       if (state is GLNError) {
-                        toast(state.message.replaceAll('Exception:', ''));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                state.message.replaceAll('Exception:', '')),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                       }
                     },
                     builder: (context, state) {
                       return Container(
                         margin: const EdgeInsets.symmetric(horizontal: 50),
-                        width: context.width(),
+                        width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                           onPressed: () {
@@ -380,7 +389,12 @@ class _AddGlnScreenState extends State<AddGlnScreen> {
                                 _selectedImageText == null ||
                                 glnLocation.toString().isEmpty ||
                                 _latController.text.trim().isEmpty) {
-                              toast("Please fill all the fields");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please fill all the fields"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                               return;
                             }
                             glnCubit.postGln(

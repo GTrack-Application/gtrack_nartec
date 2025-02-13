@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/screens/home/share/product-information/codification_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/share/product-information/company_information.dart';
-import 'package:gtrack_mobile_app/screens/home/share/product-information/digital_link_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/share/product-information/gtin_information_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/share/traceability/traceability_screen.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/screens/home/share/product-information/codification_screen.dart';
+import 'package:gtrack_nartec/screens/home/share/product-information/company_information.dart';
+import 'package:gtrack_nartec/screens/home/share/product-information/digital_link_screen.dart';
+import 'package:gtrack_nartec/screens/home/share/product-information/gtin_information_screen.dart';
+import 'package:gtrack_nartec/screens/home/share/traceability/traceability_screen.dart';
 
 class ProductInformationScreen extends StatefulWidget {
   final String gtin;

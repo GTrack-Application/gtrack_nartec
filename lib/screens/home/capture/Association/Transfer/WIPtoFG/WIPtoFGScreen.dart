@@ -3,18 +3,18 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/capture/association/transfer/wip_to_fg_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/WIPtoFG/wip_to_fg_controller.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Transfer/WipToFG/get_items_ln_wips_model.dart';
+import 'package:gtrack_nartec/blocs/capture/association/transfer/wip_to_fg_bloc.dart';
+import 'package:gtrack_nartec/blocs/global/global_states_events.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/WIPtoFG/wip_to_fg_controller.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/WipToFG/get_items_ln_wips_model.dart';
 
 class WIPtoFGScreen extends StatefulWidget {
   const WIPtoFGScreen({super.key});
@@ -236,13 +236,8 @@ class _WIPtoFGScreenState extends State<WIPtoFGScreen> {
                               .contains(filter.toLowerCase());
                         },
                         enabled: true,
-                        dropdownButtonProps: const DropdownButtonProps(
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
-                        ),
-                        items: dropDownList,
+                        popupProps: const PopupProps.menu(),
+                        // items: dropDownList,
                         onChanged: (value) {
                           setState(() {
                             dropDownValue = value!;

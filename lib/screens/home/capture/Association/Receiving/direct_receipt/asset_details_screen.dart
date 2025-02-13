@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class AssetDetailsScreen extends StatelessWidget {
   const AssetDetailsScreen({super.key});
@@ -75,7 +74,12 @@ class AssetDetailsScreen extends StatelessWidget {
                     ItemDetailsCubit.get(context).assets.add(state.asset);
                     ItemDetailsCubit.get(context).clearTextFields();
                   } else if (state is ItemDetailsAssetDetailsError) {
-                    toast(state.message);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 },
                 builder: (context, state) {

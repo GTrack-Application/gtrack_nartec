@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/gln_model.dart';
-import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/job_details_model.dart';
-import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/job_order_details_model.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/old/domain/services/models/dispatch_management/gln_model.dart';
+import 'package:gtrack_nartec/old/domain/services/models/dispatch_management/job_details_model.dart';
+import 'package:gtrack_nartec/old/domain/services/models/dispatch_management/job_order_details_model.dart';
 import 'package:http/http.dart' as http;
 
 class DispatchManagementServices {

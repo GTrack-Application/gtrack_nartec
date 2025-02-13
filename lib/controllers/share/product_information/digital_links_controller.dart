@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/digital_links_model.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/product_contents_model.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/promotional_offer_model.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/recipe_model.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/safety_information_model.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/share/product_information/digital_links_model.dart';
+import 'package:gtrack_nartec/models/share/product_information/product_contents_model.dart';
+import 'package:gtrack_nartec/models/share/product_information/promotional_offer_model.dart';
+import 'package:gtrack_nartec/models/share/product_information/recipe_model.dart';
+import 'package:gtrack_nartec/models/share/product_information/safety_information_model.dart';
 import 'package:http/http.dart' as http;
 
 class DigitalLinksController {

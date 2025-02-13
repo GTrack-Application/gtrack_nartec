@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class AppSnackbars {
   static void danger(BuildContext context, String message) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    toast(
-      message.replaceAll("Exception:", ""),
-      bgColor: Colors.red,
-      textColor: Colors.white,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message.replaceAll("Exception:", "")),
+        backgroundColor: Colors.red,
+      ),
     );
   }
 
   static void normal(BuildContext context, String message) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    toast(
-      message.replaceAll("Exception:", ""),
-      bgColor: Colors.red,
-      textColor: Colors.white,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message.replaceAll("Exception:", "")),
+        backgroundColor: Colors.red,
+      ),
     );
   }
 
@@ -26,10 +27,11 @@ class AppSnackbars {
     int? duration,
   ) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    toast(
-      message.replaceAll("Exception:", ""),
-      bgColor: Colors.red,
-      textColor: Colors.white,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message.replaceAll("Exception:", "")),
+        backgroundColor: Colors.green,
+      ),
     );
   }
 }

@@ -1,19 +1,18 @@
-// ignore_for_file: prefer_final_fields, sized_box_for_whitespace, prefer_typing_uninitialized_variables, unnecessary_import
+// ignore_for_file: prefer_final_fields, sized_box_for_whitespace, prefer_typing_uninitialized_variables, unnecessary_import, use_build_context_synchronously
 
 import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Receivingg/CustomerReturns/getWmsReturnSalesOrderByReturnItemNumController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Receivingg/CustomerReturns/getWmsReturnSalesOrderByReturnItemNumController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
 
 import 'ReturnRMAScreen2.dart';
 
@@ -97,10 +96,11 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                           onEditingComplete: () {
                             FocusScope.of(context).unfocus();
                             if (_searchController.text.trim().isEmpty) {
-                              toast(
-                                "Please enter RMA",
-                                bgColor: Colors.red,
-                                textColor: Colors.white,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please enter RMA"),
+                                  backgroundColor: Colors.red,
+                                ),
                               );
                               return;
                             }
@@ -120,10 +120,13 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                               AppDialogs.closeDialog();
                             }).onError((error, stackTrace) {
                               AppDialogs.closeDialog();
-                              toast(
-                                error.toString().replaceAll("Exception:", ""),
-                                bgColor: Colors.red,
-                                textColor: Colors.white,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(error
+                                      .toString()
+                                      .replaceAll("Exception:", "")),
+                                  backgroundColor: Colors.red,
+                                ),
                               );
                             });
                           },
@@ -139,10 +142,11 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                           onTap: () {
                             FocusScope.of(context).unfocus();
                             if (_searchController.text.trim().isEmpty) {
-                              toast(
-                                "Please enter RMA",
-                                bgColor: Colors.red,
-                                textColor: Colors.white,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please enter RMA"),
+                                  backgroundColor: Colors.red,
+                                ),
                               );
                               return;
                             }
@@ -163,10 +167,13 @@ class _ReturnRMAScreen1State extends State<ReturnRMAScreen1> {
                               AppDialogs.closeDialog();
                             }).onError((error, stackTrace) {
                               AppDialogs.closeDialog();
-                              toast(
-                                error.toString().replaceAll("Exception:", ""),
-                                bgColor: Colors.red,
-                                textColor: Colors.white,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(error
+                                      .toString()
+                                      .replaceAll("Exception:", "")),
+                                  backgroundColor: Colors.red,
+                                ),
                               );
                             });
                           },

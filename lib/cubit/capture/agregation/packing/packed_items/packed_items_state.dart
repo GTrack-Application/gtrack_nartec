@@ -1,4 +1,4 @@
-import 'package:gtrack_mobile_app/models/capture/aggregation/packing/PackedItemsModel.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 
 abstract class PackedItemsState {}
 

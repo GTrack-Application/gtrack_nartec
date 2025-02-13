@@ -2,12 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_gtin_screen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Serialization/serialization_gtin_screen.dart';
 
 class CreateSerialScreen extends StatefulWidget {
   final GTIN_Model gtin;
@@ -127,14 +126,19 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                         ),
                       ],
                     ),
-                    50.height,
+                    SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         BlocConsumer<CaptureCubit, CaptureState>(
                           listener: (context, state) {
                             if (state is CaptureCreateSerializationSuccess) {
-                              toast("Serials created successfully");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Serials created successfully"),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
                               CaptureCubit.get(context).getSerializationData(
                                   widget.gtin.barcode ?? "");
                               AppNavigator.replaceTo(
@@ -144,7 +148,12 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                                   ));
                             } else if (state
                                 is CaptureCreateSerializationError) {
-                              toast(state.message);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(state.message),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                             }
                           },
                           builder: (context, state) {

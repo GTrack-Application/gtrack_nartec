@@ -1,19 +1,18 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_state.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/direct_receipt/asset_details_screen.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_state.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/direct_receipt/asset_details_screen.dart';
 import 'package:intl/intl.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class DirectReceiptSaveScreen extends StatefulWidget {
   const DirectReceiptSaveScreen({
@@ -71,7 +70,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              10.height,
+              SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.all(10),
                 width: double.infinity,
@@ -81,7 +80,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                 ),
                 child: Row(
                   children: [
-                    10.width,
+                    SizedBox(width: 10),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5),
@@ -97,7 +96,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                                 color: AppColors.primary,
                               ),
                             ),
-                            5.height,
+                            SizedBox(height: 5),
                             Text(
                               widget.productsModel.barcode ?? "",
                               style: const TextStyle(
@@ -105,7 +104,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                                 color: AppColors.primary,
                               ),
                             ),
-                            5.height,
+                            SizedBox(height: 5),
                             Text(
                               widget.productsModel.hsDescription ?? "",
                               style: const TextStyle(
@@ -124,17 +123,17 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                         imageUrl:
                             "${AppUrls.baseUrlWith3091}${widget.productsModel.frontImage!.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
                         width: 60,
-                        height: context.height() * 0.1,
+                        height: MediaQuery.of(context).size.height * 0.1,
                         fit: BoxFit.cover,
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.image_outlined),
                       ),
                     ),
-                    10.width,
+                    SizedBox(width: 10),
                   ],
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "QUANTITY",
                 style: TextStyle(
@@ -160,7 +159,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "BATCH NO",
                 style: TextStyle(
@@ -186,7 +185,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "EXPIRY DATE",
                 style: TextStyle(
@@ -237,7 +236,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "MANUFACTURE DATE",
                 style: TextStyle(
@@ -287,7 +286,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "NET WEIGHT",
                 style: TextStyle(
@@ -311,7 +310,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "UNIT OF MEASURE",
                 style: TextStyle(
@@ -337,7 +336,14 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                         ItemDetailsCubit.get(context).unitList.first;
                   }
                   if (state is UnitError) {
-                    toast(state.message.toString().replaceAll("Exception", ""));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message
+                            .toString()
+                            .replaceAll("Exception", "")),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 },
                 builder: (context, state) {
@@ -366,7 +372,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   );
                 },
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "TRANSPO GLN",
                 style: TextStyle(
@@ -391,7 +397,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "PUT AWAY LOCATION",
                 style: TextStyle(
@@ -418,7 +424,14 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                         ItemDetailsCubit.get(context).locationList.first;
                   }
                   if (state is CountryError) {
-                    toast(state.message.toString().replaceAll("Exception", ""));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message
+                            .toString()
+                            .replaceAll("Exception", "")),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 },
                 builder: (context, state) {
@@ -447,7 +460,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   );
                 },
               ),
-              10.height,
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -482,11 +495,21 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                         }).onError((error, stackTrace) {
                           print("EPCIS Log error: $error");
                         });
-                        toast("Item details saved successfully!");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Item details saved successfully!"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
                         ItemDetailsCubit.get(context).clearEverything();
                         Navigator.pop(context);
                       } else if (state is ItemDetailsError) {
-                        toast(state.message.toString());
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.message.toString()),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                       }
                     },
                     builder: (context, state) {
@@ -520,7 +543,13 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                               ItemDetailsCubit.get(context).unitValue == "" ||
                               ItemDetailsCubit.get(context).locationValue ==
                                   "") {
-                            toast("Please fill all the above fields!");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text("Please fill all the above fields!"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                             return;
                           }
                           ItemDetailsCubit.get(context).saveItemDetails(
@@ -541,7 +570,7 @@ class _DirectReceiptSaveScreenState extends State<DirectReceiptSaveScreen> {
                   ),
                 ],
               ),
-              20.height,
+              SizedBox(height: 20),
             ],
           ),
         ),

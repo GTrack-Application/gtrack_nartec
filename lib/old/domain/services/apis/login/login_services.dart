@@ -3,12 +3,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/LoginUser/BrandOwnerLoginModel.dart';
-import 'package:gtrack_mobile_app/models/LoginUser/SupplierLoginModel.dart';
-import 'package:gtrack_mobile_app/models/Member/member_data_model.dart';
-import 'package:gtrack_mobile_app/models/activities/email_activities_model.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/LoginUser/BrandOwnerLoginModel.dart';
+import 'package:gtrack_nartec/models/LoginUser/SupplierLoginModel.dart';
+import 'package:gtrack_nartec/models/Member/member_data_model.dart';
+import 'package:gtrack_nartec/models/activities/email_activities_model.dart';
 import 'package:http/http.dart' as http;
 
 class LoginServices {
@@ -28,7 +28,6 @@ class LoginServices {
       uri,
       body: json.encode(
         {
-          // body should include email
           'email': email,
           'activity': activity,
           'activityID': activityId,
@@ -40,7 +39,6 @@ class LoginServices {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Host': 'gs1ksa.org',
       },
     ).then((response) {
       if (response.statusCode == 200) {
@@ -78,61 +76,15 @@ class LoginServices {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Host': 'gs1ksa.org',
         'Authorization':
             'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IklyZmFuIiwiaWF0IjoxNTE2MjM5MDIyfQ.vx1SEIP27zyDm9NoNbJRrKo-r6kRaVHNagsMVTToU6A',
       },
     ).then((response) {
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final responseBody = json.decode(response.body) as Map<String, dynamic>;
         return responseBody;
       } else {
         throw Exception('Error happended while sending OTP');
-      }
-    });
-  }
-
-  static Future<Map<String, dynamic>> loginWithPassword(
-    String email,
-    String activity,
-    String password,
-    String activityId,
-  ) {
-    const baseUrl = '${AppUrls.domain}/api/member/login';
-    final uri = Uri.parse(baseUrl);
-
-    print(jsonEncode({
-      'email': email,
-      'activity': activity,
-      'activityID': activityId,
-      'password': password,
-    }));
-
-    return http.post(
-      uri,
-      body: json.encode(
-        {
-          // body should include email
-          'email': email,
-          'activity': activity,
-          'activityID': activityId,
-          'password': password,
-        },
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Host': 'gs1ksa.org',
-      },
-    ).then((response) {
-      if (response.statusCode == 200) {
-        // handle successful response
-        final responseBody = json.decode(response.body) as Map<String, dynamic>;
-        return responseBody;
-      } else if (response.statusCode == 422) {
-        throw Exception('Please Wait For Admin Approval');
-      } else {
-        throw Exception('Error happended while logging in');
       }
     });
   }
@@ -146,7 +98,6 @@ class LoginServices {
           await http.post(uri, body: json.encode({'email': email}), headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Host': AppUrls.host,
       });
 
       if (response.statusCode == 200) {
@@ -185,8 +136,6 @@ class LoginServices {
 
     final headers = {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Host': AppUrls.host,
     };
 
     final body = jsonEncode(
@@ -222,7 +171,6 @@ class LoginServices {
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Host': AppUrls.host,
     };
 
     final body = jsonEncode(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class Themes {
   static const MaterialColor primarySwatch = MaterialColor(

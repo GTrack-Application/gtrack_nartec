@@ -3,8 +3,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +35,6 @@ class GlnController {
       // Bearer token
       request.headers.addAll({
         'Authorization': 'Bearer $token',
-        'Host': 'gs1ksa.org:3093',
       });
 
       // Adding fields

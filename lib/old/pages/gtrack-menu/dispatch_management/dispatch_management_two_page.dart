@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/components/counter_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_mobile_app/global/widgets/buttons/secondary_button.dart';
-import 'package:gtrack_mobile_app/global/widgets/drop_down/drop_down_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/title_text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
-import 'package:gtrack_mobile_app/old/domain/services/apis/dispatch_management/dispatch_management_services.dart';
-import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/job_details_model.dart';
-import 'package:gtrack_mobile_app/old/providers/dispatch_management/gln_provider.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/components/counter_widget.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/secondary_button.dart';
+import 'package:gtrack_nartec/global/widgets/drop_down/drop_down_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/title_text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
+import 'package:gtrack_nartec/old/domain/services/apis/dispatch_management/dispatch_management_services.dart';
+import 'package:gtrack_nartec/old/domain/services/models/dispatch_management/job_details_model.dart';
+import 'package:gtrack_nartec/old/providers/dispatch_management/gln_provider.dart';
 import 'package:provider/provider.dart';
 
 class DispatchManagementTwoPage extends StatefulWidget {

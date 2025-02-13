@@ -3,15 +3,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/constants/app_icons.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/old/pages/login/user_login_page.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/capture_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/identify_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/share/share_screen.dart';
+import 'package:gtrack_nartec/constants/app_icons.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/old/pages/login/user_login_page.dart';
+import 'package:gtrack_nartec/screens/home/capture/capture_screen.dart';
+import 'package:gtrack_nartec/screens/home/identify/identify_screen.dart';
+import 'package:gtrack_nartec/screens/home/share/share_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

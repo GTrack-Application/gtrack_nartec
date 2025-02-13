@@ -1,17 +1,16 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/gtin/gtin_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/gpc_by_search_model.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/controller/add_gtin_controller.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/cubit/add_gtin_cubit.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/cubit/add_gtin_state.dart';
+import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gpc_by_search_model.dart';
+import 'package:gtrack_nartec/screens/home/identify/controller/add_gtin_controller.dart';
+import 'package:gtrack_nartec/screens/home/identify/cubit/add_gtin_cubit.dart';
+import 'package:gtrack_nartec/screens/home/identify/cubit/add_gtin_state.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:nb_utils/nb_utils.dart'; // Ensure this package is properly imported and used
 import 'package:flutter/material.dart';
 
 class AddGtinScreen extends StatefulWidget {
@@ -193,7 +192,12 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
           } else if (state is InsertGtinLoaded) {
             context.read<GtinCubit>().getGtinData();
 
-            toast("Gtin Added Successfully!");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Gtin Added Successfully!"),
+                backgroundColor: Colors.green,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -308,7 +312,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                           ),
                         ),
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       const Text(
                         "Product Name [Arabic]",
                         style: TextStyle(
@@ -351,7 +355,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                           ),
                         ),
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       const Text(
                         "Brand Name [Eng]",
                         style: TextStyle(
@@ -372,7 +376,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         },
                         hintText: 'Select brand name',
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       const Text(
                         "Brand Name [Arabic]",
                         style: TextStyle(
@@ -393,7 +397,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         },
                         hintText: 'Select brand name',
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       const Text(
                         "Unit Code",
                         style: TextStyle(
@@ -413,7 +417,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         hintText: 'Select unit code',
                       ),
 
-                      10.height,
+                      SizedBox(height: 10),
                       const Text(
                         "Size",
                         style: TextStyle(
@@ -449,7 +453,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                           ),
                         ),
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       // dropdown for origin
                       const Text(
                         "Origin",
@@ -469,7 +473,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         },
                         hintText: 'Select origin',
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       // dropdown for countryOfSale
                       const Text(
                         "Country of Sale",
@@ -489,7 +493,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         },
                         hintText: 'Select country of sale',
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       // dropdown for productDesctiptionLanguage
                       const Text(
                         "Product Description Language",
@@ -509,7 +513,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         },
                         hintText: 'Select product description language',
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       // dropdown for productType
                       const Text(
                         "Product Type",
@@ -529,7 +533,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         },
                         hintText: 'Select product type',
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       // dropdown for packageType
                       const Text(
                         "Package Type",
@@ -549,7 +553,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         },
                         hintText: 'Select package type',
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       // dropdown for gpc
                       const Text(
                         "GPC",
@@ -668,7 +672,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                           ),
                         ],
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       // dropdown for hsCode
                       const Text(
                         "HS Code",
@@ -692,7 +696,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                         },
                         hintText: 'Select HS Code',
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       const Text(
                         "Description [Eng]",
                         style: TextStyle(
@@ -720,7 +724,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                           ),
                         ),
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       const Text(
                         "Description [Arabic]",
                         style: TextStyle(
@@ -747,7 +751,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                           ),
                         ),
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                       const Text(
                         "Product URL",
                         style: TextStyle(
@@ -781,10 +785,10 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                             'Front Photo',
                             _frontImage,
                             () => _pickImage(0),
-                            context.width() * 0.4,
-                            context.height() * 0.2,
-                            context.width() * 0.4,
-                            context.height() * 0.05,
+                            MediaQuery.of(context).size.width * 0.4,
+                            MediaQuery.of(context).size.height * 0.2,
+                            MediaQuery.of(context).size.width * 0.4,
+                            MediaQuery.of(context).size.height * 0.05,
                             15,
                             12,
                           ),
@@ -792,10 +796,10 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                             'Back Photo',
                             _backImage,
                             () => _pickImage(1),
-                            context.width() * 0.4,
-                            context.height() * 0.2,
-                            context.width() * 0.4,
-                            context.height() * 0.05,
+                            MediaQuery.of(context).size.width * 0.4,
+                            MediaQuery.of(context).size.height * 0.2,
+                            MediaQuery.of(context).size.width * 0.4,
+                            MediaQuery.of(context).size.height * 0.05,
                             15,
                             12,
                           ),
@@ -810,10 +814,10 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                               'Optional\nPhoto 1',
                               _optionalImages[0],
                               () => _pickImage(2, optionalIndex: 0),
-                              context.width() * 0.2,
-                              context.height() * 0.1,
-                              context.width() * 0.27,
-                              context.height() * 0.04,
+                              MediaQuery.of(context).size.width * 0.2,
+                              MediaQuery.of(context).size.height * 0.1,
+                              MediaQuery.of(context).size.width * 0.27,
+                              MediaQuery.of(context).size.height * 0.04,
                               10,
                               8,
                             ),
@@ -821,10 +825,10 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                               'Optional\nPhoto 2',
                               _optionalImages[1],
                               () => _pickImage(2, optionalIndex: 1),
-                              context.width() * 0.2,
-                              context.height() * 0.1,
-                              context.width() * 0.27,
-                              context.height() * 0.04,
+                              MediaQuery.of(context).size.width * 0.2,
+                              MediaQuery.of(context).size.height * 0.1,
+                              MediaQuery.of(context).size.width * 0.27,
+                              MediaQuery.of(context).size.height * 0.04,
                               10,
                               8,
                             ),
@@ -832,31 +836,43 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                               'Optional\nPhoto 3',
                               _optionalImages[2],
                               () => _pickImage(2, optionalIndex: 2),
-                              context.width() * 0.2,
-                              context.height() * 0.1,
-                              context.width() * 0.27,
-                              context.height() * 0.04,
+                              MediaQuery.of(context).size.width * 0.2,
+                              MediaQuery.of(context).size.height * 0.1,
+                              MediaQuery.of(context).size.width * 0.27,
+                              MediaQuery.of(context).size.height * 0.04,
                               10,
                               8,
                             ),
                           ],
                         ),
                       ),
-                      20.height,
+                      SizedBox(height: 20),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
                             FocusScope.of(context).unfocus();
 
                             if (_frontImage == null && _backImage == null) {
-                              toast("Please select front and back image");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "Please select front and back image"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                               return;
                             }
 
                             if (productNameEngController.text.isEmpty ||
                                 productNameArbController.text.isEmpty ||
                                 sizeController.text.isEmpty) {
-                              toast("Please fill the mendatory feilds");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text("Please fill the mendatory feilds"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                               return;
                             }
 
@@ -906,13 +922,24 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                               });
                               context.read<GtinCubit>().getGtinData();
 
-                              toast("GtIN Product Added Successfully!");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text("GtIN Product Added Successfully!"),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
 
                               Navigator.of(context).pop();
                             }).onError((error, stackTrace) {
-                              toast(error
-                                  .toString()
-                                  .replaceAll("Exception:", ""));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(error
+                                      .toString()
+                                      .replaceAll("Exception:", "")),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                             });
                           },
                           style: ElevatedButton.styleFrom(
@@ -922,7 +949,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                               : const Text('Add GTIN'),
                         ),
                       ),
-                      10.height,
+                      SizedBox(height: 10),
                     ],
                   ),
                 ),

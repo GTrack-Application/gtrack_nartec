@@ -1,11 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
-import 'package:gtrack_mobile_app/blocs/share/product_information/gtin_information_bloc.dart';
-import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/gtin_information_model.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/blocs/global/global_states_events.dart';
+import 'package:gtrack_nartec/blocs/share/product_information/gtin_information_bloc.dart';
+import 'package:gtrack_nartec/global/widgets/loading/loading_widget.dart';
+import 'package:gtrack_nartec/models/share/product_information/gtin_information_model.dart';
 
 GtinInformationModel? gtinInformationModel;
 GtinInformationDataModel? gtinInformationDataModel;
@@ -122,9 +121,9 @@ class _CompanyInformationScreenState extends State<CompanyInformationScreen> {
                                 value2: gtinInformationDataModel == null
                                     ? "${gtinInformationModel?.companyInfo?.primaryMOName}"
                                     : "${gtinInformationDataModel!.data!.countryOfSaleName}"),
-                            30.height,
+                            const SizedBox(height: 30),
                             // const Divider(thickness: 2),
-                            10.height,
+                            const SizedBox(height: 10),
                             // PaginatedDataTable(
                             //   columns: const [
                             //     DataColumn(label: Text("Allergen Info")),

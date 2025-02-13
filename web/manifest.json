@@ -1,6 +1,6 @@
 {
-    "name": "gtrack_mobile_app",
-    "short_name": "gtrack_mobile_app",
+    "name": "gtrack_nartec",
+    "short_name": "gtrack_nartec",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

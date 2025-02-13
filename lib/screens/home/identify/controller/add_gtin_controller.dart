@@ -2,16 +2,16 @@
 
 import 'dart:io';
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/brands_name_model.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/gpc_by_search_model.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/gpc_model.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/origin_model.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/package_type_model.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/product_description_model.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/product_type_model.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/unit_model.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/brands_name_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gpc_by_search_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gpc_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/origin_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/package_type_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/product_description_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/product_type_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/unit_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
@@ -269,7 +269,6 @@ class AddGtinController {
       // Bearer token
       request.headers.addAll({
         'Authorization': 'Bearer $token',
-        'Host': 'gs1ksa.org:3091',
       });
 
       // Adding fields

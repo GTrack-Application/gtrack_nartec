@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/Association/Mapping/Sales_Order/GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -24,7 +24,6 @@ class GetPickingListController {
 
     final headers = <String, String>{
       "Authorization": tokenNew!,
-      "Host": AppUrls.host,
       "Accept": "application/json",
     };
 

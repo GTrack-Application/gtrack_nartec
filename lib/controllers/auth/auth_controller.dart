@@ -1,11 +1,35 @@
 import 'dart:convert';
 
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/auth/CRLoginModel.dart';
-import 'package:gtrack_mobile_app/models/auth/LoginResponseModel.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/auth/CRLoginModel.dart';
+import 'package:gtrack_nartec/models/auth/LoginResponseModel.dart';
+import 'package:gtrack_nartec/models/auth/login_model.dart';
 import 'package:http/http.dart' as http;
 
 class AuthController {
+  static Future<LoginModel> loginWithPassword(
+      String email, String password) async {
+    const baseUrl = '${AppUrls.baseUrlWith7000}/api/member/login';
+    final uri = Uri.parse(baseUrl);
+
+    final body = json.encode({'email': email, 'password': password});
+
+    try {
+      final response = await http
+          .post(uri, body: body, headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseBody = json.decode(response.body);
+        return LoginModel.fromJson(responseBody);
+      } else {
+        final msg = json.decode(response.body)['error'];
+        throw Exception(msg);
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   static Future<List<CRLoginModel>> login(String email) async {
     final url = Uri.parse(
         '${AppUrls.baseUrlWith3091}api/users/getCrInfoByEmail?email=$email');

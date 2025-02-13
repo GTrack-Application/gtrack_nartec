@@ -2,17 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/ItemReallocation/ItemReAllocationTableDataController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/ItemReallocation/SubmitItemReallocateController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/ItemReallocation/ItemReAllocationTableDataController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/ItemReallocation/SubmitItemReallocateController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/Transfer/ItemReAllocation/GetItemInfoByPalletCodeModel.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/Transfer/ItemReAllocation/GetItemInfoByPalletCodeModel.dart';
 
 class ItemReAllocationScreen extends StatefulWidget {
   const ItemReAllocationScreen({super.key});

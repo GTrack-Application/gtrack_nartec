@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "gtrack_mobile_app" "\0"
+            VALUE "CompanyName", "com.nartec" "\0"
+            VALUE "FileDescription", "gtrack_nartec" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "gtrack_mobile_app" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "gtrack_mobile_app.exe" "\0"
-            VALUE "ProductName", "gtrack_mobile_app" "\0"
+            VALUE "InternalName", "gtrack_nartec" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.nartec. All rights reserved." "\0"
+            VALUE "OriginalFilename", "gtrack_nartec.exe" "\0"
+            VALUE "ProductName", "gtrack_nartec" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -2,16 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/generate_pallet_controller.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/generate_pallet_controller.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
 
 class NewPalletizationScreen extends StatefulWidget {
   const NewPalletizationScreen({super.key});
@@ -346,10 +345,11 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
     }
 
     if (noOfBoxController.text.isEmpty || qtyPerBoxController.text.isEmpty) {
-      toast(
-        "Please enter No of Boxes and QTY per Box",
-        bgColor: Colors.red,
-        textColor: Colors.white,
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter No of Boxes and QTY per Box"),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -365,10 +365,11 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
           table.map((e) => e.serialNo).toList().contains(value[0].serialNo);
       if (test) {
         AppDialogs.closeDialog();
-        toast(
-          "Serial No ${value[0].serialNo} already exists.",
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Serial No ${value[0].serialNo} already exists."),
+            backgroundColor: Colors.red,
+          ),
         );
         return;
       }
@@ -384,10 +385,11 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
       AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      toast(
-        error.toString().replaceAll("Exception:", ""),
-        bgColor: Colors.red,
-        textColor: Colors.white,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceAll("Exception:", "")),
+          backgroundColor: Colors.red,
+        ),
       );
     });
   }
@@ -409,22 +411,29 @@ class _NewPalletizationScreenState extends State<NewPalletizationScreen> {
           total = "0";
         });
         AppDialogs.closeDialog();
-        toast(
-          "SSCC Generated and Details Saved Successfully.",
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("SSCC Generated and Details Saved Successfully."),
+            backgroundColor: Colors.green,
+          ),
         );
       }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
-        toast(
-          error.toString().replaceAll("Exception:", ""),
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.toString().replaceAll("Exception:", "")),
+            backgroundColor: Colors.red,
+          ),
         );
       });
     } else {
-      toast(
-          "Please scan the serial values equal to the total No of items in the boxes");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              "Please scan the serial values equal to the total No of items in the boxes"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }

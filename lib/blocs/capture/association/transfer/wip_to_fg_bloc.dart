@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/WIPtoFG/wip_to_fg_controller.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Transfer/WipToFG/get_items_ln_wips_model.dart';
+import 'package:gtrack_nartec/blocs/global/global_states_events.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/WIPtoFG/wip_to_fg_controller.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/WipToFG/get_items_ln_wips_model.dart';
 
 class WipToFGBloc extends Bloc<GlobalEvent, GlobalState> {
   WipToFGBloc() : super(GlobalInitState()) {

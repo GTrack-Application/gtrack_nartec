@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/SSCC/sscc_controller/sscc_controller.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/SSCC/sscc_cubit/add_sscc_state.dart';
+import 'package:gtrack_nartec/screens/home/identify/SSCC/sscc_controller/sscc_controller.dart';
+import 'package:gtrack_nartec/screens/home/identify/SSCC/sscc_cubit/add_sscc_state.dart';
 
 class AddSSCCCubit extends Cubit<AddSSCCState> {
   AddSSCCCubit() : super(AddSSCCInitial());

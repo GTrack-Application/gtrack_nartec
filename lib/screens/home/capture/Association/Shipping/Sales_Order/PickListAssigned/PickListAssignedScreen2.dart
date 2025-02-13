@@ -1,21 +1,20 @@
-// ignore_for_file: non_constant_identifier_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, avoid_print, use_build_context_synchronously
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/GetAllTblDZonesController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/GetFirstTableData.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/InsertPickListController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/Sales_Order/PickListAssigned/PickListAssignedScreen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Sales_Order/GetAllTblDZonesController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Sales_Order/GetFirstTableData.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Sales_Order/InsertPickListController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/Sales_Order/PickListAssigned/PickListAssignedScreen.dart';
 
 // ignore: must_be_immutable
 class PickListAssingedScreen2 extends StatefulWidget {
@@ -470,10 +469,12 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                                     element.itemSerialNo.toString().trim() ==
                                     _serialNoController.text.trim())
                                 .isEmpty) {
-                              toast(
-                                "This Serial No. is not found in the above Table, Please insert a Valid Serial No.",
-                                bgColor: Colors.red,
-                                textColor: Colors.white,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "This Serial No. is not found in the above Table, Please insert a Valid Serial No."),
+                                  backgroundColor: Colors.red,
+                                ),
                               );
                               return;
                             }
@@ -751,13 +752,8 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                             .contains(filter.toLowerCase());
                       },
                       enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList,
+                      popupProps: const PopupProps.menu(),
+                      // items: filterList,
                       onChanged: (value) {
                         setState(() {
                           dropDownValue = value!;
@@ -848,18 +844,20 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                   title: "Save",
                   onPressed: () {
                     if (dropDownValue == null) {
-                      toast(
-                        "Please Scan Location",
-                        bgColor: Colors.red,
-                        textColor: Colors.white,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Please Scan Location"),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                       return;
                     }
                     if (table2.isEmpty) {
-                      toast(
-                        "Please scan item.",
-                        bgColor: Colors.red,
-                        textColor: Colors.white,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Please scan item."),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                       return;
                     }
@@ -899,10 +897,11 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                       ).then((val) {
                         AppDialogs.closeDialog();
 
-                        toast(
-                          "Data inserted successfully.",
-                          bgColor: Colors.green,
-                          textColor: Colors.white,
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Data inserted successfully."),
+                            backgroundColor: Colors.green,
+                          ),
                         );
                         Navigator.pushReplacement(context, MaterialPageRoute(
                           builder: (context) {
@@ -913,18 +912,22 @@ class _PickListAssingedScreen2State extends State<PickListAssingedScreen2> {
                         ));
                       }).onError((error, stackTrace) {
                         AppDialogs.closeDialog();
-                        toast(
-                          error.toString().replaceAll("Exception:", ""),
-                          bgColor: Colors.red,
-                          textColor: Colors.white,
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                error.toString().replaceAll("Exception:", "")),
+                            backgroundColor: Colors.red,
+                          ),
                         );
                       });
                     }).onError((error, stackTrace) {
                       AppDialogs.closeDialog();
-                      toast(
-                        error.toString().replaceAll("Exception:", ""),
-                        bgColor: Colors.red,
-                        textColor: Colors.white,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              error.toString().replaceAll("Exception:", "")),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                     });
                   },

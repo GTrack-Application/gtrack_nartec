@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gtrack_mobile_app/cubit/share/share_cubit.dart';
+import 'package:gtrack_nartec/cubit/share/share_cubit.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 String cleanCoordinate(String coordinate) {
@@ -86,11 +86,16 @@ class _TraceabilityScreenState extends State<TraceabilityScreen> {
           // Fetching polyline points from Polyline API
           PolylineResult result =
               await polylinePoints.getRouteBetweenCoordinates(
-            "AIzaSyCsEUxB9psxb-LxhYx8hJtF248gj4bx49A", // Replace with your API Key
-            PointLatLng(fromLatitude, fromLongitude),
-            PointLatLng(toLatitude, toLongitude),
-            travelMode: TravelMode.driving,
-          );
+                  googleApiKey: "AIzaSyCsEUxB9psxb-LxhYx8hJtF248gj4bx49A",
+                  request: PolylineRequest(
+                    origin: PointLatLng(fromLatitude, fromLongitude),
+                    destination: PointLatLng(toLatitude, toLongitude),
+                    mode: TravelMode.driving,
+                    optimizeWaypoints: true,
+                    avoidFerries: true,
+                    avoidHighways: false,
+                    avoidTolls: true,
+                  ));
 
           if (result.points.isNotEmpty) {
             List<LatLng> polylineCoordinates = [];

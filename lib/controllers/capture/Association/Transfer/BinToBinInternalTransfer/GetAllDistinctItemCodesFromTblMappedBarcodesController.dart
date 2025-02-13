@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print, depend_on_referenced_packages
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -18,7 +18,6 @@ class GetAllDistinctItemCodesFromTblMappedBarcodesController {
 
     final headers = <String, String>{
       "Authorization": tokenNew!,
-      "Host": AppUrls.host,
       "Accept": "application/json",
     };
 

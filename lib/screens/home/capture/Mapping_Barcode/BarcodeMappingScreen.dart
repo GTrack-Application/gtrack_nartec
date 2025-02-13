@@ -1,22 +1,22 @@
-// ignore_for_file: unused_element, avoid_print, sized_box_for_whitespace, use_key_in_widget_constructors, depend_on_referenced_packages, deprecated_member_use
+// ignore_for_file: unused_element, avoid_print, sized_box_for_whitespace, use_key_in_widget_constructors, depend_on_referenced_packages, deprecated_member_use, use_build_context_synchronously
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetTblStockMasterByItemIdController.dart';
-import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/UpdateStockMasterDataController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Mapping_Barcode/GetItemInfoByItemSerialNoController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Mapping_Barcode/getAllTblMappedBarcodesController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Mapping_Barcode/insertIntoMappedBarcodeOrUpdateBySerialNoController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
-import 'package:gtrack_mobile_app/models/capture/mapping_barcode/getInventTableWMSDataByItemIdOrItemNameModel.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/Receiving/supplier_receipt/GetTblStockMasterByItemIdController.dart';
+import 'package:gtrack_nartec/controllers/Receiving/supplier_receipt/UpdateStockMasterDataController.dart';
+import 'package:gtrack_nartec/controllers/capture/Mapping_Barcode/GetItemInfoByItemSerialNoController.dart';
+import 'package:gtrack_nartec/controllers/capture/Mapping_Barcode/getAllTblMappedBarcodesController.dart';
+import 'package:gtrack_nartec/controllers/capture/Mapping_Barcode/insertIntoMappedBarcodeOrUpdateBySerialNoController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
+import 'package:gtrack_nartec/models/capture/mapping_barcode/getInventTableWMSDataByItemIdOrItemNameModel.dart';
 import 'package:intl/intl.dart';
 
 Map<String, dynamic> selectedRow = {};
@@ -430,7 +430,7 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
                   width: MediaQuery.of(context).size.width * 0.9,
                   margin: const EdgeInsets.only(left: 20),
                   child: DropdownSearch<String>(
-                    items: dropDownList,
+                    popupProps: const PopupProps.menu(),
                     onChanged: (value) {
                       setState(() {
                         dropDownValue = value!;

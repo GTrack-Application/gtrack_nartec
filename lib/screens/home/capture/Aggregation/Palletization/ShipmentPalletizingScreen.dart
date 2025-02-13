@@ -1,20 +1,19 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_print, file_names
 
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/GetShipmentPalletizingController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/ValidateShipmentIdFromShipmentReveivedClController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetTransferDistributionByTransferIdModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization/PalletProceedScreen.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/GetShipmentPalletizingController.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/ValidateShipmentIdFromShipmentReveivedClController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/palletization/GetTransferDistributionByTransferIdModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/Palletization/PalletProceedScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class ShipmentPalletizingScreen extends StatefulWidget {
   const ShipmentPalletizingScreen({super.key});
@@ -357,10 +356,11 @@ class _ShipmentPalletizingScreenState extends State<ShipmentPalletizingScreen> {
         isShipmentId = false;
       });
       AppDialogs.closeDialog();
-      toast(
-        error.toString().replaceAll("Exception:", ""),
-        bgColor: Colors.red,
-        textColor: Colors.white,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceAll("Exception:", "")),
+          backgroundColor: Colors.red,
+        ),
       );
     });
   }
@@ -377,10 +377,11 @@ class _ShipmentPalletizingScreenState extends State<ShipmentPalletizingScreen> {
         });
         AppDialogs.closeDialog();
 
-        toast(
-          "Shipment ID is valid.",
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Shipment ID is valid."),
+            backgroundColor: Colors.green,
+          ),
         );
       } else {
         setState(() {
@@ -388,10 +389,12 @@ class _ShipmentPalletizingScreenState extends State<ShipmentPalletizingScreen> {
         });
         AppDialogs.closeDialog();
 
-        toast(
-          "Shipment ID not found in the tbl_Shipment_Received_CL.",
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text("Shipment ID not found in the tbl_Shipment_Received_CL."),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } catch (e) {

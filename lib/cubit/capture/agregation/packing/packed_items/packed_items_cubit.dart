@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Assembling_Bundling/assembling_controller.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packed_items/packed_items_state.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/packing/PackedItemsModel.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Assembling_Bundling/assembling_controller.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_state.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 
 class PackedItemsCubit extends Cubit<PackedItemsState> {
   PackedItemsCubit() : super(PackedItemsInitial());
@@ -11,10 +10,6 @@ class PackedItemsCubit extends Cubit<PackedItemsState> {
     emit(PackedItemsLoading());
 
     try {
-      var network = await isNetworkAvailable();
-      if (!network) {
-        emit(PackedItemsError(message: "No Internet Connection"));
-      }
       List<PackedItemsModel> data =
           await AssemblingController.getPackedItems(gtin);
       emit(PackedItemsLoaded(data: data));

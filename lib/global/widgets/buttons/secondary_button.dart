@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SecondaryButton extends StatefulWidget {
@@ -48,7 +48,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
         ),
         child: _isLoading == true
             ? Center(
-                child: LoadingAnimationWidget.prograssiveDots(
+                child: LoadingAnimationWidget.hexagonDots(
                   color: Colors.white,
                   size: 20,
                 ),

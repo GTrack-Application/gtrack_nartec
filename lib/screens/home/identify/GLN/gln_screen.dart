@@ -2,20 +2,18 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/GLN/add_gln_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_information_screen.dart';
+import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
+import 'package:gtrack_nartec/blocs/Identify/gln/gln_states.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_nartec/screens/home/identify/GLN/add_gln_screen.dart';
+import 'package:gtrack_nartec/screens/home/identify/GLN/gln_information_screen.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 import 'package:shimmer/shimmer.dart';
 
@@ -75,7 +73,12 @@ class _GLNScreenState extends State<GLNScreen> {
         listener: (context, state) {
           if (state is GlnLoadedState) {
             if (state.data.isEmpty) {
-              toast('No data found');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('No data found'),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
             table = state.data;
             filteredTable = state.data;
@@ -236,7 +239,7 @@ class _GLNScreenState extends State<GLNScreen> {
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
                               return Container(
-                                width: context.width() * 0.9,
+                                width: MediaQuery.of(context).size.width * 0.9,
                                 alignment: Alignment.center,
                                 margin: const EdgeInsets.symmetric(
                                   horizontal: 20,
@@ -279,7 +282,7 @@ class _GLNScreenState extends State<GLNScreen> {
                                             fontSize: 15,
                                           ),
                                         ),
-                                        10.width,
+                                        SizedBox(width: 10),
                                         const Icon(
                                           Icons.delete,
                                           color: Colors.white,
@@ -306,7 +309,7 @@ class _GLNScreenState extends State<GLNScreen> {
                                             fontSize: 15,
                                           ),
                                         ),
-                                        10.width,
+                                        SizedBox(width: 10),
                                         const Icon(
                                           Icons.delete,
                                           color: Colors.white,

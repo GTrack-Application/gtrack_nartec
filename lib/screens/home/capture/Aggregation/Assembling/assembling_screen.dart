@@ -3,21 +3,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/assembling_state.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_state.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Assembling/created_assembly_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/gtin_details_screen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
+import 'package:gtrack_nartec/blocs/Identify/gln/gln_states.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/assembling_bundling/assembling_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/assembling_bundling/assembling_state.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_state.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/Assembling/created_assembly_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/Bundling/gtin_details_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AssemblingScreen extends StatefulWidget {
@@ -64,7 +63,12 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
           bloc: assembleCubit,
           listener: (context, state) {
             if (state is AssemblingError) {
-              toast(state.message);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
             if (state is AssemblingLoaded) {
               FocusNode().unfocus();
@@ -82,7 +86,12 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                     bloc: glnCubit,
                     listener: (context, state) {
                       if (state is GlnErrorState) {
-                        toast(state.message);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.message),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                       }
                       if (state is GlnLoadedState) {
                         table = state.data;
@@ -133,7 +142,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                       );
                     },
                   ),
-                  10.height,
+                  SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -159,7 +168,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                           ),
                         ),
                       ),
-                      5.width,
+                      SizedBox(width: 5),
                       Expanded(
                         flex: 1,
                         child: GestureDetector(
@@ -184,7 +193,7 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                   Container(
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    width: context.width() * 1,
+                    width: MediaQuery.of(context).size.width * 1,
                     height: 40,
                     decoration: const BoxDecoration(color: AppColors.primary),
                     child: const Text(
@@ -213,7 +222,8 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                                   baseColor: Colors.grey[300]!,
                                   highlightColor: Colors.grey[100]!,
                                   child: Container(
-                                    width: context.width() * 0.9,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
                                     alignment: Alignment.center,
                                     margin: const EdgeInsets.symmetric(
                                       horizontal: 20,
@@ -261,7 +271,8 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return Container(
-                                  width: context.width() * 0.9,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   alignment: Alignment.center,
                                   margin: const EdgeInsets.symmetric(
                                     horizontal: 20,
@@ -336,7 +347,12 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                               bloc: createBundleCubit,
                               listener: (context, state) {
                                 if (state is CreateBundleError) {
-                                  toast(state.message);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(state.message),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
                                 }
                                 if (state is CreateBundleLoaded) {
                                   RawMaterialsToWIPController
@@ -356,7 +372,13 @@ class _AssemblingScreenState extends State<AssemblingScreen> {
                                     searchController.clear();
                                     products = [];
                                   });
-                                  toast("Assemble Created Successfully");
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text("Assemble Created Successfully"),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
 
                                   AppNavigator.goToPage(
                                     context: context,

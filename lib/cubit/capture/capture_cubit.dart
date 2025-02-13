@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/constants/app_icons.dart';
-import 'package:gtrack_mobile_app/controllers/capture/capture_controller.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
-import 'package:gtrack_mobile_app/models/capture/serialization/serialization_model.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/aggregation_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/association_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/MappingRFID/mapping_rfid_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Mapping_Barcode/BarcodeMappingScreen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Transformation/transformation_screen.dart';
+import 'package:gtrack_nartec/constants/app_icons.dart';
+import 'package:gtrack_nartec/controllers/capture/capture_controller.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/association_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Mapping_Barcode/BarcodeMappingScreen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Serialization/serialization_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Transformation/transformation_screen.dart';
 import 'package:intl/intl.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 part 'capture_states.dart';
 
@@ -59,8 +57,10 @@ class CaptureCubit extends Cubit<CaptureState> {
         {
           "text": "MAPPING RFID",
           "icon": AppIcons.mappingRFID,
-          "onTap": () => AppNavigator.goToPage(
-              context: context, screen: const MappingRFIDScreen()),
+          "onTap": () {
+            // AppNavigator.goToPage(
+            //     context: context, screen: const MappingRFIDScreen());
+          },
         },
       ];
 
@@ -104,17 +104,12 @@ class CaptureCubit extends Cubit<CaptureState> {
   // * Serialization ***
   getSerializationData(String barcode) async {
     try {
-      var network = await isNetworkAvailable();
-      if (network) {
-        emit(CaptureSerializationLoading());
-        final data = await CaptureController().getSerializationData(barcode);
-        if (data.isEmpty) {
-          emit(CaptureSerializationEmpty());
-        } else {
-          emit(CaptureSerializationSuccess(data));
-        }
+      emit(CaptureSerializationLoading());
+      final data = await CaptureController().getSerializationData(barcode);
+      if (data.isEmpty) {
+        emit(CaptureSerializationEmpty());
       } else {
-        emit(CaptureSerializationError('No Internet Connection'));
+        emit(CaptureSerializationSuccess(data));
       }
     } catch (error) {
       emit(CaptureSerializationError(error.toString()));
@@ -123,20 +118,15 @@ class CaptureCubit extends Cubit<CaptureState> {
 
   createNewSerial(String gtin) async {
     try {
-      var network = await isNetworkAvailable();
-      if (network) {
-        emit(CaptureCreateSerializationLoading());
-        final data = await CaptureController().createNewSerial(
-          gtin: gtin,
-          quantity: quantity!,
-          batchNumber: batchNumber.toString(),
-          expiryDate: expiryDate.text,
-          manufacturingDate: manufacturingDate.text,
-        );
-        emit(CaptureCreateSerializationSuccess(data));
-      } else {
-        emit(CaptureCreateSerializationError('No Internet Connection'));
-      }
+      emit(CaptureCreateSerializationLoading());
+      final data = await CaptureController().createNewSerial(
+        gtin: gtin,
+        quantity: quantity!,
+        batchNumber: batchNumber.toString(),
+        expiryDate: expiryDate.text,
+        manufacturingDate: manufacturingDate.text,
+      );
+      emit(CaptureCreateSerializationSuccess(data));
     } catch (error) {
       emit(CaptureCreateSerializationError(error.toString()));
     }
@@ -145,18 +135,13 @@ class CaptureCubit extends Cubit<CaptureState> {
   // * GTIN ***
   getGtinProducts() async {
     try {
-      var network = await isNetworkAvailable();
-      if (network) {
-        emit(CaptureGetGtinProductsLoading());
-        final data =
-            await CaptureController().getProducts(gtin: gtin.text.trim());
-        if (data.isEmpty) {
-          emit(CaptureGetGtinProductsEmpty());
-        } else {
-          emit(CaptureGetGtinProductsSuccess(data));
-        }
+      emit(CaptureGetGtinProductsLoading());
+      final data =
+          await CaptureController().getProducts(gtin: gtin.text.trim());
+      if (data.isEmpty) {
+        emit(CaptureGetGtinProductsEmpty());
       } else {
-        emit(CaptureGetGtinProductsError('No Internet Connection'));
+        emit(CaptureGetGtinProductsSuccess(data));
       }
     } catch (error) {
       emit(CaptureGetGtinProductsError(error.toString()));

@@ -8,15 +8,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_simple_treeview/flutter_simple_treeview.dart';
-import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
-import 'package:gtrack_mobile_app/blocs/share/Similar_Records/record_states.dart';
-import 'package:gtrack_mobile_app/blocs/share/Similar_Records/records_cubit.dart';
-import 'package:gtrack_mobile_app/blocs/share/codification/codification_cubit.dart';
-import 'package:gtrack_mobile_app/blocs/share/codification/codification_states.dart';
-import 'package:gtrack_mobile_app/blocs/share/product_information/gtin_information_bloc.dart';
-import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/gtin_information_model.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/blocs/global/global_states_events.dart';
+import 'package:gtrack_nartec/blocs/share/Similar_Records/record_states.dart';
+import 'package:gtrack_nartec/blocs/share/Similar_Records/records_cubit.dart';
+import 'package:gtrack_nartec/blocs/share/codification/codification_cubit.dart';
+import 'package:gtrack_nartec/blocs/share/codification/codification_states.dart';
+import 'package:gtrack_nartec/blocs/share/product_information/gtin_information_bloc.dart';
+import 'package:gtrack_nartec/global/widgets/loading/loading_widget.dart';
+import 'package:gtrack_nartec/models/share/product_information/gtin_information_model.dart';
 
 GtinInformationModel? gtinInformationModel;
 GtinInformationDataModel? gtinInformationDataModel;
@@ -33,6 +32,16 @@ class _CodificationScreenState extends State<CodificationScreen> {
   GtinInformationBloc gtinInformationBloc = GtinInformationBloc();
   CodificationCubit codificationCubit = CodificationCubit();
   RecordCubit recordsCubit = RecordCubit();
+
+  void toast(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -123,7 +132,7 @@ class _CodificationScreenState extends State<CodificationScreen> {
                       );
                     },
                   ),
-                  20.height,
+                  SizedBox(height: 20),
                   isTapedContainer == 0 || isTapedContainer == -1
                       ? BlocConsumer<CodificationCubit, CodificationState>(
                           bloc: codificationCubit,
@@ -337,7 +346,7 @@ class _CodificationScreenState extends State<CodificationScreen> {
                                                           ))
                                                       .toList(),
                                                 ),
-                                                16.height,
+                                                const SizedBox(height: 16),
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.all(8.0),

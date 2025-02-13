@@ -1,19 +1,18 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, non_constant_identifier_names, prefer_final_fields, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/GetQtyReceivedController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getAxaptaTableData.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials/wip_fg/BinToBinAXAPTA/BinToBinAxapta2Screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/goods_issue/raw_materials/wip_fg/BinToBinAXAPTA/bin_to_bin_details_screen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/GetQtyReceivedController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getAxaptaTableData.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/raw_materials/wip_fg/BinToBinAXAPTA/BinToBinAxapta2Screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/raw_materials/wip_fg/BinToBinAXAPTA/bin_to_bin_details_screen.dart';
 
 class WIPtoFGBinToBinAxaptaScreen extends StatefulWidget {
   const WIPtoFGBinToBinAxaptaScreen({super.key});
@@ -129,7 +128,7 @@ class _WIPtoFGBinToBinAxaptaScreenState
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
                     return Container(
-                      width: context.width() * 0.9,
+                      width: MediaQuery.of(context).size.width * 0.9,
                       alignment: Alignment.center,
                       margin: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -457,7 +456,12 @@ class _WIPtoFGBinToBinAxaptaScreenState
       AppDialogs.closeDialog();
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      toast(error.toString().replaceAll("Exception:", ""));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceAll("Exception:", "")),
+          backgroundColor: Colors.red,
+        ),
+      );
     });
   }
 }

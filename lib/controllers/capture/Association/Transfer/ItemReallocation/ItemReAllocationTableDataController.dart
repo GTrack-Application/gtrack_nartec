@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/Transfer/ItemReAllocation/GetItemInfoByPalletCodeModel.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/Transfer/ItemReAllocation/GetItemInfoByPalletCodeModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -19,7 +19,6 @@ class ItemReAllocationTableDataController {
 
     final headers = <String, String>{
       "Authorization": tokenNew!,
-      "Host": AppUrls.host,
       "Accept": "application/json",
       "palletcode": palletId,
     };

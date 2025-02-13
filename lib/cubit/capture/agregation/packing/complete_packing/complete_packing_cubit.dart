@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/packing/gtin_product_details_controller.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/complete_packing/complete_packing_state.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/packing/gtin_product_details_controller.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/packing/complete_packing/complete_packing_state.dart';
 
 class CompletePackingCubit extends Cubit<CompletePackingState> {
   CompletePackingCubit() : super(CompletePackingInitial());
@@ -21,10 +20,6 @@ class CompletePackingCubit extends Cubit<CompletePackingState> {
     emit(CompletePackingLoading());
 
     try {
-      var network = await isNetworkAvailable();
-      if (!network) {
-        emit(CompletePackingError(message: "No Internet Connection"));
-      }
       await GtinProductDetailsController.completePacking(
         gtin,
         batchNo,

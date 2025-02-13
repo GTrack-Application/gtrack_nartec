@@ -1,13 +1,12 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gtrack_mobile_app/controllers/share/product_information/events_screen_controller.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/events_screen_model.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/controllers/share/product_information/events_screen_controller.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/models/share/product_information/events_screen_model.dart';
 
 List<EventsScreenModel> table = [];
 
@@ -44,15 +43,16 @@ class _EventsScreenState extends State<EventsScreen> {
     origin = PointLatLng(latitude[i], longitude[i]);
     destination = PointLatLng(lat, long);
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyCsEUxB9psxb-LxhYx8hJtF248gj4bx49A", // Replace with your Google Maps API key
-      origin!, // Starting coordinates
-      destination!, // Ending coordinates
-      avoidFerries: true,
-      avoidHighways: false,
-      avoidTolls: true,
-      travelMode: TravelMode.driving,
-      optimizeWaypoints: true,
-    );
+        googleApiKey: "AIzaSyCsEUxB9psxb-LxhYx8hJtF248gj4bx49A",
+        request: PolylineRequest(
+          origin: origin!,
+          destination: destination!,
+          mode: TravelMode.driving,
+          optimizeWaypoints: true,
+          avoidFerries: true,
+          avoidHighways: false,
+          avoidTolls: true,
+        ));
 
     if (result.status == 'OK') {
       for (var point in result.points) {
@@ -122,7 +122,12 @@ class _EventsScreenState extends State<EventsScreen> {
             table = [];
           });
           AppDialogs.closeDialog();
-          toast(error.toString().replaceAll("Exception:", ""));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error.toString().replaceAll("Exception:", "")),
+              backgroundColor: Colors.red,
+            ),
+          );
         });
       },
     );
@@ -163,92 +168,93 @@ class _EventsScreenState extends State<EventsScreen> {
                   ),
                   child: Text(isTableVisible ? "Hide Grid" : "Show Grid"),
                 ),
-                !isTableVisible
-                    ? const SizedBox.shrink()
-                    : Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.green),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: PaginatedDataTable(
-                          columns: const [
-                            DataColumn(
-                                label: Text(
-                              "Event Id",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
-                            )),
-                            DataColumn(
-                                label: Text(
-                              "Member Id",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
-                            )),
-                            DataColumn(
-                                label: Text(
-                              "Ref Description",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
-                            )),
-                            DataColumn(
-                                label: Text(
-                              "Date Created",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
-                            )),
-                            DataColumn(
-                                label: Text(
-                              "Date Last Updated",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
-                            )),
-                            DataColumn(
-                                label: Text(
-                              "GLN Id From",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
-                            )),
-                            DataColumn(
-                                label: Text(
-                              "GLN Id To",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
-                            )),
-                          ],
-                          source: EventsSource(),
-                          arrowHeadColor: AppColors.green,
-                          showCheckboxColumn: false,
-                          rowsPerPage: 3,
-                        ).visible(isTableVisible),
-                      ).visible(isTableVisible),
+                Visibility(
+                  visible: isTableVisible,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.green),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: PaginatedDataTable(
+                      columns: const [
+                        DataColumn(
+                            label: Text(
+                          "Event Id",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Member Id",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Ref Description",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Date Created",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Date Last Updated",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "GLN Id From",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "GLN Id To",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        )),
+                      ],
+                      source: EventsSource(),
+                      arrowHeadColor: AppColors.green,
+                      showCheckboxColumn: false,
+                      rowsPerPage: 3,
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: GoogleMap(
                     fortyFiveDegreeImageryEnabled: false,

@@ -2,9 +2,9 @@
 
 import 'dart:developer';
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -21,7 +21,7 @@ class GeneratePalletController {
 
     final headers = <String, String>{
       // "Authorization": tokenNew!,
-      "Host": AppUrls.host,
+
       "Accept": "application/json",
     };
 
@@ -63,7 +63,6 @@ class GeneratePalletController {
     log(uri.toString());
 
     final headers = <String, String>{
-      "Host": AppUrls.host,
       "Accept": "application/json",
       "Content-Type": "application/json",
     };

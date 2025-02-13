@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
-import 'package:gtrack_mobile_app/models/capture/serialization/serialization_model.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:http/http.dart' as http;
 
 class CaptureController {
@@ -72,7 +72,6 @@ class CaptureController {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
-        'Host': AppUrls.host,
         'Authorization': 'Bearer $token',
       },
     );

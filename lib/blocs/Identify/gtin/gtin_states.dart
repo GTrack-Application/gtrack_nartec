@@ -1,4 +1,4 @@
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 
 abstract class GtinState {}
 

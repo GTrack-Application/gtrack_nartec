@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_controller/gln_controller.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/GLN/gln_cubit/gln_state.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/screens/home/identify/GLN/gln_controller/gln_controller.dart';
+import 'package:gtrack_nartec/screens/home/identify/GLN/gln_cubit/gln_state.dart';
 
 class GLNCubit extends Cubit<GLNState> {
   GLNCubit() : super(GLNInitial());
@@ -24,10 +23,6 @@ class GLNCubit extends Cubit<GLNState> {
   ) async {
     emit(GLNLoading());
     try {
-      var network = await isNetworkAvailable();
-      if (!network) {
-        emit(GLNError(message: "No Internet Connection"));
-      }
       await GlnController.postGln(
         locationNameEn,
         addressEn,

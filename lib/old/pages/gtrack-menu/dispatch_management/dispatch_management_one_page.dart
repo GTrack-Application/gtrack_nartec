@@ -1,17 +1,19 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_toast.dart';
-import 'package:gtrack_mobile_app/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_mobile_app/global/widgets/buttons/search_button.dart';
-import 'package:gtrack_mobile_app/global/widgets/buttons/secondary_button.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/table_header_text.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/title_text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_field_widget.dart';
-import 'package:gtrack_mobile_app/old/domain/services/apis/dispatch_management/dispatch_management_services.dart';
-import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/gln_model.dart';
-import 'package:gtrack_mobile_app/old/domain/services/models/dispatch_management/job_order_details_model.dart';
-import 'package:gtrack_mobile_app/old/pages/gtrack-menu/dispatch_management/dispatch_management_two_page.dart';
-import 'package:gtrack_mobile_app/old/providers/dispatch_management/gln_provider.dart';
+import 'package:gtrack_nartec/global/common/utils/app_toast.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/search_button.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/secondary_button.dart';
+import 'package:gtrack_nartec/global/widgets/text/table_header_text.dart';
+import 'package:gtrack_nartec/global/widgets/text/title_text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
+import 'package:gtrack_nartec/old/domain/services/apis/dispatch_management/dispatch_management_services.dart';
+import 'package:gtrack_nartec/old/domain/services/models/dispatch_management/gln_model.dart';
+import 'package:gtrack_nartec/old/domain/services/models/dispatch_management/job_order_details_model.dart';
+import 'package:gtrack_nartec/old/pages/gtrack-menu/dispatch_management/dispatch_management_two_page.dart';
+import 'package:gtrack_nartec/old/providers/dispatch_management/gln_provider.dart';
 import 'package:provider/provider.dart';
 
 class DispatchManagementOnePage extends StatefulWidget {
@@ -58,10 +60,10 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
           glnidController.text = jobOrderDetails[0].gLNIDMember.toString();
           trxDateController.text = "";
         });
-        AppToast.success('Job Order Details Loaded');
+        AppToast.success(context, 'Job Order Details Loaded');
         isClicked = false;
       }).catchError((e) {
-        AppToast.danger(e.toString());
+        AppToast.danger(context, e.toString());
         isClicked = false;
       });
     } else if (isClicked) {
@@ -69,7 +71,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
         isClicked = false;
       });
     } else {
-      AppToast.danger('Enter Job Order Request #');
+      AppToast.danger(context, 'Enter Job Order Request #');
       isClicked = false;
     }
   }
@@ -88,7 +90,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
         Get.toNamed(DispatchManagementTwoPage.pageName);
         isClicked = false;
       }).catchError((e) {
-        AppToast.danger(e.toString());
+        AppToast.danger(context, e.toString());
         // PrettyToast.error(context, e.toString());
         isClicked = false;
       });
@@ -97,7 +99,7 @@ class _DispatchManagementOnePageState extends State<DispatchManagementOnePage> {
         isClicked = false;
       });
     } else {
-      AppToast.danger("Get Job Order Details first");
+      AppToast.danger(context, 'Get Job Order Details first');
       // PrettyToast.error(context, 'Get Job Order Details first');
       isClicked = false;
     }

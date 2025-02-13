@@ -1,24 +1,25 @@
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class AppToast {
-  static success(message) {
-    _appToast(message, AppColors.success);
+  static success(BuildContext context, message) {
+    _appToast(context, message, AppColors.success);
   }
 
-  static danger(message) {
-    _appToast(message, AppColors.danger);
+  static danger(BuildContext context, message) {
+    _appToast(context, message, AppColors.danger);
   }
 
-  static normal(message) {
-    _appToast(message, AppColors.black);
+  static normal(BuildContext context, message) {
+    _appToast(context, message, AppColors.black);
   }
 }
 
-void _appToast(message, color) {
-  toast(
-    message.toString().replaceAll("Exception:", ""),
-    bgColor: color,
-    length: Toast.LENGTH_LONG,
+void _appToast(BuildContext context, message, color) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message.toString().replaceAll("Exception:", "")),
+      backgroundColor: color,
+    ),
   );
 }

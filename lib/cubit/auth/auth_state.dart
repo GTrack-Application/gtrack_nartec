@@ -1,4 +1,4 @@
-import 'package:gtrack_mobile_app/models/auth/LoginResponseModel.dart';
+import 'package:gtrack_nartec/models/auth/LoginResponseModel.dart';
 
 abstract class LoginState {}
 

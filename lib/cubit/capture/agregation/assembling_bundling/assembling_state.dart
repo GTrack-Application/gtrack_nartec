@@ -1,4 +1,4 @@
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/assembling_bundling/products_model.dart';
 
 abstract class AssemblingState {}
 

@@ -1,21 +1,20 @@
 // ignore_for_file: use_key_in_widget_constructors, non_constant_identifier_names, sized_box_for_whitespace
 
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Sales_Order/GetPickingListController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Sales_Order/GetPickingListController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Shipping/Sales_Order/PickListAssigned/PickListAssignedScreen2.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/models/capture/Association/Mapping/Sales_Order/GetSalesPickingListByAssignToUserIdAndPurchaseOrderModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/Sales_Order/PickListAssigned/PickListAssignedScreen2.dart';
 
 // ignore: must_be_immutable
 class PickListAssignedScreen extends StatefulWidget {
@@ -59,10 +58,11 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
       });
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      toast(
-        error.toString().replaceAll("Exception:", ""),
-        bgColor: Colors.red,
-        textColor: Colors.white,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceAll("Exception:", "")),
+          backgroundColor: Colors.red,
+        ),
       );
     });
 
@@ -81,10 +81,11 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
           }).onError(
             (error, stackTrace) {
               AppDialogs.closeDialog();
-              toast(
-                error.toString().replaceAll("Exception:", ""),
-                bgColor: Colors.red,
-                textColor: Colors.white,
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(error.toString().replaceAll("Exception:", "")),
+                  backgroundColor: Colors.red,
+                ),
               );
             },
           );
@@ -158,13 +159,8 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
                             .contains(filter.toLowerCase());
                       },
                       enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList,
+                      popupProps: const PopupProps.menu(),
+                      // items: filterList,
                       onChanged: (value) {
                         setState(() {
                           dropDownValue = value!;
@@ -630,10 +626,11 @@ class _PickListAssignedScreenState extends State<PickListAssignedScreen> {
           isMarked = [];
         });
         AppDialogs.closeDialog();
-        toast(
-          error.toString().replaceAll("Exception:", ""),
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.toString().replaceAll("Exception:", "")),
+            backgroundColor: Colors.red,
+          ),
         );
       },
     );

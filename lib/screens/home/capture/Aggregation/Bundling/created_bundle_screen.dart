@@ -2,13 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/get_bundle_items/bundle_items_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/assembling_bundling/get_bundle_items/bundle_items_state.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/BundleItemsModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Bundling/sub_bundles_screen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/assembling_bundling/get_bundle_items/bundle_items_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/assembling_bundling/get_bundle_items/bundle_items_state.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/assembling_bundling/BundleItemsModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/Bundling/sub_bundles_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CreatedBundleScreen extends StatefulWidget {
@@ -48,7 +47,12 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
           bloc: bundleItemsCubit,
           listener: (context, state) {
             if (state is BundleItemsError) {
-              toast(state.message);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
             if (state is BundleItemsLoaded) {
               products.addAll(state.items);
@@ -63,7 +67,7 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    width: context.width() * 1,
+                    width: MediaQuery.of(context).size.width * 1,
                     height: 40,
                     decoration: const BoxDecoration(color: AppColors.primary),
                     child: Text(
@@ -92,7 +96,8 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
                                   baseColor: Colors.grey[300]!,
                                   highlightColor: Colors.grey[100]!,
                                   child: Container(
-                                    width: context.width() * 0.9,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
                                     alignment: Alignment.center,
                                     margin: const EdgeInsets.symmetric(
                                       horizontal: 20,
@@ -140,7 +145,8 @@ class _CreatedBundleScreenState extends State<CreatedBundleScreen> {
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return Container(
-                                  width: context.width() * 0.9,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   alignment: Alignment.center,
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 20, vertical: 10),

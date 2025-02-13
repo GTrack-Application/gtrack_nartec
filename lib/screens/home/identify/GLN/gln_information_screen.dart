@@ -3,11 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class GLNInformationScreen extends StatefulWidget {
@@ -105,7 +104,7 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
         children: <Widget>[
           Container(
             width: double.infinity,
-            height: context.height() * 0.15,
+            height: MediaQuery.of(context).size.height * 0.15,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -132,7 +131,7 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
                 IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
-                    finish(context);
+                    Navigator.pop(context);
                   },
                 ),
                 const Text(
@@ -147,11 +146,11 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
               ],
             ),
           ),
-          10.height,
+          SizedBox(height: 10),
           Container(
             alignment: Alignment.centerLeft,
             width: double.infinity,
-            height: context.height() * 0.1,
+            height: MediaQuery.of(context).size.height * 0.1,
             decoration: const BoxDecoration(
               color: Color.fromRGBO(151, 235, 159, 1),
             ),
@@ -170,10 +169,10 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
               ),
             ),
           ),
-          10.height,
+          SizedBox(height: 10),
           Container(
-            height: context.height() * 0.2,
-            width: context.width() * 1,
+            height: MediaQuery.of(context).size.height * 0.2,
+            width: MediaQuery.of(context).size.width * 1,
             decoration: const BoxDecoration(color: Colors.white),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -259,7 +258,7 @@ class _GLNInformationScreenState extends State<GLNInformationScreen> {
             keyy: 'Physical Location',
             value: widget.employees.physicalLocation ?? "null",
           ),
-          10.height,
+          SizedBox(height: 10),
           Stack(
             children: [
               Container(
@@ -396,7 +395,7 @@ class KeyValueInfoWidget extends StatelessWidget {
               ),
             ),
           ),
-          10.width,
+          SizedBox(width: 10),
           Expanded(
             flex: 2,
             child: Container(

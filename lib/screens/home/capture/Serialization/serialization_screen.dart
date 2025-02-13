@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_details_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Serialization/serialization_gtin_screen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/screens/home/capture/Serialization/serialization_details_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Serialization/serialization_gtin_screen.dart';
 
 class SerializationScreen extends StatefulWidget {
   const SerializationScreen({super.key});
@@ -36,7 +35,7 @@ class _SerializationScreenState extends State<SerializationScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSearchBar(context),
-            10.height,
+            SizedBox(height: 10),
             _buildSerializationList(context),
           ],
         ),
@@ -88,11 +87,21 @@ class _SerializationScreenState extends State<SerializationScreen> {
           CaptureCubit.get(context).gtinProducts.addAll(state.data);
         }
         if (state is CaptureGetGtinProductsError) {
-          toast(state.message);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
         if (state is CaptureGetGtinProductsEmpty) {
-          toast(
-              "No data found with ${CaptureCubit.get(context).gtin.text} GTIN");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  "No data found with ${CaptureCubit.get(context).gtin.text} GTIN"),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       }, builder: (context, state) {
         if (state is CaptureGetGtinProductsLoading) {

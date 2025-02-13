@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
 
 class DirectReceiptDetailsScreen extends StatefulWidget {
   const DirectReceiptDetailsScreen({super.key, required this.employees});
@@ -25,7 +24,7 @@ class _DirectReceiptDetailsScreenState
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: context.height() * 0.15,
+              height: MediaQuery.of(context).size.height * 0.15,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -51,7 +50,7 @@ class _DirectReceiptDetailsScreenState
                   IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
-                      finish(context);
+                      Navigator.pop(context);
                     },
                   ),
                   const Text(
@@ -66,10 +65,10 @@ class _DirectReceiptDetailsScreenState
                 ],
               ),
             ),
-            10.height,
+            SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 10),
-              width: context.width() * 0.98,
+              width: MediaQuery.of(context).size.width * 0.98,
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(
@@ -114,7 +113,7 @@ class _DirectReceiptDetailsScreenState
                 ],
               ),
             ),
-            10.height,
+            SizedBox(height: 10),
           ],
         ),
       ),
@@ -154,7 +153,7 @@ class KeyValueInfoWidget extends StatelessWidget {
               ),
             ),
           ),
-          10.width,
+          SizedBox(width: 10),
           Expanded(
             flex: 2,
             child: Container(

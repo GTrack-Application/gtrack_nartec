@@ -3,11 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_cubit.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/item_details/asset_details_model.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_cubit.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_nartec/models/capture/Association/item_details/asset_details_model.dart';
 import 'package:http/http.dart' as http;
 
 part 'item_details_states.dart';
@@ -54,7 +54,6 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
 
       final headers = <String, String>{
         "Content-Type": "application/json",
-        "Host": AppUrls.host,
       };
 
       var body;

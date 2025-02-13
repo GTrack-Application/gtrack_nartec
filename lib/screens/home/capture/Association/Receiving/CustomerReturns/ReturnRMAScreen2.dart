@@ -1,24 +1,23 @@
-// ignore_for_file: file_names, avoid_print, prefer_typing_uninitialized_variables
+// ignore_for_file: file_names, avoid_print, prefer_typing_uninitialized_variables, use_build_context_synchronously
 
 import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/ReceivingController/CustomerReturns/GetWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesIdController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/ReceivingController/CustomerReturns/ReturnDZones.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/ReceivingController/CustomerReturns/generateBarcodeForRmaController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/ReceivingController/CustomerReturns/insertIntoWmsReturnSalesOrderClController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/ReceivingController/CustomerReturns/insertManyIntoMappedBarcodeController2.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/GetWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesIdController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/ReturnDZones.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/generateBarcodeForRmaController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/insertIntoWmsReturnSalesOrderClController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/insertManyIntoMappedBarcodeController2.dart';
 
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getmapBarcodeDataByItemCodeController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/updateWmsJournalMovementClQtyScannedModel.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getmapBarcodeDataByItemCodeController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
+import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
+import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/updateWmsJournalMovementClQtyScannedModel.dart';
 
 // ignore: must_be_immutable
 class ReturnRMAScreen2 extends StatefulWidget {
@@ -146,10 +145,11 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
           });
         } catch (e) {
           Navigator.pop(context);
-          toast(
-            e.toString().replaceAll("Exception:", ""),
-            bgColor: Colors.red,
-            textColor: Colors.white,
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.toString().replaceAll("Exception:", "")),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       },
@@ -345,13 +345,14 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
                             .contains(filter.toLowerCase());
                       },
                       enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList,
+                      popupProps: const PopupProps.menu(),
+                      // dropdownButtonProps: const DropdownButtonProps(
+                      //   icon: Icon(
+                      //     Icons.arrow_drop_down,
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
+                      // items: filterList,
                       onChanged: (value) {
                         setState(() {
                           dropDownValue = value!;
@@ -768,13 +769,14 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
                             .contains(filter.toLowerCase());
                       },
                       enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: fltrList,
+                      popupProps: const PopupProps.menu(),
+                      // dropdownButtonProps: const DropdownButtonProps(
+                      //   icon: Icon(
+                      //     Icons.arrow_drop_down,
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
+                      // items: fltrList,
                       onChanged: (value) {
                         setState(() {
                           dDownValue = value!;
@@ -868,19 +870,22 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
                   color: AppColors.pink,
                   onPressed: () {
                     if (dDownValue == null || dDownValue == "") {
-                      toast(
-                        "Please Select Bin Location.",
-                        bgColor: Colors.red,
-                        textColor: Colors.white,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Please Select Bin Location."),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                       return;
                     }
 
                     if (tableData.isEmpty) {
-                      toast(
-                        "Please select at least one item from table.",
-                        bgColor: Colors.red,
-                        textColor: Colors.white,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              "Please select at least one item from table."),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                       return;
                     }
@@ -913,19 +918,24 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
                       }).onError(
                         (error, stackTrace) {
                           Navigator.pop(context);
-                          toast(
-                            error.toString().replaceAll("Exception:", ""),
-                            bgColor: Colors.red,
-                            textColor: Colors.white,
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(error
+                                  .toString()
+                                  .replaceAll("Exception:", "")),
+                              backgroundColor: Colors.red,
+                            ),
                           );
                         },
                       );
                     }).onError((error, stackTrace) {
                       Navigator.of(context).pop();
-                      toast(
-                        error.toString().replaceAll("Exception:", ""),
-                        bgColor: Colors.red,
-                        textColor: Colors.white,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              error.toString().replaceAll("Exception:", "")),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                     });
                   },
@@ -943,17 +953,22 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
     var expectedQty = widget.eXPECTEDRETQTY * -1;
 
     if (recQty >= expectedQty) {
-      toast(
-        "Received Qty has been completed.\nYou can't insert more records.",
-        bgColor: Colors.red,
-        textColor: Colors.white,
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              "Received Qty has been completed.\nYou can't insert more records."),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
 
     if (dropDownValue == "") {
-      toast(
-        "Please select a location.",
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please select a location."),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -971,8 +986,11 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
             _serialNoController.text.trim())
         .toList()
         .isNotEmpty) {
-      toast(
-        "This Serial No. is already exists in the table.",
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("This Serial No. is already exists in the table."),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -1001,10 +1019,11 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
       },
     );
 
-    toast(
-      "Record inserted Successfully.",
-      bgColor: Colors.green,
-      textColor: Colors.white,
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Record inserted Successfully."),
+        backgroundColor: Colors.green,
+      ),
     );
   }
 
@@ -1014,23 +1033,31 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
     var expectedQty = widget.eXPECTEDRETQTY * -1;
 
     if (recQty >= expectedQty) {
-      toast(
-        "Received Qty has been completed.\nYou can't insert more records.",
-        bgColor: Colors.red,
-        textColor: Colors.white,
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              "Received Qty has been completed.\nYou can't insert more records."),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
 
     if (_modelNoController.text.trim().isEmpty) {
-      toast(
-        "Please Enter a Unique Model No.",
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Enter a Unique Model No."),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
     if (dropDownValue == "") {
-      toast(
-        "Please Select a Location.",
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please Select a Location."),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -1068,14 +1095,20 @@ class _ReturnRMAScreen2State extends State<ReturnRMAScreen2> {
       );
       AppDialogs.closeDialog();
 
-      toast(
-        "Record inserted Successfully.",
-        bgColor: Colors.green,
-        textColor: Colors.white,
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Record inserted Successfully."),
+          backgroundColor: Colors.green,
+        ),
       );
     }).onError((error, stackTrace) {
       AppDialogs.closeDialog();
-      toast(error.toString().replaceAll("Exception:", ""));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceAll("Exception:", "")),
+          backgroundColor: Colors.red,
+        ),
+      );
     });
   }
 }

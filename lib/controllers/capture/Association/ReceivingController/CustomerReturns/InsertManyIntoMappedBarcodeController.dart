@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, depend_on_referenced_packages, avoid_print
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -27,7 +27,6 @@ class InsertManyIntoMappedBarcodeController {
 
     final headers = <String, String>{
       "Authorization": tokenNew!,
-      "Host": AppUrls.host,
       "Content-Type": "application/json",
       "Accept": "application/json",
     };

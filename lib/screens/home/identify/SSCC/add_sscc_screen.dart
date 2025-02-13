@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/sscc/sscc_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/SSCC/sscc_cubit/add_sscc_cubit.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/SSCC/sscc_cubit/add_sscc_state.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/controller/add_gtin_controller.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/screens/home/identify/SSCC/sscc_cubit/add_sscc_cubit.dart';
+import 'package:gtrack_nartec/screens/home/identify/SSCC/sscc_cubit/add_sscc_state.dart';
+import 'package:gtrack_nartec/screens/home/identify/controller/add_gtin_controller.dart';
 
 class AddSsccFormScreen extends StatefulWidget {
   const AddSsccFormScreen({super.key});
@@ -564,21 +563,41 @@ class _AddSsccFormScreenState extends State<AddSsccFormScreen> {
                 listener: (context, state) {
                   if (state is AddSSCCAddedByPallet) {
                     BlocProvider.of<SsccCubit>(context).getSsccData();
-                    toast("SSCC Added by Pallet Successfully");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("SSCC Added by Pallet Successfully"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
                     Navigator.pop(context);
                   } else if (state is AddSSCCAddedByLabel) {
                     BlocProvider.of<SsccCubit>(context).getSsccData();
-                    toast("SSCC Added by Label Successfully");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("SSCC Added by Label Successfully"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
                     Navigator.pop(context);
                   } else if (state is AddSSCCError) {
-                    toast(state.error);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.error),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 },
                 builder: (context, state) {
                   return ElevatedButton(
                     onPressed: () {
                       if (selectedSsccType == null) {
-                        toast('Please select SSCC Type');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select SSCC Type'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                         return;
                       }
 
@@ -593,7 +612,12 @@ class _AddSsccFormScreenState extends State<AddSsccFormScreen> {
                             useByController.text.isEmpty ||
                             batchNoController.text.isEmpty ||
                             boxOfController.text.isEmpty) {
-                          toast('Please fill all fields');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please fill all fields'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                           return;
                         }
                       } else if (selectedSsccType == 'Label') {
@@ -609,7 +633,12 @@ class _AddSsccFormScreenState extends State<AddSsccFormScreen> {
                             shortQtyCodeController.text.isEmpty ||
                             cartonController.text.isEmpty ||
                             originValue == null) {
-                          toast('Please fill all fields');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please fill all fields'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                           return;
                         }
                       }

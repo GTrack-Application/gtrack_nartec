@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
 
 class AppLogo extends StatelessWidget {
   final double? height;

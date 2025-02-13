@@ -1,5 +1,5 @@
-import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/CountryListModel.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/UnitListModel.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/CountryListModel.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/UnitListModel.dart';
 
 abstract class UnitCountryState {}
 

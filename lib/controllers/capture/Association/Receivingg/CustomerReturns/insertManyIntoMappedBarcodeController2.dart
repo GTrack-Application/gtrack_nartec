@@ -1,8 +1,8 @@
 // ignore_for_file: camel_case_types, depend_on_referenced_packages, avoid_print
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -22,7 +22,6 @@ class insertManyIntoMappedBarcodeController2 {
     final headers = <String, String>{
       "Content-Type": "application/json",
       "Authorization": tokenNew!,
-      "Host": AppUrls.host,
       "Accept": "application/json",
     };
 

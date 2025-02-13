@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -31,7 +31,6 @@ class InsertAllDataController {
 
     final headers = <String, String>{
       "Authorization": tokenNew!,
-      "Host": AppUrls.host,
       "Accept": "application/json",
       "Content-Type": "application/json"
     };
@@ -98,7 +97,6 @@ class InsertAllDataController {
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
-      "Host": AppUrls.host,
       "Accept": "application/json",
       "Content-Type": "application/json"
     };

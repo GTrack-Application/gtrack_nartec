@@ -5,17 +5,17 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/GenerateAndUpdatePalletIdController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/GetAlltblBinLocationsController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/ValidateShipmentPalettizingSerialNo.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/palletization/GetAlltblBinLocationsModel.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/GenerateAndUpdatePalletIdController.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/GetAlltblBinLocationsController.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/ValidateShipmentPalettizingSerialNo.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/palletization/GetAlltblBinLocationsModel.dart';
 
 // ignore: must_be_immutable
 class PalletGenerateScreen extends StatefulWidget {
@@ -286,18 +286,18 @@ class _PalletGenerateScreenState extends State<PalletGenerateScreen> {
                     showSelectedItems: true,
                     disabledItemFn: (String s) => s.startsWith('I'),
                   ),
-                  items: dropdownList,
-                  dropdownDecoratorProps: const DropDownDecoratorProps(
-                    baseStyle: TextStyle(fontSize: 15),
-                    dropdownSearchDecoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: "Select Pallet Type",
-                      hintStyle: TextStyle(fontSize: 15),
-                    ),
-                  ),
+                  // items: dropdownList,
+                  // dropdownDecoratorProps: const DropDownDecoratorProps(
+                  //   baseStyle: TextStyle(fontSize: 15),
+                  //   dropdownSearchDecoration: InputDecoration(
+                  //     border: OutlineInputBorder(),
+                  //     contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                  //     filled: true,
+                  //     fillColor: Colors.white,
+                  //     hintText: "Select Pallet Type",
+                  //     hintStyle: TextStyle(fontSize: 15),
+                  //   ),
+                  // ),
                   enabled: true,
                   onChanged: (value) {
                     setState(() {
@@ -503,13 +503,14 @@ class _PalletGenerateScreenState extends State<PalletGenerateScreen> {
                             .contains(filter.toLowerCase());
                       },
                       enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList,
+                      popupProps: const PopupProps.menu(),
+                      // dropdownButtonProps: const DropdownButtonProps(
+                      //   icon: Icon(
+                      //     Icons.arrow_drop_down,
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
+                      // items: filterList,
                       onChanged: (value) {
                         setState(() {
                           dropDownValue = value!;

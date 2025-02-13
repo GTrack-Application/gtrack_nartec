@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/global/global_states_events.dart';
-import 'package:gtrack_mobile_app/blocs/share/product_information/gtin_information_bloc.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/widgets/loading/loading_widget.dart';
-import 'package:gtrack_mobile_app/models/share/product_information/gtin_information_model.dart';
+import 'package:gtrack_nartec/blocs/global/global_states_events.dart';
+import 'package:gtrack_nartec/blocs/share/product_information/gtin_information_bloc.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/widgets/loading/loading_widget.dart';
+import 'package:gtrack_nartec/models/share/product_information/gtin_information_model.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 GtinInformationModel? gtinInformationModel;
 GtinInformationDataModel? gtinInformationDataModel;
@@ -128,9 +127,9 @@ class _GtinInformationScreenState extends State<GtinInformationScreen> {
                             : gtinInformationDataModel!.data!.countryOfSaleName
                                 .toString(),
                       ),
-                      30.height,
+                      SizedBox(height: 30),
                       // const Divider(thickness: 2),
-                      10.height,
+                      SizedBox(height: 10),
                       // PaginatedDataTable(
                       //   columns: const [
                       //     DataColumn(label: Text("Allergen Info")),

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/BundleItemsModel.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/assembling_bundling/products_model.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/packing/PackedItemsModel.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/assembling_bundling/BundleItemsModel.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/assembling_bundling/products_model.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:http/http.dart' as http;
 
 class AssemblingController {
@@ -23,7 +23,7 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
+
       // "Authorization": "Bearer $token",
     };
 
@@ -57,7 +57,7 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
+
       // "Authorization": "Bearer $token",
     };
 
@@ -89,7 +89,7 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
+
       // "Authorization": "Bearer $token",
     };
 
@@ -128,7 +128,7 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
+
       // "Authorization": "Bearer $token",
     };
 
@@ -165,7 +165,7 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
+
       // "Authorization": "Bearer $token",
     };
 
@@ -198,7 +198,7 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
+
       // "Authorization": "Bearer $token",
     };
 
@@ -229,7 +229,6 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
     };
 
     var response = await http.get(uri, headers: headers);
@@ -259,7 +258,6 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
     };
 
     var response = await http.get(uri, headers: headers);
@@ -289,7 +287,6 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
     };
 
     var response = await http.get(uri, headers: headers);
@@ -319,7 +316,6 @@ class AssemblingController {
 
     final headers = <String, String>{
       "Content-Type": "application/json",
-      "Host": AppUrls.host,
     };
 
     var response = await http.get(uri, headers: headers);

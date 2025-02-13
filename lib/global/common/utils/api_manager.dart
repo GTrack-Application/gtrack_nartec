@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
 import 'package:http/http.dart';
 
 class ApiManager {
@@ -11,7 +10,6 @@ class ApiManager {
           {
             'Content-Type': 'application/json',
             "Accept": "application/json",
-            "Host": AppUrls.host,
           },
     );
   }

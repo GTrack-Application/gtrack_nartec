@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/cubit/capture/capture_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/GTIN/GTINModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Serialization/create_serial_screen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Serialization/create_serial_screen.dart';
+
 import 'package:searchable_listview/searchable_listview.dart';
 
 class SerializationGtinScreen extends StatefulWidget {
@@ -38,9 +38,9 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            10.height,
+            SizedBox(height: 10),
             _buildGTINText(context, widget.gtinModel.barcode ?? ''),
-            10.height,
+            SizedBox(height: 10),
             Container(
               alignment: Alignment.centerLeft,
               width: double.infinity,
@@ -55,7 +55,7 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
               ),
             ),
             _buildSerializationList(context),
-            10.height,
+            SizedBox(height: 10),
             _buildCreateSerialsButton(context),
           ],
         ),
@@ -85,10 +85,20 @@ class _SerializationGtinScreenState extends State<SerializationGtinScreen> {
           CaptureCubit.get(context).serializationData = state.data;
         }
         if (state is CaptureSerializationError) {
-          toast(state.message);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
         if (state is CaptureSerializationEmpty) {
-          toast("No data found");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("No data found"),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       }, builder: (context, state) {
         if (state is CaptureSerializationLoading) {

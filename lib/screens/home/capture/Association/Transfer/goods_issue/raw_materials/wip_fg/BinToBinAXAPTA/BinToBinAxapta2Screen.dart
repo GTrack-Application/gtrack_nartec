@@ -2,18 +2,17 @@
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getPalletTableController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getSerialTableController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/insertAllDataController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getPalletTableController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getSerialTableController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/insertAllDataController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
 
 class WIPtoFGBinToBinAxapta2Screen extends StatefulWidget {
   String TRANSFERID;
@@ -143,7 +142,7 @@ class _WIPtoFGBinToBinAxapta2ScreenState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        10.width,
+                        SizedBox(width: 10),
                         const TextWidget(
                           text: "From:",
                           color: Colors.white,
@@ -163,7 +162,7 @@ class _WIPtoFGBinToBinAxapta2ScreenState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        10.width,
+                        SizedBox(width: 10),
                         const Text(
                           "Item Code:",
                           style: TextStyle(
@@ -520,13 +519,14 @@ class _WIPtoFGBinToBinAxapta2ScreenState
                       return item.toLowerCase().contains(filter.toLowerCase());
                     },
                     enabled: true,
-                    dropdownButtonProps: const DropdownButtonProps(
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.black,
-                      ),
-                    ),
-                    items: filterList,
+                    popupProps: const PopupProps.menu(),
+                    // dropdownButtonProps: const DropdownButtonProps(
+                    //   icon: Icon(
+                    //     Icons.arrow_drop_down,
+                    //     color: Colors.black,
+                    //   ),
+                    // ),
+                    // items: filterList,
                     onChanged: (value) {
                       setState(() {
                         dropDownValue = value!;

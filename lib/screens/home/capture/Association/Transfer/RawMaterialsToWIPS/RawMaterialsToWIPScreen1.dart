@@ -1,19 +1,19 @@
 // ignore_for_file: use_key_in_widget_constructors, non_constant_identifier_names, sized_box_for_whitespace, file_names
 
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_snakbars.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Transfer/RawMaterialsToWIPS/RawMaterialsToWIPScreen2.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/RawMaterialsToWIPS/RawMaterialsToWIPScreen2.dart';
 
 // ignore: must_be_immutable
 class RawMaterialsToWIPScreen1 extends StatefulWidget {
@@ -159,13 +159,14 @@ class _RawMaterialsToWIPScreen1State extends State<RawMaterialsToWIPScreen1> {
                     return item.toLowerCase().contains(filter.toLowerCase());
                   },
                   enabled: true,
-                  dropdownButtonProps: const DropdownButtonProps(
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.black,
-                    ),
-                  ),
-                  items: dropDownList,
+                  popupProps: const PopupProps.menu(),
+                  // dropdownButtonProps: const DropdownButtonProps(
+                  //   icon: Icon(
+                  //     Icons.arrow_drop_down,
+                  //     color: Colors.black,
+                  //   ),
+                  // ),
+                  // items: dropDownList,
                   onChanged: (value) {
                     setState(() {
                       dropDownValue = value!;

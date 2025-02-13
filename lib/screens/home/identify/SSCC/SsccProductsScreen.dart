@@ -3,17 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/sscc/sscc_cubit.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/sscc/sscc_states.dart';
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/IDENTIFY/SSCC/SsccModel.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/SSCC/add_sscc_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/SSCC/sscc_cubit/sscc_cubit.dart';
-import 'package:gtrack_mobile_app/screens/home/identify/SSCC/sscc_cubit/sscc_state.dart';
+import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_cubit.dart';
+import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_states.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/SSCC/SsccModel.dart';
+import 'package:gtrack_nartec/screens/home/identify/SSCC/add_sscc_screen.dart';
+import 'package:gtrack_nartec/screens/home/identify/SSCC/sscc_cubit/sscc_cubit.dart';
+import 'package:gtrack_nartec/screens/home/identify/SSCC/sscc_cubit/sscc_state.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SsccProductsScreen extends StatefulWidget {
@@ -77,12 +76,22 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
           if (state is SsccErrorState) {
           } else if (state is SsccLoadedState) {
             if (state.data.isEmpty) {
-              toast("No data found for this user.");
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("No data found for this user."),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
             table = state.data;
           } else if (state is SsccDeleted) {
             BlocProvider.of<SsccCubit>(context).getSsccData();
-            toast("SSCC Item deleted successfully.");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("SSCC Item deleted successfully."),
+                backgroundColor: Colors.green,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -247,7 +256,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                                               fontSize: 15,
                                             ),
                                           ),
-                                          10.width,
+                                          SizedBox(width: 10),
                                           const Icon(
                                             Icons.delete,
                                             color: Colors.white,
@@ -274,7 +283,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                                               fontSize: 10,
                                             ),
                                           ),
-                                          10.width,
+                                          SizedBox(width: 10),
                                           const Icon(
                                             Icons.delete,
                                             color: Colors.white,
@@ -322,7 +331,8 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                                               table[index].id.toString());
                                     },
                                     child: Container(
-                                      width: context.width() * 0.9,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
                                       height: 50,
                                       alignment: Alignment.center,
                                       margin: const EdgeInsets.only(
@@ -469,12 +479,22 @@ class _BarcodeDialogState extends State<BarcodeDialog> {
           listener: (context, state) {
             if (state is SsccError) {
               Navigator.of(context).pop();
-              toast(state.error);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.error),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
             if (state is SsccLoaded) {
               BlocProvider.of<SsccCubit>(context).getSsccData();
               Navigator.of(context).pop();
-              toast("Bulk SSCC generated successfully.");
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Bulk SSCC generated successfully."),
+                  backgroundColor: Colors.green,
+                ),
+              );
             }
           },
           builder: (context, state) {
@@ -485,7 +505,13 @@ class _BarcodeDialogState extends State<BarcodeDialog> {
 
                 if (selectedExtensionDigit == null ||
                     _quantityController.text.isEmpty) {
-                  toast("Please select extension digit and enter quantity.");
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          "Please select extension digit and enter quantity."),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                   return;
                 }
 

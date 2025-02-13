@@ -2,15 +2,14 @@
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/Receiving/supplier_receipt/GetAllTableZoneController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Aggregation/Palletization/PalletGenerateScreen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/Receiving/supplier_receipt/GetAllTableZoneController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/Palletization/PalletGenerateScreen.dart';
 
 // ignore: must_be_immutable
 class PalletProceedScreen extends StatefulWidget {
@@ -69,10 +68,11 @@ class _PalletProceedScreenState extends State<PalletProceedScreen> {
         AppDialogs.closeDialog();
       }).onError((error, stackTrace) {
         AppDialogs.closeDialog();
-        toast(
-          error.toString().replaceAll("Exception:", ""),
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.toString().replaceAll("Exception:", "")),
+            backgroundColor: Colors.red,
+          ),
         );
       });
     });
@@ -210,18 +210,19 @@ class _PalletProceedScreenState extends State<PalletProceedScreen> {
                     showSelectedItems: true,
                     disabledItemFn: (String s) => s.startsWith('I'),
                   ),
-                  items: dropdownList,
-                  dropdownDecoratorProps: const DropDownDecoratorProps(
-                    baseStyle: TextStyle(fontSize: 15),
-                    dropdownSearchDecoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: "Enter/Scan Receiving Zone",
-                      hintStyle: TextStyle(fontSize: 15),
-                    ),
-                  ),
+
+                  // items: dropdownList,
+                  // dropdownDecoratorProps: const DropDownDecoratorProps(
+                  //   baseStyle: TextStyle(fontSize: 15),
+                  //   dropdownSearchDecoration: InputDecoration(
+                  //     border: OutlineInputBorder(),
+                  //     contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                  //     filled: true,
+                  //     fillColor: Colors.white,
+                  //     hintText: "Enter/Scan Receiving Zone",
+                  //     hintStyle: TextStyle(fontSize: 15),
+                  //   ),
+                  // ),
                   enabled: true,
                   onChanged: (value) {
                     setState(() {
@@ -241,10 +242,11 @@ class _PalletProceedScreenState extends State<PalletProceedScreen> {
                   title: "Proceed",
                   onPressed: () {
                     if (dropdownValue == "Select Zone" || dropdownValue == "") {
-                      toast(
-                        "Please select receiving zone.",
-                        bgColor: Colors.red,
-                        textColor: Colors.white,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Please select receiving zone."),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                       return;
                     }

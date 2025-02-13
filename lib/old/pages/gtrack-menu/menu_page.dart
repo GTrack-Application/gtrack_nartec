@@ -1,11 +1,11 @@
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
-// import 'package:gtrack_mobile_app/constants/app_icons.dart';
-// import 'package:gtrack_mobile_app/constants/app_images.dart';
-// import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-// import 'package:gtrack_mobile_app/global/widgets/buttons/icon_elevated_button.dart';
-// import 'package:gtrack_mobile_app/old/pages/gtrack-menu/dispatch_management/dispatch_management_one_page.dart';
-// import 'package:gtrack_mobile_app/screens/home/receiving/receiving_screen.dart';
+// import 'package:gtrack_nartec/constants/app_icons.dart';
+// import 'package:gtrack_nartec/constants/app_images.dart';
+// import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+// import 'package:gtrack_nartec/global/widgets/buttons/icon_elevated_button.dart';
+// import 'package:gtrack_nartec/old/pages/gtrack-menu/dispatch_management/dispatch_management_one_page.dart';
+// import 'package:gtrack_nartec/screens/home/receiving/receiving_screen.dart';
 
 // class MenuPage extends StatefulWidget {
 //   const MenuPage({super.key});

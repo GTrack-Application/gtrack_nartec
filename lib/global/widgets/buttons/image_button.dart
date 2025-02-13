@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class ImageButton extends StatelessWidget {
   const ImageButton({super.key, required this.icon, required this.text});

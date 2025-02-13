@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class CardIconButton extends StatelessWidget {
   const CardIconButton({

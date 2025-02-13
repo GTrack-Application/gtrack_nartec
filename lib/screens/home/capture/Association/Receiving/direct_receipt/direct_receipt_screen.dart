@@ -2,23 +2,21 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_cubit.dart';
-import 'package:gtrack_mobile_app/blocs/Identify/gln/gln_states.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/direct_receipt_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/direct_receipt_state.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/get_shipment_data/get_shipment_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/direct_receipt/get_shipment_data/get_shipment_state.dart';
-import 'package:gtrack_mobile_app/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_navigator.dart';
-import 'package:gtrack_mobile_app/models/Identify/GLN/GLNProductsModel.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/direct_receipt/direct_receipt_details_screen.dart';
-import 'package:gtrack_mobile_app/screens/home/capture/Association/Receiving/direct_receipt/direct_receipt_save_screen.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
+import 'package:gtrack_nartec/blocs/Identify/gln/gln_states.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/direct_receipt_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/direct_receipt_state.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/get_shipment_data/get_shipment_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/get_shipment_data/get_shipment_state.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/direct_receipt/direct_receipt_details_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/direct_receipt/direct_receipt_save_screen.dart';
 
 class DirectReceiptScreen extends StatefulWidget {
   const DirectReceiptScreen({super.key});
@@ -70,7 +68,12 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
           bloc: glnCubit,
           listener: (context, state) {
             if (state is GlnErrorState) {
-              toast(state.message);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
             }
             if (state is GlnLoadedState) {
               table = state.data;
@@ -134,7 +137,13 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                         bloc: directReceiptCubit,
                         listener: (context, state) {
                           if (state is DirectReceiptError) {
-                            toast(state.message.replaceAll("Exception:", ""));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    state.message.replaceAll("Exception:", "")),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                           }
                           if (state is DirectReceiptLoaded) {
                             receivingType = state.directReceiptModel
@@ -240,7 +249,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                               ),
                             ),
                           ),
-                          5.width,
+                          SizedBox(width: 5),
                           GestureDetector(
                             onTap: () {
                               getShipmentCubit.getShipmentData(
@@ -273,7 +282,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                       Container(
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        width: context.width() * 1,
+                        width: MediaQuery.of(context).size.width * 1,
                         height: 40,
                         decoration: const BoxDecoration(color: AppColors.pink),
                         child: const Text(
@@ -297,8 +306,13 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                             bloc: getShipmentCubit,
                             listener: (context, state) {
                               if (state is GetShipmentError) {
-                                toast(
-                                    state.message.replaceAll("Exception:", ""));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(state.message
+                                        .replaceAll("Exception:", "")),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
                               }
                               if (state is GetShipmentLoaded) {
                                 products.add(state.shipment);
@@ -324,7 +338,8 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
                                   physics: const BouncingScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     return Container(
-                                      width: context.width() * 0.9,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
                                       alignment: Alignment.center,
                                       margin: const EdgeInsets.symmetric(
                                         horizontal: 20,

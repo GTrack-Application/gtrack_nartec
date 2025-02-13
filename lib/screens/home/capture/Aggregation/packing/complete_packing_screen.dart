@@ -1,15 +1,14 @@
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/complete_packing/complete_packing_cubit.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/complete_packing/complete_packing_state.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
-import 'package:gtrack_mobile_app/models/capture/aggregation/packing/GtinProductDetailsModel.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packing_state.dart';
-import 'package:gtrack_mobile_app/cubit/capture/agregation/packing/packing_cubit.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/packing/complete_packing/complete_packing_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/packing/complete_packing/complete_packing_state.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packing/GtinProductDetailsModel.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/packing/packing_state.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/packing/packing_cubit.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -80,7 +79,12 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                 bloc: packingCubit,
                 listener: (context, state) {
                   if (state is PackingError) {
-                    toast(state.message);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                   if (state is PackingLoaded) {
                     setState(() {
@@ -114,7 +118,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                           ),
                         ),
                       ),
-                      5.width,
+                      SizedBox(width: 5),
                       Expanded(
                         flex: 1,
                         child: GestureDetector(
@@ -137,7 +141,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   );
                 },
               ),
-              10.height,
+              SizedBox(height: 10),
               Visibility(
                 visible: product != null,
                 child: Container(
@@ -149,7 +153,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   ),
                   child: Row(
                     children: [
-                      10.width,
+                      SizedBox(width: 10),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(5),
@@ -165,7 +169,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                                   color: AppColors.primary,
                                 ),
                               ),
-                              5.height,
+                              SizedBox(height: 5),
                               Text(
                                 product?.data?.gtin ?? "",
                                 style: const TextStyle(
@@ -173,7 +177,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                                   color: AppColors.primary,
                                 ),
                               ),
-                              5.height,
+                              SizedBox(height: 5),
                               Text(
                                 product?.data?.productDescription?.value ?? "",
                                 style: const TextStyle(
@@ -192,18 +196,18 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                           imageUrl:
                               "${AppUrls.baseUrlWith3091}${product?.data?.productImageUrl?.value?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
                           width: 60,
-                          height: context.height() * 0.1,
+                          height: MediaQuery.of(context).size.height * 0.1,
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.image_outlined),
                         ),
                       ),
-                      10.width,
+                      SizedBox(width: 10),
                     ],
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "QUANTITY",
                 style: TextStyle(
@@ -229,7 +233,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "BATCH NO",
                 style: TextStyle(
@@ -255,7 +259,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "EXPIRY DATE",
                 style: TextStyle(
@@ -298,7 +302,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "MANUFACTURE DATE",
                 style: TextStyle(
@@ -340,7 +344,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "NET WEIGHT",
                 style: TextStyle(
@@ -366,7 +370,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               const Text(
                 "UNIT OF MEASURE",
                 style: TextStyle(
@@ -392,17 +396,27 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   ),
                 ),
               ),
-              10.height,
+              SizedBox(height: 10),
               Visibility(
                 visible: product != null,
                 child: BlocConsumer<CompletePackingCubit, CompletePackingState>(
                   bloc: completePackingCubit,
                   listener: (context, state) {
                     if (state is CompletePackingError) {
-                      toast(state.message);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                     if (state is CompletePackingLoaded) {
-                      toast("Packing Completed Successfully!");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Packing Completed Successfully!"),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
                       RawMaterialsToWIPController.insertGtrackEPCISLog(
                               "packing",
                               product!.data!.gtin.toString(),
@@ -430,7 +444,13 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                                 manufactureDateController.text.isEmpty ||
                                 netWeightController.text.isEmpty ||
                                 unitController.text.isEmpty) {
-                              toast("Please fill all the above fields!");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text("Please fill all the above fields!"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                               return;
                             }
 
@@ -469,7 +489,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   },
                 ),
               ),
-              20.height,
+              SizedBox(height: 20),
             ],
           ),
         ),

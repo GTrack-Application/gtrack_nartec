@@ -2,9 +2,9 @@
 
 import 'dart:convert';
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Transfer/WipToFG/get_items_ln_wips_model.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/WipToFG/get_items_ln_wips_model.dart';
 import 'package:http/http.dart' as http;
 
 class WIPToFgController {
@@ -16,10 +16,7 @@ class WIPToFgController {
 
     List<GetItemsLnWipsModel> items = [];
 
-    final headers = <String, String>{
-      'Authorization': '$token',
-      'Host': AppUrls.host,
-    };
+    final headers = <String, String>{'Authorization': '$token'};
 
     final response = await http.get(Uri.parse(endPoint), headers: headers);
     if (response.statusCode == 200) {
@@ -45,7 +42,6 @@ class WIPToFgController {
           headers: {
             "Authorization": "$token",
             "Content-Type": "application/json",
-            "Host": AppUrls.host,
           });
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);

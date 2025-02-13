@@ -1,24 +1,23 @@
-// ignore_for_file: avoid_print, sized_box_for_whitespace
+// ignore_for_file: avoid_print, sized_box_for_whitespace, use_build_context_synchronously
 
 import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_mobile_app/constants/app_images.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/BinToBinInternalTableDataController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/GetAllDistinctItemCodesFromTblMappedBarcodesController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/NewOne.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateByPalletController.dart';
-import 'package:gtrack_mobile_app/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateBySerialController.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_mobile_app/global/widgets/ElevatedButtonWidget.dart';
-import 'package:gtrack_mobile_app/global/widgets/appBar/appBar_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text/text_widget.dart';
-import 'package:gtrack_mobile_app/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
-import 'package:gtrack_mobile_app/models/reveiving/supplier_receipt/BinToBinInternalModel.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/constants/app_images.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/BinToBinInternalTableDataController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/GetAllDistinctItemCodesFromTblMappedBarcodesController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/NewOne.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateByPalletController.dart';
+import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateBySerialController.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
+import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
+import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
+import 'package:gtrack_nartec/models/reveiving/supplier_receipt/BinToBinInternalModel.dart';
 
 class BinToBinInternalScreen extends StatefulWidget {
   const BinToBinInternalScreen({super.key});
@@ -141,13 +140,14 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                             .contains(filter.toLowerCase());
                       },
                       enabled: true,
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                      ),
-                      items: filterList2,
+                      popupProps: const PopupProps.menu(),
+                      // dropdownButtonProps: const DropdownButtonProps(
+                      //   icon: Icon(
+                      //     Icons.arrow_drop_down,
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
+                      // items: filterList2,
                       onChanged: (value) {
                         setState(() {
                           dropDownValue2 = value!;
@@ -263,11 +263,14 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                   onPressed: () {
                     if (dropDownList2.isEmpty ||
                         _locationFromController.text.isEmpty) {
-                      toast(
-                        "Please select Item Code and Bin Location",
-                        bgColor: Colors.red,
-                        textColor: Colors.white,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("Please select Item Code and Bin Location"),
+                          backgroundColor: Colors.red,
+                        ),
                       );
+
                       return;
                     }
                     onSearch();
@@ -513,9 +516,9 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                     scrollDirection: Axis.horizontal,
                     child: DataTable(
                       showCheckboxColumn: false,
-                      dataRowColor: MaterialStateColor.resolveWith(
+                      dataRowColor: WidgetStateColor.resolveWith(
                           (states) => Colors.grey.withOpacity(0.2)),
-                      headingRowColor: MaterialStateColor.resolveWith(
+                      headingRowColor: WidgetStateColor.resolveWith(
                           (states) => AppColors.pink),
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -735,13 +738,21 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                             });
                             AppDialogs.closeDialog();
 
-                            toast("Updated Successfully.");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Updated Successfully."),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
                           }).onError((error, stackTrace) {
                             AppDialogs.closeDialog();
-                            toast(
-                              error.toString().replaceAll("Exception:", ""),
-                              bgColor: Colors.red,
-                              textColor: Colors.white,
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error
+                                    .toString()
+                                    .replaceAll("Exception:", "")),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           });
                           return;
@@ -769,18 +780,22 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                               );
                             });
                             AppDialogs.closeDialog();
-                            toast(
-                              "Updated Successfully.",
-                              bgColor: Colors.green,
-                              textColor: Colors.white,
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Updated Successfully."),
+                                backgroundColor: Colors.green,
+                              ),
                             );
                           }).onError(
                             (error, stackTrace) {
                               AppDialogs.closeDialog();
-                              toast(
-                                error.toString().replaceAll("Exception:", ""),
-                                bgColor: Colors.red,
-                                textColor: Colors.white,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(error
+                                      .toString()
+                                      .replaceAll("Exception:", "")),
+                                  backgroundColor: Colors.red,
+                                ),
                               );
                             },
                           );
@@ -846,10 +861,11 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
       (error, stackTrace) {
         AppDialogs.closeDialog();
 
-        toast(
-          error.toString().replaceAll("Exception:", ""),
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.toString().replaceAll("Exception:", "")),
+            backgroundColor: Colors.red,
+          ),
         );
       },
     );
@@ -867,10 +883,11 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
           .map((e) => e.palletCode.toString())
           .toList()
           .contains(_palletIdController.text.trim())) {
-        toast(
-          "Pallet ID already exists on the table.",
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Pallet ID already exists on the table."),
+            backgroundColor: Colors.red,
+          ),
         );
         FocusScope.of(context).requestFocus(FocusNode());
 
@@ -882,10 +899,11 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
           .map((e) => e.palletCode.toString())
           .toList()
           .contains(_palletIdController.text.trim())) {
-        toast(
-          "Pallet ID not found",
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Pallet ID not found"),
+            backgroundColor: Colors.red,
+          ),
         );
         FocusScope.of(context).requestFocus(FocusNode());
 
@@ -919,10 +937,11 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
           .map((e) => e.itemSerialNo.toString())
           .toList()
           .contains(_serialNumberController.text.trim())) {
-        toast(
-          "Serial No. already exists on table.",
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Serial No. already exists on table."),
+            backgroundColor: Colors.red,
+          ),
         );
         FocusScope.of(context).requestFocus(FocusNode());
 
@@ -934,10 +953,11 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
           .map((e) => e.itemSerialNo.toString())
           .toList()
           .contains(_serialNumberController.text.trim())) {
-        toast(
-          "Serial No. not found.",
-          bgColor: Colors.red,
-          textColor: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Serial No. not found."),
+            backgroundColor: Colors.red,
+          ),
         );
         FocusScope.of(context).requestFocus(FocusNode());
 
@@ -995,10 +1015,11 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
       });
 
       AppDialogs.closeDialog();
-      toast(
-        error.toString().replaceAll("Exception:", ""),
-        bgColor: Colors.red,
-        textColor: Colors.white,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceAll("Exception:", "")),
+          backgroundColor: Colors.red,
+        ),
       );
     });
   }

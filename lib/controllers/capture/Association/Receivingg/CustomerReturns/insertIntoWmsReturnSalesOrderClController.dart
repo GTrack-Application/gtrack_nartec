@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print, camel_case_types, depend_on_referenced_packages
 
-import 'package:gtrack_mobile_app/constants/app_preferences.dart';
-import 'package:gtrack_mobile_app/constants/app_urls.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -13,7 +13,8 @@ class insertIntoWmsReturnSalesOrderClController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/insertIntoWmsReturnSalesOrderCl";
+    String url =
+        "${AppUrls.baseUrlWith7000}/api/insertIntoWmsReturnSalesOrderCl";
     print("url: $url");
 
     final uri = Uri.parse(url);
@@ -21,7 +22,6 @@ class insertIntoWmsReturnSalesOrderClController {
     final headers = <String, String>{
       "Content-Type": "application/json",
       "Authorization": tokenNew!,
-      "Host": AppUrls.host,
       "Accept": "application/json",
     };
 

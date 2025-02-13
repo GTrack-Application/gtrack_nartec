@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_mobile_app/global/common/colors/app_colors.dart';
-import 'package:gtrack_mobile_app/models/capture/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/models/capture/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
 
 class BinToBinDetailsScreen extends StatefulWidget {
   const BinToBinDetailsScreen({super.key, required this.employees});
@@ -23,7 +22,7 @@ class _BinToBinDetailsScreenState extends State<BinToBinDetailsScreen> {
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: context.height() * 0.15,
+              height: MediaQuery.of(context).size.height * 0.15,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -49,7 +48,7 @@ class _BinToBinDetailsScreenState extends State<BinToBinDetailsScreen> {
                   IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
-                      finish(context);
+                      Navigator.pop(context);
                     },
                   ),
                   const Text(
@@ -64,10 +63,10 @@ class _BinToBinDetailsScreenState extends State<BinToBinDetailsScreen> {
                 ],
               ),
             ),
-            10.height,
+            SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 10),
-              width: context.width() * 0.98,
+              width: MediaQuery.of(context).size.width * 0.98,
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(
@@ -112,7 +111,7 @@ class _BinToBinDetailsScreenState extends State<BinToBinDetailsScreen> {
                 ],
               ),
             ),
-            10.height,
+            SizedBox(height: 10),
           ],
         ),
       ),
@@ -152,7 +151,7 @@ class KeyValueInfoWidget extends StatelessWidget {
               ),
             ),
           ),
-          10.width,
+          SizedBox(width: 10),
           Expanded(
             flex: 2,
             child: Container(
