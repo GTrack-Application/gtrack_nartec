@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_nartec/global/themes/themes.dart';
-import 'package:gtrack_nartec/old/providers/login/login_provider.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_cubit.dart';
@@ -10,13 +8,15 @@ import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/pack
 import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_nartec/cubit/share/share_cubit.dart';
+import 'package:gtrack_nartec/global/themes/themes.dart';
 import 'package:gtrack_nartec/old/pages/login/user_login_page.dart';
 import 'package:gtrack_nartec/old/providers/dispatch_management/gln_provider.dart';
+import 'package:gtrack_nartec/old/providers/login/login_provider.dart';
 import 'package:provider/provider.dart';
 
 extension ColorExtension on Color {
   Color withValues({double? alpha}) {
-    return withOpacity(alpha ?? 1.0);
+    return withValues(alpha: alpha ?? 1.0);
   }
 }
 

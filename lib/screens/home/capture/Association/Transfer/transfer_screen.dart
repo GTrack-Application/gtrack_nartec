@@ -25,26 +25,26 @@ class _TransferScreenState extends State<TransferScreen> {
       "icon": AppIcons.goodsIssue,
       "onTap": () {},
     },
-    // {
-    //   "text": "Raw Materials to WIP",
-    //   "icon": AppIcons.transferRaw,
-    //   "onTap": () {},
-    // },
-    // {
-    //   "text": "Warehouse Transfer",
-    //   "icon": AppIcons.transferWarehouse,
-    //   "onTap": () {},
-    // },
-    // {
-    //   "text": "Bin to Bin Transfer",
-    //   "icon": AppIcons.transferBinToBin,
-    //   "onTap": () {},
-    // },
-    // {
-    //   "text": "Pallet Transfer",
-    //   "icon": AppIcons.transferPallet,
-    //   "onTap": () {},
-    // },
+    {
+      "text": "Raw Materials to WIP",
+      "icon": AppIcons.transferRaw,
+      "onTap": () {},
+    },
+    {
+      "text": "Warehouse Transfer",
+      "icon": AppIcons.transferWarehouse,
+      "onTap": () {},
+    },
+    {
+      "text": "Bin to Bin Transfer",
+      "icon": AppIcons.transferBinToBin,
+      "onTap": () {},
+    },
+    {
+      "text": "Pallet Transfer",
+      "icon": AppIcons.transferPallet,
+      "onTap": () {},
+    },
     // {
     //   "text": "Pallet Re-Allocation",
     //   "icon": AppIcons.aggPackaging,
@@ -64,7 +64,7 @@ class _TransferScreenState extends State<TransferScreen> {
         context: context, screen: const GoodsReceiptScreen());
     data[1]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const GoodsIssueScreen());
-    // data[0]["onTap"] = () => AppNavigator.goToPage(
+    // data[2]["onTap"] = () => AppNavigator.goToPage(
     //     context: context, screen: RawMaterialsToWIPScreen1());
     // data[1]["onTap"] = () => AppNavigator.goToPage(
     //     context: context, screen: const BinToBinAxaptaScreen());

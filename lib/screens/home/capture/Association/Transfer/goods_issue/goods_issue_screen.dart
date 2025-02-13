@@ -3,6 +3,7 @@ import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/production_job_order_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/raw_materials/rm_to_wip/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/raw_materials/wip_fg/BinToBinAXAPTA/BinToBinAxaptaScreen.dart';
 
@@ -40,8 +41,10 @@ class _GoodsIssueScreenState extends State<GoodsIssueScreen> {
   @override
   void initState() {
     super.initState();
-    // data[0]["onTap"] = () => AppNavigator.goToPage(
-    //     context: context, screen: RawMaterialsToWIPScreen1());
+    data[0]["onTap"] = () => AppNavigator.goToPage(
+          context: context,
+          screen: const ProductionJobOrderScreen(),
+        );
     data[1]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const RMtoWIPBinToBinAxaptaScreen());
     data[2]["onTap"] = () => AppNavigator.goToPage(
