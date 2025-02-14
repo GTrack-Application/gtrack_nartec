@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_screen.dart';
 import 'package:intl/intl.dart';
 
 class ProductionJobOrderScreen extends StatefulWidget {
@@ -69,141 +71,152 @@ class JobOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8.0,
-        children: [
-          Row(
-            children: [
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Order Date: ",
-                      style: TextStyle(fontSize: 12, color: AppColors.black),
-                    ),
-                    TextSpan(
-                      text:
-                          "\t${DateFormat('dd-MM-yyyy').format(DateTime.parse(order.jobOrderMaster?.orderDate ?? ''))}",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppColors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: order.jobOrderMaster?.status == "pending"
-                      ? AppColors.skyBlue
-                      : AppColors.green,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: RichText(
+    return InkWell(
+      onTap: () {
+        AppNavigator.goToPage(
+          context: context,
+          screen: JobOrderBomScreen(
+            jobOrderDetailsId: order.id!,
+            jobOrderNumber: order.jobOrderMaster?.jobOrderNumber ?? 'N/A',
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8.0,
+          children: [
+            Row(
+              children: [
+                RichText(
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "Status: ",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.white,
-                        ),
+                        text: "Order Date: ",
+                        style: TextStyle(fontSize: 12, color: AppColors.black),
                       ),
                       TextSpan(
-                        text: order.jobOrderMaster?.status,
+                        text:
+                            "\t${DateFormat('dd-MM-yyyy').format(DateTime.parse(order.jobOrderMaster?.orderDate ?? ''))}",
                         style: TextStyle(
                           fontSize: 12,
-                          color: order.jobOrderMaster?.status == "pending"
-                              ? AppColors.white
-                              : AppColors.black,
+                          color: AppColors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-          Text(
-            order.jobOrderMaster?.jobOrderNumber ?? "N/A",
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: order.jobOrderMaster?.status == "pending"
+                        ? AppColors.skyBlue
+                        : AppColors.green,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Status: ",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.white,
+                          ),
+                        ),
+                        TextSpan(
+                          text: order.jobOrderMaster?.status,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: order.jobOrderMaster?.status == "pending"
+                                ? AppColors.white
+                                : AppColors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          Row(
-            children: [
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Total Items: ",
-                      style: TextStyle(fontSize: 12, color: AppColors.black),
-                    ),
-                    TextSpan(
-                      text: order.quantity ?? "N/A",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
+            Text(
+              order.jobOrderMaster?.jobOrderNumber ?? "N/A",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              const Spacer(),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Total Cost: ",
-                      style: TextStyle(fontSize: 12, color: AppColors.black),
-                    ),
-                    TextSpan(
-                      text: order.jobOrderMaster?.totalCost ?? "N/A",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Delivery Date: ",
-                      style: TextStyle(fontSize: 12, color: AppColors.black),
-                    ),
-                    TextSpan(
-                      text:
-                          "\t${DateFormat('dd-MM-yyyy').format(DateTime.parse(order.jobOrderMaster?.deliveryDate ?? ''))}",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppColors.black,
-                        fontWeight: FontWeight.bold,
+            ),
+            Row(
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Total Items: ",
+                        style: TextStyle(fontSize: 12, color: AppColors.black),
                       ),
-                    ),
-                  ],
+                      TextSpan(
+                        text: order.quantity ?? "N/A",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const Divider(color: AppColors.grey),
-        ],
+                const Spacer(),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Total Cost: ",
+                        style: TextStyle(fontSize: 12, color: AppColors.black),
+                      ),
+                      TextSpan(
+                        text: order.jobOrderMaster?.totalCost ?? "N/A",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Delivery Date: ",
+                        style: TextStyle(fontSize: 12, color: AppColors.black),
+                      ),
+                      TextSpan(
+                        text:
+                            "\t${DateFormat('dd-MM-yyyy').format(DateTime.parse(order.jobOrderMaster?.deliveryDate ?? ''))}",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const Divider(color: AppColors.grey),
+          ],
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
 import 'package:http/http.dart' as http;
 
 class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
@@ -34,6 +35,33 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       }
     } catch (e) {
       emit(ProductionJobOrderError(message: e.toString()));
+    }
+  }
+
+  Future<void> getProductionJobOrderBom(String jobOrderDetailsId) async {
+    emit(ProductionJobOrderBomLoading());
+    try {
+      final token = await AppPreferences.getToken();
+
+      final response = await http.get(
+        Uri.parse(
+            '${AppUrls.baseUrlWith7000}/api/bom?jobOrderDetailsId=$jobOrderDetailsId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        final bomItems =
+            data.map((e) => ProductionJobOrderBom.fromJson(e)).toList();
+        emit(ProductionJobOrderBomLoaded(bomItems: bomItems));
+      } else {
+        emit(ProductionJobOrderBomError(message: 'Failed to fetch BOM items'));
+      }
+    } catch (e) {
+      emit(ProductionJobOrderBomError(message: e.toString()));
     }
   }
 }
