@@ -42,9 +42,7 @@ class _GoodsIssueScreenState extends State<GoodsIssueScreen> {
   void initState() {
     super.initState();
     data[0]["onTap"] = () => AppNavigator.goToPage(
-          context: context,
-          screen: const ProductionJobOrderScreen(),
-        );
+        context: context, screen: const ProductionJobOrderScreen());
     data[1]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const RMtoWIPBinToBinAxaptaScreen());
     data[2]["onTap"] = () => AppNavigator.goToPage(

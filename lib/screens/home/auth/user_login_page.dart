@@ -11,7 +11,7 @@ import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
-import 'package:gtrack_nartec/old/domain/services/apis/login/login_services.dart';
+import 'package:gtrack_nartec/screens/home/auth/services/login_services.dart';
 import 'package:gtrack_nartec/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -256,6 +256,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       if (dropdownValue == "Admin User") {
                         // hide the keyboard
                         emailNode.unfocus();
+                        FocusScope.of(context).requestFocus(adminPasswordNode);
                       } else {
                         // scope to password node
                         FocusScope.of(context).requestFocus(passwordNode);
@@ -275,34 +276,37 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   ),
                   // .box.width(context.width * 0.9).make(),
                   const SizedBox(height: 20),
-                  TextFieldWidget(
-                    hintText: "Password",
-                    focusNode: adminPasswordNode,
-                    onFieldSubmitted: (p0) {
-                      // hide keyboard
-                      adminPasswordNode.unfocus();
-                    },
-                    controller: adminPasswordController,
-                    leadingIcon: Image.asset(
-                      AppIcons.passwordIcon,
-                      width: 42,
-                      height: 42,
-                    ),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: obscureText,
-                    validator: (p0) {
-                      if (p0!.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.remove_red_eye),
-                      onPressed: () {
-                        setState(() {
-                          obscureText = !obscureText;
-                        });
+                  Visibility(
+                    visible: dropdownValue == "Admin User" ? true : false,
+                    child: TextFieldWidget(
+                      hintText: "Password",
+                      focusNode: adminPasswordNode,
+                      onFieldSubmitted: (p0) {
+                        // hide keyboard
+                        adminPasswordNode.unfocus();
                       },
+                      controller: adminPasswordController,
+                      leadingIcon: Image.asset(
+                        AppIcons.passwordIcon,
+                        width: 42,
+                        height: 42,
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: obscureText,
+                      validator: (p0) {
+                        if (p0!.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.remove_red_eye),
+                        onPressed: () {
+                          setState(() {
+                            obscureText = !obscureText;
+                          });
+                        },
+                      ),
                     ),
                   ),
                   Visibility(

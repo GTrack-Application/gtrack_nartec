@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,27 +23,54 @@ class JobOrderBomStartScreen extends StatefulWidget {
 }
 
 class _JobOrderBomStartScreenState extends State<JobOrderBomStartScreen> {
+  late ProductionJobOrderCubit _productionJobOrderCubit;
   @override
   void initState() {
     super.initState();
-    context.read<ProductionJobOrderCubit>().getBomStartDetails(widget.barcode);
+    _productionJobOrderCubit = ProductionJobOrderCubit();
+    _productionJobOrderCubit.getBomStartDetails(widget.barcode);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product Details - ${widget.jobOrderNumber}'),
+        title: Text(
+          'Product Details - ${widget.jobOrderNumber}',
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            color: AppColors.white,
+          ),
+        ),
         backgroundColor: AppColors.pink,
+        elevation: 0,
       ),
       body: BlocBuilder<ProductionJobOrderCubit, ProductionJobOrderState>(
+        bloc: _productionJobOrderCubit,
         builder: (context, state) {
           if (state is ProductionJobOrderBomStartLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildShimmer();
           }
 
           if (state is ProductionJobOrderBomStartError) {
-            return Center(child: Text(state.message));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline,
+                      size: 60, color: AppColors.pink.withOpacity(0.5)),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.message,
+                    style: TextStyle(
+                      color: AppColors.grey,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
           }
 
           if (state is ProductionJobOrderBomStartLoaded) {
@@ -53,23 +82,48 @@ class _JobOrderBomStartScreenState extends State<JobOrderBomStartScreen> {
                 children: [
                   _buildProductImage(product.frontImage),
                   const SizedBox(height: 16),
-                  _buildInfoCard(
-                    title: 'Product Information',
-                    children: [
-                      _buildInfoRow('Name (English)',
-                          product.productnameenglish ?? 'N/A'),
-                      _buildInfoRow(
-                          'Name (Arabic)', product.productnamearabic ?? 'N/A'),
-                      _buildInfoRow('Brand', product.brandName ?? 'N/A'),
-                      _buildInfoRow('Type', product.productType ?? 'N/A'),
-                      _buildInfoRow('Origin', product.origin ?? 'N/A'),
-                      _buildInfoRow(
-                          'Packaging', product.packagingType ?? 'N/A'),
-                      _buildInfoRow('Unit', product.unit ?? 'N/A'),
-                      _buildInfoRow('Size', product.size ?? 'N/A'),
-                      _buildInfoRow('Barcode', product.barcode ?? 'N/A'),
-                      _buildInfoRow('GPC', product.gpc ?? 'N/A'),
-                    ],
+                  Card(
+                    color: AppColors.white,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Product Information',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Divider(height: 24),
+                          _buildInfoRow(Icons.inventory_2, 'Name (English)',
+                              product.productnameenglish ?? 'N/A'),
+                          _buildInfoRow(Icons.translate, 'Name (Arabic)',
+                              product.productnamearabic ?? 'N/A'),
+                          _buildInfoRow(Icons.branding_watermark, 'Brand',
+                              product.brandName ?? 'N/A'),
+                          _buildInfoRow(Icons.category, 'Type',
+                              product.productType ?? 'N/A'),
+                          _buildInfoRow(
+                              Icons.public, 'Origin', product.origin ?? 'N/A'),
+                          _buildInfoRow(Icons.inventory, 'Packaging',
+                              product.packagingType ?? 'N/A'),
+                          _buildInfoRow(
+                              Icons.straighten, 'Unit', product.unit ?? 'N/A'),
+                          _buildInfoRow(Icons.aspect_ratio, 'Size',
+                              product.size ?? 'N/A'),
+                          _buildInfoRow(Icons.qr_code, 'Barcode',
+                              product.barcode ?? 'N/A'),
+                          _buildInfoRow(Icons.category_outlined, 'GPC',
+                              product.gpc ?? 'N/A'),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -83,68 +137,185 @@ class _JobOrderBomStartScreenState extends State<JobOrderBomStartScreen> {
   }
 
   Widget _buildProductImage(String? imageUrl) {
-    return Container(
-      height: 200,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.background),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: imageUrl != null
-          ? CachedNetworkImage(
-              imageUrl: '${AppUrls.domain}$imageUrl',
-              fit: BoxFit.contain,
-              errorWidget: (context, error, stackTrace) =>
-                  const Icon(Icons.image_not_supported, size: 50),
-            )
-          : const Icon(Icons.image_not_supported, size: 50),
-    );
-  }
-
-  Widget _buildInfoCard(
-      {required String title, required List<Widget> children}) {
-    return Card(
-      color: AppColors.background,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {
+        if (imageUrl != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.black,
+                  leading: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                body: Container(
+                  color: Colors.black,
+                  child: Center(
+                    child: InteractiveViewer(
+                      minScale: 0.5,
+                      maxScale: 3.0,
+                      child: CachedNetworkImage(
+                        imageUrl: '${AppUrls.domain}$imageUrl',
+                        fit: BoxFit.contain,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, error, stackTrace) => Icon(
+                          Icons.image_not_supported,
+                          size: 50,
+                          color: AppColors.grey.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-            const Divider(),
-            ...children,
-          ],
+          );
+        }
+      },
+      child: Container(
+        height: 200,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: imageUrl != null
+              ? CachedNetworkImage(
+                  imageUrl: '${AppUrls.domain}$imageUrl',
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, error, stackTrace) => Icon(
+                    Icons.image_not_supported,
+                    size: 50,
+                    color: AppColors.grey.withOpacity(0.5),
+                  ),
+                )
+              : Icon(
+                  Icons.image_not_supported,
+                  size: 50,
+                  color: AppColors.grey.withOpacity(0.5),
+                ),
         ),
       ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
-              ),
+          Icon(icon, size: 20, color: AppColors.grey),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: AppColors.grey,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
-          Expanded(
-            child: Text(value),
-          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildShimmer() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 200,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.grey.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(
+                    10,
+                    (index) => Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: AppColors.grey.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 80,
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Container(
+                                  width: double.infinity,
+                                  height: 14,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/receiving_screen.dart';
 
 class LandingScreen extends StatefulWidget {
-  const LandingScreen({Key? key}) : super(key: key);
+  const LandingScreen({super.key});
 
   @override
   State<LandingScreen> createState() => _LandingScreenState();

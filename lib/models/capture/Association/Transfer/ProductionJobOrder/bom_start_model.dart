@@ -2,7 +2,7 @@ class BomStartModel {
   String? id;
   String? userId;
   String? gcpGLNID;
-  Null? importCode;
+  String? importCode;
   String? productnameenglish;
   String? productnamearabic;
   String? brandName;
@@ -15,7 +15,7 @@ class BomStartModel {
   String? unit;
   String? size;
   String? frontImage;
-  Null? backImage;
+  String? backImage;
   String? childProduct;
   String? quantity;
   String? barcode;
@@ -29,7 +29,7 @@ class BomStartModel {
   String? detailsPage;
   String? detailsPageAr;
   int? status;
-  Null? deletedAt;
+  String? deletedAt;
   String? createdAt;
   String? updatedAt;
   String? memberID;
@@ -39,7 +39,7 @@ class BomStartModel {
   String? productUrl;
   String? productLinkUrl;
   String? brandNameAr;
-  Null? digitalInfoType;
+  String? digitalInfoType;
   String? readyForGepir;
   int? gepirPosted;
   String? image1;
