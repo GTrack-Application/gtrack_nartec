@@ -17,10 +17,12 @@ class ProductionJobOrderScreen extends StatefulWidget {
 }
 
 class _ProductionJobOrderScreenState extends State<ProductionJobOrderScreen> {
+  late ProductionJobOrderCubit _productionJobOrderCubit;
   @override
   void initState() {
     super.initState();
-    context.read<ProductionJobOrderCubit>().getProductionJobOrders();
+    _productionJobOrderCubit = ProductionJobOrderCubit();
+    _productionJobOrderCubit.getProductionJobOrders();
   }
 
   @override
@@ -35,6 +37,7 @@ class _ProductionJobOrderScreenState extends State<ProductionJobOrderScreen> {
           Expanded(
             child:
                 BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
+              bloc: _productionJobOrderCubit,
               listener: (context, state) {
                 // TODO: implement listener
               },
