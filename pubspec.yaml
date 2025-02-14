@@ -73,6 +73,7 @@ dependencies:
   http_parser: ^4.0.2
   geocoding: ^3.0.0
   shared_preferences: ^2.5.2
+  flex_color_scheme: ^8.1.0
   # mobile_scanner: ^6.0.6
 
 dev_dependencies:
