@@ -32,7 +32,9 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('BOM - ${widget.jobOrderNumber}'),
+        // title: Text('BOM - ${widget.jobOrderNumber}'),
+        title: const Text('Picklist Details'),
+
         backgroundColor: AppColors.pink,
       ),
       body: BlocBuilder<ProductionJobOrderCubit, ProductionJobOrderState>(
@@ -47,6 +49,11 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
           }
 
           if (state is ProductionJobOrderBomLoaded) {
+            if (state.bomItems.isEmpty) {
+              return Center(
+                  child:
+                      Text('No BOM items found for ${widget.jobOrderNumber}'));
+            }
             return ListView.builder(
               itemCount: state.bomItems.length,
               itemBuilder: (context, index) {
