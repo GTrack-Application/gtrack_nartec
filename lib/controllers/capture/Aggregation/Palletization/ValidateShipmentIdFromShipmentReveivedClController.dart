@@ -11,7 +11,7 @@ class ValidateShipmentIdFromShipmentReveivedClController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=$shipmentId";
+        "${AppUrls.baseUrlWith7010}/api/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=$shipmentId";
 
     final uri = Uri.parse(url);
 

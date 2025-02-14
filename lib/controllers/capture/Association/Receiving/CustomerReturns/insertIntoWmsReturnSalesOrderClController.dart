@@ -14,7 +14,7 @@ class insertIntoWmsReturnSalesOrderClController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/insertIntoWmsReturnSalesOrderCl";
+        "${AppUrls.baseUrlWith7010}/api/insertIntoWmsReturnSalesOrderCl";
     print("url: $url");
 
     final uri = Uri.parse(url);

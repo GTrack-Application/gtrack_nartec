@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class AuthController {
   static Future<LoginModel> loginWithPassword(
       String email, String password) async {
-    const baseUrl = '${AppUrls.baseUrlWith7000}/api/member/login';
+    const baseUrl = '${AppUrls.baseUrlWith7010}/api/member/login';
     final uri = Uri.parse(baseUrl);
 
     final body = json.encode({'email': email, 'password': password});

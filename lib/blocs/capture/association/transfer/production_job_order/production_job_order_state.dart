@@ -1,3 +1,4 @@
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
 
@@ -27,4 +28,16 @@ class ProductionJobOrderBomLoaded extends ProductionJobOrderState {
 class ProductionJobOrderBomError extends ProductionJobOrderState {
   final String message;
   ProductionJobOrderBomError({required this.message});
+}
+
+class ProductionJobOrderBomStartLoading extends ProductionJobOrderState {}
+
+class ProductionJobOrderBomStartLoaded extends ProductionJobOrderState {
+  final BomStartModel bomStartData;
+  ProductionJobOrderBomStartLoaded({required this.bomStartData});
+}
+
+class ProductionJobOrderBomStartError extends ProductionJobOrderState {
+  final String message;
+  ProductionJobOrderBomStartError({required this.message});
 }

@@ -9,7 +9,7 @@ class ReturnDZones {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/getAllTblRZones";
+    String url = "${AppUrls.baseUrlWith7010}/api/getAllTblRZones";
 
     final uri = Uri.parse(url);
 

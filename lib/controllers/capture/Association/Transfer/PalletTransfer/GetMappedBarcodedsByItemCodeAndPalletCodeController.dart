@@ -16,7 +16,7 @@ class GetMappedBarcodedsByItemCodeAndPalletCodeController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/getMappedBarcodedsByItemCodeAndPalletCode?ItemCode=$itemCode&PalletCode=$palletCode";
+        "${AppUrls.baseUrlWith7010}/api/getMappedBarcodedsByItemCodeAndPalletCode?ItemCode=$itemCode&PalletCode=$palletCode";
 
     print(url);
 

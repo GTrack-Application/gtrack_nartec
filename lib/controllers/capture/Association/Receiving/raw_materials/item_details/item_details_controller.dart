@@ -11,7 +11,7 @@ class ItemDetailsController {
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    const url = "${AppUrls.baseUrlWith7000}/api/getReceivingTypes";
+    const url = "${AppUrls.baseUrlWith7010}/api/getReceivingTypes";
 
     final uri = Uri.parse(url);
 

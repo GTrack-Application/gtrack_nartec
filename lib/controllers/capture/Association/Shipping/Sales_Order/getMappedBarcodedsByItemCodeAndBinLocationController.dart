@@ -14,7 +14,7 @@ class getMappedBarcodedsByItemCodeAndBinLocationController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/getmapBarcodeDataByItemCode";
+    String url = "${AppUrls.baseUrlWith7010}/api/getmapBarcodeDataByItemCode";
 
     final uri = Uri.parse(url);
 

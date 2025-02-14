@@ -48,7 +48,7 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
       // String? token = await AppPreferences.getToken();
       // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-      const url = "${AppUrls.baseUrlWith7000}/api/addTransaction";
+      const url = "${AppUrls.baseUrlWith7010}/api/addTransaction";
 
       final uri = Uri.parse(url);
 

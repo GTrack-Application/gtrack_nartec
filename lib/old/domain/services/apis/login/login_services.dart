@@ -131,7 +131,7 @@ class LoginServices {
     String email,
     String pass,
   ) async {
-    const baseUrl = '${AppUrls.baseUrlWith7000}/api/loginUser';
+    const baseUrl = '${AppUrls.baseUrlWith7010}/api/loginUser';
     final uri = Uri.parse(baseUrl);
 
     final headers = {
@@ -165,7 +165,7 @@ class LoginServices {
     String email,
     String pass,
   ) async {
-    const baseUrl = '${AppUrls.baseUrlWith7000}/api/loginInternalUser';
+    const baseUrl = '${AppUrls.baseUrlWith7010}/api/loginInternalUser';
     final uri = Uri.parse(baseUrl);
 
     final headers = {

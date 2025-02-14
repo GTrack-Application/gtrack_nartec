@@ -15,7 +15,7 @@ class updateBySerialController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        '${AppUrls.baseUrlWith7000}/api/updateMappedBarcodesBinLocationBySerialNo';
+        '${AppUrls.baseUrlWith7010}/api/updateMappedBarcodesBinLocationBySerialNo';
 
     print("url : $url");
 

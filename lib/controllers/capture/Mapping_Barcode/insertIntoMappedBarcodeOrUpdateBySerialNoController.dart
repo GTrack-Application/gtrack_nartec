@@ -25,7 +25,7 @@ class insertIntoMappedBarcodeOrUpdateBySerialNoController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/insertIntoMappedBarcodeOrUpdateBySerialNo";
+        "${AppUrls.baseUrlWith7010}/api/insertIntoMappedBarcodeOrUpdateBySerialNo";
 
     final uri = Uri.parse(url);
 

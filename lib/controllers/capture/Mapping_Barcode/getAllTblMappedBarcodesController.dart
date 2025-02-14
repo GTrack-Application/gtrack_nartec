@@ -13,7 +13,7 @@ class getAllTblMappedBarcodesController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/getInventTableWMSDataByItemIdOrItemName";
+        "${AppUrls.baseUrlWith7010}/api/getInventTableWMSDataByItemIdOrItemName";
     print("url: $url");
 
     final uri = Uri.parse(url);

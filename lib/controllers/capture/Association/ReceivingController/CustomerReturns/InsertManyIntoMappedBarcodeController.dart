@@ -21,7 +21,7 @@ class InsertManyIntoMappedBarcodeController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/insertManyIntoMappedBarcode";
+    String url = "${AppUrls.baseUrlWith7010}/api/insertManyIntoMappedBarcode";
     print("url: $url");
     final uri = Uri.parse(url);
 

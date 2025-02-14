@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_start_screen.dart';
 
 class JobOrderBomScreen extends StatefulWidget {
   final String jobOrderDetailsId;
@@ -91,6 +93,12 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
                     trailing: ElevatedButton(
                       onPressed: () {
                         // Add start picking logic here
+                        AppNavigator.goToPage(
+                            context: context,
+                            screen: JobOrderBomStartScreen(
+                              barcode: bom.productId ?? '',
+                              jobOrderNumber: widget.jobOrderNumber,
+                            ));
                       },
                       child: const Text('Start'),
                     ),

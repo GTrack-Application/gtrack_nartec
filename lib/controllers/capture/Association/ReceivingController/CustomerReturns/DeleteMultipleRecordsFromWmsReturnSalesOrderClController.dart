@@ -13,7 +13,7 @@ class DeleteMultipleRecordsFromWmsReturnSalesOrderClController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/deleteMultipleRecordsFromWmsReturnSalesOrderCl";
+        "${AppUrls.baseUrlWith7010}/api/deleteMultipleRecordsFromWmsReturnSalesOrderCl";
     print("url: $url");
 
     final uri = Uri.parse(url);

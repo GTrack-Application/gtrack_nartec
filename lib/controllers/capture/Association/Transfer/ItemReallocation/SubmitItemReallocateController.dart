@@ -16,7 +16,7 @@ class SubmitItemReallocateControllerimport {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/manageItemsReallocation";
+    String url = "${AppUrls.baseUrlWith7010}/api/manageItemsReallocation";
     print("url: $url");
 
     final uri = Uri.parse(url);

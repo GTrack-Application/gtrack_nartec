@@ -16,7 +16,7 @@ class GeneratePalletController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/getControlledSerialBySerialNo?serialNo=$serialNo";
+        "${AppUrls.baseUrlWith7010}/api/getControlledSerialBySerialNo?serialNo=$serialNo";
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
@@ -57,7 +57,7 @@ class GeneratePalletController {
     String? userId;
     await AppPreferences.getUserId().then((value) => userId = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/insertPalletData";
+    String url = "${AppUrls.baseUrlWith7010}/api/insertPalletData";
     final uri = Uri.parse(url);
 
     log(uri.toString());

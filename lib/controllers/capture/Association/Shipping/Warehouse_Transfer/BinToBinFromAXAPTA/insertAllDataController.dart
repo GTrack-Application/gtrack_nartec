@@ -25,7 +25,7 @@ class InsertAllDataController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/insertTblTransferBinToBinCL";
+    String url = "${AppUrls.baseUrlWith7010}/api/insertTblTransferBinToBinCL";
 
     final uri = Uri.parse(url);
 
@@ -92,7 +92,7 @@ class InsertAllDataController {
     String? userId;
     await AppPreferences.getToken().then((value) => userId = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/insertTblTransferJournalCL";
+    String url = "${AppUrls.baseUrlWith7010}/api/insertTblTransferJournalCL";
 
     final uri = Uri.parse(url);
 

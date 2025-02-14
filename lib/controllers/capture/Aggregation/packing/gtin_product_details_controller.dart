@@ -49,7 +49,7 @@ class GtinProductDetailsController {
     String? userId = await AppPreferences.getUserId();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    const url = "${AppUrls.baseUrlWith7000}/api/insertPackedItem";
+    const url = "${AppUrls.baseUrlWith7010}/api/insertPackedItem";
 
     final uri = Uri.parse(url);
 

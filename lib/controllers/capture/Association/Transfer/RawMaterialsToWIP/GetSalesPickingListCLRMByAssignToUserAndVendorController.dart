@@ -17,7 +17,7 @@ class RawMaterialsToWIPController {
     print(userId);
     print(vendorId);
     final url = Uri.parse(
-        '${AppUrls.baseUrlWith7000}/api/getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId');
+        '${AppUrls.baseUrlWith7010}/api/getSalesPickingListCLRMByAssignToUserAndVendor?assign_to_user_id=$userId&vendor_id=$vendorId');
     print(url);
     String? token;
     await AppPreferences.getToken().then((value) => token = value);
@@ -55,7 +55,7 @@ class RawMaterialsToWIPController {
     String? token;
     await AppPreferences.getToken().then((value) => token = value.toString());
     final url = Uri.parse(
-        '${AppUrls.baseUrlWith7000}getMappedBarcodesRMByItemIdAndQty?item_id=$itemId&qty=$qty');
+        '${AppUrls.baseUrlWith7010}getMappedBarcodesRMByItemIdAndQty?item_id=$itemId&qty=$qty');
     print(url);
     final headers = <String, String>{
       'Authorization': token!,
@@ -85,7 +85,7 @@ class RawMaterialsToWIPController {
     String? token;
     await AppPreferences.getToken().then((value) => token = value.toString());
 
-    final url = Uri.parse('${AppUrls.baseUrlWith7000}insertItemsLnWIP');
+    final url = Uri.parse('${AppUrls.baseUrlWith7010}insertItemsLnWIP');
     final headers = {
       'Authorization': '$token',
       'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ class RawMaterialsToWIPController {
     // String? token;
     // await AppPreferences.getToken().then((value) => token = value.toString());
 
-    final url = Uri.parse('${AppUrls.baseUrlWith7000}insertEPCISEvent');
+    final url = Uri.parse('${AppUrls.baseUrlWith7010}insertEPCISEvent');
 
     print(url);
 
@@ -212,7 +212,7 @@ class RawMaterialsToWIPController {
   ) async {
     String? userId = await AppPreferences.getUserId();
     final url =
-        Uri.parse('${AppUrls.baseUrlWith7000}/api/insertGtrackEPCISLog');
+        Uri.parse('${AppUrls.baseUrlWith7010}/api/insertGtrackEPCISLog');
 
     print(url);
 

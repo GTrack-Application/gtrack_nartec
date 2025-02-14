@@ -13,7 +13,7 @@ class BinToBinInternalTableDataController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/getmapBarcodeDataByBinLocation?BinLocation=$location";
+        "${AppUrls.baseUrlWith7010}/api/getmapBarcodeDataByBinLocation?BinLocation=$location";
     print("url: $url");
 
     final uri = Uri.parse(url);

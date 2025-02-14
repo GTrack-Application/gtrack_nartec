@@ -17,7 +17,7 @@ class UpdateStockMasterDataController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7000}/api/updateStockMasterData";
+    String url = "${AppUrls.baseUrlWith7010}/api/updateStockMasterData";
 
     final uri = Uri.parse(url);
 

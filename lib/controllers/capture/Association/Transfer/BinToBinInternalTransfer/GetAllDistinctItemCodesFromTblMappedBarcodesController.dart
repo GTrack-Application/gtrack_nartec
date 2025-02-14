@@ -11,7 +11,7 @@ class GetAllDistinctItemCodesFromTblMappedBarcodesController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/getAllDistinctItemCodesFromTblMappedBarcodes";
+        "${AppUrls.baseUrlWith7010}/api/getAllDistinctItemCodesFromTblMappedBarcodes";
     print("url: $url");
 
     final uri = Uri.parse(url);

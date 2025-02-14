@@ -15,7 +15,7 @@ class GetWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesIdController 
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7000}/api/getWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesId";
+        "${AppUrls.baseUrlWith7010}/api/getWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesId";
     print("url: $url");
 
     final uri = Uri.parse(url);
