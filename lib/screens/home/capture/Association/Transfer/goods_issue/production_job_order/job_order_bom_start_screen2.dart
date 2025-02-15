@@ -349,33 +349,40 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
   }
 
   Widget _buildSerialForm() {
-    return Form(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8.0,
-        children: [
-          Text("Scan Serial Number"),
-          TextFormField(
-            controller: serialController,
-            decoration: InputDecoration(
-              hintText: 'Serial Number',
-              suffixIcon: IconButton(
-                onPressed: () {
-                  cubit.getMappedBarcodes(
-                    context
-                            .read<ProductionJobOrderCubit>()
-                            .bomStartData
-                            ?.productId ??
-                        '',
-                    serialNo: serialController.text,
-                  );
-                },
-                icon: Icon(Icons.qr_code),
+    return BlocBuilder<ProductionJobOrderCubit, ProductionJobOrderState>(
+      bloc: cubit,
+      builder: (context, state) {
+        return Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8.0,
+            children: [
+              Text("Scan Serial Number"),
+              TextFormField(
+                controller: serialController,
+                decoration: InputDecoration(
+                  hintText: 'Serial Number',
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      cubit.getMappedBarcodes(
+                        context
+                                .read<ProductionJobOrderCubit>()
+                                .bomStartData
+                                ?.productId ??
+                            '',
+                        serialNo: serialController.text,
+                      );
+                    },
+                    icon: Icon(state is ProductionJobOrderMappedBarcodesLoading
+                        ? Icons.hourglass_empty
+                        : Icons.qr_code),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
