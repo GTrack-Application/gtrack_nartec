@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_start_screen2.dart';
 
 class JobOrderBomStartScreen1 extends StatefulWidget {
   final String gtin;
@@ -21,11 +23,24 @@ class JobOrderBomStartScreen1 extends StatefulWidget {
 
 class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
   late ProductionJobOrderCubit _cubit;
-  final TextEditingController _locationController = TextEditingController();
+
+  final _locationController = TextEditingController();
+  final _groupCodeController = TextEditingController();
+  final _availableQuantityController = TextEditingController();
+  final _whLocationCodeController = TextEditingController();
+  final _minQtyController = TextEditingController();
+  final _maxQtyController = TextEditingController();
+  final _itemBinTypeController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+    _groupCodeController.text = 'Riyadh';
+    _minQtyController.text = '0';
+    _itemBinTypeController.text = 'x';
+    _whLocationCodeController.text = '1106';
     _cubit = ProductionJobOrderCubit();
     _cubit.getBinLocations(widget.gtin);
   }
@@ -69,68 +84,94 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ProductionJobOrderBinLocationsLoaded) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 16.0,
-                      children: [
-                        const Text(
-                          'Suggested Bin Locations',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    return Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 16.0,
+                        children: [
+                          const Text(
+                            'Suggested Bin Locations',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        DropdownButtonFormField<String>(
-                          decoration: const InputDecoration(
-                            labelText: 'Select Bin Location',
-                            border: OutlineInputBorder(),
+                          DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              labelText: 'Select Bin Location',
+                              border: OutlineInputBorder(),
+                            ),
+                            items: state.binLocations.data?.map((location) {
+                              return DropdownMenuItem(
+                                value:
+                                    "${location.binLocation}:${location.quantity}",
+                                child: Text(
+                                  '${location.binLocation} (${location.quantity})',
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              _locationController.text =
+                                  value?.split(':')[0] ?? '';
+                              _availableQuantityController.text =
+                                  value?.split(':')[1] ?? '';
+                              _maxQtyController.text =
+                                  value?.split(':')[1] ?? '';
+                            },
                           ),
-                          items: state.binLocations.data?.map((location) {
-                            return DropdownMenuItem(
-                              value: location.binLocation,
-                              child: Text(
-                                '${location.binLocation}',
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            _locationController.text = value ?? '';
-                          },
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _locationController,
-                                decoration: const InputDecoration(
-                                  labelText: 'Enter / Scan Location Code',
-                                  border: OutlineInputBorder(),
+                          _buildKeyValue("Group Code:", _groupCodeController),
+                          _buildKeyValue("Available Quantity:",
+                              _availableQuantityController),
+                          _buildKeyValue(
+                              "WH Location Code:", _whLocationCodeController),
+                          _buildKeyValue("Min Qty:", _minQtyController),
+                          _buildKeyValue("Max Qty:", _maxQtyController),
+                          _buildKeyValue(
+                              "Item Bin Type:", _itemBinTypeController),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _locationController,
+                                  validator: (value) {
+                                    if (value != _locationController.text) {
+                                      return 'Invalid Location Code';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter / Scan Location Code',
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              onPressed: () {
-                                // Add scanner functionality
-                              },
-                              icon: const Icon(Icons.qr_code),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Add next button functionality
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[300],
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                            ),
-                            child: const Text('Next'),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.qr_code),
+                            ],
                           ),
-                        ),
-                      ],
+                          FilledButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                // Add next button functionality
+                                AppNavigator.goToPage(
+                                  context: context,
+                                  screen: JobOrderBomStartScreen2(),
+                                );
+                              }
+                              return;
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.pink,
+                            ),
+                            child: const Text("Next"),
+                          ),
+                        ],
+                      ),
                     );
                   }
                   if (state is ProductionJobOrderBinLocationsError) {
@@ -143,6 +184,38 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildKeyValue(String key, TextEditingController controller) {
+    return Row(
+      children: [
+        Text(key),
+        const Spacer(),
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.black),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          width: 200,
+          height: 40,
+          child: TextField(
+            controller: controller,
+            enabled: false,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 14,
+              color: AppColors.black,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+              isDense: true,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

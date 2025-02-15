@@ -28,7 +28,7 @@ class _ProductionJobOrderScreenState extends State<ProductionJobOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           "Production Job Order",

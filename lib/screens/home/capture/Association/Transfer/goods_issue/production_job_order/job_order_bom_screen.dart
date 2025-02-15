@@ -167,6 +167,9 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
+                                  context
+                                      .read<ProductionJobOrderCubit>()
+                                      .bomStartData = bom;
                                   AppNavigator.goToPage(
                                     context: context,
                                     screen: JobOrderBomDetailsScreen(

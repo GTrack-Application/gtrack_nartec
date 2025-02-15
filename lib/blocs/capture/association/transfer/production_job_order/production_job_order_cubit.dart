@@ -6,12 +6,17 @@ import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
 import 'package:http/http.dart' as http;
 
 class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   ProductionJobOrderCubit() : super(ProductionJobOrderInitial());
+
+  ProductionJobOrderBom? bomStartData;
+  String bomStartType = 'pallet';
+  List<MappedBarcode> items = [];
 
   Future<void> getProductionJobOrders() async {
     emit(ProductionJobOrderLoading());
@@ -123,5 +128,41 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     } catch (e) {
       emit(ProductionJobOrderBinLocationsError(message: e.toString()));
     }
+  }
+
+  Future<void> getMappedBarcodes(String palletCode, String gtin) async {
+    emit(ProductionJobOrderMappedBarcodesLoading());
+    try {
+      final token = await AppPreferences.getToken();
+
+      final response = await http.get(
+        Uri.parse(
+            '${AppUrls.baseUrlWith7010}/api/mappedBarcodes?PalletCode=$palletCode&GTIN=$gtin'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
+        items.addAll(mappedBarcodes.data ?? []);
+        emit(ProductionJobOrderMappedBarcodesLoaded(
+            mappedBarcodes: mappedBarcodes));
+      } else {
+        emit(ProductionJobOrderMappedBarcodesError(
+            message: 'Failed to fetch mapped barcodes'));
+      }
+    } catch (e) {
+      emit(ProductionJobOrderMappedBarcodesError(message: e.toString()));
+    }
+  }
+
+  void clearItems() {
+    items = [];
+    emit(ProductionJobOrderMappedBarcodesLoaded(
+      mappedBarcodes: MappedBarcodesResponse(data: items),
+    ));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
 
@@ -53,4 +54,16 @@ class ProductionJobOrderBinLocationsLoaded extends ProductionJobOrderState {
 class ProductionJobOrderBinLocationsError extends ProductionJobOrderState {
   final String message;
   ProductionJobOrderBinLocationsError({required this.message});
+}
+
+class ProductionJobOrderMappedBarcodesLoading extends ProductionJobOrderState {}
+
+class ProductionJobOrderMappedBarcodesLoaded extends ProductionJobOrderState {
+  final MappedBarcodesResponse mappedBarcodes;
+  ProductionJobOrderMappedBarcodesLoaded({required this.mappedBarcodes});
+}
+
+class ProductionJobOrderMappedBarcodesError extends ProductionJobOrderState {
+  final String message;
+  ProductionJobOrderMappedBarcodesError({required this.message});
 }
