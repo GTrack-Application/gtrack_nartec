@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
@@ -157,8 +156,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         },
       );
 
-      log(response.body);
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
@@ -189,6 +186,14 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     emit(ProductionJobOrderMappedBarcodesLoaded(
       mappedBarcodes: MappedBarcodesResponse(
           data: items, message: "All items cleared successfully"),
+    ));
+  }
+
+  void removeItem(MappedBarcode item) {
+    items.remove(item);
+    emit(ProductionJobOrderMappedBarcodesLoaded(
+      mappedBarcodes: MappedBarcodesResponse(
+          data: items, message: "Item removed successfully"),
     ));
   }
 }

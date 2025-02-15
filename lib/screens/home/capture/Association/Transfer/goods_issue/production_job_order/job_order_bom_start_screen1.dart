@@ -81,7 +81,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                 bloc: _cubit,
                 builder: (context, state) {
                   if (state is ProductionJobOrderBinLocationsLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return _buildShimmer();
                   }
                   if (state is ProductionJobOrderBinLocationsLoaded) {
                     return Form(
@@ -193,6 +193,76 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildShimmer() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 24,
+          width: 200,
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: AppColors.grey.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        Container(
+          height: 56,
+          width: double.infinity,
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: AppColors.grey.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        ...List.generate(
+          7,
+          (index) => Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            child: Row(
+              children: [
+                Container(
+                  height: 16,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  height: 40,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          height: 56,
+          width: double.infinity,
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: AppColors.grey.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        Container(
+          height: 48,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.grey.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ],
     );
   }
 

@@ -71,9 +71,9 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
 
             if (state is ProductionJobOrderBomLoaded) {
               if (state.bomItems.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.all(16),
+                return Center(
                   child: Card(
+                    color: AppColors.white,
                     elevation: 3,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -82,6 +82,7 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
                       padding: const EdgeInsets.all(24),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(Icons.inventory_2_outlined,
                               size: 48, color: Colors.grey[400]),
