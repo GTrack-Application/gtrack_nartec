@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
@@ -94,6 +95,33 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       }
     } catch (e) {
       emit(ProductionJobOrderBomStartError(message: e.toString()));
+    }
+  }
+
+  Future<void> getBinLocations(String gtin) async {
+    emit(ProductionJobOrderBinLocationsLoading());
+    try {
+      final token = await AppPreferences.getToken();
+
+      final response = await http.get(
+        Uri.parse(
+            '${AppUrls.baseUrlWith7010}/api/mappedBarcodes/getlocationsByGTIN?GTIN=$gtin'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final binLocations = BinLocationsResponse.fromJson(data);
+        emit(ProductionJobOrderBinLocationsLoaded(binLocations: binLocations));
+      } else {
+        emit(ProductionJobOrderBinLocationsError(
+            message: 'Failed to fetch bin locations'));
+      }
+    } catch (e) {
+      emit(ProductionJobOrderBinLocationsError(message: e.toString()));
     }
   }
 }

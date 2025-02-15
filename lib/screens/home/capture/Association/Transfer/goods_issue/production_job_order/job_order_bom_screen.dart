@@ -4,7 +4,7 @@ import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_start_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_details_screen.dart';
 
 class JobOrderBomScreen extends StatefulWidget {
   final String jobOrderDetailsId;
@@ -163,13 +163,13 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
                               bom.binLocation ?? 'N/A'),
                           const SizedBox(height: 16),
                           Center(
-                            child: Container(
+                            child: SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
                                   AppNavigator.goToPage(
                                     context: context,
-                                    screen: JobOrderBomStartScreen(
+                                    screen: JobOrderBomDetailsScreen(
                                       barcode: bom.productId ?? '',
                                       jobOrderNumber: widget.jobOrderNumber,
                                     ),

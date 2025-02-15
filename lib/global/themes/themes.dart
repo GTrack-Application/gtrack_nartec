@@ -39,6 +39,7 @@ class Themes {
       appBarTheme: _appBarTheme(AppColors.primary, Brightness.light),
       textTheme: _textTheme(),
       textButtonTheme: _textButtonTheme(AppColors.primary),
+      inputDecorationTheme: _inputDecorationTheme(Brightness.light),
     );
   }
 
@@ -54,6 +55,7 @@ class Themes {
       appBarTheme: _appBarTheme(AppColors.primary, Brightness.dark),
       textTheme: _textTheme(),
       textButtonTheme: _textButtonTheme(Colors.white),
+      inputDecorationTheme: _inputDecorationTheme(Brightness.dark),
     );
   }
 
@@ -134,6 +136,52 @@ class Themes {
           borderRadius: BorderRadius.circular(5),
         ),
       ),
+    );
+  }
+
+  static InputDecorationTheme _inputDecorationTheme(Brightness brightness) {
+    return InputDecorationTheme(
+      filled: true,
+      fillColor:
+          brightness == Brightness.light ? Colors.white : Colors.grey[900],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(
+          color: brightness == Brightness.light
+              ? Colors.grey[300]!
+              : Colors.grey[700]!,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(
+          color: brightness == Brightness.light
+              ? Colors.grey[300]!
+              : Colors.grey[700]!,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(
+          color: AppColors.primary,
+          width: 2,
+        ),
+      ),
+      labelStyle: TextStyle(
+        color: brightness == Brightness.light
+            ? Colors.grey[700]
+            : Colors.grey[300],
+      ),
+      hintStyle: TextStyle(
+        color: brightness == Brightness.light
+            ? Colors.grey[400]
+            : Colors.grey[600],
+      ),
+      // Dropdown specific styling
+      suffixIconColor:
+          brightness == Brightness.light ? Colors.grey[700] : Colors.grey[300],
+      iconColor:
+          brightness == Brightness.light ? Colors.grey[700] : Colors.grey[300],
     );
   }
 }

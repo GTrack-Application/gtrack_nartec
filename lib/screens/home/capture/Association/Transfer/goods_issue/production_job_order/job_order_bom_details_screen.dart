@@ -7,22 +7,25 @@ import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_start_screen1.dart';
 
-class JobOrderBomStartScreen extends StatefulWidget {
+class JobOrderBomDetailsScreen extends StatefulWidget {
   final String barcode;
   final String jobOrderNumber;
 
-  const JobOrderBomStartScreen({
+  const JobOrderBomDetailsScreen({
     super.key,
     required this.barcode,
     required this.jobOrderNumber,
   });
 
   @override
-  State<JobOrderBomStartScreen> createState() => _JobOrderBomStartScreenState();
+  State<JobOrderBomDetailsScreen> createState() =>
+      _JobOrderBomDetailsScreenState();
 }
 
-class _JobOrderBomStartScreenState extends State<JobOrderBomStartScreen> {
+class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
   late ProductionJobOrderCubit _productionJobOrderCubit;
   @override
   void initState() {
@@ -124,6 +127,21 @@ class _JobOrderBomStartScreenState extends State<JobOrderBomStartScreen> {
                         ],
                       ),
                     ),
+                  ),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      FilledButton(
+                          onPressed: () {
+                            AppNavigator.goToPage(
+                                context: context,
+                                screen: JobOrderBomStartScreen1(
+                                  gtin: widget.barcode,
+                                  productName: product.productnameenglish ?? '',
+                                ));
+                          },
+                          child: Text("Start Picking")),
+                    ],
                   ),
                 ],
               ),
