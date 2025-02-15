@@ -60,6 +60,7 @@ class ProductionJobOrderMappedBarcodesLoading extends ProductionJobOrderState {}
 
 class ProductionJobOrderMappedBarcodesLoaded extends ProductionJobOrderState {
   final MappedBarcodesResponse mappedBarcodes;
+  
   ProductionJobOrderMappedBarcodesLoaded({required this.mappedBarcodes});
 }
 

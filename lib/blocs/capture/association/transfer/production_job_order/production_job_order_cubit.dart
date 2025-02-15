@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
@@ -35,6 +36,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
+
         final orders = data.map((e) => ProductionJobOrder.fromJson(e)).toList();
         emit(ProductionJobOrderLoaded(orders: orders));
       } else {
@@ -130,24 +132,47 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     }
   }
 
-  Future<void> getMappedBarcodes(String palletCode, String gtin) async {
+  Future<void> getMappedBarcodes(
+    String gtin, {
+    String? palletCode,
+    String? serialNo,
+  }) async {
     emit(ProductionJobOrderMappedBarcodesLoading());
     try {
       final token = await AppPreferences.getToken();
+      String url = '';
+      if (palletCode != null) {
+        url =
+            '${AppUrls.baseUrlWith7010}/api/mappedBarcodes?PalletCode=$palletCode&GTIN=$gtin';
+      } else if (serialNo != null) {
+        url =
+            '${AppUrls.baseUrlWith7010}/api/mappedBarcodes?ItemSerialNo=$serialNo&GTIN=$gtin';
+      }
 
       final response = await http.get(
-        Uri.parse(
-            '${AppUrls.baseUrlWith7010}/api/mappedBarcodes?PalletCode=$palletCode&GTIN=$gtin'),
+        Uri.parse(url),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
+      log(response.body);
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
-        items.addAll(mappedBarcodes.data ?? []);
+        if (mappedBarcodes.data?.isEmpty ?? true) {
+          emit(ProductionJobOrderMappedBarcodesError(
+            message: 'No mapped barcodes found',
+          ));
+          return;
+        }
+        // add all new list but don't add duplicates
+        final newItems = mappedBarcodes.data
+            ?.where((element) => !items.any((e) => e.id == element.id))
+            .toList();
+        items.addAll(newItems ?? []);
         emit(ProductionJobOrderMappedBarcodesLoaded(
             mappedBarcodes: mappedBarcodes));
       } else {
@@ -162,7 +187,8 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   void clearItems() {
     items = [];
     emit(ProductionJobOrderMappedBarcodesLoaded(
-      mappedBarcodes: MappedBarcodesResponse(data: items),
+      mappedBarcodes: MappedBarcodesResponse(
+          data: items, message: "All items cleared successfully"),
     ));
   }
 }

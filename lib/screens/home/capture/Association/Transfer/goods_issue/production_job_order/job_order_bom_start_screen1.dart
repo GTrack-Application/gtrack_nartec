@@ -135,7 +135,13 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                                 child: TextFormField(
                                   controller: _locationController,
                                   validator: (value) {
-                                    if (value != _locationController.text) {
+                                    if (value == null) {
+                                      return 'Location Code is required';
+                                    } else if (_locationController
+                                        .text.isEmpty) {
+                                      return 'Location Code is required';
+                                    } else if (value !=
+                                        _locationController.text) {
                                       return 'Invalid Location Code';
                                     }
                                     return null;
@@ -156,7 +162,10 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                           ),
                           FilledButton(
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
+                              final isValidated =
+                                  _formKey.currentState!.validate();
+
+                              if (isValidated) {
                                 // Add next button functionality
                                 AppNavigator.goToPage(
                                   context: context,
