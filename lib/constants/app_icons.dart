@@ -157,6 +157,7 @@ class AppIcons {
   static const String recStock = 'assets/icons/rec_stock.png';
   static const String recSupplier = 'assets/icons/rec_supplier.png';
   static const String recVendor = 'assets/icons/rec_vendor.png';
+  static const String purchaseOrder = 'assets/icons/purchase_order_receipt.png';
 
   // Mapping Screen
   static const String mappingBarcode = 'assets/icons/mapping_barcode.png';

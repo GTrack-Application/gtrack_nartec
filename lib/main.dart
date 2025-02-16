@@ -6,12 +6,15 @@ import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_cubit.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/association/receiving/purchase_order_receipt/purchase_order_receipt_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_nartec/cubit/share/share_cubit.dart';
 import 'package:gtrack_nartec/global/themes/themes.dart';
 import 'package:gtrack_nartec/screens/home/auth/providers/dispatch_management/gln_provider.dart';
 import 'package:gtrack_nartec/screens/home/auth/providers/login/login_provider.dart';
+import 'package:gtrack_nartec/screens/home/auth/user_login_page.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/perchase_order_receipt/purchase_order_receipt_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/production_job_order_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -45,13 +48,15 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => GlnCubit()..identifyGln()),
           BlocProvider(create: (context) => SsccCubit()..getSsccData()),
           BlocProvider(create: (context) => ProductionJobOrderCubit()),
+          BlocProvider(create: (context) => PurchaseOrderReceiptCubit()),
         ],
         child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Gtrack',
           theme: Themes.lightTheme(),
           // home: const UserLoginPage(),
-          home: const ProductionJobOrderScreen(),
+          // home: const ProductionJobOrderScreen(),
+          home: const PurchaseOrderReceiptScreen(),
         ),
       ),
     );

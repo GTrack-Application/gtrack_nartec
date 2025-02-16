@@ -4,7 +4,6 @@ abstract class AppUrls {
 
   // static const String baseUrlWith7000 = 'http://gs1ksa.org:7000';
   static const String baseUrlWith7010 = 'https://gs1ksa.org:7010';
-
   static const String domain = 'https://gs1ksa.org';
 
   // Alessa urls
