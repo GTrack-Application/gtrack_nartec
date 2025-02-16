@@ -274,10 +274,12 @@ class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
               decoration: BoxDecoration(
                 color: AppColors.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.grey.withOpacity(0.1)),
               ),
             ),
             const SizedBox(height: 16),
             Card(
+              color: AppColors.white,
               elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
