@@ -5,7 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/receiving/purchase_order_receipt/purchase_order_receipt_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/receiving/purchase_order_receipt/purchase_order_receipt_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/purchase_order_details_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/perchase_order_receipt/receiving_by_pallet_serial_screen.dart';
 
 class PurchaseOrderDetailsScreen extends StatefulWidget {
   const PurchaseOrderDetailsScreen({super.key});
@@ -404,7 +406,14 @@ class _PurchaseOrderDetailsScreenState
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 FilledButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    AppNavigator.goToPage(
+                                      context: context,
+                                      screen: ReceivingByPalletSerialScreen(
+                                        purchaseOrderDetails: selectedItem!,
+                                      ),
+                                    );
+                                  },
                                   style: FilledButton.styleFrom(
                                     backgroundColor: AppColors.primary,
                                     padding: const EdgeInsets.symmetric(

@@ -13,7 +13,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
-        android:label="gtrack_nartec"
+        android:label="GTrack"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

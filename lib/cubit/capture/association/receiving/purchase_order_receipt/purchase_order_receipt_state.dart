@@ -1,3 +1,4 @@
+import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/pallet_number_details_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/purchase_order_details_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/purchase_order_receipt_model.dart';
 
@@ -32,4 +33,25 @@ class PurchaseOrderDetailsFilterLoaded extends PurchaseOrderReceiptState {
 class PurchaseOrderDetailsError extends PurchaseOrderReceiptState {
   final String message;
   PurchaseOrderDetailsError(this.message);
+}
+
+class PalletNumberDetailsLoading extends PurchaseOrderReceiptState {}
+
+class PalletNumberDetailsLoaded extends PurchaseOrderReceiptState {
+  final List<PalletNumberDetailsModel> palletNumberDetails;
+  PalletNumberDetailsLoaded(this.palletNumberDetails);
+}
+
+class PalletNumberDetailsError extends PurchaseOrderReceiptState {
+  final String message;
+  PalletNumberDetailsError(this.message);
+}
+
+class CreateBatchSerialLoading extends PurchaseOrderReceiptState {}
+
+class CreateBatchSerialLoaded extends PurchaseOrderReceiptState {}
+
+class CreateBatchSerialError extends PurchaseOrderReceiptState {
+  final String message;
+  CreateBatchSerialError(this.message);
 }
