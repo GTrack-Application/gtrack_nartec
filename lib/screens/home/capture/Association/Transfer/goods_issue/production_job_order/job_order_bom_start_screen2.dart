@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/common/utils/app_toast.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/production_job_order_screen.dart';
 
 class JobOrderBomStartScreen2 extends StatefulWidget {
   const JobOrderBomStartScreen2({super.key});
@@ -105,12 +109,46 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                       hintText: 'WIP Location',
                     ),
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      context.read<ProductionJobOrderCubit>().bomStartType =
-                          selectedType;
+                  BlocConsumer<ProductionJobOrderCubit,
+                      ProductionJobOrderState>(
+                    listener: (context, state) {
+                      if (state
+                          is ProductionJobOrderUpdateMappedBarcodesLoaded) {
+                        AppSnackbars.success(context, state.message);
+                        AppNavigator.pushAndRemoveUntil(
+                          context: context,
+                          screen: ProductionJobOrderScreen(),
+                        );
+                      }
                     },
-                    child: const Text('Save'),
+                    builder: (context, state) {
+                      final isLoading = state
+                          is ProductionJobOrderUpdateMappedBarcodesLoading;
+                      return PrimaryButtonWidget(
+                        text: "Save",
+                        onPressed: () {
+                          if (locationController.text.isEmpty) {
+                            AppSnackbars.normal(context,
+                                "Please Enter WIP Location in order to proceed");
+                            return;
+                          } else if (cubit.items.isEmpty) {
+                            AppSnackbars.normal(context,
+                                "Please scan at least one item in order to proceed");
+                            return;
+                          } else if (isLoading) {
+                            return;
+                          }
+
+                          context
+                              .read<ProductionJobOrderCubit>()
+                              .updateMappedBarcodes(
+                                locationController.text,
+                                cubit.items,
+                              );
+                        },
+                        isLoading: isLoading,
+                      );
+                    },
                   ),
                 ],
               );

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
@@ -195,5 +196,45 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       mappedBarcodes: MappedBarcodesResponse(
           data: items, message: "Item removed successfully"),
     ));
+  }
+
+  Future<void> updateMappedBarcodes(
+      String location, List<MappedBarcode> scannedItems) async {
+    emit(ProductionJobOrderUpdateMappedBarcodesLoading());
+
+    try {
+      final token = await AppPreferences.getToken();
+      final url = Uri.parse(
+          '${AppUrls.baseUrlWith7010}/api/mappedBarcodes/updateBinLocationForMappedBarcodes');
+
+      final itemIds = scannedItems.map((item) => item.id).toList();
+
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'ids': itemIds,
+          'newBinLocation': location,
+        }),
+      );
+
+      log(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        emit(ProductionJobOrderUpdateMappedBarcodesLoaded(
+          message: data['message'],
+          updatedCount: data['updatedCount'],
+        ));
+      } else {
+        throw Exception('Failed to update mapped barcodes');
+      }
+    } catch (e) {
+      log(e.toString());
+      emit(ProductionJobOrderUpdateMappedBarcodesError(message: e.toString()));
+    }
   }
 }

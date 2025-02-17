@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class PrimaryButtonWidget extends StatelessWidget {
   const PrimaryButtonWidget({
@@ -8,11 +9,13 @@ class PrimaryButtonWidget extends StatelessWidget {
     required this.onPressed,
     this.backgroungColor,
     this.fontSize,
+    this.isLoading = false,
   });
   final String text;
   final VoidCallback onPressed;
   final Color? backgroungColor;
   final double? fontSize;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +30,18 @@ class PrimaryButtonWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: fontSize ?? 15,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: isLoading
+            ? CircularProgressIndicator(
+                color: AppColors.white,
+                strokeWidth: 2,
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize ?? 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }

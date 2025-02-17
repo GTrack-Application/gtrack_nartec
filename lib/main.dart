@@ -13,8 +13,6 @@ import 'package:gtrack_nartec/cubit/share/share_cubit.dart';
 import 'package:gtrack_nartec/global/themes/themes.dart';
 import 'package:gtrack_nartec/screens/home/auth/providers/dispatch_management/gln_provider.dart';
 import 'package:gtrack_nartec/screens/home/auth/providers/login/login_provider.dart';
-import 'package:gtrack_nartec/screens/home/auth/user_login_page.dart';
-import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/perchase_order_receipt/purchase_order_receipt_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/production_job_order_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -55,8 +53,8 @@ class MyApp extends StatelessWidget {
           title: 'Gtrack',
           theme: Themes.lightTheme(),
           // home: const UserLoginPage(),
-          // home: const ProductionJobOrderScreen(),
-          home: const PurchaseOrderReceiptScreen(),
+          home: const ProductionJobOrderScreen(),
+          //   home: const PurchaseOrderReceiptScreen(),
         ),
       ),
     );

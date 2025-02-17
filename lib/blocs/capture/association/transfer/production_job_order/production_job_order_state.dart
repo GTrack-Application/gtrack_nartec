@@ -60,11 +60,31 @@ class ProductionJobOrderMappedBarcodesLoading extends ProductionJobOrderState {}
 
 class ProductionJobOrderMappedBarcodesLoaded extends ProductionJobOrderState {
   final MappedBarcodesResponse mappedBarcodes;
-  
+
   ProductionJobOrderMappedBarcodesLoaded({required this.mappedBarcodes});
 }
 
 class ProductionJobOrderMappedBarcodesError extends ProductionJobOrderState {
   final String message;
   ProductionJobOrderMappedBarcodesError({required this.message});
+}
+
+class ProductionJobOrderUpdateMappedBarcodesLoading
+    extends ProductionJobOrderState {}
+
+class ProductionJobOrderUpdateMappedBarcodesLoaded
+    extends ProductionJobOrderState {
+  final String message;
+  final int updatedCount;
+
+  ProductionJobOrderUpdateMappedBarcodesLoaded({
+    required this.message,
+    required this.updatedCount,
+  });
+}
+
+class ProductionJobOrderUpdateMappedBarcodesError
+    extends ProductionJobOrderState {
+  final String message;
+  ProductionJobOrderUpdateMappedBarcodesError({required this.message});
 }

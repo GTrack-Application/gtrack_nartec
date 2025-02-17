@@ -23,4 +23,17 @@ class AppNavigator {
       ),
     );
   }
+
+  static pushAndRemoveUntil(
+      {required BuildContext context, required Widget screen}) {
+    return Navigator.pushAndRemoveUntil(
+      context,
+      PageTransition(
+        duration: const Duration(milliseconds: 400),
+        type: PageTransitionType.fade,
+        child: screen,
+      ),
+      (route) => false,
+    );
+  }
 }
