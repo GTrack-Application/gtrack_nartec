@@ -85,4 +85,33 @@ class PurchaseOrderReceiptCubit extends Cubit<PurchaseOrderReceiptState> {
       emit(CreateBatchSerialError(e.toString()));
     }
   }
+
+  Future<void> createPurchaseOrderReceipt(
+      PurchaseOrderDetailsModel purchaseOrderDetails,
+      String quantity,
+      String batchNumber,
+      String expiryDate,
+      String manufacturingDate,
+      String netWeight,
+      String transportGLN,
+      String putAwayLocation,
+      String receivedBy) async {
+    emit(CreatePurchaseOrderReceiptLoading());
+    try {
+      await PurchaseOrderReceiptController.createPurchaseOrderReceipt(
+        purchaseOrderDetails,
+        quantity,
+        batchNumber,
+        expiryDate,
+        manufacturingDate,
+        netWeight,
+        transportGLN,
+        putAwayLocation,
+        receivedBy,
+      );
+      emit(CreatePurchaseOrderReceiptLoaded());
+    } catch (e) {
+      emit(CreatePurchaseOrderReceiptError(e.toString()));
+    }
+  }
 }

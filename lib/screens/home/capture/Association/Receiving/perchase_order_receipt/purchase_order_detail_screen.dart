@@ -191,6 +191,144 @@ class _PurchaseOrderDetailsScreenState
                 ),
               );
             });
+          } else if (state is PurchaseOrderDetailsFilterLoaded) {
+            purchaseOrderDetails = state.purchaseOrderDetails;
+
+            Future.delayed(const Duration(milliseconds: 100), () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: Colors.white,
+                  title: Text(
+                    'Select Purchase Order',
+                    style: TextStyle(
+                      color: AppColors.pink,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  content: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    width: double.maxFinite,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: purchaseOrderDetails.length,
+                      itemBuilder: (context, index) {
+                        final item = purchaseOrderDetails[index];
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Card(
+                            shadowColor: Colors.grey,
+                            color: Colors.white,
+                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            child: ListTile(
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Order Date:\n${_formatDate(item.orderDate)}',
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: item.status == 'Shipped'
+                                              ? Colors.green
+                                              : item.status == 'Delivered'
+                                                  ? Colors.green
+                                                  : item.status == 'Pending'
+                                                      ? Colors.yellow
+                                                      : item.status ==
+                                                              'Approved'
+                                                          ? Colors.blue
+                                                          : Colors.red[200],
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          'Status: ${item.status}',
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    '${item.purchaseOrderNumber}',
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Items: ${item.purchaseOrderDetails?.first.quantity}',
+                                        style: const TextStyle(fontSize: 10),
+                                      ),
+                                      Text(
+                                        'Total: SAR ${item.totalAmount ?? "0.00"}',
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (item.deliveryDate != null) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Expected Delivery: ${_formatDate(item.deliveryDate)}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  selectedItem = null;
+                                  selectedItem = item;
+                                });
+                                Navigator.pop(context);
+                              },
+                              selected: selectedItem == item,
+                              selectedTileColor:
+                                  AppColors.pink.withOpacity(0.1),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              );
+            });
           }
         },
         builder: (context, state) {
@@ -205,7 +343,7 @@ class _PurchaseOrderDetailsScreenState
                   children: [
                     Expanded(
                       child: SizedBox(
-                        height: 40,
+                        height: 50,
                         child: TextField(
                           controller: _poNumberController,
                           onEditingComplete: () async {

@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/controllers/capture/Association/Receiving/purchase_order_receipt/purchase_order_receipt_controller.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/purchase_order_receipt_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/perchase_order_receipt/create_purchase_order_receipt.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/perchase_order_receipt/purchase_order_detail_screen.dart';
 
 class PurchaseOrderReceiptScreen extends StatefulWidget {
@@ -25,6 +27,8 @@ class _PurchaseOrderReceiptScreenState
     fetchPurchaseOrders();
   }
 
+  TextEditingController searchController = TextEditingController();
+
   Future<void> fetchPurchaseOrders() async {
     try {
       final orders =
@@ -41,6 +45,12 @@ class _PurchaseOrderReceiptScreenState
         SnackBar(content: Text('Error: ${e.toString()}')),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,6 +71,42 @@ class _PurchaseOrderReceiptScreenState
       body: SafeArea(
         child: Column(
           children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () {
+                  AppNavigator.goToPage(
+                      context: context,
+                      screen: const CreatePurchaseOrderReceiptScreen());
+                },
+                child: const Text('Create Purchase Order'),
+              ),
+            ),
+            // search textfeild with searching the purchase order number
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: searchController,
+                onChanged: (value) {
+                  setState(() {
+                    purchaseOrders = purchaseOrders
+                        .where((element) =>
+                            element.purchaseOrderNumber?.contains(value) ??
+                            false)
+                        .toList();
+
+                    if (value.isEmpty) {
+                      fetchPurchaseOrders();
+                    }
+                  });
+                },
+                decoration: const InputDecoration(
+                  hintText: 'Search Purchase Order Number',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
             Expanded(
               child: isLoading
                   ? ListView.builder(

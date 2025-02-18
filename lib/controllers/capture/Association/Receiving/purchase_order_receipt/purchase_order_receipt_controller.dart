@@ -58,10 +58,14 @@ class PurchaseOrderReceiptController {
     final url = Uri.parse(
         "${AppUrls.baseUrlWith7010}/api/purchaseOrder/master/dynamicData?filters=${Uri.encodeComponent(jsonEncode(filters))}");
 
+    print(url);
+
     final response =
         await http.get(url, headers: {'Authorization': 'Bearer $token'});
 
     final data = jsonDecode(response.body);
+
+    print(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = jsonDecode(response.body) as List;
@@ -128,6 +132,52 @@ class PurchaseOrderReceiptController {
     });
 
     print(body);
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      },
+      body: body,
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return data;
+    } else {
+      throw Exception(data['error']);
+    }
+  }
+
+  static Future<void> createPurchaseOrderReceipt(
+    PurchaseOrderDetailsModel purchaseOrderDetails,
+    String quantity,
+    String batchNumber,
+    String expiryDate,
+    String manufacturingDate,
+    String netWeight,
+    String transportGLN,
+    String putAwayLocation,
+    String receivedBy,
+  ) async {
+    final token = await AppPreferences.getToken();
+
+    final url = Uri.parse(
+        "${AppUrls.baseUrlWith7010}/api/grnpurchaseorder/processGoodsReceipt");
+
+    final body = jsonEncode({
+      "purchaseOrderNumber": purchaseOrderDetails.purchaseOrderNumber,
+      "quantityReceived": quantity,
+      "receivedBy": receivedBy,
+      "batchNumber": batchNumber,
+      "expiryDate": expiryDate,
+      "manufactureDate": manufacturingDate,
+      "netWeight": netWeight,
+      "transportGLN": transportGLN,
+      "putAwayLocation": putAwayLocation
+    });
 
     final response = await http.post(
       url,

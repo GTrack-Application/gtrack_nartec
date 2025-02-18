@@ -55,3 +55,12 @@ class CreateBatchSerialError extends PurchaseOrderReceiptState {
   final String message;
   CreateBatchSerialError(this.message);
 }
+
+class CreatePurchaseOrderReceiptLoading extends PurchaseOrderReceiptState {}
+
+class CreatePurchaseOrderReceiptLoaded extends PurchaseOrderReceiptState {}
+
+class CreatePurchaseOrderReceiptError extends PurchaseOrderReceiptState {
+  final String message;
+  CreatePurchaseOrderReceiptError(this.message);
+}
