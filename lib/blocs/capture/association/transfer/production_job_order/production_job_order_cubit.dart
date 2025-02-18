@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/controllers/epcis_controller.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
@@ -219,6 +220,14 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
           'ids': itemIds,
           'newBinLocation': location,
         }),
+      );
+
+      // EPCIS API Call
+      await EPCISController.insertEPCISEvent(
+        type: "Transaction Event",
+        action: "ADD",
+        bizStep: "shipping",
+        disposition: "in_transit",
       );
 
       log(response.body);
