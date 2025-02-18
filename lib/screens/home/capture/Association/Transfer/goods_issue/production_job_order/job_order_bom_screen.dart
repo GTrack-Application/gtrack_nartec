@@ -105,6 +105,8 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
                 itemCount: state.bomItems.length,
                 itemBuilder: (context, index) {
                   final bom = state.bomItems[index];
+                  final isPicked = bom.quantity == bom.quantityPicked ||
+                      bom.status == 'picked';
                   return Card(
                     color: Colors.white,
                     elevation: 3,
@@ -168,6 +170,8 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
+                                  if (isPicked) return;
+                                  // if Item is not picked
                                   context
                                       .read<ProductionJobOrderCubit>()
                                       .bomStartData = bom;
@@ -180,7 +184,9 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.pink,
+                                  backgroundColor: isPicked
+                                      ? AppColors.grey
+                                      : AppColors.pink,
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 12),
                                   shape: RoundedRectangleBorder(
