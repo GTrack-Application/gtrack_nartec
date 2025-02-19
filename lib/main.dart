@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_cubit.dart';
-import 'package:gtrack_nartec/blocs/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/receiving/purchase_order_receipt/purchase_order_receipt_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';

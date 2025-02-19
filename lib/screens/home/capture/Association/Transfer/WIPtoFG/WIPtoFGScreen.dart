@@ -3,7 +3,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/blocs/capture/association/transfer/wip_to_fg_bloc.dart';
+import 'package:gtrack_nartec/cubit/capture/association/transfer/wip_to_fg_bloc.dart';
 import 'package:gtrack_nartec/blocs/global/global_states_events.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
