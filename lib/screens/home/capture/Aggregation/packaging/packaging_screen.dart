@@ -100,7 +100,7 @@ class PackagingScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: AppColors.pink,
+        color: AppColors.pink.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.background),
         shape: BoxShape.rectangle,
