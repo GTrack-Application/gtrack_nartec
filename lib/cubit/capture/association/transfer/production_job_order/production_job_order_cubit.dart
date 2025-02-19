@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,11 +11,12 @@ import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobO
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
-import 'package:http/http.dart' as http;
 
 class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   ProductionJobOrderCubit() : super(ProductionJobOrderInitial());
   final HttpService _httpService = HttpService();
+  final HttpService _httpServiceForDomain =
+      HttpService(baseUrl: AppUrls.domain);
 
   ProductionJobOrderBom? bomStartData;
   String bomStartType = 'pallet';
@@ -28,18 +28,14 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       final memberId = await AppPreferences.getUserId();
       final token = await AppPreferences.getToken();
 
-      final response = await http.get(
-        Uri.parse(
-            '${AppUrls.baseUrlWith7010}/api/jobOrder/details?memberId=$memberId'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+      final response = await _httpService
+          .request("/api/jobOrder/details?memberId=$memberId", headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      });
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-
+      if (response.success) {
+        final List<dynamic> data = response.data;
         final orders = data.map((e) => ProductionJobOrder.fromJson(e)).toList();
         emit(ProductionJobOrderLoaded(orders: orders));
       } else {
@@ -54,18 +50,14 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     emit(ProductionJobOrderBomLoading());
     try {
       final token = await AppPreferences.getToken();
+      final response = await _httpService
+          .request("/api/bom?jobOrderDetailsId=$jobOrderDetailsId", headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      });
 
-      final response = await http.get(
-        Uri.parse(
-            '${AppUrls.baseUrlWith7010}/api/bom?jobOrderDetailsId=$jobOrderDetailsId'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+      if (response.success) {
+        final List<dynamic> data = response.data;
         final bomItems =
             data.map((e) => ProductionJobOrderBom.fromJson(e)).toList();
         emit(ProductionJobOrderBomLoaded(bomItems: bomItems));
@@ -82,17 +74,17 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     try {
       final token = await AppPreferences.getToken();
 
-      final response = await http.get(
-        Uri.parse(
-            '${AppUrls.domain}/api/products/paginatedProducts?page=1&pageSize=10&barcode=$barcode'),
+      final response = await _httpServiceForDomain.request(
+        "/api/products/paginatedProducts?page=1&pageSize=10&barcode=$barcode",
+        method: HttpMethod.get,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+      if (response.success) {
+        final data = response.data;
         if (data['products']?.isNotEmpty ?? false) {
           final bomStartData = BomStartModel.fromJson(data['products'][0]);
           emit(ProductionJobOrderBomStartLoaded(bomStartData: bomStartData));
@@ -113,17 +105,16 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     try {
       final token = await AppPreferences.getToken();
 
-      final response = await http.get(
-        Uri.parse(
-            '${AppUrls.baseUrlWith7010}/api/mappedBarcodes/getlocationsByGTIN?GTIN=$gtin'),
+      final response = await _httpService.request(
+        "/api/mappedBarcodes/getlocationsByGTIN?GTIN=$gtin",
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+      if (response.success) {
+        final data = response.data;
         final binLocations = BinLocationsResponse.fromJson(data);
         emit(ProductionJobOrderBinLocationsLoaded(binLocations: binLocations));
       } else {
@@ -143,25 +134,23 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     emit(ProductionJobOrderMappedBarcodesLoading());
     try {
       final token = await AppPreferences.getToken();
-      String url = '';
+      String url = '/api/mappedBarcodes?';
       if (palletCode != null) {
-        url =
-            '${AppUrls.baseUrlWith7010}/api/mappedBarcodes?PalletCode=$palletCode&GTIN=$gtin';
+        url += 'PalletCode=$palletCode&GTIN=$gtin';
       } else if (serialNo != null) {
-        url =
-            '${AppUrls.baseUrlWith7010}/api/mappedBarcodes?ItemSerialNo=$serialNo&GTIN=$gtin';
+        url += 'ItemSerialNo=$serialNo&GTIN=$gtin';
       }
 
-      final response = await http.get(
-        Uri.parse(url),
+      final response = await _httpService.request(
+        url,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+      if (response.success) {
+        final data = response.data;
         final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
         if (mappedBarcodes.data?.isEmpty ?? true) {
           emit(ProductionJobOrderMappedBarcodesError(
@@ -183,22 +172,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     } catch (e) {
       emit(ProductionJobOrderMappedBarcodesError(message: e.toString()));
     }
-  }
-
-  void clearItems() {
-    items = [];
-    emit(ProductionJobOrderMappedBarcodesLoaded(
-      mappedBarcodes: MappedBarcodesResponse(
-          data: items, message: "All items cleared successfully"),
-    ));
-  }
-
-  void removeItem(MappedBarcode item) {
-    items.remove(item);
-    emit(ProductionJobOrderMappedBarcodesLoaded(
-      mappedBarcodes: MappedBarcodesResponse(
-          data: items, message: "Item removed successfully"),
-    ));
   }
 
   Future<void> updateMappedBarcodes(
@@ -240,5 +213,21 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       log(e.toString());
       emit(ProductionJobOrderUpdateMappedBarcodesError(message: e.toString()));
     }
+  }
+
+  void clearItems() {
+    items = [];
+    emit(ProductionJobOrderMappedBarcodesLoaded(
+      mappedBarcodes: MappedBarcodesResponse(
+          data: items, message: "All items cleared successfully"),
+    ));
+  }
+
+  void removeItem(MappedBarcode item) {
+    items.remove(item);
+    emit(ProductionJobOrderMappedBarcodesLoaded(
+      mappedBarcodes: MappedBarcodesResponse(
+          data: items, message: "Item removed successfully"),
+    ));
   }
 }
