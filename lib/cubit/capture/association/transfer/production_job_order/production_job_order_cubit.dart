@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/controllers/epcis_controller.dart';
+import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
+import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
@@ -15,6 +16,7 @@ import 'package:http/http.dart' as http;
 
 class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   ProductionJobOrderCubit() : super(ProductionJobOrderInitial());
+  final HttpService _httpService = HttpService();
 
   ProductionJobOrderBom? bomStartData;
   String bomStartType = 'pallet';
@@ -204,22 +206,15 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     emit(ProductionJobOrderUpdateMappedBarcodesLoading());
 
     try {
-      final token = await AppPreferences.getToken();
-      final url = Uri.parse(
-          '${AppUrls.baseUrlWith7010}/api/mappedBarcodes/updateBinLocationForMappedBarcodes');
-
       final itemIds = scannedItems.map((item) => item.id).toList();
 
-      final response = await http.put(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
+      final response = await _httpService.request(
+        "/api/mappedBarcodes/updateBinLocationForMappedBarcodes",
+        method: HttpMethod.put,
+        data: {
           'ids': itemIds,
           'newBinLocation': location,
-        }),
+        },
       );
 
       // EPCIS API Call
@@ -232,8 +227,8 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
 
       log(response.body);
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      if (response.success) {
+        final data = response.data;
         emit(ProductionJobOrderUpdateMappedBarcodesLoaded(
           message: data['message'],
           updatedCount: data['updatedCount'],
