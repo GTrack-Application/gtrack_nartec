@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_icons.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packaging/packaging_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
-import 'package:gtrack_nartec/global/utils/date_time_format.dart';
-import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/packaging/packaging_type_screen.dart';
 
 class PackagingScreen extends StatefulWidget {
   const PackagingScreen({super.key});
@@ -16,7 +12,6 @@ class PackagingScreen extends StatefulWidget {
 }
 
 class _PackagingScreenState extends State<PackagingScreen> {
-  final PackagingCubit packagingCubit = PackagingCubit();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,48 +55,27 @@ class _PackagingScreenState extends State<PackagingScreen> {
                                     title: "Pallet",
                                     slug: 'pallet',
                                     icon: AppIcons.transferPallet,
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      showPackagingTypeSheet(context,
-                                          type: 'Pallet');
-                                    },
                                   ),
                                   buildPackingBox(
-                                      title: "Box/Carton",
-                                      slug: 'box',
-                                      icon: AppIcons.aggCompiling,
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        showPackagingTypeSheet(context,
-                                            type: 'Box/Carton');
-                                      }),
+                                    title: "Box/Carton",
+                                    slug: 'box',
+                                    icon: AppIcons.aggCompiling,
+                                  ),
                                   buildPackingBox(
-                                      title: "Bundle",
-                                      slug: 'bundle',
-                                      icon: AppIcons.aggCompiling,
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        showPackagingTypeSheet(context,
-                                            type: 'Bundle');
-                                      }),
+                                    title: "Bundle",
+                                    slug: 'bundle',
+                                    icon: AppIcons.aggCompiling,
+                                  ),
                                   buildPackingBox(
-                                      title: "Pack",
-                                      slug: 'pack',
-                                      icon: AppIcons.aggCompiling,
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        showPackagingTypeSheet(context,
-                                            type: 'Pack');
-                                      }),
+                                    title: "Pack",
+                                    slug: 'pack',
+                                    icon: AppIcons.aggCompiling,
+                                  ),
                                   buildPackingBox(
-                                      title: "Piece",
-                                      slug: 'piece',
-                                      icon: AppIcons.aggCompiling,
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        showPackagingTypeSheet(context,
-                                            type: 'Piece');
-                                      }),
+                                    title: "Piece",
+                                    slug: 'piece',
+                                    icon: AppIcons.aggCompiling,
+                                  ),
                                 ],
                               ),
                             )
@@ -139,13 +113,19 @@ class _PackagingScreenState extends State<PackagingScreen> {
     );
   }
 
-  Widget buildPackingBox(
-      {required String title,
-      required String slug,
-      required String icon,
-      Function()? onTap}) {
+  Widget buildPackingBox({
+    required String title,
+    required String slug,
+    required String icon,
+  }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.pop(context);
+        AppNavigator.goToPage(
+          context: context,
+          screen: PackagingTypeScreen(type: title, slug: slug),
+        );
+      },
       child: Container(
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
@@ -176,186 +156,6 @@ class _PackagingScreenState extends State<PackagingScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  showPackagingTypeSheet(BuildContext context, {String? type, String? slug}) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.background,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-      ),
-      isScrollControlled: true,
-      enableDrag: true,
-      showDragHandle: true,
-      // full height
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16.0),
-        child: BlocConsumer<PackagingCubit, PackagingState>(
-          bloc: packagingCubit,
-          listener: (context, state) {
-            if (state is PackagingScanError) {
-              AppSnackbars.normal(context, state.message);
-            }
-          },
-          builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              spacing: 16.0,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Packaging Type',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.pink),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Pack Type: ${type ?? ""}'),
-                      //   const SizedBox(height: 8),
-                      //   Text(
-                      //       'Pack Date: ${DateTime.now().toString().split(' ')[0]}'),
-                      //   const SizedBox(height: 8),
-                      //   Text(
-                      //       'Transaction Id: TRX${DateTime.now().millisecondsSinceEpoch}'),
-                    ],
-                  ),
-                ),
-                Row(
-                  spacing: 8.0,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: TextFormFieldWidget(
-                        controller: packagingCubit.ssccController,
-                      ),
-                    ),
-
-                    // Filled Button
-                    Expanded(
-                      child: SizedBox(
-                        height: 45,
-                        child: PrimaryButtonWidget(
-                          text: "Scan",
-                          onPressed: () {
-                            if (state is PackagingScanLoading) {
-                              return;
-                            }
-                            packagingCubit.scanItem();
-                          },
-                          isLoading: state is PackagingScanLoading,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: packagingCubit.items.length,
-                    itemBuilder: (context, index) {
-                      final item = packagingCubit.items[index];
-                      return Card(
-                        color: AppColors.background,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            spacing: 8.0,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Map Date: ${dateFormat(item.mapDate ?? "")}",
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.pink,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        "Bin Location: ${(item.binLocation)}",
-                                        style: TextStyle(
-                                          color: AppColors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "SSCC: ${item.gTIN}",
-                                style: TextStyle(
-                                  color: AppColors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "Count: ${packagingCubit.itemsWithPallet[item.palletCode]?['count'] ?? 0}",
-                                style: TextStyle(
-                                  color: AppColors.black,
-                                ),
-                              ),
-                              Text(
-                                "PO: ${item.pO}",
-                                style: TextStyle(
-                                  color: AppColors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: PrimaryButtonWidget(
-                    backgroungColor: packagingCubit.itemsWithPallet.isNotEmpty
-                        ? AppColors.pink
-                        : Colors.grey,
-                    text: "Complete Transaction",
-                    isLoading: state is PackagingInsertLoading,
-                    onPressed: () {
-                      if (state is PackagingInsertLoading) {
-                        return;
-                      }
-                      packagingCubit.insertPackaging(slug ?? "");
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
         ),
       ),
     );

@@ -10,6 +10,9 @@ part 'packaging_state.dart';
 class PackagingCubit extends Cubit<PackagingState> {
   PackagingCubit() : super(PackagingInitial());
 
+  static PackagingCubit get(BuildContext context) =>
+      BlocProvider.of<PackagingCubit>(context);
+
   final HttpService httpService = HttpService();
 
   final ssccController = TextEditingController();
@@ -64,7 +67,7 @@ class PackagingCubit extends Cubit<PackagingState> {
       final memberId = await AppPreferences.getMemberId();
       final response = await httpService
           .request("/api/packaging/insert", method: HttpMethod.post, data: {
-        "memberId": memberId,
+        "memberId": memberId.toString(),
         "palletCodes": items.map((e) => e.palletCode.toString()).toList(),
         "type": type,
       });
