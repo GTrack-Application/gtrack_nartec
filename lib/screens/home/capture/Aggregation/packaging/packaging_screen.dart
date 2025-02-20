@@ -8,9 +8,15 @@ import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
 
-class PackagingScreen extends StatelessWidget {
+class PackagingScreen extends StatefulWidget {
   const PackagingScreen({super.key});
 
+  @override
+  State<PackagingScreen> createState() => _PackagingScreenState();
+}
+
+class _PackagingScreenState extends State<PackagingScreen> {
+  final PackagingCubit packagingCubit = PackagingCubit();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +58,7 @@ class PackagingScreen extends StatelessWidget {
                                 children: [
                                   buildPackingBox(
                                     title: "Pallet",
+                                    slug: 'pallet',
                                     icon: AppIcons.transferPallet,
                                     onTap: () {
                                       Navigator.pop(context);
@@ -61,6 +68,7 @@ class PackagingScreen extends StatelessWidget {
                                   ),
                                   buildPackingBox(
                                       title: "Box/Carton",
+                                      slug: 'box',
                                       icon: AppIcons.aggCompiling,
                                       onTap: () {
                                         Navigator.pop(context);
@@ -69,6 +77,7 @@ class PackagingScreen extends StatelessWidget {
                                       }),
                                   buildPackingBox(
                                       title: "Bundle",
+                                      slug: 'bundle',
                                       icon: AppIcons.aggCompiling,
                                       onTap: () {
                                         Navigator.pop(context);
@@ -77,6 +86,7 @@ class PackagingScreen extends StatelessWidget {
                                       }),
                                   buildPackingBox(
                                       title: "Pack",
+                                      slug: 'pack',
                                       icon: AppIcons.aggCompiling,
                                       onTap: () {
                                         Navigator.pop(context);
@@ -85,6 +95,7 @@ class PackagingScreen extends StatelessWidget {
                                       }),
                                   buildPackingBox(
                                       title: "Piece",
+                                      slug: 'piece',
                                       icon: AppIcons.aggCompiling,
                                       onTap: () {
                                         Navigator.pop(context);
@@ -129,7 +140,10 @@ class PackagingScreen extends StatelessWidget {
   }
 
   Widget buildPackingBox(
-      {required String title, required String icon, Function()? onTap}) {
+      {required String title,
+      required String slug,
+      required String icon,
+      Function()? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -167,7 +181,7 @@ class PackagingScreen extends StatelessWidget {
     );
   }
 
-  showPackagingTypeSheet(BuildContext context, {String? type}) {
+  showPackagingTypeSheet(BuildContext context, {String? type, String? slug}) {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.background,
@@ -184,6 +198,7 @@ class PackagingScreen extends StatelessWidget {
       builder: (context) => Container(
         padding: const EdgeInsets.all(16.0),
         child: BlocConsumer<PackagingCubit, PackagingState>(
+          bloc: packagingCubit,
           listener: (context, state) {
             if (state is PackagingScanError) {
               AppSnackbars.normal(context, state.message);
@@ -236,8 +251,7 @@ class PackagingScreen extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: TextFormFieldWidget(
-                        controller:
-                            context.read<PackagingCubit>().ssccController,
+                        controller: packagingCubit.ssccController,
                       ),
                     ),
 
@@ -251,7 +265,7 @@ class PackagingScreen extends StatelessWidget {
                             if (state is PackagingScanLoading) {
                               return;
                             }
-                            context.read<PackagingCubit>().scanItem();
+                            packagingCubit.scanItem();
                           },
                           isLoading: state is PackagingScanLoading,
                         ),
@@ -261,9 +275,9 @@ class PackagingScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: context.read<PackagingCubit>().items.length,
+                    itemCount: packagingCubit.items.length,
                     itemBuilder: (context, index) {
-                      final item = context.read<PackagingCubit>().items[index];
+                      final item = packagingCubit.items[index];
                       return Card(
                         color: AppColors.background,
                         child: Padding(
@@ -325,16 +339,14 @@ class PackagingScreen extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade300,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
-                    ),
+                  child: PrimaryButtonWidget(
+                    backgroungColor: packagingCubit.itemsWithPallet.isNotEmpty
+                        ? AppColors.pink
+                        : Colors.grey,
+                    text: "Complete Transaction",
                     onPressed: () {
-                      // Handle complete transaction
+                      packagingCubit.insertPackaging(slug ?? "");
                     },
-                    child: Text('COMPLETE TRANSACTION'),
                   ),
                 ),
               ],
