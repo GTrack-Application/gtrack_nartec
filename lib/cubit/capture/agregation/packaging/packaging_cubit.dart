@@ -32,6 +32,7 @@ class PackagingCubit extends Cubit<PackagingState> {
         itemsWithPallet[ssccController.text.trim()] = {
           'palletCode': ssccController.text.trim(),
           'items': result,
+          'count': result.length,
         };
       }
 
@@ -47,6 +48,8 @@ class PackagingCubit extends Cubit<PackagingState> {
 
       // items.addAll(newItems);
       items.add(result.first);
+
+      ssccController.clear();
 
       emit(PackagingScanLoaded());
     } catch (error) {

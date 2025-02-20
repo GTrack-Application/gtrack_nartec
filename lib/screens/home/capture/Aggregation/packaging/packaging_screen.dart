@@ -319,7 +319,7 @@ class _PackagingScreenState extends State<PackagingScreen> {
                                 ),
                               ),
                               Text(
-                                "Count: ${item.cID}",
+                                "Count: ${packagingCubit.itemsWithPallet[item.palletCode]?['count'] ?? 0}",
                                 style: TextStyle(
                                   color: AppColors.black,
                                 ),
@@ -344,7 +344,11 @@ class _PackagingScreenState extends State<PackagingScreen> {
                         ? AppColors.pink
                         : Colors.grey,
                     text: "Complete Transaction",
+                    isLoading: state is PackagingInsertLoading,
                     onPressed: () {
+                      if (state is PackagingInsertLoading) {
+                        return;
+                      }
                       packagingCubit.insertPackaging(slug ?? "");
                     },
                   ),
