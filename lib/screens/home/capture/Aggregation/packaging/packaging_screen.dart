@@ -54,27 +54,27 @@ class _PackagingScreenState extends State<PackagingScreen> {
                                   buildPackingBox(
                                     title: "Pallet",
                                     slug: 'pallet',
-                                    icon: AppIcons.transferPallet,
+                                    icon: AppIcons.pallet,
                                   ),
                                   buildPackingBox(
                                     title: "Box/Carton",
                                     slug: 'box',
-                                    icon: AppIcons.aggCompiling,
+                                    icon: AppIcons.boxcarton,
                                   ),
                                   buildPackingBox(
                                     title: "Bundle",
                                     slug: 'bundle',
-                                    icon: AppIcons.aggCompiling,
+                                    icon: AppIcons.bundle,
                                   ),
                                   buildPackingBox(
                                     title: "Pack",
                                     slug: 'pack',
-                                    icon: AppIcons.aggCompiling,
+                                    icon: AppIcons.pack,
                                   ),
                                   buildPackingBox(
                                     title: "Piece",
                                     slug: 'piece',
-                                    icon: AppIcons.aggCompiling,
+                                    icon: AppIcons.piece,
                                   ),
                                 ],
                               ),
@@ -129,13 +129,13 @@ class _PackagingScreenState extends State<PackagingScreen> {
       child: Container(
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: AppColors.pink.withValues(alpha: 0.8),
+          color: AppColors.pink,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColors.background),
           shape: BoxShape.rectangle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.5),
+              color: AppColors.grey,
               spreadRadius: 2,
               blurRadius: 5,
             ),

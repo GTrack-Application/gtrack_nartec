@@ -313,6 +313,7 @@ class _PackagingTypeScreenState extends State<PackagingTypeScreen> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 8.0),
                         _buildItemRow('Item Code:', item.itemCode ?? '',
                             item.itemCode != null),
                         _buildItemRow('Description:', item.itemDesc ?? '',

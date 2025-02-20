@@ -166,4 +166,11 @@ class AppIcons {
   // Consignment Screen
   static const String consignShipper = 'assets/icons/consign_shipper.png';
   static const String consignReceiver = 'assets/icons/consign_receiver.png';
+
+  // Packaging Screen
+  static const String boxcarton = 'assets/icons/boxcarton.png';
+  static const String pallet = 'assets/icons/pallet.png';
+  static const String bundle = 'assets/icons/bundle.png';
+  static const String pack = 'assets/icons/pack.png';
+  static const String piece = 'assets/icons/piece.png';
 }
