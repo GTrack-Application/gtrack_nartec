@@ -1,21 +1,14 @@
 // ignore_for_file: avoid_print
 
 import 'package:gtrack_nartec/constants/app_preferences.dart';
-import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/Transfer/ItemReAllocation/GetItemInfoByPalletCodeModel.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class ItemReAllocationTableDataController {
   static Future<List<GetItemInfoByPalletCodeModel>> getAllTable(
       String palletId) async {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
-
-    String url = "${AppUrls.baseUrlWith7010}/api/getItemInfoByPalletCode";
-    print("url: $url");
-
-    final uri = Uri.parse(url);
 
     final headers = <String, String>{
       "Authorization": tokenNew!,
@@ -24,18 +17,22 @@ class ItemReAllocationTableDataController {
     };
 
     try {
-      var response = await http.post(uri, headers: headers);
+      final response = await HttpService().request(
+        "/api/getItemInfoByPalletCode",
+        method: HttpMethod.post,
+        headers: headers,
+      );
 
-      if (response.statusCode == 200) {
+      if (response.success) {
         print("Status Code: ${response.statusCode}");
 
-        var data = json.decode(response.body) as List;
+        var data = response.data as List;
         List<GetItemInfoByPalletCodeModel> shipmentData =
             data.map((e) => GetItemInfoByPalletCodeModel.fromJson(e)).toList();
         return shipmentData;
       } else {
         print("Status Code: ${response.statusCode}");
-        var data = json.decode(response.body);
+        var data = response.data;
         var msg = data['message'];
         throw Exception(msg);
       }
