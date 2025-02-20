@@ -37,51 +37,7 @@ class _PackagingScreenState extends State<PackagingScreen> {
                   ),
                   child: GestureDetector(
                     onTap: () {
-                      // Show nice dialog
-                      showDialog(
-                        context: context,
-                        builder: (context) => SimpleDialog(
-                          title: Text('Packaing Box'),
-                          backgroundColor: AppColors.background,
-                          children: [
-                            // create a wrap widget of 3 columns and 5 elements total
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Wrap(
-                                spacing: 16,
-                                runSpacing: 16,
-                                children: [
-                                  buildPackingBox(
-                                    title: "Pallet",
-                                    slug: 'pallet',
-                                    icon: AppIcons.pallet,
-                                  ),
-                                  buildPackingBox(
-                                    title: "Box/Carton",
-                                    slug: 'box',
-                                    icon: AppIcons.boxcarton,
-                                  ),
-                                  buildPackingBox(
-                                    title: "Bundle",
-                                    slug: 'bundle',
-                                    icon: AppIcons.bundle,
-                                  ),
-                                  buildPackingBox(
-                                    title: "Pack",
-                                    slug: 'pack',
-                                    icon: AppIcons.pack,
-                                  ),
-                                  buildPackingBox(
-                                    title: "Piece",
-                                    slug: 'piece',
-                                    icon: AppIcons.piece,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      );
+                      showPalletTypeDialog();
                     },
                     child: Row(
                       spacing: 4,
@@ -104,11 +60,57 @@ class _PackagingScreenState extends State<PackagingScreen> {
               ],
             ),
             Expanded(
-                child: Container(
-              color: Colors.grey,
-            ))
+              child: Text('API For This Section Is Not Working!'),
+            )
           ],
         ),
+      ),
+    );
+  }
+
+  showPalletTypeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text('Packaing Box'),
+        backgroundColor: AppColors.background,
+        children: [
+          // create a wrap widget of 3 columns and 5 elements total
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: [
+                buildPackingBox(
+                  title: "Pallet",
+                  slug: 'pallet',
+                  icon: AppIcons.pallet,
+                ),
+                buildPackingBox(
+                  title: "Box/Carton",
+                  slug: 'box',
+                  icon: AppIcons.boxcarton,
+                ),
+                buildPackingBox(
+                  title: "Bundle",
+                  slug: 'bundle',
+                  icon: AppIcons.bundle,
+                ),
+                buildPackingBox(
+                  title: "Pack",
+                  slug: 'pack',
+                  icon: AppIcons.pack,
+                ),
+                buildPackingBox(
+                  title: "Piece",
+                  slug: 'piece',
+                  icon: AppIcons.piece,
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
