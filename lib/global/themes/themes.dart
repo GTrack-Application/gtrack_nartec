@@ -76,6 +76,20 @@ class Themes {
     );
   }
 
+  static FilledButtonThemeData _filledButtonTheme(
+      Color foregroundColor, Color backgroundColor) {
+    return FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        foregroundColor: foregroundColor,
+        backgroundColor: backgroundColor,
+        textStyle: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
   static ButtonThemeData _buttonTheme(Color buttonColor) {
     return ButtonThemeData(
       buttonColor: buttonColor,

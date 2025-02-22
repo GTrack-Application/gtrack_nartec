@@ -53,6 +53,9 @@ class TextFormFieldWidget extends StatelessWidget {
         onChanged: onChanged,
         onEditingComplete: onEditingComplete,
         onFieldSubmitted: onFieldSubmitted,
+        style: TextStyle(
+          fontSize: 12,
+        ),
         decoration: InputDecoration(
           suffixIcon: suffixIcon,
           border: const OutlineInputBorder(
@@ -66,7 +69,7 @@ class TextFormFieldWidget extends StatelessWidget {
           hintText: hintText ?? "",
           hintStyle: const TextStyle(
             color: Colors.grey,
-            fontSize: 16,
+            fontSize: 12,
           ),
         ),
         textInputAction: textInputAction,

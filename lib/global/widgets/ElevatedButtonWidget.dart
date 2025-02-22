@@ -48,7 +48,7 @@ class _ElevatedButtonWidgetState extends State<ElevatedButtonWidget> {
               widget.title,
               style: TextStyle(
                 color: widget.textColor ?? Colors.blue[900],
-                fontSize: widget.fontSize ?? 20.0,
+                fontSize: widget.fontSize ?? 16.0,
                 fontWeight: FontWeight.bold,
               ),
             ),

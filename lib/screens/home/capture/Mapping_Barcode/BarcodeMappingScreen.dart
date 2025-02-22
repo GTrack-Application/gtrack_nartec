@@ -1,10 +1,9 @@
-// ignore_for_file: unused_element, avoid_print, sized_box_for_whitespace, use_key_in_widget_constructors, depend_on_referenced_packages, deprecated_member_use, use_build_context_synchronously
+// ignore_for_file: unused_element, avoid_print, sized_box_for_whitespace, use_key_in_widget_constructors, depend_on_referenced_packages, deprecated_member_use, use_build_context_synchronously, avoid_unnecessary_containers
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_nartec/constants/app_images.dart';
 import 'package:gtrack_nartec/controllers/Receiving/supplier_receipt/GetTblStockMasterByItemIdController.dart';
 import 'package:gtrack_nartec/controllers/Receiving/supplier_receipt/UpdateStockMasterDataController.dart';
 import 'package:gtrack_nartec/controllers/capture/Mapping_Barcode/GetItemInfoByItemSerialNoController.dart';
@@ -12,7 +11,6 @@ import 'package:gtrack_nartec/controllers/capture/Mapping_Barcode/getAllTblMappe
 import 'package:gtrack_nartec/controllers/capture/Mapping_Barcode/insertIntoMappedBarcodeOrUpdateBySerialNoController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_nartec/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
@@ -107,8 +105,14 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
   List<String> dList = [];
 
   void _onSearchItem() async {
+    if (_searchController.text.trim() == "") {
+      FocusScope.of(context).unfocus();
+      return;
+    }
+
     FocusScope.of(context).unfocus();
     AppDialogs.loadingDialog(context);
+
     getAllTblMappedBarcodesController
         .getData(_searchController.text.trim())
         .then((value) {
@@ -185,18 +189,10 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
               Get.back();
             },
             title: "Barcode Mapping".toUpperCase(),
-            actions: [
-              Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: const Icon(
-                  Icons.cancel_outlined,
-                  color: Colors.white,
-                ),
-              ),
-            ],
           ),
         ),
         body: Container(
+          padding: const EdgeInsets.only(left: 10),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
@@ -206,219 +202,211 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
               children: [
                 const SizedBox(height: 10),
                 Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Search Item Code",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                  child: TextFormFieldWidget(
+                    hintText: "Search",
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        _onSearchItem();
+                      },
+                      icon: const Icon(Icons.search),
                     ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(left: 20),
-                        child: TextFormFieldWidget(
-                          hintText: "Search Item No. Or Description",
-                          controller: _searchController,
-                          width: MediaQuery.of(context).size.width * 0.73,
-                          onEditingComplete: () {
-                            _onSearchItem();
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            _onSearchItem();
-                          },
-                          child: Image.asset(
-                            AppImages.finder,
-                            width: 45,
-                            height: 45,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ],
+                    controller: _searchController,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    onEditingComplete: () {
+                      _onSearchItem();
+                    },
                   ),
                 ),
                 const SizedBox(height: 10),
-                Center(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 50,
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black12),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DropdownButtonFormField(
-                      value: dValue,
-                      alignment: Alignment.centerLeft,
-                      decoration: const InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
+                Row(
+                  children: [
+                    Container(
+                      child: TextFormFieldWidget(
+                        hintText: "Type or Scan Serial No",
+                        controller: _serialNoController,
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        focusNode: focusNode,
+                        textInputAction: TextInputAction.next,
+                        onFieldSubmitted: (p0) {
+                          FocusScope.of(context).unfocus();
+                          GetItemInfoByItemSerialNoController.getData(
+                                  _serialNoController.text.trim())
+                              .then((value) {
+                            if (value == 200) {
+                              showDiologMethod(
+                                context,
+                                "Item Serial No. Already Exists",
+                                () {
+                                  FocusScope.of(context)
+                                      .requestFocus(gtinFocusNode);
+                                },
+                                () {
+                                  _serialNoController.clear();
+                                  FocusScope.of(context)
+                                      .requestFocus(focusNode);
+                                },
+                              ).show();
+                            }
+                            if (value == 404) {
+                              FocusScope.of(context)
+                                  .requestFocus(gtinFocusNode);
+                              return;
+                            }
+                          }).onError((error, stackTrace) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Error: $error".replaceAll("Exception:", ""),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                backgroundColor: Colors.white,
+                                duration: const Duration(seconds: 3),
+                              ),
+                            );
+                            return;
+                          });
+                        },
                       ),
-                      padding: const EdgeInsets.only(top: 7),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dValue = newValue!;
-                          itemID = itemList
-                              .where((element) =>
-                                  dValue.contains(element.iTEMID.toString()))
-                              .first
-                              .iTEMID
-                              .toString();
-                          itemName = itemList
-                              .where((element) =>
-                                  dValue.contains(element.iTEMID.toString()))
-                              .first
-                              .iTEMNAME
-                              .toString();
-                        });
-                      },
-                      isExpanded: true,
-                      items:
-                          dList.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            textScaleFactor: 0.7,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              background: null,
-                            ),
-                          ),
-                        );
-                      }).toList(),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    // scan icon
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.qr_code),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Container(
+                      child: TextFormFieldWidget(
+                        hintText: "Enter/Scan GTIN",
+                        controller: _gtinController,
+                        focusNode: gtinFocusNode,
+                        textInputAction: TextInputAction.next,
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        onFieldSubmitted: (p0) {
+                          FocusScope.of(context).unfocus();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    // scan icon
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.qr_code),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // Container(
+                //   width: MediaQuery.of(context).size.width * 0.9,
+                //   height: 50,
+                //   padding: const EdgeInsets.only(left: 10, right: 10),
+                //   decoration: BoxDecoration(
+                //     border: Border.all(color: Colors.black12),
+                //     borderRadius: BorderRadius.circular(5),
+                //     color: Colors.white,
+                //   ),
+                //   child: DropdownButtonFormField(
+                //     value: dValue,
+                //     alignment: Alignment.centerLeft,
+                //     decoration: const InputDecoration(
+                //       enabledBorder: InputBorder.none,
+                //       focusedBorder: InputBorder.none,
+                //     ),
+                //     onChanged: (String? newValue) {
+                //       setState(() {
+                //         dValue = newValue!;
+                //         itemID = itemList
+                //             .where((element) =>
+                //                 dValue.contains(element.iTEMID.toString()))
+                //             .first
+                //             .iTEMID
+                //             .toString();
+                //         itemName = itemList
+                //             .where((element) =>
+                //                 dValue.contains(element.iTEMID.toString()))
+                //             .first
+                //             .iTEMNAME
+                //             .toString();
+                //       });
+                //     },
+                //     isExpanded: true,
+                //     items: dList.map<DropdownMenuItem<String>>((String value) {
+                //       return DropdownMenuItem<String>(
+                //         value: value,
+                //         child: Text(
+                //           value,
+                //           textScaleFactor: 0.7,
+                //           style: const TextStyle(
+                //             fontSize: 18,
+                //             fontWeight: FontWeight.bold,
+                //             background: null,
+                //           ),
+                //         ),
+                //       );
+                //     }).toList(),
+                //   ),
+                // ),
+                // const SizedBox(height: 20),
                 Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 10),
+                      ),
+                    ],
+                  ),
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Center(
                     child: Text(
                       dValue.toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue[900]!,
+                        color: Colors.blue[700]!,
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Scan Serial No",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "Enter/Scan Serial No",
-                    controller: _serialNoController,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    focusNode: focusNode,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                      GetItemInfoByItemSerialNoController.getData(
-                              _serialNoController.text.trim())
-                          .then((value) {
-                        if (value == 200) {
-                          showDiologMethod(
-                            context,
-                            "Item Serial No. Already Exists",
-                            () {
-                              FocusScope.of(context)
-                                  .requestFocus(gtinFocusNode);
-                            },
-                            () {
-                              _serialNoController.clear();
-                              FocusScope.of(context).requestFocus(focusNode);
-                            },
-                          ).show();
-                        }
-                        if (value == 404) {
-                          FocusScope.of(context).requestFocus(gtinFocusNode);
-                          return;
-                        }
-                      }).onError((error, stackTrace) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Error: $error".replaceAll("Exception:", ""),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
-                            ),
-                            backgroundColor: Colors.white,
-                            duration: const Duration(seconds: 3),
-                          ),
-                        );
-                        return;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Scan GTIN",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "Enter/Scan GTIN",
-                    controller: _gtinController,
-                    focusNode: gtinFocusNode,
-                    textInputAction: TextInputAction.next,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
                   child: Text(
                     "Select Config",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                      color: Colors.blue[700]!,
                     ),
                   ),
                 ),
@@ -428,7 +416,6 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
                     color: Colors.white,
                   ),
                   width: MediaQuery.of(context).size.width * 0.9,
-                  margin: const EdgeInsets.only(left: 20),
                   child: DropdownSearch<String>(
                     popupProps: const PopupProps.menu(),
                     onChanged: (value) {
@@ -441,100 +428,130 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
                 ),
                 const SizedBox(height: 10),
                 Container(
-                  margin: const EdgeInsets.only(left: 20),
+                  width: MediaQuery.of(context).size.width * 0.4,
                   child: Text(
-                    "Select Manufacture Date",
+                    "Manufacture Date",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                      color: Colors.blue[700]!,
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "dd/mm/yyyy",
-                    controller: _manufacturingController,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                    },
-                    readOnly: true,
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        _selectDate(context);
-                      },
-                      icon: Icon(
-                        Icons.calendar_today,
-                        size: 30,
-                        color: Colors.blue[900]!,
+                Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: TextFormFieldWidget(
+                        hintText: "dd/mm/yyyy",
+                        controller: _manufacturingController,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        onFieldSubmitted: (p0) {
+                          FocusScope.of(context).unfocus();
+                        },
+                        readOnly: true,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            _selectDate(context);
+                          },
+                          icon: Icon(
+                            Icons.calendar_today,
+                            size: 30,
+                            color: Colors.blue[700]!,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Scan QR Code",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          child: TextFormFieldWidget(
+                            hintText: "QR Scanning",
+                            controller: _qrCodeController,
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (p0) {
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.1,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                          ),
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.qr_code,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "Enter/Scan QR Code",
-                    controller: _qrCodeController,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Container(
-                  margin: const EdgeInsets.only(left: 20),
                   child: Text(
                     "Scan Bin Location",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                      color: Colors.blue[700]!,
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "Enter/Scan Bin Location",
-                    controller: _binLocationController,
-                    textInputAction: TextInputAction.next,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      child: TextFormFieldWidget(
+                        hintText: "Enter/Scan Bin Location",
+                        controller: _binLocationController,
+                        textInputAction: TextInputAction.next,
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        onFieldSubmitted: (p0) {
+                          FocusScope.of(context).unfocus();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.qr_code,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Container(
-                  margin: const EdgeInsets.only(left: 20),
                   child: Text(
                     "Enter Reference",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                      color: Colors.blue[700]!,
                     ),
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 20),
                   child: TextFormFieldWidget(
                     hintText: "Enter/Scan Reference",
                     controller: _referenceController,
@@ -546,190 +563,215 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Enter Length",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Text(
+                            "Enter Length",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[700]!,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: TextFormFieldWidget(
+                            hintText: "Enter Length",
+                            controller: _lengthController,
+                            textInputAction: TextInputAction.next,
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            onFieldSubmitted: (p0) {
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "Enter Length",
-                    controller: _lengthController,
-                    textInputAction: TextInputAction.next,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(
+                            "Enter Width",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[700]!,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: TextFormFieldWidget(
+                            hintText: "Enter Width",
+                            controller: _widthController,
+                            textInputAction: TextInputAction.next,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            onFieldSubmitted: (p0) {
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Enter Width",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(
+                            "Enter Height",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[700]!,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: TextFormFieldWidget(
+                            hintText: "Enter Height",
+                            controller: _heightController,
+                            textInputAction: TextInputAction.next,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            onFieldSubmitted: (p0) {
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "Enter Width",
-                    controller: _widthController,
-                    textInputAction: TextInputAction.next,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Enter Height",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(
+                            "Enter Weight",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[700]!,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: TextFormFieldWidget(
+                            hintText: "Enter Weight",
+                            controller: _weightController,
+                            textInputAction: TextInputAction.done,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            onFieldSubmitted: (p0) {
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "Enter Height",
-                    controller: _heightController,
-                    textInputAction: TextInputAction.next,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Enter Weight",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900]!,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextFormFieldWidget(
-                    hintText: "Enter Weight",
-                    controller: _weightController,
-                    textInputAction: TextInputAction.done,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    onFieldSubmitted: (p0) {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 20),
-                Center(
-                  child: ElevatedButtonWidget(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    title: "Save",
-                    onPressed: () {
-                      if (_searchController.text.trim() == "" ||
-                          _serialNoController.text.trim() == "" ||
-                          _gtinController.text.trim() == "" ||
-                          dropDownValue == "Select Config" ||
-                          _binLocationController.text.trim() == "" ||
-                          _lengthController.text.trim() == "" ||
-                          _widthController.text.trim() == "" ||
-                          _heightController.text.trim() == "" ||
-                          dValue.toString() == "") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Please fill the above fields"),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                        return;
-                      }
-                      FocusScope.of(context).unfocus();
-                      AppDialogs.loadingDialog(context);
-                      insertIntoMappedBarcodeOrUpdateBySerialNoController
-                          .insert(
-                        itemID,
-                        itemName,
-                        _referenceController.text.trim(),
-                        _gtinController.text.trim(),
-                        _binLocationController.text.trim(),
-                        _serialNoController.text.trim(),
-                        dropDownValue.toString(),
-                        _qrCodeController.text.trim(),
-                        double.parse(_lengthController.text.trim()),
-                        double.parse(_widthController.text.trim()),
-                        double.parse(_heightController.text.trim()),
-                        double.parse(_weightController.text.trim()),
-                        _manufacturingController.text.trim(),
-                      )
-                          .then((value) {
-                        Get.back();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Data saved successfully"),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                        setState(() {
-                          // _gtinController.clear();
-                          // _binLocationController.clear();
-                          _serialNoController.clear();
-                          // _manufacturingController.clear();
-                          // _qrCodeController.clear();
-                          // _referenceController.clear();
-                          // _searchController.clear();
-                          // _lengthController.clear();
-                          // _widthController.clear();
-                          // _heightController.clear();
-                          // _weightController.clear();
+                Container(
+                  margin: EdgeInsets.only(right: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_searchController.text.trim() == "" ||
+                              _serialNoController.text.trim() == "" ||
+                              _gtinController.text.trim() == "" ||
+                              dropDownValue == "Select Config" ||
+                              _binLocationController.text.trim() == "" ||
+                              _lengthController.text.trim() == "" ||
+                              _widthController.text.trim() == "" ||
+                              _heightController.text.trim() == "" ||
+                              dValue.toString() == "") {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Please fill the above fields"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          FocusScope.of(context).unfocus();
+                          AppDialogs.loadingDialog(context);
+                          insertIntoMappedBarcodeOrUpdateBySerialNoController
+                              .insert(
+                            itemID,
+                            itemName,
+                            _referenceController.text.trim(),
+                            _gtinController.text.trim(),
+                            _binLocationController.text.trim(),
+                            _serialNoController.text.trim(),
+                            dropDownValue.toString(),
+                            _qrCodeController.text.trim(),
+                            double.parse(_lengthController.text.trim()),
+                            double.parse(_widthController.text.trim()),
+                            double.parse(_heightController.text.trim()),
+                            double.parse(_weightController.text.trim()),
+                            _manufacturingController.text.trim(),
+                          )
+                              .then((value) {
+                            Get.back();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Data saved successfully"),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            setState(() {
+                              // _gtinController.clear();
+                              // _binLocationController.clear();
+                              _serialNoController.clear();
+                              // _manufacturingController.clear();
+                              // _qrCodeController.clear();
+                              // _referenceController.clear();
+                              // _searchController.clear();
+                              // _lengthController.clear();
+                              // _widthController.clear();
+                              // _heightController.clear();
+                              // _weightController.clear();
 
-                          // itemID = "";
-                          // itemName = "";
-                          // itemGroupId = "";
-                          // groupName = "";
-                        });
-                        UpdateStockMasterDataController.insertShipmentData(
-                          itemID,
-                          double.parse(_lengthController.text.trim()),
-                          double.parse(_widthController.text.trim()),
-                          double.parse(_heightController.text.trim()),
-                          double.parse(_weightController.text.trim()),
-                        );
-                        FocusScope.of(context).requestFocus(focusNode);
-                      }).onError((error, stackTrace) {
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                error.toString().replaceAll("Exception:", "")),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      });
-                    },
-                    textColor: Colors.white,
-                    color: AppColors.pink,
+                              // itemID = "";
+                              // itemName = "";
+                              // itemGroupId = "";
+                              // groupName = "";
+                            });
+                            UpdateStockMasterDataController.insertShipmentData(
+                              itemID,
+                              double.parse(_lengthController.text.trim()),
+                              double.parse(_widthController.text.trim()),
+                              double.parse(_heightController.text.trim()),
+                              double.parse(_weightController.text.trim()),
+                            );
+                            FocusScope.of(context).requestFocus(focusNode);
+                          }).onError((error, stackTrace) {
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error
+                                    .toString()
+                                    .replaceAll("Exception:", "")),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          });
+                        },
+                        child: Text("Save"),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(height: 20),
