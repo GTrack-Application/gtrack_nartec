@@ -1,6 +1,4 @@
-// ignore_for_file: avoid_print, sized_box_for_whitespace, use_build_context_synchronously
-
-import 'package:dropdown_search/dropdown_search.dart';
+// ignore_for_file: avoid_print, sized_box_for_whitespace, use_build_context_synchronously, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,27 +51,40 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       AppDialogs.showLoadingDialog(context);
       GetAllDistinctItemCodesFromTblMappedBarcodesController.getAllTable()
           .then((value) {
-        for (int i = 0; i < value.length; i++) {
-          setState(
-            () {
-              dropDownList2.add(value[i]);
-              Set<String> set = dropDownList2.toSet();
-              dropDownList2 = set.toList();
-            },
+        print("Retrieved values: $value");
+
+        if (value.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("No item codes found"),
+              backgroundColor: Colors.orange,
+            ),
           );
+          Navigator.of(context).pop();
+          return;
         }
 
         setState(() {
+          dropDownList2 = value.toSet().toList();
           dropDownValue2 = dropDownList2[0];
           filterList2 = dropDownList2;
         });
 
         Navigator.of(context).pop();
       }).onError((error, stackTrace) {
+        print("Error loading item codes: $error");
+        print("Stacktrace: $stackTrace");
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error loading item codes: ${error.toString()}"),
+            backgroundColor: Colors.red,
+          ),
+        );
         Navigator.of(context).pop();
       });
     });
@@ -117,6 +128,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              const SizedBox(height: 10),
               Container(
                 margin: const EdgeInsets.only(left: 20),
                 child: const TextWidget(
@@ -131,32 +143,50 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
                     ),
-                    width: MediaQuery.of(context).size.width * 0.73,
+                    width: MediaQuery.of(context).size.width * 0.70,
                     margin: const EdgeInsets.only(left: 20),
-                    child: DropdownSearch<String>(
-                      filterFn: (item, filter) {
-                        return item
-                            .toLowerCase()
-                            .contains(filter.toLowerCase());
-                      },
-                      enabled: true,
-                      popupProps: const PopupProps.menu(),
-                      // dropdownButtonProps: const DropdownButtonProps(
-                      //   icon: Icon(
-                      //     Icons.arrow_drop_down,
-                      //     color: Colors.black,
-                      //   ),
-                      // ),
-                      // items: filterList2,
-                      onChanged: (value) {
-                        setState(() {
-                          dropDownValue2 = value!;
-                        });
-                      },
-                      selectedItem: "Select Item Code",
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
+                      ),
+                      child: DropdownButton(
+                        value: dropDownValue2,
+                        underline: Container(),
+                        isExpanded: true,
+                        icon: const Icon(Icons.arrow_drop_down),
+                        iconSize: 30,
+                        iconEnabledColor: Colors.black,
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        style: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        items: dropDownList2
+                            .map((e) =>
+                                DropdownMenuItem(value: e, child: Text(e)))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropDownValue2 = value;
+                          });
+                        },
+                      ),
                     ),
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.15,
                     margin: const EdgeInsets.only(left: 10),
                     child: IconButton(
                       onPressed: () {
@@ -449,9 +479,12 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
               ),
               const SizedBox(height: 10),
               Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: TextWidget(
-                      text: _site == "By Pallet" ? "Pallet ID" : "Serial No.")),
+                margin: const EdgeInsets.only(left: 20),
+                child: TextWidget(
+                  text: _site == "By Pallet" ? "Pallet ID" : "Serial No.",
+                  fontSize: 13,
+                ),
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -502,6 +535,7 @@ class _BinToBinInternalScreenState extends State<BinToBinInternalScreen> {
               // Container(
               //     margin: const EdgeInsets.only(left: 10, top: 10),
               //     child: const TextWidget(text: "List of items on Pallets*")),
+              const SizedBox(height: 10),
               Container(
                 height: MediaQuery.of(context).size.height * 0.4,
                 decoration: BoxDecoration(

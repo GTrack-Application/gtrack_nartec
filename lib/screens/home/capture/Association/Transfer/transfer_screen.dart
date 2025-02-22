@@ -3,6 +3,7 @@ import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/goods_issue_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_receipt/goods_receipt.dart';
 
@@ -64,6 +65,8 @@ class _TransferScreenState extends State<TransferScreen> {
         context: context, screen: const GoodsReceiptScreen());
     data[1]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const GoodsIssueScreen());
+    data[4]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const BinToBinInternalScreen());
     // data[2]["onTap"] = () => AppNavigator.goToPage(
     //     context: context, screen: RawMaterialsToWIPScreen1());
     // data[1]["onTap"] = () => AppNavigator.goToPage(

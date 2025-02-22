@@ -1,31 +1,26 @@
 // ignore_for_file: avoid_print, depend_on_referenced_packages
 
-import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class GetAllDistinctItemCodesFromTblMappedBarcodesController {
   static Future<List<String>> getAllTable() async {
-    String? tokenNew;
-    await AppPreferences.getToken().then((value) => tokenNew = value);
-
     String url =
         "${AppUrls.baseUrlWith7010}/api/getAllDistinctItemCodesFromTblMappedBarcodes";
     print("url: $url");
 
     final uri = Uri.parse(url);
 
-    final headers = <String, String>{
-      "Authorization": tokenNew!,
-      "Accept": "application/json",
-    };
-
     try {
-      var response = await http.get(uri, headers: headers);
+      var response = await http.get(uri);
 
       if (response.statusCode == 200) {
         print("Status Code: ${response.statusCode}");
+
+        //     {
+        //     "ItemCode": "CV-9800YJ 220 BR"
+        //     }
 
         var data = json.decode(response.body) as List;
         List<String> shipmentData =
