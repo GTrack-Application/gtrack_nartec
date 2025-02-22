@@ -1,8 +1,7 @@
-// ignore_for_file: avoid_print, sized_box_for_whitespace
+// ignore_for_file: avoid_print, sized_box_for_whitespace, deprecated_member_use, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_nartec/constants/app_images.dart';
 import 'package:gtrack_nartec/controllers/capture/Association/Transfer/ItemReallocation/ItemReAllocationTableDataController.dart';
 import 'package:gtrack_nartec/controllers/capture/Association/Transfer/ItemReallocation/SubmitItemReallocateController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
@@ -45,21 +44,7 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
           onPressed: () {
             Get.back();
           },
-          title: "Pallet Re-Allocation".toUpperCase(),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: const Icon(
-                  Icons.cancel_outlined,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+          title: "Pallet Re-Allocation",
         ),
       ),
       body: Container(
@@ -72,61 +57,29 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
             children: [
               Container(
                 color: AppColors.pink.withOpacity(0.1),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Flexible(
-                      child: ListTile(
-                        title: const Text(
-                          'Allocation',
-                          style: TextStyle(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        leading: Radio(
-                          value: "Allocation",
-                          groupValue: _site,
-                          onChanged: (String? value) {
-                            setState(() {
-                              _site = value!;
-                              print(_site);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: ListTile(
-                        title: const Text(
-                          'Picking',
-                          style: TextStyle(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        leading: Radio(
-                          value: "Picking",
-                          groupValue: _site,
-                          onChanged: (String? value) {
-                            setState(() {
-                              _site = value!;
-                              print(_site);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+                child: DefaultTabController(
+                  length: 2,
+                  child: TabBar(
+                    onTap: (index) {
+                      setState(() {
+                        _site = index == 0 ? "Allocation" : "Picking";
+                      });
+                    },
+                    labelColor: AppColors.pink,
+                    unselectedLabelColor: AppColors.black,
+                    tabs: const [
+                      Tab(text: 'Allocation'),
+                      Tab(text: 'Picking'),
+                    ],
+                  ),
                 ),
               ),
+              const SizedBox(height: 10),
               Container(
                 margin: const EdgeInsets.only(left: 20),
                 child: const TextWidget(
                   text: "Pallet ID",
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               SingleChildScrollView(
@@ -146,21 +99,18 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                       ),
                     ),
                     const SizedBox(width: 10),
+                    // icon for scanning
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey[400]!),
                       ),
-                      child: GestureDetector(
-                        onTap: () {
+                      child: IconButton(
+                        onPressed: () {
                           palletIdMethod();
                         },
-                        child: Image.asset(
-                          AppImages.finder,
-                          width: 45,
-                          height: 45,
-                          fit: BoxFit.fill,
-                        ),
+                        icon: const Icon(Icons.qr_code),
                       ),
                     ),
                   ],
@@ -174,101 +124,101 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                     DataColumn(
                         label: Text(
                       'Item Code',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                     )),
                     DataColumn(
                         label: Text(
                       'Item Desc',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                     )),
                     DataColumn(
                         label: Text(
                       'GTIN',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Remarks',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'User',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Classification',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Main Location',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Bin Location',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Int Code',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Item Serial No.',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Map Date',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Pallet Code',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Reference',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'SID',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'CID',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'PO',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                     DataColumn(
                         label: Text(
                       'Trans',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: AppColors.primary),
                       textAlign: TextAlign.center,
                     )),
                   ],
@@ -276,13 +226,14 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                   showCheckboxColumn: false,
                   showFirstLastButtons: true,
                   arrowHeadColor: AppColors.pink,
+                  headingRowColor: MaterialStateProperty.all(Colors.grey[200]),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(left: 20, top: 10),
                 child: const TextWidget(
                   text: "Scan Serial Item",
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               Container(
@@ -302,14 +253,14 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                       const Text(
                         "",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 5),
                       ElevatedButtonWidget(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
+                        height: 40,
                         title: "Save",
                         textColor: Colors.white,
                         color: AppColors.pink,
@@ -366,14 +317,14 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      const TextWidget(text: "TOTAL", fontSize: 20),
+                      const TextWidget(text: "TOTAL", fontSize: 14),
                       const SizedBox(height: 5),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
+                        height: 40,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Colors.blue,
+                            color: AppColors.primary,
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -395,6 +346,11 @@ class _ItemReAllocationScreenState extends State<ItemReAllocationScreen> {
   }
 
   void palletIdMethod() {
+    if (_palletIdController.text.isEmpty) {
+      FocusScope.of(context).requestFocus(FocusNode());
+      return;
+    }
+
     FocusScope.of(context).requestFocus(FocusNode());
     AppDialogs.loadingDialog(context);
 
