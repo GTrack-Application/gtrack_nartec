@@ -88,28 +88,31 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const Text("GTIN Tracker v.2.0"),
           automaticallyImplyLeading: false,
         ),
-        bottomNavigationBar: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Image.asset(
-                AppIcons.iosLogo,
-                width: 50,
-                height: 50,
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Image.asset(
+                  AppIcons.iosLogo,
+                  width: 50,
+                  height: 50,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Image.asset(
-                AppIcons.gs1Logo,
-                width: 100,
-                height: 50,
-                fit: BoxFit.contain,
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Image.asset(
+                  AppIcons.gs1Logo,
+                  width: 100,
+                  height: 50,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         // Drawer from right side that contains the identity, capture and share screens
         endDrawer: MyDrawerWidget(currentUser: currentUser),
@@ -164,7 +167,7 @@ class MyDrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.background,
       child: ListView(
         children: [
           DrawerHeader(
@@ -274,7 +277,7 @@ class MyDrawerWidget extends StatelessWidget {
                 backgroundColor: Colors.red.withOpacity(0.8),
                 child: const Icon(
                   Icons.logout,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
             ),
