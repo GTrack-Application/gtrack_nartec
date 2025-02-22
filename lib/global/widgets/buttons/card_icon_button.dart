@@ -1,15 +1,17 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class CardIconButton extends StatelessWidget {
   const CardIconButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.icon,
     required this.onPressed,
     this.fontSize,
-  }) : super(key: key);
+  });
 
   final String text;
   final String icon;
@@ -42,7 +44,7 @@ class CardIconButton extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: fontSize ?? 13,
+                fontSize: fontSize ?? 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
