@@ -34,11 +34,11 @@ class TextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: const Color.fromRGBO(255, 255, 255, 1),
-      ),
-      height: 50,
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(5),
+      //   color: const Color.fromRGBO(255, 255, 255, 1),
+      // ),
+      // height: 50,
       child: TextFormField(
         controller: controller,
         enabled: enabled ?? true,

@@ -102,7 +102,7 @@ class _PackagingTypeScreenState extends State<PackagingTypeScreen> {
                   spacing: 8.0,
                   children: [
                     Expanded(
-                      flex: 3,
+                      flex: 5,
                       child: TextFormFieldWidget(
                         controller: packagingCubit.ssccController,
                       ),
@@ -110,6 +110,7 @@ class _PackagingTypeScreenState extends State<PackagingTypeScreen> {
 
                     // Filled Button
                     Expanded(
+                      flex: 2,
                       child: SizedBox(
                         height: 45,
                         child: PrimaryButtonWidget(
