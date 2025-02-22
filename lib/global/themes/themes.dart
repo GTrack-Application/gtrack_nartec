@@ -51,6 +51,7 @@ class Themes {
       brightness: Brightness.dark,
       elevatedButtonTheme:
           _elevatedButtonTheme(Colors.white, AppColors.primary),
+      filledButtonTheme: _filledButtonTheme(Colors.white, AppColors.primary),
       buttonTheme: _buttonTheme(AppColors.primary),
       appBarTheme: _appBarTheme(AppColors.primary, Brightness.dark),
       textTheme: _textTheme(),
