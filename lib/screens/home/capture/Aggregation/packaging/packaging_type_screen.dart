@@ -107,7 +107,6 @@ class _PackagingTypeScreenState extends State<PackagingTypeScreen> {
                         controller: packagingCubit.ssccController,
                       ),
                     ),
-
                     // Filled Button
                     Expanded(
                       flex: 2,
