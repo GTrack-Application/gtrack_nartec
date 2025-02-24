@@ -13,7 +13,10 @@ class JobOrderCubit extends Cubit<JobOrderState> {
       BlocProvider.of<JobOrderCubit>(context);
 
   final HttpService _httpService = HttpService();
+
+  // Lists
   final List<JobOrderBillOfMaterial> _selectedItems = [];
+  List<JobOrderModel> orders = [];
 
   get items => _selectedItems;
 
@@ -31,7 +34,7 @@ class JobOrderCubit extends Cubit<JobOrderState> {
 
       if (response.success) {
         final List<dynamic> data = response.data;
-        final orders = data.map((e) => JobOrderModel.fromJson(e)).toList();
+        orders = data.map((e) => JobOrderModel.fromJson(e)).toList();
 
         emit(JobOrderLoaded(orders: orders));
       } else {

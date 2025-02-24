@@ -38,22 +38,21 @@ class _JobOrderScreenState extends State<JobOrderScreen> {
         builder: (context, state) {
           if (state is JobOrderLoading) {
             return _buildLoadingPlaceholder();
-          } else if (state is JobOrderLoaded) {
-            return RefreshIndicator(
-              onRefresh: () => jobOrderCubit.getJobOrders(),
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: state.orders.length,
-                itemBuilder: (context, index) {
-                  final order = state.orders[index];
-                  return _buildJobOrderCard(order);
-                },
-              ),
-            );
-          } else if (state is JobOrderError) {
+          }
+          if (state is JobOrderError) {
             return Center(child: Text(state.message));
           }
-          return const SizedBox();
+          return RefreshIndicator(
+            onRefresh: () => jobOrderCubit.getJobOrders(),
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: jobOrderCubit.orders.length,
+              itemBuilder: (context, index) {
+                final order = jobOrderCubit.orders[index];
+                return _buildJobOrderCard(order);
+              },
+            ),
+          );
         },
       ),
     );
