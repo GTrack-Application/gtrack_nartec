@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_icons.dart';
+import 'package:gtrack_nartec/cubit/capture/agregation/packaging/packaging_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packaging/packaging_master_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packaging/packaging_type_screen.dart';
+import 'package:intl/intl.dart';
 
 class PackagingScreen extends StatefulWidget {
   const PackagingScreen({super.key});
@@ -12,6 +16,24 @@ class PackagingScreen extends StatefulWidget {
 }
 
 class _PackagingScreenState extends State<PackagingScreen> {
+  final ScrollController _scrollController = ScrollController();
+  late PackagingCubit packagingCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    packagingCubit = PackagingCubit();
+    packagingCubit.getPackagingMasters();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      packagingCubit.getPackagingMasters();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,18 +41,15 @@ class _PackagingScreenState extends State<PackagingScreen> {
         title: Text('Packaging'),
         backgroundColor: AppColors.pink,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          spacing: 8,
-          children: [
-            Row(
-              spacing: 8.0,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
               children: [
                 Container(
                   height: 45,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: AppColors.pink,
                     borderRadius: BorderRadius.circular(10),
@@ -40,30 +59,62 @@ class _PackagingScreenState extends State<PackagingScreen> {
                       showPalletTypeDialog();
                     },
                     child: Row(
-                      spacing: 4,
                       children: [
-                        const Icon(
-                          Icons.print,
-                          color: AppColors.white,
-                        ),
-                        const Text(
-                          "Packaing Box",
+                        Icon(Icons.print, color: AppColors.white),
+                        SizedBox(width: 4),
+                        Text(
+                          "Packaging Box",
                           style: TextStyle(
                             color: AppColors.white,
                             fontSize: 16,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-            Expanded(
-              child: Text('API For This Section Is Not Working!'),
-            )
-          ],
-        ),
+          ),
+          Expanded(
+            child: BlocBuilder<PackagingCubit, PackagingState>(
+              bloc: packagingCubit,
+              builder: (context, state) {
+                if (state is PackagingMasterLoading) {
+                  return _buildShimmer();
+                }
+
+                if (packagingCubit.packagingMasters.isEmpty) {
+                  return Center(child: Text('No data found'));
+                }
+
+                if (state is PackagingMasterError) {
+                  return Center(child: Text(state.message));
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () =>
+                      packagingCubit.getPackagingMasters(refresh: true),
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: EdgeInsets.all(8),
+                    itemCount: packagingCubit.packagingMasters.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == packagingCubit.packagingMasters.length) {
+                        return state is PackagingMasterLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : SizedBox();
+                      }
+
+                      final package = packagingCubit.packagingMasters[index];
+                      return PackagingCard(package: package);
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -131,13 +182,13 @@ class _PackagingScreenState extends State<PackagingScreen> {
       child: Container(
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: AppColors.pink,
+          color: AppColors.background,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.background),
+          border: Border.all(color: AppColors.pink),
           shape: BoxShape.rectangle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.grey,
+              color: AppColors.pink,
               spreadRadius: 2,
               blurRadius: 5,
             ),
@@ -154,8 +205,136 @@ class _PackagingScreenState extends State<PackagingScreen> {
             FittedBox(
               child: Text(
                 title,
-                style: TextStyle(color: AppColors.white, fontSize: 12),
+                style: TextStyle(color: AppColors.black, fontSize: 12),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmer() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: 5,
+      itemBuilder: (context, index) => _buildShimmerItem(),
+    );
+  }
+
+  Widget _buildShimmerItem() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 120,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: AppColors.grey.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const Spacer(),
+              Container(
+                width: 80,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: AppColors.grey.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            height: 16,
+            decoration: BoxDecoration(
+              color: AppColors.grey.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            width: 200,
+            height: 16,
+            decoration: BoxDecoration(
+              color: AppColors.grey.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PackagingCard extends StatelessWidget {
+  final PackagingMasterModel package;
+
+  const PackagingCard({super.key, required this.package});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: AppColors.background,
+      margin: EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'SSCC: ${package.ssccNo}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.green,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Pallets: ${package.totalPallet}',
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Transaction Date: ${DateFormat('dd/MM/yyyy HH:mm').format(package.transactionDate)}',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Created At: ${DateFormat('dd/MM/yyyy HH:mm').format(package.createdAt)}',
+              style: TextStyle(color: Colors.grey[600]),
             ),
           ],
         ),

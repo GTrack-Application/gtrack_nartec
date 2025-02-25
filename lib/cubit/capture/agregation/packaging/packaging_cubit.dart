@@ -4,6 +4,7 @@ import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/controllers/capture/Association/Transfer/ItemReallocation/ItemReAllocationTableDataController.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/Transfer/ItemReAllocation/GetItemInfoByPalletCodeModel.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packaging/packaging_master_model.dart';
 
 part 'packaging_state.dart';
 
@@ -19,6 +20,10 @@ class PackagingCubit extends Cubit<PackagingState> {
   List<GetItemInfoByPalletCodeModel> items = [];
   Map<String, dynamic> itemsWithPallet = {};
 
+  List<PackagingMasterModel> packagingMasters = [];
+  PackagingPaginationModel? pagination;
+  int currentPage = 1;
+
   void scanItem() async {
     emit(PackagingScanLoading());
 
@@ -29,7 +34,6 @@ class PackagingCubit extends Cubit<PackagingState> {
 
       if (itemsWithPallet.containsKey(ssccController.text.trim())) {
         emit(PackagingScanError(message: "Pallet already scanned"));
-        print("pallet already scanned");
         return;
       } else {
         itemsWithPallet[ssccController.text.trim()] = {
@@ -79,6 +83,55 @@ class PackagingCubit extends Cubit<PackagingState> {
       }
     } catch (error) {
       emit(PackagingInsertError(message: error.toString()));
+    }
+  }
+
+  Future<void> getPackagingMasters({bool refresh = false}) async {
+    if (refresh) {
+      currentPage = 1;
+      packagingMasters.clear();
+    }
+
+    if (state is PackagingMasterLoading) return;
+
+    final currentState = state;
+
+    if (!refresh && currentState is PackagingMasterLoaded) {
+      if (currentPage >= (pagination?.totalPages ?? 1)) return;
+      currentPage += 1;
+    }
+
+    emit(PackagingMasterLoading());
+
+    try {
+      final url = "/api/packaging/master?page=$currentPage&limit=50";
+      final response = await httpService.request(
+        url,
+        method: HttpMethod.get,
+      );
+
+      if (response.success) {
+        final List<PackagingMasterModel> newPackages =
+            (response.data['data'] as List)
+                .map((e) => PackagingMasterModel.fromJson(e))
+                .toList();
+
+        pagination =
+            PackagingPaginationModel.fromJson(response.data['pagination']);
+
+        if (refresh) {
+          packagingMasters = newPackages;
+        } else {
+          packagingMasters.addAll(newPackages);
+        }
+
+        emit(PackagingMasterLoaded(
+          packages: packagingMasters,
+          hasReachedEnd: currentPage >= (pagination?.totalPages ?? 1),
+        ));
+      }
+    } catch (error) {
+      emit(PackagingMasterError(message: error.toString()));
     }
   }
 }

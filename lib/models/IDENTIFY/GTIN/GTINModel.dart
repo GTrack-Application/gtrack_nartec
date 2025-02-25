@@ -195,3 +195,28 @@ class GTIN_Model {
     return data;
   }
 }
+
+class PaginatedGTINResponse {
+  final int currentPage;
+  final int pageSize;
+  final int totalProducts;
+  final List<GTIN_Model> products;
+
+  PaginatedGTINResponse({
+    required this.currentPage,
+    required this.pageSize,
+    required this.totalProducts,
+    required this.products,
+  });
+
+  factory PaginatedGTINResponse.fromJson(Map<String, dynamic> json) {
+    return PaginatedGTINResponse(
+      currentPage: json['currentPage'],
+      pageSize: json['pageSize'],
+      totalProducts: json['totalProducts'],
+      products: (json['products'] as List)
+          .map((product) => GTIN_Model.fromJson(product))
+          .toList(),
+    );
+  }
+}

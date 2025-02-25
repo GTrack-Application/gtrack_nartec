@@ -8,6 +8,7 @@ import 'package:gtrack_nartec/cubit/capture/agregation/packaging/packaging_cubit
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/receiving/purchase_order_receipt/purchase_order_receipt_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
+import 'package:gtrack_nartec/cubit/capture/association/transfer/goods_receipt/job_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_nartec/cubit/share/share_cubit.dart';
@@ -49,6 +50,8 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => ProductionJobOrderCubit()),
           BlocProvider(create: (context) => PurchaseOrderReceiptCubit()),
           BlocProvider(create: (context) => PackagingCubit()),
+          // Goods Receipt --> Job Order
+          BlocProvider(create: (context) => JobOrderCubit()),
         ],
         child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
