@@ -5,7 +5,6 @@ import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 
 class GTINScreenV2 extends StatefulWidget {
@@ -44,18 +43,27 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
         backgroundColor: AppColors.skyBlue,
       ),
       body: SafeArea(
-        child: BlocConsumer<GtinCubit, GtinState>(
-          bloc: gtinCubit,
-          listener: (context, state) {
-            if (state is GtinLoadedState) {
-            } else if (state is GtinDeleteProductLoadedState) {
-              AppSnackbars.success(context, "Product Successfully Deleted", 2);
-              context.read<GtinCubit>().getProducts();
-            } else if (state is GtinErrorState) {
-              AppSnackbars.danger(context, state.message);
-            }
-          },
+        child: BlocBuilder<GtinCubit, GtinState>(
           builder: (context, state) {
+            if (state is GtinLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is GtinErrorState) {
+              return Center(child: Text(state.message));
+            }
+
+            List<GTIN_Model> products = [];
+            bool hasMore = false;
+
+            if (state is GtinLoadedState) {
+              products = state.data;
+              hasMore = state.hasMoreData;
+            } else if (state is GtinLoadingMoreState) {
+              products = state.currentData;
+              hasMore = state.hasMoreData;
+            }
+
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -146,20 +154,26 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async {
-                        gtinCubit.getProducts();
+                        context.read<GtinCubit>().refresh();
                       },
                       child: ListView.builder(
                         controller: _scrollController,
-                        itemCount: gtinCubit.products.length,
+                        itemCount: products.length + (hasMore ? 1 : 0),
                         itemBuilder: (context, index) {
-                          if (index == gtinCubit.products.length) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
+                          if (index == products.length) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              alignment: Alignment.center,
+                              child: const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              ),
                             );
                           }
 
-                          final product = gtinCubit.products[index];
-                          return ProductCard(product: product);
+                          return ProductCard(product: products[index]);
                         },
                       ),
                     ),

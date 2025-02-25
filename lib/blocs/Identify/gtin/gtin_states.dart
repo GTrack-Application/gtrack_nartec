@@ -7,6 +7,16 @@ class GtinInitState extends GtinState {}
 // * Loading states
 class GtinLoadingState extends GtinState {}
 
+class GtinLoadingMoreState extends GtinState {
+  final List<GTIN_Model> currentData;
+  final bool hasMoreData;
+
+  GtinLoadingMoreState({
+    required this.currentData,
+    required this.hasMoreData,
+  });
+}
+
 class GtinDeleteProductLoadingState extends GtinState {}
 
 // * Success states

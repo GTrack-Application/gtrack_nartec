@@ -56,6 +56,10 @@ class GtinCubit extends Cubit<GtinState> {
     if (state is GtinLoadedState) {
       final currentState = state as GtinLoadedState;
       if (currentState.hasMoreData) {
+        emit(GtinLoadingMoreState(
+          currentData: _allProducts,
+          hasMoreData: true,
+        ));
         _currentPage++;
         getProducts();
       }
