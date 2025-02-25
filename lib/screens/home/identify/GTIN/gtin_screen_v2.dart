@@ -46,7 +46,11 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
         child: BlocBuilder<GtinCubit, GtinState>(
           builder: (context, state) {
             if (state is GtinLoadingState) {
-              return const Center(child: CircularProgressIndicator());
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: 5, // Show 5 placeholder cards
+                itemBuilder: (context, index) => _buildPlaceholderCard(),
+              );
             }
 
             if (state is GtinErrorState) {
@@ -191,6 +195,103 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Widget _buildPlaceholderCard() {
+    return Card(
+      color: AppColors.background,
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Status bar placeholder
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.grey.withOpacity(0.1),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image placeholder
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // GTIN number placeholder
+                Container(
+                  width: 150,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Product details placeholders
+                ...List.generate(
+                  6,
+                  (index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: AppColors.grey.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: AppColors.grey.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Container(
+                                width: double.infinity,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: AppColors.grey.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
