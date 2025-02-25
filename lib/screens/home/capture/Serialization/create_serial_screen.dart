@@ -141,11 +141,11 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                               );
                               CaptureCubit.get(context).getSerializationData(
                                   widget.gtin.barcode ?? "");
-                              AppNavigator.replaceTo(
-                                  context: context,
-                                  screen: SerializationGtinScreen(
-                                    gtinModel: widget.gtin,
-                                  ));
+                              // AppNavigator.replaceTo(
+                              //     context: context,
+                              //     screen: SerializationGtinScreen(
+                              //       gtinModel: widget.gtin,
+                              //     ));
                             } else if (state
                                 is CaptureCreateSerializationError) {
                               ScaffoldMessenger.of(context).showSnackBar(

@@ -4,6 +4,7 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/BinToBinTransfer/BinToBinInternalScreen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/PalletTransfer/PalletTransferScreen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/goods_issue_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_receipt/goods_receipt.dart';
 
@@ -77,8 +78,8 @@ class _TransferScreenState extends State<TransferScreen> {
     //     context: context, screen: const PalletTransferScreen());
     // data[4]["onTap"] = () => AppNavigator.goToPage(
     //     context: context, screen: const ItemReAllocationScreen());
-    // data[5]["onTap"] = () =>
-    //     AppNavigator.goToPage(context: context, screen: const WIPtoFGScreen());
+    data[5]["onTap"] = () => AppNavigator.goToPage(
+        context: context, screen: const PalletTransferScreen());
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(

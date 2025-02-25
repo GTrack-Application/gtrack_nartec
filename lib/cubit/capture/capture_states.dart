@@ -16,8 +16,6 @@ class CaptureGetGtinProductsLoading extends CaptureState {}
 
 class CaptureSerializationEmpty extends CaptureState {}
 
-class CaptureGetGtinProductsEmpty extends CaptureState {}
-
 // * SUCCESS ***
 
 class CaptureSerializationSuccess extends CaptureState {
@@ -33,7 +31,7 @@ class CaptureCreateSerializationSuccess extends CaptureState {
 }
 
 class CaptureGetGtinProductsSuccess extends CaptureState {
-  final List<GTIN_Model> data;
+  final List<GTINModell> data;
 
   CaptureGetGtinProductsSuccess(this.data);
 }

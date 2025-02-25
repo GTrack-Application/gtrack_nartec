@@ -11,6 +11,8 @@ class AppIcons {
   // static const String stock = 'assets/icons/stock.png';
   static const String work = 'assets/icons/work.png';
 
+  static const String gtinJourney = 'assets/icons/gtin_journey.png';
+
   // receipt management
   // static const String foreignPO = 'assets/icons/foreignPO.png';
   // static const String salesOrder = 'assets/icons/salesOrder.png';

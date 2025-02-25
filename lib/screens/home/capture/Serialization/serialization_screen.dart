@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,26 +96,26 @@ class _SerializationScreenState extends State<SerializationScreen> {
             ),
           );
         }
-        if (state is CaptureGetGtinProductsEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                  "No data found with ${CaptureCubit.get(context).gtin.text} GTIN"),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
       }, builder: (context, state) {
         if (state is CaptureGetGtinProductsLoading) {
           return const Center(child: CircularProgressIndicator());
         }
         return RefreshIndicator(
           onRefresh: () async {
+            CaptureCubit.get(context).gtinProducts.clear();
             CaptureCubit.get(context).getGtinProducts();
           },
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.primary),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                ),
+              ],
             ),
             child: Column(
               children: [
@@ -156,19 +158,18 @@ class _SerializationScreenState extends State<SerializationScreen> {
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(10),
                         onTap: () {
-                          AppNavigator.goToPage(
-                            context: context,
-                            screen: SerializationGtinScreen(
-                              gtinModel:
-                                  CaptureCubit.get(context).gtinProducts[index],
-                            ),
-                          );
+                          // AppNavigator.goToPage(
+                          //   context: context,
+                          //   screen: SerializationGtinScreen(
+                          //     gtinModel:
+                          //         CaptureCubit.get(context).gtinProducts[index],
+                          //   ),
+                          // );
                         },
                         title: Text(
                           CaptureCubit.get(context)
-                                  .gtinProducts[index]
-                                  .productnameenglish ??
-                              "",
+                              .gtinProducts[index]
+                              .SerialNo,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -176,37 +177,37 @@ class _SerializationScreenState extends State<SerializationScreen> {
                         ),
                         subtitle: Text(
                           CaptureCubit.get(context)
-                                  .gtinProducts[index]
-                                  .barcode ??
-                              "",
+                              .gtinProducts[index]
+                              .EXPIRY_DATE
+                              .toString(),
                           style: const TextStyle(fontSize: 13),
                         ),
-                        leading: Hero(
-                          tag: CaptureCubit.get(context)
-                                  .gtinProducts[index]
-                                  .id ??
-                              "",
-                          child: ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  "${AppUrls.baseUrlWith3093}${CaptureCubit.get(context).gtinProducts[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.image_outlined),
-                            ),
-                          ),
-                        ),
+                        // leading: Hero(
+                        //   tag: CaptureCubit.get(context)
+                        //           .gtinProducts[index]
+                        //           .GTIN ??
+                        //       "",
+                        //   child: ClipOval(
+                        //     child: CachedNetworkImage(
+                        //       imageUrl:
+                        //           "${AppUrls.baseUrlWith3093}${CaptureCubit.get(context).gtinProducts[index].frontImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
+                        //       width: 50,
+                        //       height: 50,
+                        //       fit: BoxFit.cover,
+                        //       errorWidget: (context, url, error) =>
+                        //           const Icon(Icons.image_outlined),
+                        //     ),
+                        //   ),
+                        // ),
                         trailing: GestureDetector(
                           onTap: () {
-                            AppNavigator.goToPage(
-                              context: context,
-                              screen: SerializationDetailsScreen(
-                                employees: CaptureCubit.get(context)
-                                    .gtinProducts[index],
-                              ),
-                            );
+                            // AppNavigator.goToPage(
+                            //   context: context,
+                            //   screen: SerializationDetailsScreen(
+                            //     employees: CaptureCubit.get(context)
+                            //         .gtinProducts[index],
+                            //   ),
+                            // );
                           },
                           child: Image.asset("assets/icons/view.png"),
                         ),

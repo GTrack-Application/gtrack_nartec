@@ -36,7 +36,14 @@ class CardIconButton extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Image.asset(icon),
+            SizedBox(
+              width: 70,
+              height: 50,
+              child: Image.asset(
+                icon,
+                fit: BoxFit.fill,
+              ),
+            ),
             const Spacer(),
             AutoSizeText(
               text,
