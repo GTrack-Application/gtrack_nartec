@@ -15,6 +15,16 @@ class PackagingScanError extends PackagingState {
 
 class PackagingInsertLoading extends PackagingState {}
 
+class PackagingLoadingMoreState extends PackagingState {
+  final List<PackagingMasterModel> currentData;
+  final bool hasMoreData;
+
+  PackagingLoadingMoreState({
+    required this.currentData,
+    required this.hasMoreData,
+  });
+}
+
 class PackagingInsertLoaded extends PackagingState {}
 
 class PackagingInsertError extends PackagingState {

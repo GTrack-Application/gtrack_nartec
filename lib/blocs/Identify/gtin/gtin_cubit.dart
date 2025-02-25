@@ -39,13 +39,13 @@ class GtinCubit extends Cubit<GtinState> {
       _allProducts.addAll(response.products);
 
       final totalPages = (response.totalProducts / _pageSize).ceil();
-      final hasMore = _currentPage < totalPages;
+      _hasMoreData = _currentPage < totalPages;
 
       emit(GtinLoadedState(
         data: _allProducts,
         currentPage: _currentPage,
         totalPages: totalPages,
-        hasMoreData: hasMore,
+        hasMoreData: _hasMoreData,
       ));
     } catch (error) {
       emit(GtinErrorState(message: error.toString()));

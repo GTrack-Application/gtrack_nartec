@@ -30,7 +30,9 @@ class _PackagingScreenState extends State<PackagingScreen> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      packagingCubit.getPackagingMasters();
+      if (packagingCubit.hasMoreData) {
+        packagingCubit.loadMore();
+      }
     }
   }
 
@@ -92,24 +94,35 @@ class _PackagingScreenState extends State<PackagingScreen> {
                   return Center(child: Text(state.message));
                 }
 
-                return RefreshIndicator(
-                  onRefresh: () =>
-                      packagingCubit.getPackagingMasters(refresh: true),
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    padding: EdgeInsets.all(8),
-                    itemCount: packagingCubit.packagingMasters.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == packagingCubit.packagingMasters.length) {
-                        return state is PackagingMasterLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : SizedBox();
-                      }
+                return ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.all(8),
+                  itemCount: packagingCubit.packagingMasters.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == packagingCubit.packagingMasters.length) {
+                      return (state is PackagingLoadingMoreState &&
+                              packagingCubit.hasMoreData)
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.pink,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : !packagingCubit.hasMoreData
+                              ? SizedBox(
+                                  height: 40,
+                                  child: Center(
+                                    child: Text(packagingCubit
+                                        .packagingMasters.length
+                                        .toString()),
+                                  ),
+                                )
+                              : SizedBox.shrink();
+                    }
 
-                      final package = packagingCubit.packagingMasters[index];
-                      return PackagingCard(package: package);
-                    },
-                  ),
+                    final package = packagingCubit.packagingMasters[index];
+                    return PackagingCard(package: package);
+                  },
                 );
               },
             ),

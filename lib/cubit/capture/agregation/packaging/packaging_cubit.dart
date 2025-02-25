@@ -23,6 +23,8 @@ class PackagingCubit extends Cubit<PackagingState> {
   List<PackagingMasterModel> packagingMasters = [];
   PackagingPaginationModel? pagination;
   int currentPage = 1;
+  bool hasMoreData = true;
+  int limit = 10;
 
   void scanItem() async {
     emit(PackagingScanLoading());
@@ -86,7 +88,10 @@ class PackagingCubit extends Cubit<PackagingState> {
     }
   }
 
-  Future<void> getPackagingMasters({bool refresh = false}) async {
+  Future<void> getPackagingMasters({
+    bool refresh = false,
+    bool loadMore = false,
+  }) async {
     if (refresh) {
       currentPage = 1;
       packagingMasters.clear();
@@ -101,14 +106,18 @@ class PackagingCubit extends Cubit<PackagingState> {
       currentPage += 1;
     }
 
-    emit(PackagingMasterLoading());
+    if (loadMore) {
+      emit(PackagingLoadingMoreState(
+        currentData: packagingMasters,
+        hasMoreData: hasMoreData,
+      ));
+    } else {
+      emit(PackagingMasterLoading());
+    }
 
     try {
-      final url = "/api/packaging/master?page=$currentPage&limit=50";
-      final response = await httpService.request(
-        url,
-        method: HttpMethod.get,
-      );
+      final url = "/api/packaging/master?page=$currentPage&limit=$limit";
+      final response = await httpService.request(url);
 
       if (response.success) {
         final List<PackagingMasterModel> newPackages =
@@ -119,16 +128,40 @@ class PackagingCubit extends Cubit<PackagingState> {
         pagination =
             PackagingPaginationModel.fromJson(response.data['pagination']);
 
+        hasMoreData = currentPage < (pagination?.totalPages ?? 1);
+
         if (refresh) {
           packagingMasters = newPackages;
         } else {
           packagingMasters.addAll(newPackages);
+          // final totalPages = (response.totalProducts / _pageSize).ceil();
+          // final hasMore = _currentPage < totalPages;
         }
 
         emit(PackagingMasterLoaded(
           packages: packagingMasters,
           hasReachedEnd: currentPage >= (pagination?.totalPages ?? 1),
         ));
+      }
+    } catch (error) {
+      emit(PackagingMasterError(message: error.toString()));
+    }
+  }
+
+  void loadMore() {
+    try {
+      if (state is PackagingLoadingMoreState) return;
+      if (state is PackagingMasterLoading) return;
+      if (currentPage >= (pagination?.totalPages ?? 1)) return;
+      if (hasMoreData) {
+        emit(PackagingLoadingMoreState(
+          currentData: packagingMasters,
+          hasMoreData: hasMoreData,
+        ));
+      }
+      if (hasMoreData) {
+        currentPage += 1;
+        getPackagingMasters(loadMore: true);
       }
     } catch (error) {
       emit(PackagingMasterError(message: error.toString()));
