@@ -9,6 +9,11 @@ class AppPreferences {
     prefs.setString('userId', userId);
   }
 
+  static Future<void> setGs1UserId(String gs1UserId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('gs1UserId', gs1UserId);
+  }
+
   /* set gpc */
   static Future<void> setGcp(String gcp) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -81,6 +86,11 @@ class AppPreferences {
   static Future<String?> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('userId');
+  }
+
+  static Future<String?> getGs1UserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('gs1UserId');
   }
 
   /* Get gcp */

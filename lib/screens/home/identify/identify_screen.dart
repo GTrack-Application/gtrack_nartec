@@ -5,7 +5,7 @@ import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/giai_screen.dart';
 import 'package:gtrack_nartec/screens/home/identify/GLN/gln_screen.dart';
-import 'package:gtrack_nartec/screens/home/identify/GTIN/gtin_screen.dart';
+import 'package:gtrack_nartec/screens/home/identify/GTIN/gtin_screen_v2.dart';
 import 'package:gtrack_nartec/screens/home/identify/SSCC/SsccProductsScreen.dart';
 
 class IdentifyScreen extends StatefulWidget {
@@ -83,7 +83,7 @@ class _IdentifyScreenState extends State<IdentifyScreen> {
   void initState() {
     super.initState();
     data[0]["onTap"] = () =>
-        AppNavigator.goToPage(context: context, screen: const GTINScreen());
+        AppNavigator.goToPage(context: context, screen: const GTINScreenV2());
     data[1]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const GLNScreen());
     data[2]["onTap"] = () => AppNavigator.goToPage(

@@ -109,6 +109,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
         AppPreferences.setCurrentUser("Admin User").then((_) {});
         AppPreferences.setGln(value.user!.gln.toString()).then((_) {});
         AppPreferences.setId(value.user!.id.toString()).then((_) {});
+        AppPreferences.setGs1UserId(value.user!.gs1Userid.toString())
+            .then((_) {});
 
         AppDialogs.closeDialog();
         AppNavigator.goToPage(context: context, screen: const HomeScreen());

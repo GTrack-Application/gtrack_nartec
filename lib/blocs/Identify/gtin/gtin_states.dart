@@ -11,9 +11,17 @@ class GtinDeleteProductLoadingState extends GtinState {}
 
 // * Success states
 class GtinLoadedState extends GtinState {
-  List<GTIN_Model> data = [];
+  final List<GTIN_Model> data;
+  final int currentPage;
+  final int totalPages;
+  final bool hasMoreData;
 
-  GtinLoadedState({required this.data});
+  GtinLoadedState({
+    required this.data,
+    required this.currentPage,
+    required this.totalPages,
+    required this.hasMoreData,
+  });
 }
 
 class GtinDeleteProductLoadedState extends GtinState {}
