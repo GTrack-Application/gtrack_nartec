@@ -8,11 +8,11 @@ import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
-import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_receipt/job_order/job_order_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_receipt/job_order/job_order_item_details_screen.dart';
 
 class JobOrderScanAssetScreen extends StatefulWidget {
-  final JobOrderBillOfMaterial bom;
-  const JobOrderScanAssetScreen({super.key, required this.bom});
+  final JobOrderModel order;
+  const JobOrderScanAssetScreen({super.key, required this.order});
 
   @override
   State<JobOrderScanAssetScreen> createState() =>
@@ -51,7 +51,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
             AppSnackbars.normal(context, 'Assets saved successfully');
             AppNavigator.goToPage(
               context: context,
-              screen: JobOrderScreen(),
+              screen: JobOrderItemDetailsScreen(order: widget.order),
             );
           }
         },
@@ -119,7 +119,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                         text: "Save",
                         onPressed: () {
                           jobOrderCubit.saveAssetTags(
-                            widget.bom.id.toString(),
+                            widget.order.id.toString(),
                             transferDate,
                           );
                         },
