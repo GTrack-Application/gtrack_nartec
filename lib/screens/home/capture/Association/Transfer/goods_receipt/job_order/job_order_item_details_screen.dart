@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/transfer/goods_receipt/job_order_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_receipt/job_order/job_order_scan_asset_screen.dart';
 
 class JobOrderItemDetailsScreen extends StatefulWidget {
   final JobOrderModel order;
@@ -92,6 +94,8 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
   }
 
   buildJobOrderItemDetails(JobOrderBillOfMaterial bom, int index) {
+    final picked =
+        (bom.quantityPicked != bom.quantityPicked) && bom.status != 'picked';
     return GestureDetector(
       onTap: () {
         jobOrderCubit.selectJobOrderItem(index);
@@ -132,8 +136,17 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
                   Expanded(
                     child: PrimaryButtonWidget(
                       text: "Start",
-                      onPressed: () {},
-                      backgroungColor: AppColors.grey,
+                      onPressed: () {
+                        if (!picked) {
+                          // navigate to scan asset screen
+                          AppNavigator.goToPage(
+                            context: context,
+                            screen: JobOrderScanAssetScreen(),
+                          );
+                        }
+                        return;
+                      },
+                      backgroungColor: picked ? AppColors.grey : AppColors.pink,
                     ),
                   )
                 ],

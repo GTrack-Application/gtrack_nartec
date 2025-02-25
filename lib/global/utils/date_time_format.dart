@@ -9,5 +9,5 @@ String dateFormat(String date) {
 }
 
 String dateTimeFormat(String date) {
-  return DateFormat('dd MMM yyyy HH:mm:ss').format(DateTime.parse(date));
+  return DateFormat('dd MMM yyyy hh:mm a').format(DateTime.parse(date));
 }

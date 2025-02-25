@@ -38,3 +38,13 @@ class AddToProductionError extends JobOrderState {
   final String message;
   AddToProductionError({required this.message});
 }
+
+// * Assets by tag number
+class AssetsByTagNumberLoading extends JobOrderState {}
+
+class AssetsByTagNumberLoaded extends JobOrderState {}
+
+class AssetsByTagNumberError extends JobOrderState {
+  final String message;
+  AssetsByTagNumberError({required this.message});
+}
