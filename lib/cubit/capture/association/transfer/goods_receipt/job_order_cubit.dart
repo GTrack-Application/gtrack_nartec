@@ -120,10 +120,10 @@ class JobOrderCubit extends Cubit<JobOrderState> {
     emit(AssetsByTagNumberLoading());
     try {
       final token = await AppPreferences.getToken();
-      // if (_assetsByTagNumber.containsKey(tagNumber)) {
-      //   emit(AssetsByTagNumberError(message: 'Assets already scanned'));
-      //   return;
-      // }
+      if (_assetsByTagNumber.containsKey(tagNumber)) {
+        emit(AssetsByTagNumberError(message: 'Assets already scanned'));
+        return;
+      }
 
       final response = await _httpService.request(
         '/api/assetCapture/getMasterEncodeAssetCaptureFinal?TagNumber=$tagNumber',
@@ -145,6 +145,47 @@ class JobOrderCubit extends Cubit<JobOrderState> {
       }
     } catch (error) {
       emit(AssetsByTagNumberError(message: error.toString()));
+    }
+  }
+
+  void saveAssetTags(
+    String jobOrderMasterId,
+    DateTime productionExecutionDateTime,
+  ) async {
+    if (state is SaveAssetTagsLoading) {
+      return;
+    }
+    emit(SaveAssetTagsLoading());
+    try {
+      if (_assets.isEmpty) {
+        throw Exception("No assets selected");
+      }
+      final token = await AppPreferences.getToken();
+      final response = await _httpService.request(
+        '/api/wipAsset/createWIPAssetInProgress',
+        method: HttpMethod.post,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: {
+          'jobOrderMasterId': jobOrderMasterId,
+          'productionExecutionDateTime':
+              productionExecutionDateTime.toIso8601String(),
+          'tblAssetMasterEncodeAssetCaptureIDs': _assets
+              .map(
+                (asset) => asset.tblAssetMasterEncodeAssetCaptureID.toString(),
+              )
+              .toList(),
+        },
+      );
+      if (response.success) {
+        emit(SaveAssetTagsLoaded());
+      } else {
+        emit(SaveAssetTagsError(message: response.message));
+      }
+    } catch (error) {
+      emit(SaveAssetTagsError(message: error.toString()));
     }
   }
 }

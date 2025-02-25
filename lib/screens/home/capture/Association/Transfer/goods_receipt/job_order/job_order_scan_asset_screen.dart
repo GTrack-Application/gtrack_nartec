@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/transfer/goods_receipt/job_order_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_receipt/job_order/job_order_screen.dart';
 
 class JobOrderScanAssetScreen extends StatefulWidget {
-  const JobOrderScanAssetScreen({super.key});
+  final JobOrderBillOfMaterial bom;
+  const JobOrderScanAssetScreen({super.key, required this.bom});
 
   @override
   State<JobOrderScanAssetScreen> createState() =>
@@ -38,9 +42,17 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
         bloc: jobOrderCubit,
         listener: (context, state) {
           if (state is AssetsByTagNumberError) {
-            AppSnackbars.normal(context, state.message);
+            AppSnackbars.warning(context, state.message);
           } else if (state is AssetsByTagNumberLoaded) {
-            // controller.clear();
+            controller.clear();
+          } else if (state is SaveAssetTagsError) {
+            AppSnackbars.warning(context, state.message);
+          } else if (state is SaveAssetTagsLoaded) {
+            AppSnackbars.normal(context, 'Assets saved successfully');
+            AppNavigator.goToPage(
+              context: context,
+              screen: JobOrderScreen(),
+            );
           }
         },
         builder: (context, state) {
@@ -105,8 +117,14 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                     Expanded(
                       child: PrimaryButtonWidget(
                         text: "Save",
-                        onPressed: () {},
+                        onPressed: () {
+                          jobOrderCubit.saveAssetTags(
+                            widget.bom.id.toString(),
+                            transferDate,
+                          );
+                        },
                         backgroungColor: AppColors.green,
+                        isLoading: state is SaveAssetTagsLoading,
                       ),
                     )
                   ],
