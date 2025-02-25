@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gtin_model.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -60,31 +60,25 @@ class CaptureController {
     }
   }
 
-  Future<List<GTIN_Model>> getProducts({String? gtin}) async {
-    final userId = await AppPreferences.getUserId();
+  Future<List<GTINModell>> getProducts({String? gtin}) async {
     final token = await AppPreferences.getToken();
 
-    String url = gtin != null
-        ? "${AppUrls.baseUrlWith3093}/api/products?user_id=$userId&barcode=$gtin"
-        : "${AppUrls.baseUrlWith3093}/api/products?user_id=$userId";
+    String url =
+        "${AppUrls.baseUrlWith7010}/api/getAllRecordsByGTIN?GTIN=${gtin!}";
 
     final response = await http.get(
       Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
-    var data = json.decode(response.body) as List;
-
-    if (response.statusCode == 200) {
-      List<GTIN_Model> products =
-          data.map((e) => GTIN_Model.fromJson(e)).toList();
-
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = json.decode(response.body)['data'] as List;
+      var products = data.map((e) => GTINModell.fromJson(e)).toList();
       return products;
     } else {
-      return [];
+      var data = json.decode(response.body);
+      var msg = data['message'];
+      throw Exception(msg);
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
+import 'package:gtrack_nartec/screens/home/share/gtin_journey/gtin_journey_screen.dart';
 import 'package:gtrack_nartec/screens/home/share/traceability/traceability_screen.dart';
 
 class ShareScreen extends StatefulWidget {
@@ -54,6 +55,11 @@ class _ShareScreenState extends State<ShareScreen> {
       "icon": AppIcons.traceability,
       "onPressed": () {},
     },
+    {
+      "text": "GTIN JOURNEY",
+      "icon": AppIcons.gtinJourney,
+      "onPressed": () {},
+    },
   ];
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(
@@ -71,6 +77,10 @@ class _ShareScreenState extends State<ShareScreen> {
     data[7]["onPressed"] = () {
       AppNavigator.goToPage(
           context: context, screen: const TraceabilityScreen());
+    };
+    data[8]["onPressed"] = () {
+      AppNavigator.goToPage(
+          context: context, screen: const GtinJourneyScreen());
     };
     super.initState();
   }

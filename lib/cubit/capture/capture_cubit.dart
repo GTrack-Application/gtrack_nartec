@@ -4,6 +4,7 @@ import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/controllers/capture/capture_controller.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gtin_model.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/association_screen.dart';
@@ -68,7 +69,7 @@ class CaptureCubit extends Cubit<CaptureState> {
 
   // Lists
   List<SerializationModel> serializationData = [];
-  List<GTIN_Model> gtinProducts = [];
+  List<GTINModell> gtinProducts = [];
 
   // Create serials variables
   int? quantity;
@@ -138,11 +139,7 @@ class CaptureCubit extends Cubit<CaptureState> {
       emit(CaptureGetGtinProductsLoading());
       final data =
           await CaptureController().getProducts(gtin: gtin.text.trim());
-      if (data.isEmpty) {
-        emit(CaptureGetGtinProductsEmpty());
-      } else {
-        emit(CaptureGetGtinProductsSuccess(data));
-      }
+      emit(CaptureGetGtinProductsSuccess(data));
     } catch (error) {
       emit(CaptureGetGtinProductsError(error.toString()));
     }

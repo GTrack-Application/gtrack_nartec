@@ -1,6 +1,4 @@
-// ignore_for_file: avoid_print, sized_box_for_whitespace
-
-import 'package:dropdown_search/dropdown_search.dart';
+// ignore_for_file: avoid_print, sized_box_for_whitespace, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -167,27 +165,39 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
               Row(
                 children: [
                   Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       color: Colors.white,
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
                     ),
                     width: MediaQuery.of(context).size.width * 0.73,
                     margin: const EdgeInsets.only(left: 20),
-                    child: DropdownSearch<String>(
-                      filterFn: (item, filter) {
-                        return item
-                            .toLowerCase()
-                            .contains(filter.toLowerCase());
-                      },
-                      enabled: true,
-                      popupProps: const PopupProps.menu(),
-                      // items: filterList2,
+                    child: DropdownButton(
+                      isExpanded: true,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      items: filterList2
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
                       onChanged: (value) {
                         setState(() {
                           dropDownValue2 = value!;
                         });
                       },
-                      selectedItem: "Select Item Code",
+                      hint: const Text("Select Item Code"),
+                      icon: const Icon(Icons.arrow_drop_down),
+                      underline: Container(),
+                      dropdownColor: Colors.white,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 13,
+                      ),
+                      value: dropDownValue2,
                     ),
                   ),
                   Container(
@@ -841,9 +851,12 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                 children: [
                   Container(
                     alignment: Alignment.center,
+                    margin: const EdgeInsets.only(right: 10, bottom: 10),
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: 40,
                     child: ElevatedButtonWidget(
                       width: MediaQuery.of(context).size.width * 0.4,
-                      height: 50,
+                      height: 40,
                       title: "Save",
                       textColor: Colors.white,
                       color: AppColors.pink,
@@ -913,10 +926,9 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                     ),
                   ),
                   Container(
-                    margin:
-                        const EdgeInsets.only(right: 10, top: 10, bottom: 10),
+                    margin: const EdgeInsets.only(right: 10, bottom: 10),
                     width: MediaQuery.of(context).size.width * 0.4,
-                    height: 50,
+                    height: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.blue,
@@ -927,10 +939,16 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Center(
-                          child: TextWidget(text: "Total: "),
+                          child: TextWidget(
+                            text: "Total: ",
+                            fontSize: 13,
+                          ),
                         ),
                         Center(
-                          child: TextWidget(text: total2),
+                          child: TextWidget(
+                            text: total2,
+                            fontSize: 13,
+                          ),
                         ),
                       ],
                     ),
@@ -938,7 +956,7 @@ class _PalletTransferScreenState extends State<PalletTransferScreen> {
                 ],
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
             ],
           ),
         ),
