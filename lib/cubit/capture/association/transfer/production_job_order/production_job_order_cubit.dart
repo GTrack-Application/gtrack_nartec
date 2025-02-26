@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/controllers/epcis_controller.dart';
@@ -23,6 +22,11 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   String bomStartType = 'pallet';
   List<MappedBarcode> items = [];
 
+  List<ProductionJobOrder> filteredOrders = [];
+  List<ProductionJobOrder> _orders = [];
+
+  int quantityPicked = 0;
+
   Future<void> getProductionJobOrders() async {
     emit(ProductionJobOrderLoading());
     try {
@@ -38,10 +42,32 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       if (response.success) {
         final List<dynamic> data = response.data;
         final orders = data.map((e) => ProductionJobOrder.fromJson(e)).toList();
+        _orders = orders;
         emit(ProductionJobOrderLoaded(orders: orders));
       } else {
         emit(ProductionJobOrderError(message: 'Failed to fetch orders'));
       }
+    } catch (e) {
+      emit(ProductionJobOrderError(message: e.toString()));
+    }
+  }
+
+  Future<void> searchProductionJobOrders(String query) async {
+    try {
+      log(query);
+      if (query.isEmpty) {
+        filteredOrders = _orders;
+        emit(ProductionJobOrderLoaded(orders: _orders));
+        return;
+      }
+      final orders = _orders.where((element) {
+        return element.jobOrderMaster?.jobOrderNumber
+                ?.toLowerCase()
+                .contains(query.toLowerCase()) ??
+            false;
+      }).toList();
+      filteredOrders = orders;
+      emit(ProductionJobOrderLoaded(orders: orders));
     } catch (e) {
       emit(ProductionJobOrderError(message: e.toString()));
     }
@@ -134,6 +160,13 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   }) async {
     emit(ProductionJobOrderMappedBarcodesLoading());
     try {
+      // If picked quantity is equal to the quantity, don't fetch mapped barcodes
+      if (quantityPicked >= (bomStartData?.quantity ?? 0)) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'You have reached the maximum quantity',
+        ));
+        return;
+      }
       final token = await AppPreferences.getToken();
       String url = '/api/mappedBarcodes?';
       if (palletCode != null) {
@@ -160,10 +193,17 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
           return;
         }
         // add all new list but don't add duplicates
-        final newItems = mappedBarcodes.data
-            ?.where((element) => !items.any((e) => e.id == element.id))
-            .toList();
+        // final newItems = mappedBarcodes.data
+        //     ?.where((element) => !items.any((e) => e.id == element.id))
+        //     .toList();
+        final newItems = mappedBarcodes.data;
         items.addAll(newItems ?? []);
+        // increment quantity
+        if (bomStartData != null) {
+          bomStartData = bomStartData!.increasePickedQuantity();
+          quantityPicked++;
+        }
+
         emit(ProductionJobOrderMappedBarcodesLoaded(
             mappedBarcodes: mappedBarcodes));
       } else {

@@ -5,7 +5,6 @@ import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
-import 'package:gtrack_nartec/global/common/utils/app_toast.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/production_job_order_screen.dart';
 
@@ -25,11 +24,20 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
   String selectedType = 'pallet';
 
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      cubit.quantityPicked = cubit.bomStartData?.quantityPicked ?? 0;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final bom = context.read<ProductionJobOrderCubit>().bomStartData;
+    final bom = context.watch<ProductionJobOrderCubit>().bomStartData;
+    cubit.bomStartData = bom;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Job Order BOM Start'),
+        title: const Text('Transfer By Pallet'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(
@@ -39,9 +47,12 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
             bloc: cubit,
             listener: (context, state) {
               if (state is ProductionJobOrderMappedBarcodesError) {
-                AppToast.danger(context, state.message);
+                AppSnackbars.danger(context, state.message);
               } else if (state is ProductionJobOrderMappedBarcodesLoaded) {
-                AppToast.success(context, state.mappedBarcodes.message);
+                AppSnackbars.success(
+                  context,
+                  state.mappedBarcodes.message ?? '',
+                );
               }
             },
             builder: (context, state) {
@@ -52,13 +63,14 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                   Row(
                     children: [
                       const Text('Quantity: '),
-                      Text(bom?.quantity ?? '0'),
+                      Text("${bom?.quantity ?? 0}"),
                     ],
                   ),
                   Row(
                     children: [
                       const Text('Picked Quantity: '),
-                      Text(bom?.quantityPicked ?? '0'),
+                      // Text("${bom?.quantityPicked ?? 0}"),
+                      Text("${cubit.quantityPicked}"),
                     ],
                   ),
                   // Radio Buttons for BY PALLET or BY SERIAL

@@ -6,8 +6,8 @@ class ProductionJobOrderBom {
   String? productDescription;
   String? taskDescription;
   String? unitOfMeasure;
-  String? quantity;
-  String? quantityPicked;
+  int? quantity;
+  int? quantityPicked;
   String? binLocation;
   String? status;
   String? price;
@@ -42,8 +42,8 @@ class ProductionJobOrderBom {
     productDescription = json['productDescription'];
     taskDescription = json['taskDescription'];
     unitOfMeasure = json['unitOfMeasure'];
-    quantity = json['quantity'];
-    quantityPicked = json['quantityPicked'];
+    quantity = int.tryParse(json['quantity'] ?? '0');
+    quantityPicked = int.tryParse(json['quantityPicked'] ?? '0');
     binLocation = json['binLocation'];
     status = json['status'];
     price = json['price'];
@@ -77,6 +77,70 @@ class ProductionJobOrderBom {
     }
     return data;
   }
+
+  ProductionJobOrderBom copyWith({int? newQuantity}) {
+    return ProductionJobOrderBom(
+        id: id,
+        jobOrderDetailsId: jobOrderDetailsId,
+        productId: productId,
+        productName: productName,
+        productDescription: productDescription,
+        taskDescription: taskDescription,
+        unitOfMeasure: unitOfMeasure,
+        quantity: newQuantity,
+        quantityPicked: quantityPicked,
+        binLocation: binLocation,
+        status: status,
+        price: price,
+        totalPrice: totalPrice,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        jobOrderDetails: jobOrderDetails);
+  }
+
+  ProductionJobOrderBom increaseQuantity() {
+    final newBom = ProductionJobOrderBom(
+      id: id,
+      jobOrderDetailsId: jobOrderDetailsId,
+      productId: productId,
+      productName: productName,
+      productDescription: productDescription,
+      taskDescription: taskDescription,
+      unitOfMeasure: unitOfMeasure,
+      quantity: (quantity ?? 0) + 1,
+      quantityPicked: quantityPicked,
+      binLocation: binLocation,
+      status: status,
+      price: price,
+      totalPrice: totalPrice,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      jobOrderDetails: jobOrderDetails,
+    );
+    return newBom;
+  }
+
+  ProductionJobOrderBom increasePickedQuantity() {
+    final newBom = ProductionJobOrderBom(
+      id: id,
+      jobOrderDetailsId: jobOrderDetailsId,
+      productId: productId,
+      productName: productName,
+      productDescription: productDescription,
+      taskDescription: taskDescription,
+      unitOfMeasure: unitOfMeasure,
+      quantity: quantity,
+      quantityPicked: (quantityPicked ?? 0) + 1,
+      binLocation: binLocation,
+      status: status,
+      price: price,
+      totalPrice: totalPrice,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      jobOrderDetails: jobOrderDetails,
+    );
+    return newBom;
+  }
 }
 
 class JobOrderDetails {
@@ -86,7 +150,7 @@ class JobOrderDetails {
   String? productName;
   String? productDescription;
   String? unitOfMeasure;
-  String? quantity;
+  int? quantity;
   String? price;
   String? totalPrice;
   String? createdAt;
@@ -114,7 +178,7 @@ class JobOrderDetails {
     productName = json['productName'];
     productDescription = json['productDescription'];
     unitOfMeasure = json['unitOfMeasure'];
-    quantity = json['quantity'];
+    quantity = int.tryParse(json['quantity'] ?? '0');
     price = json['price'];
     totalPrice = json['totalPrice'];
     createdAt = json['createdAt'];
@@ -137,5 +201,16 @@ class JobOrderDetails {
     data['updatedAt'] = updatedAt;
     data['subUserId'] = subUserId;
     return data;
+  }
+
+  JobOrderDetails copyWith({int? quantity}) {
+    return JobOrderDetails(
+        id: id,
+        jobOrderId: jobOrderId,
+        productId: productId,
+        productName: productName,
+        productDescription: productDescription,
+        unitOfMeasure: unitOfMeasure,
+        quantity: quantity);
   }
 }
