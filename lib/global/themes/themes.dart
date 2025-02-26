@@ -40,6 +40,28 @@ class Themes {
       textTheme: _textTheme(),
       textButtonTheme: _textButtonTheme(AppColors.primary),
       inputDecorationTheme: _inputDecorationTheme(Brightness.light),
+      // dropdown
+
+      dropdownMenuTheme: DropdownMenuThemeData(
+        menuStyle: MenuStyle(
+          backgroundColor: WidgetStateProperty.all(AppColors.white),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          fillColor: AppColors.white,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: AppColors.primary,
+            ),
+          ),
+        ),
+      ),
     );
   }
 

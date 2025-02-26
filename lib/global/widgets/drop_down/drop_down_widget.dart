@@ -31,6 +31,7 @@ class DropDownWidget extends StatelessWidget {
         underline: const SizedBox(),
         isExpanded: true,
         icon: const Icon(Icons.arrow_drop_down),
+        dropdownColor: AppColors.white,
         items: items
             .map((e) => DropdownMenuItem(
                   value: e,
