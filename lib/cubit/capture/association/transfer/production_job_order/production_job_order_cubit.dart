@@ -158,6 +158,22 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     String? palletCode,
     String? serialNo,
   }) async {
+    if (state is ProductionJobOrderMappedBarcodesLoading) return;
+    if (palletCode != null) {
+      if (palletCode.isEmpty) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'Pallet code is required',
+        ));
+        return;
+      }
+    } else if (serialNo != null) {
+      if (serialNo.isEmpty) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'Serial number is required',
+        ));
+        return;
+      }
+    }
     emit(ProductionJobOrderMappedBarcodesLoading());
     try {
       // If picked quantity is equal to the quantity, don't fetch mapped barcodes
