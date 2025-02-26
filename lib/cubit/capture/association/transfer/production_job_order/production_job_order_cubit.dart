@@ -258,9 +258,12 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
 
   void clearItems() {
     items = [];
+    quantityPicked = 0;
     emit(ProductionJobOrderMappedBarcodesLoaded(
       mappedBarcodes: MappedBarcodesResponse(
-          data: items, message: "All items cleared successfully"),
+        data: items,
+        message: "All items cleared successfully",
+      ),
     ));
   }
 
