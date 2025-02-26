@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/transfer/goods_receipt/job_order_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_receipt/job_order/job_order_scan_asset_screen.dart';
 
 class JobOrderItemDetailsScreen extends StatefulWidget {
   final JobOrderModel order;
@@ -41,7 +43,7 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
                 bloc: jobOrderCubit,
                 builder: (context, state) {
                   if (state is JobOrderDetailsLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return _buildLoadingPlaceholder();
                   } else if (state is JobOrderDetailsError) {
                     return Center(child: Text(state.message));
                   }
@@ -92,6 +94,8 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
   }
 
   buildJobOrderItemDetails(JobOrderBillOfMaterial bom, int index) {
+    final picked =
+        (bom.quantityPicked != bom.quantityPicked) && bom.status != 'picked';
     return GestureDetector(
       onTap: () {
         jobOrderCubit.selectJobOrderItem(index);
@@ -132,8 +136,17 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
                   Expanded(
                     child: PrimaryButtonWidget(
                       text: "Start",
-                      onPressed: () {},
-                      backgroungColor: AppColors.grey,
+                      onPressed: () {
+                        if (!picked) {
+                          // navigate to scan asset screen
+                          AppNavigator.goToPage(
+                            context: context,
+                            screen: JobOrderScanAssetScreen(order: widget.order),
+                          );
+                        }
+                        return;
+                      },
+                      backgroungColor: picked ? AppColors.grey : AppColors.pink,
                     ),
                   )
                 ],
@@ -160,6 +173,79 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
                   : null,
             )),
       ],
+    );
+  }
+
+  Widget _buildLoadingPlaceholder() {
+    return ListView.builder(
+      itemCount: 3,
+      itemBuilder: (context, index) => Card(
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: AppColors.background,
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(
+              color: AppColors.grey.withValues(alpha: 0.3),
+              width: 1.0,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildShimmerRow(width: 120, height: 16),
+              const SizedBox(height: 12),
+              _buildShimmerRow(width: double.infinity, height: 20),
+              const SizedBox(height: 16),
+              _buildPlaceholderRow(),
+              _buildPlaceholderRow(),
+              _buildPlaceholderRow(),
+              _buildPlaceholderRow(),
+              _buildPlaceholderRow(),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(flex: 3, child: Container()),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.grey.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerRow({required double width, required double height}) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: AppColors.grey.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(4),
+      ),
+    );
+  }
+
+  Widget _buildPlaceholderRow() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildShimmerRow(width: 120, height: 14),
+          _buildShimmerRow(width: 80, height: 14),
+        ],
+      ),
     );
   }
 }

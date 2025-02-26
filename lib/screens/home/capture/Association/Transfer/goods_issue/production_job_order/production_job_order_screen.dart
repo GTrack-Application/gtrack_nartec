@@ -6,6 +6,7 @@ import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_
 import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_screen.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,7 @@ class ProductionJobOrderScreen extends StatefulWidget {
 }
 
 class _ProductionJobOrderScreenState extends State<ProductionJobOrderScreen> {
+  final TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -31,7 +33,7 @@ class _ProductionJobOrderScreenState extends State<ProductionJobOrderScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
-          "Production Job Order",
+          "Goods Issue Production Job Order",
           style: TextStyle(
             fontWeight: FontWeight.w600,
             color: AppColors.white,
@@ -43,6 +45,26 @@ class _ProductionJobOrderScreenState extends State<ProductionJobOrderScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                spacing: 8.0,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: TextFormFieldWidget(
+                      controller: _searchController,
+                      hintText: "Search job orders",
+                      onChanged: (value) {
+                        context
+                            .read<ProductionJobOrderCubit>()
+                            .searchProductionJobOrders(value);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: BlocConsumer<ProductionJobOrderCubit,
                   ProductionJobOrderState>(

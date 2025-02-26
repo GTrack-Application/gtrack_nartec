@@ -66,29 +66,96 @@ class _JobOrderScreenState extends State<JobOrderScreen> {
         return Card(
           color: AppColors.background,
           margin: const EdgeInsets.only(bottom: 16),
-          child: Container(
-            height: 200,
+          child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 200,
-                  height: 24,
-                  color: Colors.grey[200],
+                // Header with product name and status
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildShimmerContainer(width: 180, height: 22),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.skyBlue.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: _buildShimmerContainer(width: 60, height: 16),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 12),
+
+                // Product details
+                _buildShimmerContainer(width: 150, height: 16),
                 const SizedBox(height: 8),
+                _buildShimmerContainer(width: 180, height: 16),
+                const SizedBox(height: 8),
+                _buildShimmerContainer(width: 140, height: 16),
+                const SizedBox(height: 8),
+                _buildShimmerContainer(width: 200, height: 16),
+
+                // Bill of materials section
+                const SizedBox(height: 16),
+                _buildShimmerContainer(width: 120, height: 18),
+                const SizedBox(height: 12),
+
+                // BOM item
                 Container(
-                  width: 150,
-                  height: 16,
-                  color: Colors.grey[200],
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildShimmerContainer(width: 160, height: 16),
+                      const SizedBox(height: 6),
+                      _buildShimmerContainer(width: 140, height: 14),
+                      const SizedBox(height: 6),
+                      _buildShimmerContainer(width: 120, height: 14),
+                    ],
+                  ),
                 ),
-                // Add more placeholder elements as needed
+
+                // Button placeholder
+                Row(
+                  children: [
+                    const Spacer(),
+                    Container(
+                      width: 160,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColors.pink.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildShimmerContainer(
+      {required double width, required double height}) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.grey.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(4),
+      ),
     );
   }
 

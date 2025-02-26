@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_asset_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
 
 part 'job_order_state.dart';
@@ -17,8 +18,14 @@ class JobOrderCubit extends Cubit<JobOrderState> {
   // Lists
   final List<JobOrderBillOfMaterial> _selectedItems = [];
   List<JobOrderModel> orders = [];
+  final List<JobOrderAssetModel> _assets = [];
 
+  // Maps
+  final Map<String, List<JobOrderAssetModel>> _assetsByTagNumber = {};
+
+  // Getters
   get items => _selectedItems;
+  List<JobOrderAssetModel> get assets => _assets;
 
   Future<void> getJobOrders() async {
     emit(JobOrderLoading());
@@ -103,6 +110,82 @@ class JobOrderCubit extends Cubit<JobOrderState> {
       // TODO: Add to production
     } catch (error) {
       emit(AddToProductionError(message: error.toString()));
+    }
+  }
+
+  void getAssetsByTagNumber(String tagNumber) async {
+    if (state is AssetsByTagNumberLoading) {
+      return;
+    }
+    emit(AssetsByTagNumberLoading());
+    try {
+      final token = await AppPreferences.getToken();
+      if (_assetsByTagNumber.containsKey(tagNumber)) {
+        emit(AssetsByTagNumberError(message: 'Assets already scanned'));
+        return;
+      }
+
+      final response = await _httpService.request(
+        '/api/assetCapture/getMasterEncodeAssetCaptureFinal?TagNumber=$tagNumber',
+        method: HttpMethod.get,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.success) {
+        final List<dynamic> data = response.data["data"];
+        final assets = data.map((e) => JobOrderAssetModel.fromJson(e)).toList();
+
+        _assets.addAll(assets);
+        _assetsByTagNumber[tagNumber] = assets;
+        emit(AssetsByTagNumberLoaded());
+      } else {
+        emit(AssetsByTagNumberError(message: 'Failed to fetch assets'));
+      }
+    } catch (error) {
+      emit(AssetsByTagNumberError(message: error.toString()));
+    }
+  }
+
+  void saveAssetTags(
+    String jobOrderMasterId,
+    DateTime productionExecutionDateTime,
+  ) async {
+    if (state is SaveAssetTagsLoading) {
+      return;
+    }
+    emit(SaveAssetTagsLoading());
+    try {
+      if (_assets.isEmpty) {
+        throw Exception("No assets selected");
+      }
+      final token = await AppPreferences.getToken();
+      final response = await _httpService.request(
+        '/api/wipAsset/createWIPAssetInProgress',
+        method: HttpMethod.post,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        data: {
+          'jobOrderMasterId': jobOrderMasterId,
+          'productionExecutionDateTime':
+              productionExecutionDateTime.toIso8601String(),
+          'tblAssetMasterEncodeAssetCaptureIDs': _assets
+              .map(
+                (asset) => asset.tblAssetMasterEncodeAssetCaptureID.toString(),
+              )
+              .toList(),
+        },
+      );
+      if (response.success) {
+        emit(SaveAssetTagsLoaded());
+      } else {
+        emit(SaveAssetTagsError(message: response.message));
+      }
+    } catch (error) {
+      emit(SaveAssetTagsError(message: error.toString()));
     }
   }
 }
