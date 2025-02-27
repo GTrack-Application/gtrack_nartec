@@ -13,7 +13,6 @@ import 'package:gtrack_nartec/cubit/capture/agregation/assembling_bundling/creat
 import 'package:gtrack_nartec/cubit/capture/agregation/assembling_bundling/create_bundle/create_bundle_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/assembling_bundling/products_model.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/Bundling/created_bundle_screen.dart';
