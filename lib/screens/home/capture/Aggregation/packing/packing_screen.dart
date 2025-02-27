@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_states.dart';
-import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
@@ -151,6 +150,8 @@ class _PackingScreenState extends State<PackingScreen> {
                               }
                               if (state is PackedItemsLoaded) {
                                 products = state.data;
+                                print(
+                                    "${products[0].itemImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/")}");
                               }
                             },
                             builder: (context, state) {
@@ -206,14 +207,15 @@ class _PackingScreenState extends State<PackingScreen> {
                                           child: ClipOval(
                                             child: CachedNetworkImage(
                                               imageUrl:
-                                                  "${AppUrls.baseUrlWith3093}${products[index].itemImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/") ?? ''}",
+                                                  "${products[index].itemImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/")}",
                                               width: 50,
                                               height: 50,
                                               fit: BoxFit.cover,
                                               errorWidget:
                                                   (context, url, error) =>
                                                       const Icon(
-                                                          Icons.image_outlined),
+                                                Icons.image_outlined,
+                                              ),
                                             ),
                                           ),
                                         ),

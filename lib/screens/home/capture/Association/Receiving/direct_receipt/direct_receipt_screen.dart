@@ -13,7 +13,6 @@ import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/
 import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/direct_receipt/direct_receipt_details_screen.dart';

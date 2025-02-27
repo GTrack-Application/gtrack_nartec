@@ -106,6 +106,7 @@ class JobOrderCubit extends Cubit<JobOrderState> {
         }
       }
 
+      // ignore: unused_local_variable
       final selectedItem = selectedItems.first;
       // TODO: Add to production
     } catch (error) {

@@ -1,15 +1,12 @@
-// ignore_for_file: unrelated_type_equality_checks
+// ignore_for_file: unrelated_type_equality_checks, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
-import 'package:gtrack_nartec/screens/home/capture/Serialization/serialization_gtin_screen.dart';
 
 class CreateSerialScreen extends StatefulWidget {
-  final GTIN_Model gtin;
+  final String gtin;
   const CreateSerialScreen({super.key, required this.gtin});
 
   @override
@@ -135,17 +132,13 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                             if (state is CaptureCreateSerializationSuccess) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text("Serials created successfully"),
+                                  content: Text(state.message),
                                   backgroundColor: Colors.green,
                                 ),
                               );
-                              CaptureCubit.get(context).getSerializationData(
-                                  widget.gtin.barcode ?? "");
-                              // AppNavigator.replaceTo(
-                              //     context: context,
-                              //     screen: SerializationGtinScreen(
-                              //       gtinModel: widget.gtin,
-                              //     ));
+                              CaptureCubit.get(context)
+                                  .getSerializationData(widget.gtin);
+                              Navigator.pop(context);
                             } else if (state
                                 is CaptureCreateSerializationError) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -160,7 +153,7 @@ class _CreateSerialScreenState extends State<CreateSerialScreen> {
                             return ElevatedButton(
                               onPressed: () {
                                 CaptureCubit.get(context)
-                                    .createNewSerial(widget.gtin.barcode ?? "");
+                                    .createNewSerial(widget.gtin);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.pink,
@@ -216,14 +209,6 @@ class FieldWidget extends StatelessWidget {
         //   color: AppColors.grey,
         // ),
         borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.grey.withOpacity(0.7),
-            spreadRadius: 2,
-            blurRadius: 1,
-            offset: const Offset(0, 1),
-          ),
-        ],
       ),
       child: TextFormField(
         controller: controller,

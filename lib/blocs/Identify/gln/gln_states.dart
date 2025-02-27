@@ -1,4 +1,3 @@
-import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 
 abstract class GlnState {}
