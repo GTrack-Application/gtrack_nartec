@@ -22,7 +22,7 @@ class GLNController {
       "Authorization": "Bearer $token",
     };
 
-    final response = await _httpService.request(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
 
     var data = response.body as List;
 
