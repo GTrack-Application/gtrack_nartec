@@ -11,7 +11,6 @@ class GTINController {
 
   static Future<List<GTIN_Model>> getProducts() async {
     final userId = await AppPreferences.getUserId();
-    final token = await AppPreferences.getToken();
 
     String url = "api/products?user_id=$userId";
 

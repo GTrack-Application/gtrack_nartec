@@ -5,8 +5,6 @@ import 'dart:developer';
 
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
-import 'package:gtrack_nartec/global/services/http_service.dart';
-import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:http/http.dart' as http;
 
