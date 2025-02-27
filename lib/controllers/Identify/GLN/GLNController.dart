@@ -1,9 +1,11 @@
 // ignore_for_file: file_names, avoid_print
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:http/http.dart' as http;
@@ -13,16 +15,16 @@ class GLNController {
     String? token = await AppPreferences.getToken();
     String url = "${AppUrls.baseUrlWith7010}/api/getAllPackedItems";
 
-    final uri = Uri.parse(url);
+    log(url);
 
     final headers = <String, String>{
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
     };
 
-    var response = await http.get(uri, headers: headers);
+    final response = await _httpService.request(url, headers: headers);
 
-    var data = json.decode(response.body) as List;
+    var data = response.body as List;
 
     print(json.decode(response.body));
 

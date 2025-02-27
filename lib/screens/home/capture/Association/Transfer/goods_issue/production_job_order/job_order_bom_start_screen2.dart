@@ -6,7 +6,7 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/production_job_order_screen.dart';
+import 'package:gtrack_nartec/screens/home_screen.dart';
 
 class JobOrderBomStartScreen2 extends StatefulWidget {
   const JobOrderBomStartScreen2({super.key});
@@ -129,7 +129,7 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                         AppSnackbars.success(context, state.message);
                         AppNavigator.pushAndRemoveUntil(
                           context: context,
-                          screen: ProductionJobOrderScreen(),
+                          screen: const HomeScreen(),
                         );
                       }
                     },
@@ -157,6 +157,10 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                               .updateMappedBarcodes(
                                 locationController.text,
                                 cubit.items,
+                                oldOrder: context
+                                    .read<ProductionJobOrderCubit>()
+                                    .order!,
+                                qty: cubit.quantityPicked,
                               );
                         },
                         isLoading: isLoading,

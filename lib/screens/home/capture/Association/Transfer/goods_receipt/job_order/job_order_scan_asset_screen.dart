@@ -12,7 +12,12 @@ import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_re
 
 class JobOrderScanAssetScreen extends StatefulWidget {
   final JobOrderModel order;
-  const JobOrderScanAssetScreen({super.key, required this.order});
+  final JobOrderBillOfMaterial bom;
+  const JobOrderScanAssetScreen({
+    super.key,
+    required this.order,
+    required this.bom,
+  });
 
   @override
   State<JobOrderScanAssetScreen> createState() =>
@@ -35,7 +40,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Job Order Scan Asset'),
+        title: Text('Asset Details'),
         backgroundColor: AppColors.pink,
       ),
       body: BlocConsumer<JobOrderCubit, JobOrderState>(
@@ -63,6 +68,29 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
               spacing: 16,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.skyBlue.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    spacing: 8,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Job Order:',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      Text("Product: ${widget.bom.id}"),
+                      Text("Product: ${widget.bom.productName}"),
+                      Text("Quantity: ${widget.bom.quantity} PCS"),
+                      Text("Location: ${widget.bom.binLocation}"),
+                    ],
+                  ),
+                ),
                 Row(
                   spacing: 8.0,
                   children: [
@@ -119,7 +147,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                         text: "Save",
                         onPressed: () {
                           jobOrderCubit.saveAssetTags(
-                            widget.order.id.toString(),
+                            widget.bom.id.toString(),
                             transferDate,
                           );
                         },

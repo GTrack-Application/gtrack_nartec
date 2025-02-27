@@ -25,7 +25,13 @@ class EPCISController {
     };
 
     String eventTime = DateTime.now().toIso8601String();
-    String eventTimeZoneOffSet = DateTime.now().timeZoneOffset.toString();
+    // Format timezone offset to ±HH:MM format
+    Duration offset = DateTime.now().timeZoneOffset;
+    String sign = offset.isNegative ? '-' : '+';
+    int hours = offset.inHours.abs();
+    int minutes = (offset.inMinutes.abs() % 60);
+    String eventTimeZoneOffSet =
+        '$sign${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
     String createDate = DateTime.now().toIso8601String();
 
     // Globally unique ID of the event, used for deduplication and event retrieval. EPCIS2.0 specifies a hashing algorithm to construct a worldwide-unique ID for an event.
@@ -57,12 +63,16 @@ class EPCISController {
     var response =
         await http.post(url, headers: headers, body: jsonEncode(body));
 
-    log(response.body);
+    log("EPCIS Response: ${response.body}");
+    final result = jsonDecode(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
     } else {
-      return false;
+      throw Exception(result['message'] ??
+          result['error'] ??
+          'Failed to insert EPCIS event');
+      // return false;
     }
   }
 }
