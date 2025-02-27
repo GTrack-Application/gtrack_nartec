@@ -10,27 +10,32 @@ class ProductionJobOrder {
   String? totalPrice;
   String? createdAt;
   String? updatedAt;
+  String? subUserId;
+  String? status;
   // Null? subUserId;
   // List<Null>? billOfMaterial;
   // Null? memberSubUsers;
   JobOrderMaster? jobOrderMaster;
 
-  ProductionJobOrder(
-      {this.id,
-      this.jobOrderId,
-      this.productId,
-      this.productName,
-      this.productDescription,
-      this.unitOfMeasure,
-      this.quantity,
-      this.price,
-      this.totalPrice,
-      this.createdAt,
-      this.updatedAt,
-      // this.subUserId,
-      // this.billOfMaterial,
-      // this.memberSubUsers,
-      this.jobOrderMaster});
+  ProductionJobOrder({
+    this.id,
+    this.jobOrderId,
+    this.productId,
+    this.productName,
+    this.productDescription,
+    this.unitOfMeasure,
+    this.quantity,
+    this.price,
+    this.totalPrice,
+    this.createdAt,
+    this.updatedAt,
+    this.subUserId,
+    this.status,
+    // this.subUserId,
+    // this.billOfMaterial,
+    // this.memberSubUsers,
+    this.jobOrderMaster,
+  });
 
   ProductionJobOrder.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -44,7 +49,8 @@ class ProductionJobOrder {
     totalPrice = json['totalPrice'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    // subUserId = json['subUserId'];
+    subUserId = json['subUserId'];
+    status = json['status'];
     // if (json['BillOfMaterial'] != null) {
     //   billOfMaterial = <Null>[];
     //   json['BillOfMaterial'].forEach((v) {

@@ -1,30 +1,33 @@
 // ignore_for_file: file_names, avoid_print
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:http/http.dart' as http;
 
 class GLNController {
+  static final _httpService = HttpService(baseUrl: AppUrls.baseUrlWith3093);
   static Future<List<GLNProductsModel>> getData() async {
     String? userId = await AppPreferences.getUserId();
     String? token = await AppPreferences.getToken();
-    String url = "${AppUrls.baseUrlWith3093}/api/gln?user_id=$userId";
+    String url = "api/gln?user_id=$userId";
 
-    final uri = Uri.parse(url);
+    log(url);
 
     final headers = <String, String>{
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
     };
 
-    var response = await http.get(uri, headers: headers);
+    final response = await _httpService.request(url, headers: headers);
 
-    var data = json.decode(response.body) as List;
+    var data = response.body as List;
 
-    if (response.statusCode == 200) {
+    if (response.success) {
       List<GLNProductsModel> products = data
           .map((e) => GLNProductsModel.fromJson(e as Map<String, dynamic>))
           .toList();

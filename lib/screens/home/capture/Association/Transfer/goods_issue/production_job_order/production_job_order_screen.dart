@@ -233,6 +233,7 @@ class JobOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final status = order.status;
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -249,6 +250,7 @@ class JobOrderCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
         onTap: () {
+          context.read<ProductionJobOrderCubit>().order = order;
           AppNavigator.goToPage(
             context: context,
             screen: JobOrderBomScreen(
@@ -281,7 +283,7 @@ class JobOrderCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.pink.withOpacity(0.1),
+                      color: AppColors.pink.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -302,15 +304,15 @@ class JobOrderCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: order.jobOrderMaster?.status == "pending"
-                          ? AppColors.skyBlue.withOpacity(0.1)
-                          : AppColors.green.withOpacity(0.1),
+                      color: status == "pending"
+                          ? AppColors.skyBlue.withOpacity(0.2)
+                          : AppColors.green.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      order.jobOrderMaster?.status?.toUpperCase() ?? 'N/A',
+                      status?.toUpperCase() ?? 'N/A',
                       style: TextStyle(
-                        color: order.jobOrderMaster?.status == "pending"
+                        color: status == "pending"
                             ? AppColors.skyBlue
                             : AppColors.green,
                         fontWeight: FontWeight.w600,
@@ -338,9 +340,9 @@ class JobOrderCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 24),
                   _buildInfoItem(
-                    icon: Icons.attach_money,
+                    icon: null,
                     label: "Cost",
-                    value: order.jobOrderMaster?.totalCost ?? "N/A",
+                    value: "${order.jobOrderMaster?.totalCost ?? "N/A"} SAR",
                   ),
                 ],
               ),
@@ -360,18 +362,20 @@ class JobOrderCard extends StatelessWidget {
   }
 
   Widget _buildInfoItem({
-    required IconData icon,
+    required IconData? icon,
     required String label,
     required String value,
   }) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: AppColors.grey,
-        ),
+        icon == null
+            ? SizedBox.shrink()
+            : Icon(
+                icon,
+                size: 16,
+                color: AppColors.grey,
+              ),
         const SizedBox(width: 8),
         Text(
           "$label: ",

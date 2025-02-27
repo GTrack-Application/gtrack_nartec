@@ -19,6 +19,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       HttpService(baseUrl: AppUrls.domain);
 
   ProductionJobOrderBom? bomStartData;
+  ProductionJobOrder? order;
   String bomStartType = 'pallet';
   List<MappedBarcode> items = [];
 
@@ -232,7 +233,11 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   }
 
   Future<void> updateMappedBarcodes(
-      String location, List<MappedBarcode> scannedItems) async {
+    String location,
+    List<MappedBarcode> scannedItems, {
+    ProductionJobOrder? oldOrder,
+    int? qty,
+  }) async {
     emit(ProductionJobOrderUpdateMappedBarcodesLoading());
 
     try {
@@ -247,15 +252,43 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         },
       );
 
-      // EPCIS API Call
-      await EPCISController.insertEPCISEvent(
-        type: "Transaction Event",
-        action: "ADD",
-        bizStep: "shipping",
-        disposition: "in_transit",
-      );
+      final result = await Future.any([
+        // update bom API call
+        _httpService.request(
+          // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
+          "/api/bom/${bomStartData?.id}", // jobOrderId || id
+          method: HttpMethod.put,
+          data: {
+            'binLocation': location,
+            'quantityPicked': "$qty",
+          },
+        ),
+        // EPCIS API Call
+        EPCISController.insertEPCISEvent(
+          type: "Transaction Event",
+          action: "ADD",
+          bizStep: "shipping",
+          disposition: "in_transit",
+        )
+      ]);
 
-      log(response.body);
+      // // EPCIS API Call
+      // await EPCISController.insertEPCISEvent(
+      //   type: "Transaction Event",
+      //   action: "ADD",
+      //   bizStep: "shipping",
+      //   disposition: "in_transit",
+      // );
+
+      // await _httpService.request(
+      //   // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
+      //   "/api/bom/${bomStartData?.id}", // jobOrderId || id
+      //   method: HttpMethod.put,
+      //   data: {
+      //     'binLocation': location,
+      //     'quantityPicked': "$quantityPicked",
+      //   },
+      // );
 
       if (response.success) {
         final data = response.data;

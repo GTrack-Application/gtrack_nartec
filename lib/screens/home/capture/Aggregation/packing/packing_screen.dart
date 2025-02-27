@@ -10,6 +10,7 @@ import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/pack
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/complete_packing_screen.dart';
@@ -55,12 +56,7 @@ class _PackingScreenState extends State<PackingScreen> {
           bloc: glnCubit,
           listener: (context, state) {
             if (state is GlnErrorState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              AppSnackbars.danger(context, state.message);
             }
             if (state is GlnLoadedState) {
               table = state.data;
@@ -73,6 +69,10 @@ class _PackingScreenState extends State<PackingScreen> {
             }
           },
           builder: (context, state) {
+            if (state is GlnLoadingState) {
+              return buildPlaceholder();
+            }
+
             return Stack(
               children: [
                 Padding(
@@ -180,15 +180,16 @@ class _PackingScreenState extends State<PackingScreen> {
                                         borderRadius: BorderRadius.circular(10),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.grey.withOpacity(0.5),
+                                            color: Colors.grey
+                                                .withValues(alpha: 0.5),
                                             spreadRadius: 5,
                                             blurRadius: 7,
                                             offset: const Offset(0, 3),
                                           ),
                                         ],
                                         border: Border.all(
-                                            color:
-                                                Colors.grey.withOpacity(0.2)),
+                                            color: Colors.grey
+                                                .withValues(alpha: 0.2)),
                                       ),
                                       child: ListTile(
                                         contentPadding:
@@ -282,6 +283,137 @@ class _PackingScreenState extends State<PackingScreen> {
           },
         ),
       ),
+    );
+  }
+
+  Padding buildPlaceholder() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header placeholder
+          Container(
+            width: double.infinity,
+            height: 48,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            margin: const EdgeInsets.only(bottom: 24),
+          ),
+
+          // Location info placeholder
+          _buildLoadingSection(
+            title: 'Location Information',
+            items: 3,
+          ),
+
+          const SizedBox(height: 24),
+
+          // Scanning info placeholder
+          _buildLoadingSection(
+            title: 'Scanning Details',
+            items: 2,
+          ),
+
+          const SizedBox(height: 24),
+
+          // Button placeholder
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 200,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.pink.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build loading section
+  Widget _buildLoadingSection({required String title, required int items}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section title
+        Container(
+          width: 150,
+          height: 24,
+          decoration: BoxDecoration(
+            color: AppColors.skyBlue.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          margin: const EdgeInsets.only(bottom: 16),
+        ),
+
+        // Loading items
+        ...List.generate(
+          items,
+          (index) => Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Colors.grey.withValues(alpha: 0.2),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withValues(alpha: 0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Icon placeholder
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: AppColors.skyBlue.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Text placeholder
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: 140,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

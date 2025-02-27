@@ -141,7 +141,7 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
                           // navigate to scan asset screen
                           AppNavigator.goToPage(
                             context: context,
-                            screen: JobOrderScanAssetScreen(order: widget.order),
+                            screen: JobOrderScanAssetScreen(order: widget.order, bom: bom),
                           );
                         }
                         return;
