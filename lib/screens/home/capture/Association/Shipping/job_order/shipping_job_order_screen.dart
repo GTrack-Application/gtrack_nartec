@@ -117,7 +117,7 @@ class _ShippingJobOrderScreenState extends State<ShippingJobOrderScreen> {
             children: [
               TableRow(
                 decoration: BoxDecoration(
-                  color: AppColors.pink.withOpacity(0.1),
+                  color: AppColors.pink.withValues(alpha: 0.1),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(8),
                     topRight: Radius.circular(8),
