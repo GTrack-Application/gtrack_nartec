@@ -10,7 +10,6 @@ import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/pack
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/complete_packing_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/packing_details_screen.dart';
@@ -26,7 +25,7 @@ class _PackingScreenState extends State<PackingScreen> {
   TextEditingController searchController = TextEditingController();
 
   GlnCubit glnCubit = GlnCubit();
-  List<GLNProductsModel> table = [];
+  List<PackedItemsModel> table = [];
 
   List<String> dropdownList = [];
   String? dropdownValue;
@@ -36,7 +35,8 @@ class _PackingScreenState extends State<PackingScreen> {
   @override
   void initState() {
     super.initState();
-    glnCubit.identifyGln();
+    // glnCubit.identifyGln();
+    packedItemsCubit.getPackedItems();
   }
 
   PackedItemsCubit packedItemsCubit = PackedItemsCubit();
@@ -64,12 +64,11 @@ class _PackingScreenState extends State<PackingScreen> {
             }
             if (state is GlnLoadedState) {
               table = state.data;
-              dropdownList = table.map((e) => e.locationNameAr ?? "").toList();
-              gln = table.map((e) => e.gcpGLNID ?? "").toList();
+              dropdownList = table.map((e) => e.gLN ?? "").toList();
+              gln = table.map((e) => e.gLN ?? "").toList();
               dropdownList = dropdownList.toSet().toList();
               dropdownValue = dropdownList[0];
-              packedItemsCubit
-                  .getPackedItems(gln[dropdownList.indexOf(dropdownValue!)]);
+              // packedItemsCubit.getPackedItems();
             }
           },
           builder: (context, state) {
@@ -80,42 +79,41 @@ class _PackingScreenState extends State<PackingScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        width: double.infinity,
-                        height: 50,
-                        decoration: const BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          border: Border.fromBorderSide(
-                              BorderSide(color: AppColors.grey)),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: dropdownValue,
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 24,
-                            elevation: 16,
-                            isExpanded: true,
-                            style: const TextStyle(color: Colors.black),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropdownValue = newValue;
-                              });
-                              packedItemsCubit.getPackedItems(
-                                  gln[dropdownList.indexOf(newValue!)]);
-                            },
-                            items: dropdownList
-                                .map<DropdownMenuItem<String>>((String? value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value!),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                      // Container(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                      //   width: double.infinity,
+                      //   height: 50,
+                      //   decoration: const BoxDecoration(
+                      //     color: AppColors.white,
+                      //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                      //     border: Border.fromBorderSide(
+                      //         BorderSide(color: AppColors.grey)),
+                      //   ),
+                      //   child: DropdownButtonHideUnderline(
+                      //     child: DropdownButton<String>(
+                      //       value: dropdownValue,
+                      //       icon: const Icon(Icons.arrow_drop_down),
+                      //       iconSize: 24,
+                      //       elevation: 16,
+                      //       isExpanded: true,
+                      //       style: const TextStyle(color: Colors.black),
+                      //       onChanged: (String? newValue) {
+                      //         setState(() {
+                      //           dropdownValue = newValue;
+                      //         });
+                      //         packedItemsCubit.getPackedItems();
+                      //       },
+                      //       items: dropdownList
+                      //           .map<DropdownMenuItem<String>>((String? value) {
+                      //         return DropdownMenuItem<String>(
+                      //           value: value,
+                      //           child: Text(value!),
+                      //         );
+                      //       }).toList(),
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 20),
                       Container(
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -158,9 +156,7 @@ class _PackingScreenState extends State<PackingScreen> {
                             builder: (context, state) {
                               return RefreshIndicator(
                                 onRefresh: () async {
-                                  packedItemsCubit.getPackedItems(
-                                    gln[dropdownList.indexOf(dropdownValue!)],
-                                  );
+                                  packedItemsCubit.getPackedItems();
                                 },
                                 child: ListView.builder(
                                   itemCount: products.length,

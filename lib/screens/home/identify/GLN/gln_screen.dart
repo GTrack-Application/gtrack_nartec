@@ -11,6 +11,7 @@ import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/GLN/add_gln_screen.dart';
 import 'package:gtrack_nartec/screens/home/identify/GLN/gln_information_screen.dart';
 import 'package:ionicons/ionicons.dart';
@@ -27,8 +28,8 @@ class GLNScreen extends StatefulWidget {
 class _GLNScreenState extends State<GLNScreen> {
   TextEditingController searchController = TextEditingController();
 
-  List<GLNProductsModel> table = [];
-  List<GLNProductsModel> filteredTable = [];
+  List<PackedItemsModel> table = [];
+  List<PackedItemsModel> filteredTable = [];
 
   List<double> longitude = [];
   List<double> latitude = [];
@@ -164,10 +165,10 @@ class _GLNScreenState extends State<GLNScreen> {
                           onChanged: (value) {
                             setState(() {
                               filteredTable = table.where((element) {
-                                var nameCondition = element.locationNameAr!
+                                var nameCondition = element.gLN!
                                     .toLowerCase()
                                     .contains(value.toLowerCase());
-                                var barcodeCondition = element.gLNBarcodeNumber!
+                                var barcodeCondition = element.gTIN!
                                     .toLowerCase()
                                     .contains(value.toLowerCase());
                                 return nameCondition || barcodeCondition;
@@ -349,15 +350,14 @@ class _GLNScreenState extends State<GLNScreen> {
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.all(10),
                                     title: Text(
-                                      filteredTable[index].locationNameEn ?? "",
+                                      filteredTable[index].gLN ?? "",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     subtitle: Text(
-                                      filteredTable[index].gLNBarcodeNumber ??
-                                          "",
+                                      filteredTable[index].gTIN ?? "",
                                       style: const TextStyle(fontSize: 13),
                                     ),
                                     leading: Hero(
@@ -365,10 +365,10 @@ class _GLNScreenState extends State<GLNScreen> {
                                       child: ClipOval(
                                         child: CachedNetworkImage(
                                           imageUrl: filteredTable[index]
-                                                      .image ==
+                                                      .itemImage ==
                                                   null
                                               ? "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740&t=st=1715954816~exp=1715955416~hmac=b32613f5083d999009d81a82df971a4351afdc2a8725f2053bfa1a4af896d072"
-                                              : "${AppUrls.baseUrlWith3093}${filteredTable[index].image?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                                              : "${AppUrls.baseUrlWith3093}${filteredTable[index].itemImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
                                           width: 50,
                                           height: 50,
                                           fit: BoxFit.cover,
@@ -379,11 +379,11 @@ class _GLNScreenState extends State<GLNScreen> {
                                     ),
                                     trailing: GestureDetector(
                                       onTap: () {
-                                        AppNavigator.goToPage(
-                                          context: context,
-                                          screen: GLNInformationScreen(
-                                              employees: filteredTable[index]),
-                                        );
+                                        // AppNavigator.goToPage(
+                                        //   context: context,
+                                        //   screen: GLNInformationScreen(
+                                        //       employees: filteredTable[index]),
+                                        // );
                                       },
                                       child:
                                           Image.asset("assets/icons/view.png"),

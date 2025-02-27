@@ -5,13 +5,13 @@ import 'dart:convert';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:http/http.dart' as http;
 
 class GLNController {
-  static Future<List<GLNProductsModel>> getData() async {
-    String? userId = await AppPreferences.getUserId();
+  static Future<List<PackedItemsModel>> getData() async {
     String? token = await AppPreferences.getToken();
-    String url = "${AppUrls.baseUrlWith3093}/api/gln?user_id=$userId";
+    String url = "${AppUrls.baseUrlWith7010}/api/getAllPackedItems";
 
     final uri = Uri.parse(url);
 
@@ -24,9 +24,11 @@ class GLNController {
 
     var data = json.decode(response.body) as List;
 
-    if (response.statusCode == 200) {
-      List<GLNProductsModel> products = data
-          .map((e) => GLNProductsModel.fromJson(e as Map<String, dynamic>))
+    print(json.decode(response.body));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      List<PackedItemsModel> products = data
+          .map((e) => PackedItemsModel.fromJson(e as Map<String, dynamic>))
           .toList();
 
       return products;

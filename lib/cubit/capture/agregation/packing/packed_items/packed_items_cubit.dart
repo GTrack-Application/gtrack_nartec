@@ -6,12 +6,11 @@ import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsMode
 class PackedItemsCubit extends Cubit<PackedItemsState> {
   PackedItemsCubit() : super(PackedItemsInitial());
 
-  void getPackedItems(String gtin) async {
+  void getPackedItems() async {
     emit(PackedItemsLoading());
 
     try {
-      List<PackedItemsModel> data =
-          await AssemblingController.getPackedItems(gtin);
+      List<PackedItemsModel> data = await AssemblingController.getPackedItems();
       emit(PackedItemsLoaded(data: data));
     } catch (e) {
       emit(

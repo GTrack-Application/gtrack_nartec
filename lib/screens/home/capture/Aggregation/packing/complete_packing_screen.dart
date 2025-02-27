@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/complete_packing/complete_packing_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/agregation/packing/complete_packing/complete_packing_state.dart';
@@ -81,7 +83,8 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                   if (state is PackingError) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(state.message),
+                        content:
+                            Text(state.message.replaceAll("Exception: ", "")),
                         backgroundColor: Colors.red,
                       ),
                     );
@@ -401,7 +404,7 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                 visible: product != null,
                 child: BlocConsumer<CompletePackingCubit, CompletePackingState>(
                   bloc: completePackingCubit,
-                  listener: (context, state) {
+                  listener: (context, state) async {
                     if (state is CompletePackingError) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -417,13 +420,23 @@ class _CompletePackingScreenState extends State<CompletePackingScreen> {
                           backgroundColor: Colors.green,
                         ),
                       );
+                      await RawMaterialsToWIPController.insertEPCISEvent(
+                        "packing",
+                        int.parse(product!.data!.gtin.toString()),
+                        product!.data!.gcpGLNID.toString(),
+                        product!.data!.gcpGLNID.toString(),
+                        "manufacturing",
+                        "packing",
+                        "packing",
+                        "packing",
+                      );
                       RawMaterialsToWIPController.insertGtrackEPCISLog(
-                              "packing",
-                              product!.data!.gtin.toString(),
-                              product!.data!.gcpGLNID.toString(),
-                              product!.data!.gcpGLNID.toString(),
-                              'manufacturing')
-                          .then((value) {
+                        "packing",
+                        product!.data!.gtin.toString(),
+                        product!.data!.gcpGLNID.toString(),
+                        product!.data!.gcpGLNID.toString(),
+                        'manufacturing',
+                      ).then((value) {
                         print("EPCIS Log Inserted");
                       }).onError((error, stackTrace) {
                         print("EPCIS Log error: $error");
