@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -90,7 +89,7 @@ class _PackingDetailsScreenState extends State<PackingDetailsScreen> {
                       ),
                       child: CachedNetworkImage(
                         imageUrl:
-                            "${AppUrls.baseUrlWith3093}${widget.employees.itemImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
+                            "${widget.employees.itemImage?.replaceAll(RegExp(r'^/+|/+$'), '').replaceAll("\\", "/")}",
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,

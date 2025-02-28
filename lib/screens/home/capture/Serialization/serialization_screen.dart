@@ -1,14 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/screens/home/capture/Serialization/serialization_details_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Serialization/serialization_gtin_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Serialization/create_serial_screen.dart';
 
 class SerializationScreen extends StatefulWidget {
   const SerializationScreen({super.key});
@@ -50,12 +47,13 @@ class _SerializationScreenState extends State<SerializationScreen> {
       children: [
         Expanded(
           child: SizedBox(
-            height: 45,
+            height: 50,
             child: TextField(
               controller: CaptureCubit.get(context).gtin,
               onEditingComplete: () {
                 CaptureCubit.get(context).getGtinProducts();
               },
+              maxLines: 1,
               decoration: InputDecoration(
                 hintText: 'Enter GTIN',
                 border: OutlineInputBorder(
@@ -98,7 +96,74 @@ class _SerializationScreenState extends State<SerializationScreen> {
         }
       }, builder: (context, state) {
         if (state is CaptureGetGtinProductsLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.primary),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
+                    color: AppColors.pink,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(5),
+                  height: 50,
+                  width: double.infinity,
+                  child: const Text(
+                    "Loading GTIN List...",
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: 5, // Show 5 placeholder items
+                    itemBuilder: (context, index) => Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                      ),
+                      child: const ListTile(
+                        contentPadding: EdgeInsets.all(10),
+                        title: LinearProgressIndicator(),
+                        subtitle: Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: LinearProgressIndicator(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
         }
         return RefreshIndicator(
           onRefresh: () async {
@@ -121,17 +186,48 @@ class _SerializationScreenState extends State<SerializationScreen> {
               children: [
                 Container(
                   alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
+                    color: AppColors.pink,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   padding: const EdgeInsets.all(5),
-                  height: 40,
+                  height: 50,
                   width: double.infinity,
-                  color: AppColors.pink,
-                  child: const Text(
-                    "List of GTIN",
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "List of GTIN",
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        height: 35,
+                        child: FilledButton(
+                          onPressed: () {
+                            AppNavigator.goToPage(
+                              context: context,
+                              screen: CreateSerialScreen(
+                                gtin:
+                                    CaptureCubit.get(context).gtin.text.trim(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Next",
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -160,8 +256,8 @@ class _SerializationScreenState extends State<SerializationScreen> {
                         onTap: () {
                           // AppNavigator.goToPage(
                           //   context: context,
-                          //   screen: SerializationGtinScreen(
-                          //     gtinModel:
+                          //   screen: SerializationDetailsScreen(
+                          //     serialData:
                           //         CaptureCubit.get(context).gtinProducts[index],
                           //   ),
                           // );
@@ -171,7 +267,7 @@ class _SerializationScreenState extends State<SerializationScreen> {
                               .gtinProducts[index]
                               .SerialNo,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -180,7 +276,7 @@ class _SerializationScreenState extends State<SerializationScreen> {
                               .gtinProducts[index]
                               .EXPIRY_DATE
                               .toString(),
-                          style: const TextStyle(fontSize: 13),
+                          style: const TextStyle(fontSize: 12),
                         ),
                         // leading: Hero(
                         //   tag: CaptureCubit.get(context)
@@ -199,18 +295,18 @@ class _SerializationScreenState extends State<SerializationScreen> {
                         //     ),
                         //   ),
                         // ),
-                        trailing: GestureDetector(
-                          onTap: () {
-                            // AppNavigator.goToPage(
-                            //   context: context,
-                            //   screen: SerializationDetailsScreen(
-                            //     employees: CaptureCubit.get(context)
-                            //         .gtinProducts[index],
-                            //   ),
-                            // );
-                          },
-                          child: Image.asset("assets/icons/view.png"),
-                        ),
+                        // trailing: GestureDetector(
+                        //   onTap: () {
+                        //     // AppNavigator.goToPage(
+                        //     //   context: context,
+                        //     //   screen: SerializationDetailsScreen(
+                        //     //     employees: CaptureCubit.get(context)
+                        //     //         .gtinProducts[index],
+                        //     //   ),
+                        //     // );
+                        //   },
+                        //   child: Image.asset("assets/icons/view.png"),
+                        // ),
                       ),
                     ),
                     itemCount: CaptureCubit.get(context).gtinProducts.length,

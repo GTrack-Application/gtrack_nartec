@@ -40,7 +40,7 @@ class CaptureController {
       "qty": "$quantity",
       "BATCH": batchNumber,
       "EXPIRY_DATE": expiryDate,
-      "MANUFACTURING_DATE": manufacturingDate,
+      "MANUFACTURING_DATE": manufacturingDate
     });
 
     log(body);

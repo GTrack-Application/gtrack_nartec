@@ -1,4 +1,4 @@
-import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 
 abstract class GlnState {}
 
@@ -7,7 +7,7 @@ class GlnInitState extends GlnState {}
 class GlnLoadingState extends GlnState {}
 
 class GlnLoadedState extends GlnState {
-  List<GLNProductsModel> data = [];
+  List<PackedItemsModel> data = [];
 
   GlnLoadedState({required this.data});
 }

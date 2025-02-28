@@ -152,30 +152,27 @@ class AssemblingController {
     }
   }
 
-  static Future<List<PackedItemsModel>> getPackedItems(String gln) async {
+  static Future<List<PackedItemsModel>> getPackedItems() async {
+    String? token = await AppPreferences.getToken();
     // String? userId = await AppPreferences.getUserId();
-    // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    final url = "${AppUrls.baseUrlWith7010}/api/getPackedItemsByGLN?GLN=$gln";
+    final url = "${AppUrls.baseUrlWith7010}/api/getAllPackedItems";
 
     final uri = Uri.parse(url);
 
-    log(uri.toString());
+    // log(uri.toString());
 
     final headers = <String, String>{
-      "Content-Type": "application/json",
-
-      // "Authorization": "Bearer $token",
+      "Authorization": "Bearer $token",
     };
 
     var response = await http.get(uri, headers: headers);
 
-    log(json.decode(response.body));
+    // print(response.body);
 
-    var data = json.decode(response.body) as List;
-
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = json.decode(response.body) as List;
       List<PackedItemsModel> products =
           data.map((e) => PackedItemsModel.fromJson(e)).toList();
       return products;

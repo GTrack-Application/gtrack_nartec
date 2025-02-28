@@ -13,8 +13,8 @@ import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/
 import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/Identify/GLN/GLNProductsModel.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/direct_receipt/direct_receipt_details_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/direct_receipt/direct_receipt_save_screen.dart';
 
@@ -32,7 +32,7 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
   GetShipmentCubit getShipmentCubit = GetShipmentCubit();
   List<ShipmentDataModel> products = [];
 
-  List<GLNProductsModel> table = [];
+  List<PackedItemsModel> table = [];
   List<Map<String, dynamic>> data = [];
 
   List<String> dropdownList = [];
@@ -77,12 +77,9 @@ class _DirectReceiptScreenState extends State<DirectReceiptScreen> {
             }
             if (state is GlnLoadedState) {
               table = state.data;
-              dropdownList = table
-                  .map((e) =>
-                      "${e.locationNameEn ?? ""} - ${e.gLNBarcodeNumber}")
-                  .toList();
+              dropdownList = table.map((e) => e.gLN ?? "").toList();
 
-              gln = table.map((e) => e.gLNBarcodeNumber ?? "").toList();
+              gln = table.map((e) => e.gTIN ?? "").toList();
               dropdownList = dropdownList.toSet().toList();
               dropdownValue = dropdownList[0];
               ItemDetailsCubit.get(context).glnIdFrom = dropdownValue;

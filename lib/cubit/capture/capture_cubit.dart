@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/controllers/capture/capture_controller.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gtin_model.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_screen.dart';
