@@ -87,4 +87,14 @@ class FatsCubit extends Cubit<FatsState> {
       emit(FatsGenerateTagsError(message: e.toString()));
     }
   }
+
+  Future<void> getEmployeeNames() async {
+    emit(FatsGetEmployeeNamesLoading());
+    try {
+      final employeeNames = await FatsController.getEmployeeNames();
+      emit(FatsGetEmployeeNamesLoaded(employeeNames: employeeNames));
+    } catch (e) {
+      emit(FatsGetEmployeeNamesError(message: e.toString()));
+    }
+  }
 }

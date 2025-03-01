@@ -1,16 +1,20 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/brand_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/category_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/city_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/country_model.dart';
+import 'package:gtrack_nartec/screens/home/identify/GIAI/model/employee_name_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/generate_tag_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/state_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/send_barcode_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 class FatsController {
   static Future<List<CountryModel>> getContries() async {
@@ -217,6 +221,96 @@ class FatsController {
     } else {
       var data = jsonDecode(response.body);
       throw Exception(data['error']);
+    }
+  }
+
+  static Future<List<EmployeeNameModel>> getEmployeeNames() async {
+    final memberId = await AppPreferences.getUserId();
+    final token = await AppPreferences.getToken();
+
+    final url =
+        '${AppUrls.baseUrlWith7010}/api/memberSubUser?member_id=$memberId';
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: headers,
+    );
+
+    print(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = jsonDecode(response.body) as List;
+      return data.map((e) => EmployeeNameModel.fromJson(e)).toList();
+    } else {
+      var data = jsonDecode(response.body);
+      throw Exception(data['message']);
+    }
+  }
+
+  Future<void> handleSubmit(
+    String id,
+    String tagNumber,
+    String locationTag,
+    String serialNo,
+    String employeeId,
+    String phoneExtension,
+    String otherTag,
+    String notes,
+    String assetCondition,
+    String bought,
+    String assetLocationDetails,
+    List<File> selectedFiles,
+  ) async {
+    final memberData = await AppPreferences.getMemberId();
+    final token = await AppPreferences.getToken();
+    final url =
+        '${AppUrls.baseUrlWith7010}/api/assetCapture/createAssetMasterEncodeAssetCaptureFinal';
+
+    final deleteUrl = '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder/$id';
+    final headers = {'Authorization': 'Bearer $token'};
+
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+
+    request.fields['memberId'] = memberData ?? '';
+    request.fields['TagNumber'] = tagNumber;
+    request.fields['LocationTag'] = locationTag;
+    request.fields['sERIALnUMBER'] = serialNo;
+    request.fields['EMPLOYEEID'] = employeeId;
+    request.fields['PhoneExtNo'] = phoneExtension;
+    request.fields['ATMNumber'] = otherTag;
+    request.fields['DeliveryNoteNo'] = notes;
+    request.fields['aSSETcONDITION'] = assetCondition;
+    request.fields['Bought'] = bought;
+    request.fields['FullLocationDetails'] = assetLocationDetails;
+
+    for (File file in selectedFiles) {
+      var stream = http.ByteStream(file.openRead());
+      var length = await file.length();
+      var mimeType = lookupMimeType(file.path);
+      var multipartFile = http.MultipartFile(
+        'images',
+        stream,
+        length,
+        filename: file.path.split('/').last,
+        contentType: mimeType != null ? MediaType.parse(mimeType) : null,
+      );
+      request.files.add(multipartFile);
+    }
+
+    // Submit the form
+    final response = await request.send();
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("success");
+      // call delete api
+      await http.delete(Uri.parse(deleteUrl), headers: headers);
+      print("delete success");
+    } else {
+      print("error");
     }
   }
 }

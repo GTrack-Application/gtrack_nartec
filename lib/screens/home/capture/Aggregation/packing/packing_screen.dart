@@ -150,8 +150,6 @@ class _PackingScreenState extends State<PackingScreen> {
                               }
                               if (state is PackedItemsLoaded) {
                                 products = state.data;
-                                print(
-                                    "${products[0].itemImage?.replaceAll(RegExp(r'^/+'), '').replaceAll("\\", "/")}");
                               }
                             },
                             builder: (context, state) {

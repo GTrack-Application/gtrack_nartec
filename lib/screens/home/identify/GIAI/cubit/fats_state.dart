@@ -2,6 +2,7 @@ import 'package:gtrack_nartec/screens/home/identify/GIAI/model/brand_model.dart'
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/category_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/city_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/country_model.dart';
+import 'package:gtrack_nartec/screens/home/identify/GIAI/model/employee_name_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/generate_tag_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/state_model.dart';
 
@@ -103,4 +104,16 @@ class FatsGenerateTagsLoaded extends FatsState {
 class FatsGenerateTagsError extends FatsState {
   final String message;
   FatsGenerateTagsError({required this.message});
+}
+
+class FatsGetEmployeeNamesLoading extends FatsState {}
+
+class FatsGetEmployeeNamesLoaded extends FatsState {
+  final List<EmployeeNameModel> employeeNames;
+  FatsGetEmployeeNamesLoaded({required this.employeeNames});
+}
+
+class FatsGetEmployeeNamesError extends FatsState {
+  final String message;
+  FatsGetEmployeeNamesError({required this.message});
 }
