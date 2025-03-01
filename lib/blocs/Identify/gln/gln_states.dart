@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/models/identify/GLN/gln_model.dart';
 
@@ -14,9 +15,15 @@ class GlnLoadedState extends GlnState {
 }
 
 class GlnV2LoadedState extends GlnState {
-  List<GlnModel> data = [];
+  final List<GlnModel> data;
 
   GlnV2LoadedState({required this.data});
+}
+
+class GlnMapMarkersState extends GlnState {
+  final Set<Marker> markers;
+
+  GlnMapMarkersState({required this.markers});
 }
 
 class GlnDeleteState extends GlnState {}
