@@ -1,4 +1,5 @@
 import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
+import 'package:gtrack_nartec/models/identify/GLN/gln_model.dart';
 
 abstract class GlnState {}
 
@@ -10,6 +11,12 @@ class GlnLoadedState extends GlnState {
   List<PackedItemsModel> data = [];
 
   GlnLoadedState({required this.data});
+}
+
+class GlnV2LoadedState extends GlnState {
+  List<GlnModel> data = [];
+
+  GlnV2LoadedState({required this.data});
 }
 
 class GlnDeleteState extends GlnState {}
