@@ -286,25 +286,25 @@ class _GlnScreenV2State extends State<GlnScreenV2>
                                 ),
                                 Row(
                                   children: [
-                                    const Icon(
-                                      Icons.edit,
-                                      size: 14,
-                                      color: AppColors.skyBlue,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    GestureDetector(
-                                      onTap: () {
-                                        // Edit functionality
-                                      },
-                                      child: const Text(
-                                        'Edit',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: AppColors.skyBlue,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
+                                    // const Icon(
+                                    //   Icons.edit,
+                                    //   size: 14,
+                                    //   color: AppColors.skyBlue,
+                                    // ),
+                                    // const SizedBox(width: 4),
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //     // Edit functionality
+                                    //   },
+                                    //   child: const Text(
+                                    //     'Edit',
+                                    //     style: TextStyle(
+                                    //       fontSize: 12,
+                                    //       color: AppColors.skyBlue,
+                                    //       fontWeight: FontWeight.bold,
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     const SizedBox(width: 12),
                                     const Icon(
                                       Icons.delete_outline,
