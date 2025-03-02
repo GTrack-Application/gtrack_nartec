@@ -73,88 +73,6 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //   children: [
-                  //     GestureDetector(
-                  //       onTap: () {
-                  //         AppNavigator.goToPage(
-                  //           context: context,
-                  //           screen: const AddGtinScreen(),
-                  //         );
-                  //       },
-                  //       child: Container(
-                  //         width: 100,
-                  //         height: 40,
-                  //         decoration: BoxDecoration(
-                  //           color: Colors.grey[200],
-                  //           borderRadius: BorderRadius.circular(50),
-                  //         ),
-                  //         child: Row(
-                  //           mainAxisAlignment: MainAxisAlignment.center,
-                  //           children: [
-                  //             Image.asset(
-                  //               'assets/icons/add_Icon.png',
-                  //               width: 20,
-                  //               height: 20,
-                  //             ),
-                  //             const SizedBox(width: 5),
-                  //             Text(
-                  //               'Add',
-                  //               style: TextStyle(
-                  //                 color: Colors.green[700],
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     SizedBox(width: 10),
-                  //     Expanded(
-                  //       child: TextField(
-                  //         controller: searchController,
-                  //         onChanged: (value) {
-                  //           if (value.isNotEmpty) {
-                  //             setState(() {
-                  //               productsFiltered = products
-                  //                   .where((element) => element.barcode
-                  //                       .toString()
-                  //                       .toLowerCase()
-                  //                       .contains(value.toLowerCase()))
-                  //                   .toList();
-                  //             });
-                  //           } else {
-                  //             setState(() {
-                  //               productsFiltered = products;
-                  //             });
-                  //           }
-                  //         },
-                  //         decoration: const InputDecoration(
-                  //           suffixIcon: Icon(Ionicons.search_outline),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // const SizedBox(height: 20),
-                  // const Padding(
-                  //   padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Text(
-                  //         "GTIN List",
-                  //         style: TextStyle(fontSize: 18),
-                  //       ),
-                  //       Icon(
-                  //         Ionicons.filter_outline,
-                  //         size: 30,
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 10),
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async {
@@ -344,9 +262,9 @@ class ProductCard extends StatelessWidget {
                 Icon(Icons.visibility_outlined,
                     size: 20, color: Colors.grey[600]),
                 const SizedBox(width: 12),
-                Icon(Icons.edit_outlined, size: 20, color: Colors.grey[600]),
-                const SizedBox(width: 12),
-                Icon(Icons.copy_outlined, size: 20, color: Colors.grey[600]),
+                // Icon(Icons.edit_outlined, size: 20, color: Colors.grey[600]),
+                // const SizedBox(width: 12),
+                // Icon(Icons.copy_outlined, size: 20, color: Colors.grey[600]),
                 const SizedBox(width: 12),
                 Container(
                   padding: const EdgeInsets.all(4),

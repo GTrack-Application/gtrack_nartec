@@ -24,159 +24,29 @@ class UserLoginPage extends StatefulWidget {
 }
 
 class _UserLoginPageState extends State<UserLoginPage> {
-  final formKey = GlobalKey<FormState>();
+  // Form key and controllers
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _adminPasswordController =
+      TextEditingController();
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController adminPasswordController = TextEditingController();
+  // Focus nodes
+  final FocusNode _emailNode = FocusNode();
+  final FocusNode _passwordNode = FocusNode();
+  final FocusNode _adminPasswordNode = FocusNode();
 
-  final FocusNode emailNode = FocusNode();
-  final FocusNode passwordNode = FocusNode();
-  final FocusNode adminPasswordNode = FocusNode();
-  bool obscureText = true;
+  // UI state
+  bool _obscureText = true;
+  bool _rememberMe = false;
+  String _currentUser = "";
 
-  // a method that deletes all the data from the sharedpreferences
-  void clearData() async {
-    await SharedPreferences.getInstance().then((prefs) {
-      prefs.clear();
-    });
-  }
+  // Dropdown values
+  String _userTypeValue = "Admin User";
+  final List<String> _userTypeList = ["Admin User", "Normal User"];
 
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(
-      const Duration(milliseconds: 100),
-      () async {
-        clearData();
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    //controllers
-    emailController.dispose();
-    passwordController.dispose();
-    adminPasswordController.dispose();
-    formKey.currentState?.dispose();
-
-    //focus nodes
-    emailNode.dispose();
-    passwordNode.dispose();
-    adminPasswordNode.dispose();
-    super.dispose();
-  }
-
-  // login() {
-  //   if (formKey.currentState?.validate() ?? false) {
-  //     AppDialogs.loadingDialog(context);
-  //     LoginServices.login(email: emailController.text).then((response) {
-  //       AppDialogs.closeDialog();
-  //       final activities = response;
-
-  //       // add email and activities to login provider
-  //       Provider.of<LoginProvider>(context, listen: false)
-  //           .setEmail(emailController.text);
-  //       Provider.of<LoginProvider>(context, listen: false)
-  //           .setActivities(activities);
-
-  //       AppPreferences.setCurrentUser("Admin").then((_) {});
-
-  //       AppNavigator.goToPage(
-  //         context: context,
-  //         screen: ActivitiesAndPasswordPage(
-  //           email: emailController.text.trim(),
-  //           activities: activities,
-  //         ),
-  //       );
-  //     }).catchError((error) {
-  //       AppDialogs.closeDialog();
-  //       AppSnackbars.danger(context, error.toString());
-  //     });
-  //   }
-  // }
-
-  login() async {
-    if (formKey.currentState?.validate() ?? false) {
-      AppDialogs.loadingDialog(context);
-      await AuthController.loginWithPassword(
-        emailController.text.trim(),
-        adminPasswordController.text.trim(),
-      ).then((value) {
-        AppPreferences.setToken(value.token.toString()).then((_) {});
-        AppPreferences.setUserId(value.user!.id.toString()).then((_) {});
-        AppPreferences.setCurrentUser("Admin User").then((_) {});
-        AppPreferences.setGln(value.user!.gln.toString()).then((_) {});
-        AppPreferences.setId(value.user!.id.toString()).then((_) {});
-        AppPreferences.setGs1UserId(value.user!.gs1Userid.toString())
-            .then((_) {});
-
-        AppDialogs.closeDialog();
-        AppNavigator.goToPage(context: context, screen: const HomeScreen());
-      }).onError((error, stackTrace) {
-        AppDialogs.closeDialog();
-        AppSnackbars.danger(
-          context,
-          error.toString().replaceAll("Exeption", ""),
-        );
-      });
-    }
-  }
-
-  brandOwnerLogin() async {
-    AppDialogs.loadingDialog(context);
-    LoginServices.brandOwnerLogin(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-    ).then((value) {
-      AppPreferences.setToken(value.token.toString()).then((_) {});
-      AppPreferences.setUserId(value.data!.userID.toString()).then((_) {});
-      AppPreferences.setNormalUserId(emailController.text.trim().toString())
-          .then((_) {});
-      AppPreferences.setCurrentUser("Brand Owner").then((_) {});
-
-      AppDialogs.closeDialog();
-      AppSnackbars.success(context, "Login Successful", 2);
-      AppNavigator.replaceTo(context: context, screen: const HomeScreen());
-    }).onError((error, stackTrace) {
-      AppDialogs.closeDialog();
-      AppSnackbars.danger(context, error.toString());
-    });
-  }
-
-  supplierOwnerLogin() async {
-    AppDialogs.loadingDialog(context);
-    LoginServices.supplierLogin(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-    ).then((value) {
-      AppPreferences.setToken(value.token.toString()).then((_) {});
-      AppPreferences.setUserId(value.data!.userId.toString()).then((_) {});
-      AppPreferences.setNormalUserId(emailController.text.trim().toString())
-          .then((_) {});
-      AppPreferences.setCurrentUser("Supplier").then((_) {});
-      AppPreferences.setVendorId(value.data!.vendorId.toString()).then((_) {});
-
-      AppDialogs.closeDialog();
-      AppSnackbars.success(context, "Login Successful", 2);
-      AppNavigator.replaceTo(context: context, screen: const HomeScreen());
-    }).onError((error, stackTrace) {
-      AppDialogs.closeDialog();
-      AppSnackbars.danger(context, error.toString());
-    });
-  }
-
-  String currentUser = "";
-
-  String dropdownValue = "Admin User";
-  List<String> dropdownList = [
-    "Admin User",
-    "Normal User",
-  ];
-
-  String stakeHolderValue = "Brand Owner";
-  List<String> stakeHolderList = [
+  String _stakeholderValue = "Brand Owner";
+  final List<String> _stakeholderList = [
     "Brand Owner",
     "Manufacturer",
     "Supplier",
@@ -185,7 +55,132 @@ class _UserLoginPageState extends State<UserLoginPage> {
     "Local Authority",
   ];
 
-  bool rememberMe = false;
+  @override
+  void initState() {
+    super.initState();
+    _clearSharedPreferences();
+  }
+
+  @override
+  void dispose() {
+    // Dispose controllers
+    _emailController.dispose();
+    _passwordController.dispose();
+    _adminPasswordController.dispose();
+
+    // Dispose focus nodes
+    _emailNode.dispose();
+    _passwordNode.dispose();
+    _adminPasswordNode.dispose();
+
+    super.dispose();
+  }
+
+  // Clear all shared preferences data
+  Future<void> _clearSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  // Admin login method
+  Future<void> _adminLogin() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    AppDialogs.loadingDialog(context);
+
+    try {
+      final response = await AuthController.loginWithPassword(
+        _emailController.text.trim(),
+        _adminPasswordController.text.trim(),
+      );
+
+      // Save user data to preferences
+      await AppPreferences.setToken(response.token.toString());
+      await AppPreferences.setGs1UserId(response.user!.gs1Userid.toString());
+      await AppPreferences.setUserId(response.user!.id.toString());
+      await AppPreferences.setCurrentUser("Admin User");
+      await AppPreferences.setGln(response.user!.gln.toString());
+      await AppPreferences.setId(response.user!.id.toString());
+
+      AppDialogs.closeDialog();
+      AppNavigator.goToPage(context: context, screen: const HomeScreen());
+    } catch (error) {
+      AppDialogs.closeDialog();
+      AppSnackbars.danger(
+        context,
+        error.toString().replaceAll("Exeption", ""),
+      );
+    }
+  }
+
+  // Brand Owner login method
+  Future<void> _brandOwnerLogin() async {
+    AppDialogs.loadingDialog(context);
+
+    try {
+      final response = await LoginServices.brandOwnerLogin(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      // Save user data to preferences
+      await AppPreferences.setToken(response.token.toString());
+      await AppPreferences.setUserId(response.data!.userID.toString());
+      await AppPreferences.setNormalUserId(_emailController.text.trim());
+      await AppPreferences.setCurrentUser("Brand Owner");
+
+      AppDialogs.closeDialog();
+      AppSnackbars.success(context, "Login Successful", 2);
+      AppNavigator.replaceTo(context: context, screen: const HomeScreen());
+    } catch (error) {
+      AppDialogs.closeDialog();
+      AppSnackbars.danger(context, error.toString());
+    }
+  }
+
+  // Supplier login method
+  Future<void> _supplierLogin() async {
+    AppDialogs.loadingDialog(context);
+
+    try {
+      final response = await LoginServices.supplierLogin(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      // Save user data to preferences
+      await AppPreferences.setToken(response.token.toString());
+      await AppPreferences.setUserId(response.data!.userId.toString());
+      await AppPreferences.setNormalUserId(_emailController.text.trim());
+      await AppPreferences.setCurrentUser("Supplier");
+      await AppPreferences.setVendorId(response.data!.vendorId.toString());
+
+      AppDialogs.closeDialog();
+      AppSnackbars.success(context, "Login Successful", 2);
+      AppNavigator.replaceTo(context: context, screen: const HomeScreen());
+    } catch (error) {
+      AppDialogs.closeDialog();
+      AppSnackbars.danger(context, error.toString());
+    }
+  }
+
+  // Handle login based on selected user type
+  Future<void> _handleLogin() async {
+    if (_userTypeValue == "Admin User") {
+      await _adminLogin();
+    } else {
+      // Normal user login based on stakeholder type
+      if (_stakeholderValue == "Brand Owner") {
+        await _brandOwnerLogin();
+      } else if (_stakeholderValue == "Supplier") {
+        await _supplierLogin();
+      } else {
+        // Handle other stakeholder types if needed
+        AppSnackbars.warning(
+            context, "Login for $_stakeholderValue not implemented yet");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +195,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
           ),
         ),
         child: Form(
-          key: formKey,
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -208,6 +203,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // Logo
                   Container(
                     alignment: Alignment.center,
                     child: Image.asset(
@@ -216,227 +212,175 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       height: 200,
                     ),
                   ),
-                  const Text(
-                    'User Type',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.white,
-                    ),
-                  ),
+
+                  // User Type Dropdown
+                  _buildSectionTitle('User Type'),
                   DropDownWidget(
-                    items: dropdownList,
-                    value: dropdownValue,
+                    items: _userTypeList,
+                    value: _userTypeValue,
                     onChanged: (value) {
                       setState(() {
-                        dropdownValue = value!;
-                        if (dropdownValue == "Admin User") {
-                          currentUser = "Admin";
+                        _userTypeValue = value!;
+                        if (_userTypeValue == "Admin User") {
+                          _currentUser = "Admin";
                         }
-                        emailController.clear();
-                        passwordController.clear();
+                        _emailController.clear();
+                        _passwordController.clear();
                       });
                     },
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Enter your login ID',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.white,
-                    ),
-                  ),
+
+                  // Login ID Field
+                  _buildSectionTitle('Enter your login ID'),
                   const SizedBox(height: 5),
                   TextFieldWidget(
                     hintText: "Login ID",
-                    controller: emailController,
-                    focusNode: emailNode,
+                    controller: _emailController,
+                    focusNode: _emailNode,
                     keyboardType: TextInputType.emailAddress,
                     leadingIcon: Image.asset(AppIcons.usernameIcon),
                     onFieldSubmitted: (p0) {
-                      if (dropdownValue == "Admin User") {
-                        // hide the keyboard
-                        emailNode.unfocus();
-                        FocusScope.of(context).requestFocus(adminPasswordNode);
+                      if (_userTypeValue == "Admin User") {
+                        _emailNode.unfocus();
+                        FocusScope.of(context).requestFocus(_adminPasswordNode);
                       } else {
-                        // scope to password node
-                        FocusScope.of(context).requestFocus(passwordNode);
+                        FocusScope.of(context).requestFocus(_passwordNode);
                       }
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your login ID';
                       }
-                      // if (EmailValidator.validate(value)) {
-                      //   return null;
-                      // } else {
-                      //   return 'Please enter a valid email';
-                      // }
                       return null;
                     },
                   ),
-                  // .box.width(context.width * 0.9).make(),
                   const SizedBox(height: 20),
-                  Visibility(
-                    visible: dropdownValue == "Admin User" ? true : false,
-                    child: TextFieldWidget(
+
+                  // Conditional UI based on user type
+                  if (_userTypeValue == "Admin User") ...[
+                    // Admin Password Field
+                    _buildSectionTitle('Enter your password'),
+                    const SizedBox(height: 5),
+                    TextFieldWidget(
                       hintText: "Password",
-                      focusNode: adminPasswordNode,
-                      onFieldSubmitted: (p0) {
-                        // hide keyboard
-                        adminPasswordNode.unfocus();
-                      },
-                      controller: adminPasswordController,
-                      leadingIcon: Image.asset(
-                        AppIcons.passwordIcon,
-                        width: 42,
-                        height: 42,
+                      controller: _adminPasswordController,
+                      focusNode: _adminPasswordNode,
+                      obscureText: _obscureText,
+                      leadingIcon: Image.asset(AppIcons.passwordIcon),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        child: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppColors.white,
+                        ),
                       ),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: obscureText,
-                      validator: (p0) {
-                        if (p0!.isEmpty) {
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return 'Please enter your password';
                         }
                         return null;
                       },
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            obscureText = !obscureText;
-                          });
-                        },
-                      ),
                     ),
-                  ),
-                  Visibility(
-                    visible: dropdownValue == "Admin User" ? false : true,
-                    child: TextFieldWidget(
-                      hintText: "Password",
-                      focusNode: passwordNode,
-                      onFieldSubmitted: (p0) {
-                        // hide keyboard
-                        passwordNode.unfocus();
-                      },
-                      controller: passwordController,
-                      leadingIcon: Image.asset(
-                        AppIcons.passwordIcon,
-                        width: 42,
-                        height: 42,
-                      ),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: obscureText,
-                      validator: (p0) {
-                        if (p0!.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            obscureText = !obscureText;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Visibility(
-                    visible: dropdownValue == "Admin User" ? false : true,
-                    child: const Text(
-                      'Stakeholder Type',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: dropdownValue == "Admin User" ? false : true,
-                    child: DropDownWidget(
-                      items: stakeHolderList,
-                      value: stakeHolderValue,
+                  ] else ...[
+                    // Stakeholder Type Dropdown for Normal Users
+                    _buildSectionTitle('Stakeholder Type'),
+                    DropDownWidget(
+                      items: _stakeholderList,
+                      value: _stakeholderValue,
                       onChanged: (value) {
                         setState(() {
-                          stakeHolderValue = value!;
-                          currentUser = stakeHolderValue;
+                          _stakeholderValue = value!;
                         });
                       },
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  PrimaryButtonWidget(
-                    backgroungColor: const Color(0xFF4200FF),
-                    onPressed: () {
-                      if (dropdownValue.toString() == "Normal User") {
-                        if (stakeHolderValue == "Brand Owner") {
-                          brandOwnerLogin();
-                          return;
-                        }
-                        if (stakeHolderValue == "Supplier") {
-                          supplierOwnerLogin();
-                          return;
-                        }
-                      }
+                    const SizedBox(height: 20),
 
-                      if (dropdownValue.toString() == "Admin User") {
-                        login();
-                        return;
-                      }
-                    },
-                    text: "Login Now",
+                    // Password Field for Normal Users
+                    _buildSectionTitle('Enter your password'),
+                    const SizedBox(height: 5),
+                    TextFieldWidget(
+                      hintText: "Password",
+                      controller: _passwordController,
+                      focusNode: _passwordNode,
+                      obscureText: _obscureText,
+                      leadingIcon: Image.asset(AppIcons.passwordIcon),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        child: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+
+                  // Remember Me Checkbox
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            _rememberMe = value!;
+                          });
+                        },
+                        checkColor: AppColors.white,
+                        fillColor: WidgetStateProperty.all(AppColors.pink),
+                      ),
+                      const Text(
+                        'Remember me',
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
-                  Container(
-                    margin: const EdgeInsets.only(right: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: rememberMe,
-                              fillColor: WidgetStateProperty.all(Colors.white),
-                              activeColor: Colors.white,
-                              checkColor: Colors.black,
-                              onChanged: (value) {
-                                setState(() {
-                                  rememberMe = value!;
-                                });
-                              },
-                            ),
-                            const Text(
-                              'Remember Me',
-                              style: TextStyle(
-                                color: AppColors.grey,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: const Text(
-                            'Need Help?',
-                            style: TextStyle(
-                              color: AppColors.grey,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+
+                  // Login Button
+                  PrimaryButtonWidget(
+                    text: "Login",
+                    onPressed: _handleLogin,
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // Helper method to build section titles
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: AppColors.white,
       ),
     );
   }
