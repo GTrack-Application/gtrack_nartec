@@ -288,7 +288,7 @@ class _GIAIScreenState extends State<GIAIScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  SelectableText(
                     name,
                     style: TextStyle(
                       fontSize: 14,

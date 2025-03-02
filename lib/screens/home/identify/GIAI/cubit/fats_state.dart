@@ -5,6 +5,7 @@ import 'package:gtrack_nartec/screens/home/identify/GIAI/model/country_model.dar
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/employee_name_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/generate_tag_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/state_model.dart';
+import 'package:gtrack_nartec/screens/home/identify/GIAI/model/tag_model.dart';
 
 class FatsState {}
 
@@ -116,4 +117,28 @@ class FatsGetEmployeeNamesLoaded extends FatsState {
 class FatsGetEmployeeNamesError extends FatsState {
   final String message;
   FatsGetEmployeeNamesError({required this.message});
+}
+
+class FatsGetTagDetailsLoading extends FatsState {}
+
+class FatsGetTagDetailsLoaded extends FatsState {
+  final TagModel tag;
+  FatsGetTagDetailsLoaded({required this.tag});
+}
+
+class FatsGetTagDetailsError extends FatsState {
+  final String message;
+  FatsGetTagDetailsError({required this.message});
+}
+
+class FatsHandleSubmitLoading extends FatsState {}
+
+class FatsHandleSubmitLoaded extends FatsState {
+  final String message;
+  FatsHandleSubmitLoaded({required this.message});
+}
+
+class FatsHandleSubmitError extends FatsState {
+  final String message;
+  FatsHandleSubmitError({required this.message});
 }

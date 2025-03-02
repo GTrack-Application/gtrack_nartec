@@ -11,6 +11,7 @@ import 'package:gtrack_nartec/screens/home/identify/GIAI/model/country_model.dar
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/employee_name_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/generate_tag_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/state_model.dart';
+import 'package:gtrack_nartec/screens/home/identify/GIAI/model/tag_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/send_barcode_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -251,8 +252,25 @@ class FatsController {
     }
   }
 
-  Future<void> handleSubmit(
+  // get tag details
+  static Future<TagModel> getTagDetails(String tagNumber) async {
+    final memberId = await AppPreferences.getUserId();
+    final url =
+        '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder?memberId=$memberId&TagNumber=$tagNumber';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = jsonDecode(response.body) as List;
+      return TagModel.fromJson(data[0]);
+    } else {
+      var data = jsonDecode(response.body);
+      throw Exception(data['message']);
+    }
+  }
+
+  static Future<void> handleSubmit(
     String id,
+    String subUserId,
     String tagNumber,
     String locationTag,
     String serialNo,
@@ -263,54 +281,55 @@ class FatsController {
     String assetCondition,
     String bought,
     String assetLocationDetails,
+    String fullLocationDetails,
     List<File> selectedFiles,
   ) async {
-    final memberData = await AppPreferences.getMemberId();
+    final memberData = await AppPreferences.getUserId();
     final token = await AppPreferences.getToken();
     final url =
         '${AppUrls.baseUrlWith7010}/api/assetCapture/createAssetMasterEncodeAssetCaptureFinal';
 
-    final deleteUrl = '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder/$id';
-    final headers = {'Authorization': 'Bearer $token'};
-
     var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.headers['Authorization'] = 'Bearer $token';
 
-    request.fields['memberId'] = memberData ?? '';
-    request.fields['TagNumber'] = tagNumber;
-    request.fields['LocationTag'] = locationTag;
-    request.fields['sERIALnUMBER'] = serialNo;
-    request.fields['EMPLOYEEID'] = employeeId;
-    request.fields['PhoneExtNo'] = phoneExtension;
-    request.fields['ATMNumber'] = otherTag;
-    request.fields['DeliveryNoteNo'] = notes;
-    request.fields['aSSETcONDITION'] = assetCondition;
-    request.fields['Bought'] = bought;
-    request.fields['FullLocationDetails'] = assetLocationDetails;
+    request.fields.addAll({
+      'memberId': memberData ?? '',
+      'subUser_id': subUserId,
+      'TagNumber': tagNumber,
+      'LocationTag': locationTag,
+      'sERIALnUMBER': serialNo,
+      'EMPLOYEEID': employeeId,
+      'PhoneExtNo': phoneExtension,
+      'ATMNumber': otherTag,
+      'DeliveryNoteNo': notes,
+      'aSSETcONDITION': assetCondition,
+      'Bought': bought,
+      'FullLocationDetails': fullLocationDetails,
+    });
 
+    // Add files
     for (File file in selectedFiles) {
+      String fileName = file.path.split('/').last;
       var stream = http.ByteStream(file.openRead());
       var length = await file.length();
-      var mimeType = lookupMimeType(file.path);
+
       var multipartFile = http.MultipartFile(
         'images',
         stream,
         length,
-        filename: file.path.split('/').last,
-        contentType: mimeType != null ? MediaType.parse(mimeType) : null,
+        filename: fileName,
+        contentType: MediaType.parse(
+            lookupMimeType(file.path) ?? 'application/octet-stream'),
       );
       request.files.add(multipartFile);
     }
-
-    // Submit the form
-    final response = await request.send();
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("success");
-      // call delete api
-      await http.delete(Uri.parse(deleteUrl), headers: headers);
-      print("delete success");
+      print(response.body);
     } else {
-      print("error");
+      print(response.body);
     }
   }
 }

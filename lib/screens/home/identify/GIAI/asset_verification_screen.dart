@@ -2,9 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gtrack_nartec/cubit/identify/GIAI/giai_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/cubit/fats_cubit.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/cubit/fats_state.dart';
+import 'package:gtrack_nartec/screens/home/identify/GIAI/model/employee_name_model.dart';
+import 'package:gtrack_nartec/screens/home/identify/GIAI/model/tag_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -22,10 +25,10 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
   List<String> _employeeNames = [];
   String? _selectedEmployee;
 
-  String? _selectedCondition;
+  String _selectedCondition = 'Excelent';
   final List<String> _conditions = ['Excelent', 'Fair', 'Damage', 'Pack Piece'];
 
-  String? _selectedBought;
+  String _selectedBought = 'New';
   final List<String> _bought = ['New', 'Existing Asset'];
 
   final FatsCubit fatsCubit = FatsCubit();
@@ -38,6 +41,12 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
   final TextEditingController _phoneExtController = TextEditingController();
   final TextEditingController _otherTagController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+  // Add new controllers
+  final TextEditingController _daoNameController = TextEditingController();
+  final TextEditingController _businessUnitController = TextEditingController();
+  final TextEditingController _buildingNameController = TextEditingController();
+  final TextEditingController _buildingNoController = TextEditingController();
+  final TextEditingController _floorNoController = TextEditingController();
 
   // Add focus nodes
   final FocusNode _locationTagFocus = FocusNode();
@@ -47,10 +56,10 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
   final FocusNode _phoneExtFocus = FocusNode();
   final FocusNode _otherTagFocus = FocusNode();
   final FocusNode _noteFocus = FocusNode();
-
+  final FocusNode _assetLocationDetailsFocus = FocusNode();
   @override
   void dispose() {
-    // Dispose controllers
+    // Dispose existing controllers
     _locationTagController.dispose();
     _assetTagController.dispose();
     _serialNumberController.dispose();
@@ -58,6 +67,13 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
     _phoneExtController.dispose();
     _otherTagController.dispose();
     _noteController.dispose();
+    // Dispose new controllers
+    _daoNameController.dispose();
+    _businessUnitController.dispose();
+    _buildingNameController.dispose();
+    _buildingNoController.dispose();
+    _floorNoController.dispose();
+    _assetLocationDetailsFocus.dispose();
     _images.clear();
 
     // Dispose focus nodes
@@ -68,7 +84,6 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
     _phoneExtFocus.dispose();
     _otherTagFocus.dispose();
     _noteFocus.dispose();
-
     super.dispose();
   }
 
@@ -77,6 +92,12 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
     super.initState();
     fatsCubit.getEmployeeNames();
   }
+
+  TagModel? tag;
+  List<EmployeeNameModel>? employeeData;
+  String? employeeId;
+
+  final GIAICubit giaiCubit = GIAICubit();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +113,111 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
           if (state is FatsGetEmployeeNamesLoaded) {
             _employeeNames =
                 state.employeeNames.map((e) => e.userName ?? "").toList();
+            employeeData = state.employeeNames;
             _selectedEmployee = state.employeeNames.first.userName;
+            _employeeIdController.text = state.employeeNames.first.email ?? "";
+            employeeId = state.employeeNames.first.id;
+          }
+          if (state is FatsGetTagDetailsError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.message.replaceAll("Exception:", ""),
+                  style: const TextStyle(
+                    color: AppColors.white,
+                  ),
+                ),
+                backgroundColor: AppColors.danger,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(10),
+              ),
+            );
+          }
+          if (state is FatsGetTagDetailsLoaded) {
+            tag = state.tag;
+            _locationTagController.text = tag?.locationTag ?? "";
+            _serialNumberController.text = tag?.serialNumber ?? "";
+            _phoneExtController.text = tag?.phoneExtNo ?? "";
+            _otherTagController.text = tag?.aTMNumber ?? "";
+            _noteController.text = tag?.deliveryNoteNo ?? "";
+            tag?.fullLocationDetails ?? "";
+            _daoNameController.text = tag?.daoName ?? "";
+            _businessUnitController.text = tag?.businessUnit ?? "";
+            _buildingNameController.text = tag?.buildingName ?? "";
+            _buildingNoController.text = tag?.buildingNo ?? "";
+            _floorNoController.text = tag?.floorNo ?? "";
+          }
+          if (state is FatsHandleSubmitError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: AppColors.danger,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(10),
+                action: SnackBarAction(
+                  label: 'Close',
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                ),
+              ),
+            );
+          }
+          if (state is FatsHandleSubmitLoaded) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: AppColors.success,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(10),
+                action: SnackBarAction(
+                  label: 'Close',
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                ),
+              ),
+            );
+
+            // empty the images and clear the text fields
+            _images.clear();
+            _locationTagController.clear();
+            _assetTagController.clear();
+            _serialNumberController.clear();
+            _employeeIdController.clear();
+            _phoneExtController.clear();
+            _otherTagController.clear();
+            _noteController.clear();
+
+            giaiCubit.getGIAI();
+          }
+          if (state is FatsHandleSubmitError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message.replaceAll("Exception:", "")),
+                backgroundColor: AppColors.danger,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(10),
+                action: SnackBarAction(
+                  label: 'Close',
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                ),
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -101,21 +226,67 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildScanField('Location Tag', 'Type/Scan location tag'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: _buildScanField('Asset Tag', 'Type/Scan asset tag',
+                          (value) {
+                        if (value.isEmpty) {
+                          FocusScope.of(context).unfocus();
+                        }
+
+                        fatsCubit.getTagDetails(value.trim());
+                      }),
+                    ),
+                    const SizedBox(width: 8),
+                    state is FatsGetTagDetailsLoading
+                        ? const CircularProgressIndicator(
+                            strokeWidth: 2,
+                            backgroundColor: AppColors.white,
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              fatsCubit.getTagDetails(_assetTagController.text);
+                            },
+                            child: const Icon(Icons.qr_code_scanner),
+                          ),
+                  ],
+                ),
                 const SizedBox(height: 10),
-                _buildScanField('Asset Tag', 'Type/Scan asset tag'),
+                _buildTextField('Location Tag', 'Type/Scan location tag'),
                 const SizedBox(height: 10),
-                _buildLabelText('Asset Location details'),
                 Container(
+                  width: double.infinity,
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.orange[50],
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Text('Auto fill'),
+                  child: tag?.fullLocationDetails != null
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Asset Location details',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.brown,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                                "${tag?.daoName ?? ""} - ${tag?.businessUnit}"),
+                            Text(tag?.buildingName ?? ""),
+                            Text("${tag?.buildingNo ?? ""} - ${tag?.floorNo}"),
+                          ],
+                        )
+                      : const SizedBox(),
                 ),
                 const SizedBox(height: 10),
-                _buildScanField('Serial number', 'Enter/scan serial number'),
+                _buildTextField('Serial number', 'Enter serial number'),
                 const SizedBox(height: 10),
                 _buildLabelText('Employee Name'),
                 DropdownButtonFormField<String>(
@@ -132,8 +303,19 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
                       child: Text(value),
                     );
                   }).toList(),
-                  onChanged: (value) =>
-                      setState(() => _selectedEmployee = value),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedEmployee = value;
+                      _employeeIdController.text = employeeData
+                              ?.firstWhere((e) => e.userName == value)
+                              .email ??
+                          "";
+                      employeeId = employeeData
+                              ?.firstWhere((e) => e.userName == value)
+                              .id ??
+                          "";
+                    });
+                  },
                 ),
                 const SizedBox(height: 10),
                 _buildTextField('Employee ID', 'Enter employee ID'),
@@ -183,7 +365,7 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
                     );
                   }).toList(),
                   onChanged: (value) =>
-                      setState(() => _selectedCondition = value),
+                      setState(() => _selectedCondition = value!),
                 ),
                 const SizedBox(height: 10),
                 _buildLabelText('Bought'),
@@ -200,17 +382,59 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
                       child: Text(value),
                     );
                   }).toList(),
-                  onChanged: (value) => setState(() => _selectedBought = value),
+                  onChanged: (value) =>
+                      setState(() => _selectedBought = value!),
                 ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     FilledButton(
-                      onPressed: () {
-                        // Add your button press logic here
+                      onPressed: () async {
+                        if (_images.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please add at least one image'),
+                            ),
+                          );
+                        } else if (tag == null ||
+                            _locationTagController.text.isEmpty ||
+                            _assetTagController.text.isEmpty ||
+                            _serialNumberController.text.isEmpty ||
+                            _employeeIdController.text.isEmpty ||
+                            _phoneExtController.text.isEmpty ||
+                            _otherTagController.text.isEmpty ||
+                            _noteController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please fill all the fields'),
+                            ),
+                          );
+                        } else {
+                          await fatsCubit.handleSubmit(
+                            tag?.id ?? "",
+                            employeeId ?? "",
+                            _assetTagController.text,
+                            _locationTagController.text,
+                            _serialNumberController.text,
+                            _employeeIdController.text,
+                            _phoneExtController.text,
+                            _otherTagController.text,
+                            _noteController.text,
+                            _selectedCondition,
+                            _selectedBought,
+                            _locationTagController.text,
+                            _images,
+                            "${_daoNameController.text} - ${_businessUnitController.text}\n${_buildingNameController.text}\n${_buildingNoController.text} - ${_floorNoController.text}",
+                          );
+                        }
                       },
-                      child: const Text('Save'),
+                      child: state is FatsHandleSubmitLoading
+                          ? const CircularProgressIndicator(
+                              strokeWidth: 2,
+                              backgroundColor: AppColors.white,
+                            )
+                          : const Text('Save'),
                     ),
                   ],
                 ),
@@ -236,7 +460,11 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
     );
   }
 
-  Widget _buildScanField(String label, String hint) {
+  Widget _buildScanField(
+    String label,
+    String hint,
+    Function(String) onScan,
+  ) {
     final controller = label == 'Location Tag'
         ? _locationTagController
         : label == 'Asset Tag'
@@ -259,50 +487,6 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildLabelText(label),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: controller,
-                focusNode: focusNode,
-                decoration: InputDecoration(
-                  hintText: hint,
-                  border: const OutlineInputBorder(),
-                ),
-                onSubmitted: (_) => nextFocus.requestFocus(),
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(Icons.qr_code_scanner),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTextField(String label, String hint) {
-    final controller = label == 'Employee ID'
-        ? _employeeIdController
-        : label == 'Phone Extention'
-            ? _phoneExtController
-            : _otherTagController;
-
-    final focusNode = label == 'Employee ID'
-        ? _employeeIdFocus
-        : label == 'Phone Extention'
-            ? _phoneExtFocus
-            : _otherTagFocus;
-
-    final nextFocus = label == 'Employee ID'
-        ? _phoneExtFocus
-        : label == 'Phone Extention'
-            ? _otherTagFocus
-            : _noteFocus;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabelText(label),
         TextField(
           controller: controller,
           focusNode: focusNode,
@@ -310,7 +494,40 @@ class _AssetVerificationScreenState extends State<AssetVerificationScreen> {
             hintText: hint,
             border: const OutlineInputBorder(),
           ),
-          onSubmitted: (_) => nextFocus.requestFocus(),
+          onSubmitted: (_) {
+            nextFocus.requestFocus();
+            onScan(controller.text.trim());
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField(String label, String hint) {
+    final controller = switch (label) {
+      'Employee ID' => _employeeIdController,
+      'Phone Extention' => _phoneExtController,
+      'Other Tag' => _otherTagController,
+      'Location Tag' => _locationTagController,
+      'Serial number' => _serialNumberController,
+      'DAO Name' => _daoNameController,
+      'Business Unit' => _businessUnitController,
+      'Building Name' => _buildingNameController,
+      'Building No' => _buildingNoController,
+      'Floor No' => _floorNoController,
+      _ => _otherTagController, // default case
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabelText(label),
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hint,
+            border: const OutlineInputBorder(),
+          ),
         ),
       ],
     );
