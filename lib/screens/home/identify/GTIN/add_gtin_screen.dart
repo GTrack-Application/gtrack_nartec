@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
@@ -11,7 +12,6 @@ import 'package:gtrack_nartec/screens/home/identify/controller/add_gtin_controll
 import 'package:gtrack_nartec/screens/home/identify/cubit/add_gtin_cubit.dart';
 import 'package:gtrack_nartec/screens/home/identify/cubit/add_gtin_state.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
 
 class AddGtinScreen extends StatefulWidget {
   const AddGtinScreen({super.key});
@@ -190,7 +190,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
 
             packageTypeValue = packageTypeList.first;
           } else if (state is InsertGtinLoaded) {
-            context.read<GtinCubit>().getGtinData();
+            context.read<GtinCubit>().getProducts();
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -920,7 +920,7 @@ class _AddGtinScreenState extends State<AddGtinScreen> {
                                 _optionalImages[2] = null;
                                 isLoading = false;
                               });
-                              context.read<GtinCubit>().getGtinData();
+                              context.read<GtinCubit>().getProducts();
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

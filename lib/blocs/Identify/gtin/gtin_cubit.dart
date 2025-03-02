@@ -71,21 +71,21 @@ class GtinCubit extends Cubit<GtinState> {
     getProducts();
   }
 
-  void getGtinData() async {
-    emit(GtinLoadingState());
+  // void getGtinData() async {
+  //   emit(GtinLoadingState());
 
-    try {
-      final data = await GTINController.getProducts();
-      emit(GtinLoadedState(
-        data: data,
-        currentPage: 1,
-        totalPages: 1,
-        hasMoreData: false,
-      ));
-    } catch (e) {
-      emit(GtinErrorState(message: e.toString()));
-    }
-  }
+  //   try {
+  //     final data = await GTINController.getProducts();
+  //     emit(GtinLoadedState(
+  //       data: data,
+  //       currentPage: 1,
+  //       totalPages: 1,
+  //       hasMoreData: false,
+  //     ));
+  //   } catch (e) {
+  //     emit(GtinErrorState(message: e.toString()));
+  //   }
+  // }
 
   void deleteGtinProductById(String productId) async {
     emit(GtinDeleteProductLoadingState());
