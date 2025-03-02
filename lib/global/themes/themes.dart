@@ -40,6 +40,7 @@ class Themes {
       textTheme: _textTheme(),
       textButtonTheme: _textButtonTheme(AppColors.primary),
       inputDecorationTheme: _inputDecorationTheme(Brightness.light),
+
       // dropdown
 
       dropdownMenuTheme: DropdownMenuThemeData(
@@ -136,6 +137,7 @@ class Themes {
       ),
       toolbarTextStyle: _appBarTitleTextStyle,
       titleTextStyle: _appBarTitleTextStyle,
+      scrolledUnderElevation: 0,
     );
   }
 

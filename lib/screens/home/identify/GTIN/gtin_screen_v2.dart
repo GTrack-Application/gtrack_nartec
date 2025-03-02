@@ -23,7 +23,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
   @override
   void initState() {
     super.initState();
-    gtinCubit = context.read<GtinCubit>();
+    gtinCubit = GtinCubit.get(context);
     _scrollController.addListener(_onScroll);
     gtinCubit.getProducts();
   }
@@ -31,7 +31,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<GtinCubit>().loadMore();
+      gtinCubit.loadMore();
     }
   }
 
@@ -76,7 +76,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async {
-                        context.read<GtinCubit>().refresh();
+                        gtinCubit.refresh();
                       },
                       child: ListView.builder(
                         controller: _scrollController,
@@ -130,7 +130,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.grey.withOpacity(0.1),
+              color: AppColors.grey.withValues(alpha: 0.1),
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(16)),
             ),
@@ -145,7 +145,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                   height: 200,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: AppColors.grey.withOpacity(0.1),
+                    color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
@@ -155,7 +155,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                   width: 150,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: AppColors.grey.withOpacity(0.1),
+                    color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
@@ -171,7 +171,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: AppColors.grey.withOpacity(0.1),
+                            color: AppColors.grey.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -184,7 +184,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                                 width: 80,
                                 height: 12,
                                 decoration: BoxDecoration(
-                                  color: AppColors.grey.withOpacity(0.1),
+                                  color: AppColors.grey.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
@@ -193,7 +193,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                                 width: double.infinity,
                                 height: 16,
                                 decoration: BoxDecoration(
-                                  color: AppColors.grey.withOpacity(0.1),
+                                  color: AppColors.grey.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),

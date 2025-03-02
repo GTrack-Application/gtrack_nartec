@@ -9,24 +9,24 @@ import 'package:http/http.dart' as http;
 class GTINController {
   static final HttpService httpService = HttpService(baseUrl: AppUrls.gs1Url);
 
-  static Future<List<GTIN_Model>> getProducts() async {
-    final userId = await AppPreferences.getUserId();
+  // static Future<List<GTIN_Model>> getProducts() async {
+  //   final userId = await AppPreferences.getUserId();
 
-    String url = "api/products?user_id=$userId";
+  //   String url = "api/products?user_id=$userId";
 
-    final response = await httpService.request(url);
+  //   final response = await httpService.request(url);
 
-    var data = response.body as List;
+  //   var data = response.body as List;
 
-    if (response.success) {
-      List<GTIN_Model> products =
-          data.map((e) => GTIN_Model.fromJson(e)).toList();
+  //   if (response.success) {
+  //     List<GTIN_Model> products =
+  //         data.map((e) => GTIN_Model.fromJson(e)).toList();
 
-      return products;
-    } else {
-      return [];
-    }
-  }
+  //     return products;
+  //   } else {
+  //     return [];
+  //   }
+  // }
 
   static Future<void> deleteProductById(String productId) async {
     final token = await AppPreferences.getToken();
