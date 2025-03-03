@@ -271,6 +271,13 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
           action: "ADD",
           bizStep: "shipping",
           disposition: "in_transit",
+        ),
+        _httpService.request(
+          "/api/workInProgress/checkAndCreateWIPItems",
+          method: HttpMethod.post,
+          data: {
+            'jobOrderDetailId': "${oldOrder?.id}",
+          },
         )
       ]);
 
