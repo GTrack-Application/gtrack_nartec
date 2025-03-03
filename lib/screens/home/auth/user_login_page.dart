@@ -5,7 +5,6 @@ import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/controllers/auth/auth_controller.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
@@ -34,6 +33,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
   final FocusNode passwordNode = FocusNode();
   final FocusNode adminPasswordNode = FocusNode();
   bool obscureText = true;
+
+  // Add loading state variable
+  bool isLoading = false;
 
   // a method that deletes all the data from the sharedpreferences
   void clearData() async {
@@ -70,9 +72,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   // login() {
   //   if (formKey.currentState?.validate() ?? false) {
-  //     AppDialogs.loadingDialog(context);
+  //
   //     LoginServices.login(email: emailController.text).then((response) {
-  //       AppDialogs.closeDialog();
+  //
   //       final activities = response;
 
   //       // add email and activities to login provider
@@ -91,7 +93,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
   //         ),
   //       );
   //     }).catchError((error) {
-  //       AppDialogs.closeDialog();
+  //
   //       AppSnackbars.danger(context, error.toString());
   //     });
   //   }
@@ -99,7 +101,10 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   login() async {
     if (formKey.currentState?.validate() ?? false) {
-      AppDialogs.loadingDialog(context);
+      setState(() {
+        isLoading = true;
+      });
+
       await AuthController.loginWithPassword(
         emailController.text.trim(),
         adminPasswordController.text.trim(),
@@ -112,20 +117,25 @@ class _UserLoginPageState extends State<UserLoginPage> {
         AppPreferences.setGs1UserId(value.user!.gs1Userid.toString())
             .then((_) {});
 
-        AppDialogs.closeDialog();
         AppNavigator.goToPage(context: context, screen: const HomeScreen());
       }).onError((error, stackTrace) {
-        AppDialogs.closeDialog();
         AppSnackbars.danger(
           context,
           error.toString().replaceAll("Exeption", ""),
         );
+      }).whenComplete(() {
+        setState(() {
+          isLoading = false;
+        });
       });
     }
   }
 
   brandOwnerLogin() async {
-    AppDialogs.loadingDialog(context);
+    setState(() {
+      isLoading = true;
+    });
+
     LoginServices.brandOwnerLogin(
       emailController.text.trim(),
       passwordController.text.trim(),
@@ -136,17 +146,22 @@ class _UserLoginPageState extends State<UserLoginPage> {
           .then((_) {});
       AppPreferences.setCurrentUser("Brand Owner").then((_) {});
 
-      AppDialogs.closeDialog();
       AppSnackbars.success(context, "Login Successful", 2);
       AppNavigator.replaceTo(context: context, screen: const HomeScreen());
     }).onError((error, stackTrace) {
-      AppDialogs.closeDialog();
       AppSnackbars.danger(context, error.toString());
+    }).whenComplete(() {
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
   supplierOwnerLogin() async {
-    AppDialogs.loadingDialog(context);
+    setState(() {
+      isLoading = true;
+    });
+
     LoginServices.supplierLogin(
       emailController.text.trim(),
       passwordController.text.trim(),
@@ -158,12 +173,14 @@ class _UserLoginPageState extends State<UserLoginPage> {
       AppPreferences.setCurrentUser("Supplier").then((_) {});
       AppPreferences.setVendorId(value.data!.vendorId.toString()).then((_) {});
 
-      AppDialogs.closeDialog();
       AppSnackbars.success(context, "Login Successful", 2);
       AppNavigator.replaceTo(context: context, screen: const HomeScreen());
     }).onError((error, stackTrace) {
-      AppDialogs.closeDialog();
       AppSnackbars.danger(context, error.toString());
+    }).whenComplete(() {
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -390,6 +407,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       }
                     },
                     text: "Login Now",
+                    isLoading: isLoading,
                   ),
                   const SizedBox(height: 20),
                   Container(

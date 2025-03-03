@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class PrimaryButtonWidget extends StatelessWidget {
   const PrimaryButtonWidget({
@@ -23,7 +22,7 @@ class PrimaryButtonWidget extends StatelessWidget {
       width: context.width,
       height: 45,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroungColor ?? Theme.of(context).primaryColor,
           shape: RoundedRectangleBorder(
@@ -31,9 +30,12 @@ class PrimaryButtonWidget extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? CircularProgressIndicator(
-                color: AppColors.white,
-                strokeWidth: 2,
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
               )
             : Text(
                 text,
