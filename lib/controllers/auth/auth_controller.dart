@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:gtrack_nartec/constants/app_urls.dart';
@@ -9,7 +11,7 @@ import 'package:http/http.dart' as http;
 class AuthController {
   static Future<LoginModel> loginWithPassword(
       String email, String password) async {
-    const baseUrl = '${AppUrls.baseUrlWith7010}/api/member/login';
+    const baseUrl = '${AppUrls.baseUrlWith7010}/api/memberSubUser/login';
     final uri = Uri.parse(baseUrl);
 
     final body = json.encode({'email': email, 'password': password});
@@ -18,6 +20,8 @@ class AuthController {
       final response = await http
           .post(uri, body: body, headers: {'Content-Type': 'application/json'});
 
+      print(response.statusCode);
+      print(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseBody = json.decode(response.body);
         return LoginModel.fromJson(responseBody);

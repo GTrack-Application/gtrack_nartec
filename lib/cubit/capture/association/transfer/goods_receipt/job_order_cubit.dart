@@ -175,7 +175,7 @@ class JobOrderCubit extends Cubit<JobOrderState> {
               productionExecutionDateTime.toIso8601String(),
           'tblAssetMasterEncodeAssetCaptureIDs': _assets
               .map(
-                (asset) => asset.tblAssetMasterEncodeAssetCaptureID.toString(),
+                (asset) => asset.tblAssetMasterEncodeAssetCaptureID.toInt(),
               )
               .toList(),
         },

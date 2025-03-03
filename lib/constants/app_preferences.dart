@@ -9,9 +9,9 @@ class AppPreferences {
     prefs.setString('userId', userId);
   }
 
-  static Future<void> setGs1UserId(String gs1UserId) async {
+  static Future<void> setMemberId(String memberId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('gs1UserId', gs1UserId);
+    prefs.setString('member_id', memberId);
   }
 
   /* set gpc */
@@ -75,9 +75,10 @@ class AppPreferences {
     prefs.setString('gcpGLNID', gcpGlnId);
   }
 
-  static Future<void> setMemberId(String memberId) async {
+  /* set gs1 user id */
+  static Future<void> setGs1UserId(String gs1UserId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('memberID', memberId);
+    prefs.setString('gs1UserId', gs1UserId);
   }
 
   // Getters...
@@ -88,9 +89,9 @@ class AppPreferences {
     return prefs.getString('userId');
   }
 
-  static Future<String?> getGs1UserId() async {
+  static Future<String?> getMemberId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('gs1UserId');
+    return prefs.getString('member_id');
   }
 
   /* Get gcp */
@@ -153,8 +154,9 @@ class AppPreferences {
     return prefs.getString('gcpGLNID');
   }
 
-  static Future<String?> getMemberId() async {
+  /* get gs1 user id */
+  static Future<String?> getGs1UserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('memberID');
+    return prefs.getString('gs1UserId');
   }
 }

@@ -70,7 +70,7 @@ class PackagingCubit extends Cubit<PackagingState> {
     emit(PackagingInsertLoading());
 
     try {
-      final memberId = await AppPreferences.getMemberId();
+      final memberId = await AppPreferences.getUserId();
       final response = await httpService
           .request("/api/packaging/insert", method: HttpMethod.post, data: {
         "memberId": memberId.toString(),
@@ -81,7 +81,7 @@ class PackagingCubit extends Cubit<PackagingState> {
       if (response.success) {
         itemsWithPallet.clear();
         items.clear();
-        emit(PackagingInsertLoaded());
+        emit(PackagingInsertLoaded(message: response.message));
       }
     } catch (error) {
       emit(PackagingInsertError(message: error.toString()));
