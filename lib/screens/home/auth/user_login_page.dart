@@ -419,7 +419,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               value: rememberMe,
                               fillColor: WidgetStateProperty.all(Colors.white),
                               activeColor: Colors.white,
-                              checkColor: const Color.fromARGB(255, 66, 51, 51),
+                              checkColor: Colors.black,
                               onChanged: (value) {
                                 setState(() {
                                   rememberMe = value!;

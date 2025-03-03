@@ -276,7 +276,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
           "/api/workInProgress/checkAndCreateWIPItems",
           method: HttpMethod.post,
           data: {
-            'jobOrderDetailId': "${oldOrder?.id}",
+            'jobOrderDetailId': "${bomStartData?.jobOrderDetailsId}",
           },
         )
       ]);

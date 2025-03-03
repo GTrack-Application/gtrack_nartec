@@ -25,7 +25,10 @@ class PackagingLoadingMoreState extends PackagingState {
   });
 }
 
-class PackagingInsertLoaded extends PackagingState {}
+class PackagingInsertLoaded extends PackagingState {
+  final String message;
+  PackagingInsertLoaded({required this.message});
+}
 
 class PackagingInsertError extends PackagingState {
   final String message;

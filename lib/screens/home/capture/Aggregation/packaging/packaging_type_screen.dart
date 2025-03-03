@@ -51,6 +51,7 @@ class _PackagingTypeScreenState extends State<PackagingTypeScreen> {
               AppSnackbars.danger(context, state.message);
             }
             if (state is PackagingInsertLoaded) {
+              AppSnackbars.success(context, state.message);
               AppNavigator.pushAndRemoveUntil(
                 context: context,
                 screen: const HomeScreen(),
@@ -105,13 +106,15 @@ class _PackagingTypeScreenState extends State<PackagingTypeScreen> {
                       flex: 5,
                       child: TextFormFieldWidget(
                         controller: packagingCubit.ssccController,
+                        hintText: "Scan Pallet",
+                        height: 35,
                       ),
                     ),
                     // Filled Button
                     Expanded(
                       flex: 2,
                       child: SizedBox(
-                        height: 45,
+                        height: 35,
                         child: PrimaryButtonWidget(
                           text: "Scan",
                           onPressed: () {
@@ -159,12 +162,11 @@ class _PackagingTypeScreenState extends State<PackagingTypeScreen> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
-                                        child: FittedBox(
-                                          child: Text(
-                                            "Bin Location: ${(item.binLocation)}",
-                                            style: TextStyle(
-                                              color: AppColors.white,
-                                            ),
+                                        child: Text(
+                                          "Bin Location: ${(item.binLocation)}",
+                                          style: TextStyle(
+                                            color: AppColors.white,
+                                            fontSize: 12,
                                           ),
                                         ),
                                       ),
