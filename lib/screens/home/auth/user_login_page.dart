@@ -110,11 +110,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
         adminPasswordController.text.trim(),
       ).then((value) {
         AppPreferences.setToken(value.token.toString()).then((_) {});
-        AppPreferences.setUserId(value.user!.id.toString()).then((_) {});
+        AppPreferences.setUserId(value.subUser!.id.toString()).then((_) {});
         AppPreferences.setCurrentUser("Admin User").then((_) {});
-        AppPreferences.setGln(value.user!.gln.toString()).then((_) {});
-        AppPreferences.setId(value.user!.id.toString()).then((_) {});
-        AppPreferences.setGs1UserId(value.user!.gs1Userid.toString())
+        AppPreferences.setMemberId(value.subUser!.memberId.toString())
             .then((_) {});
 
         AppNavigator.goToPage(context: context, screen: const HomeScreen());
@@ -421,7 +419,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                               value: rememberMe,
                               fillColor: WidgetStateProperty.all(Colors.white),
                               activeColor: Colors.white,
-                              checkColor: Colors.black,
+                              checkColor: const Color.fromARGB(255, 66, 51, 51),
                               onChanged: (value) {
                                 setState(() {
                                   rememberMe = value!;

@@ -49,7 +49,7 @@ class GTINController {
     required int page,
     required int pageSize,
   }) async {
-    final userId = await AppPreferences.getGs1UserId();
+    final userId = await AppPreferences.getUserId();
 
     final url =
         "api/products/paginatedProducts?page=$page&pageSize=$pageSize&user_id=$userId";
