@@ -111,7 +111,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
       ).then((value) {
         AppPreferences.setToken(value.token.toString()).then((_) {});
         AppPreferences.setUserId(value.subUser!.id.toString()).then((_) {});
-        AppPreferences.setGs1UserId("1808").then((_) {});
+        AppPreferences.setGs1UserId(value.subUser!.gs1Userid.toString())
+            .then((_) {});
         AppPreferences.setCurrentUser("Admin User").then((_) {});
         AppPreferences.setMemberId(value.subUser!.memberId.toString())
             .then((_) {});
