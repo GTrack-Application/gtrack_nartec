@@ -5,7 +5,9 @@ import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_data_screen.dart';
 
 class GTINScreenV2 extends StatefulWidget {
   const GTINScreenV2({super.key});
@@ -252,10 +254,19 @@ class ProductCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 // QR Code
-                Image.network(
-                  'https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${product.barcode}',
-                  width: 24,
-                  height: 24,
+                GestureDetector(
+                  onTap: () {
+                    AppNavigator.goToPage(
+                        context: context,
+                        screen: DigitalLinkViewDataScreen(
+                          barcode: product.barcode ?? '',
+                        ));
+                  },
+                  child: Image.network(
+                    'https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${product.barcode}',
+                    width: 24,
+                    height: 24,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 // Action Icons
