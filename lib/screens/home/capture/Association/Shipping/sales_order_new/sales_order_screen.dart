@@ -13,11 +13,12 @@ class SalesOrderScreen extends StatefulWidget {
 }
 
 class _SalesOrderScreenState extends State<SalesOrderScreen> {
-  final SalesOrderCubit salesOrderCubit = SalesOrderCubit();
+  late SalesOrderCubit salesOrderCubit;
 
   @override
   void initState() {
     super.initState();
+    salesOrderCubit = context.read<SalesOrderCubit>();
     salesOrderCubit.getSalesOrder();
   }
 
@@ -32,6 +33,7 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
         title: const Text('Sales Order'),
       ),
       body: BlocConsumer<SalesOrderCubit, SalesOrderState>(
+        bloc: salesOrderCubit,
         listener: (context, state) {},
         builder: (context, state) {
           if (state is SalesOrderLoading) {}
