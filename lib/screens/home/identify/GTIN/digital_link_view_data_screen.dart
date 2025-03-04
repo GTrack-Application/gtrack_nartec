@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
+import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_reviews_screen.dart';
@@ -15,11 +18,14 @@ class DigitalLinkViewDataScreen extends StatefulWidget {
 class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late GtinCubit gtinCubit;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    gtinCubit = GtinCubit.get(context);
+    gtinCubit.getDigitalLinkViewData(widget.barcode);
   }
 
   @override
@@ -32,7 +38,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Digital Links view product info'),
+        title: const Text('Digital Links View Product Info'),
         backgroundColor: AppColors.skyBlue,
       ),
       body: SingleChildScrollView(
@@ -150,51 +156,64 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                 controller: _tabController,
                 children: [
                   // Product Information Tab
-                  ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    children: const [
-                      _InfoExpansionTile(
-                        title: 'Allergen Information',
-                        children: ['Allergen details'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Has Retailers',
-                        children: ['Retailer information'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Ingredients Information',
-                        children: ['List of ingredients'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Instructions',
-                        children: ['Usage instructions'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Packaging',
-                        children: ['Packaging details'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Promotion',
-                        children: ['Promotional information'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Recipe Info',
-                        children: ['Recipe details'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Electronic Leaflets',
-                        children: ['Digital documentation'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Images',
-                        children: ['Product images'],
-                      ),
-                      _InfoExpansionTile(
-                        title: 'Videos',
-                        children: ['Product videos'],
-                      ),
-                    ],
+                  BlocConsumer<GtinCubit, GtinState>(
+                    bloc: gtinCubit,
+                    listener: (context, state) {
+                      // TODO: implement listener
+                    },
+                    builder: (context, state) {
+                      if (state is GtinDigitalLinkViewDataLoadingState) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return ListView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          _InfoExpansionTile(
+                            title: 'Allergen Information',
+                            child: buildAllergenInformation(context),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Has Retailers',
+                            child: Text('Retailer information'),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Ingredients Information',
+                            child: Text('List of ingredients'),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Instructions',
+                            child: Text('Usage instructions'),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Packaging',
+                            child: Text('Packaging details'),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Promotion',
+                            child: Text('Promotional information'),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Recipe Info',
+                            child: Text('Recipe details'),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Electronic Leaflets',
+                            child: Text('Digital documentation'),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Images',
+                            child: Text('Product images'),
+                          ),
+                          _InfoExpansionTile(
+                            title: 'Videos',
+                            child: Text('Product videos'),
+                          ),
+                        ],
+                      );
+                    },
                   ),
 
                   // Recall Information Tab
@@ -219,22 +238,101 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
       ),
     );
   }
+
+  Column buildAllergenInformation(BuildContext context) {
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: gtinCubit.allergens.length,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          itemBuilder: (context, index) {
+            final allergen = gtinCubit.allergens[index];
+            return Container(
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.grey),
+              ),
+              child: Column(
+                spacing: 8.0,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Product Name: ${allergen.productName}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Allergen Details",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.skyBlue,
+                    ),
+                  ),
+                  Text("Name: ${allergen.allergenName}"),
+                  Text("Type: ${allergen.allergenType}"),
+                  Text("Severity: ${allergen.severity}"),
+                  Text("Source: ${allergen.allergenSource}"),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Status",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.skyBlue,
+                    ),
+                  ),
+                  Text(
+                    "Contains Allergen: ${allergen.containsAllergen ? "Yes" : "No"}",
+                  ),
+                  Text(
+                    "May Contains: ${allergen.mayContain ? "Yes" : "No"}",
+                  ),
+                  Text(
+                    "Cross Contamination Risk: ${allergen.crossContaminationRisk ? "Yes" : "No"}",
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        if (gtinCubit.hasMoreAllergens)
+          ElevatedButton(
+            onPressed: () {
+              context.read<GtinCubit>().loadMoreAllergens(widget.barcode);
+            },
+            child: const Text('Load More'),
+          ),
+      ],
+    );
+  }
 }
 
 class _InfoExpansionTile extends StatelessWidget {
   const _InfoExpansionTile({
     required this.title,
-    required this.children,
+    required this.child,
   });
 
   final String title;
-  final List<String> children;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ExpansionTile(
+        backgroundColor: AppColors.white,
+        collapsedBackgroundColor: AppColors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         title: Text(
           title,
           style: const TextStyle(
@@ -242,11 +340,7 @@ class _InfoExpansionTile extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        children: children
-            .map((child) => ListTile(
-                  title: Text(child),
-                ))
-            .toList(),
+        children: [child],
       ),
     );
   }

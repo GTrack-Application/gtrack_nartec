@@ -1,4 +1,5 @@
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
 
 abstract class GtinState {}
 
@@ -41,4 +42,30 @@ class GtinErrorState extends GtinState {
   final String message;
 
   GtinErrorState({required this.message});
+}
+
+// * Digital Link View Data States
+class GtinDigitalLinkViewDataLoadingState extends GtinState {}
+
+class GtinDigitalLinkViewDataLoadedState extends GtinState {
+  final List<AllergenModel> allergens;
+  final bool hasMore;
+
+  GtinDigitalLinkViewDataLoadedState({
+    required this.allergens,
+    required this.hasMore,
+  });
+}
+
+class GtinDigitalLinkViewDataErrorState extends GtinState {
+  final String message;
+
+  GtinDigitalLinkViewDataErrorState({required this.message});
+}
+
+// Add new state for loading more allergens
+class GtinLoadingMoreAllergensState extends GtinState {
+  final List<AllergenModel> currentData;
+
+  GtinLoadingMoreAllergensState({required this.currentData});
 }

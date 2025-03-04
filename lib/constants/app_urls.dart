@@ -15,6 +15,9 @@ abstract class AppUrls {
   static const String vectorEmbeddingUrl = "http://gs1ksa.org:3077/";
   static const String baseUrlWith4044 = 'https://gs1ksa.org:4044/';
 
+  // UPC Hub
+  static const String upcHub = 'https://upchub.online/api/';
+
   // GS1
   static const String gs1Url = 'https://gs1ksa.org/';
 }

@@ -39,13 +39,24 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
 
   @override
   Widget build(BuildContext context) {
+    List<GTIN_Model> products = [];
+    bool hasMore = false;
     return Scaffold(
       appBar: AppBar(
         title: const Text('GTIN'),
         backgroundColor: AppColors.skyBlue,
       ),
       body: SafeArea(
-        child: BlocBuilder<GtinCubit, GtinState>(
+        child: BlocConsumer<GtinCubit, GtinState>(
+          listener: (context, state) {
+            if (state is GtinLoadedState) {
+              products = state.data;
+              hasMore = state.hasMoreData;
+            } else if (state is GtinLoadingMoreState) {
+              products = state.currentData;
+              hasMore = state.hasMoreData;
+            }
+          },
           builder: (context, state) {
             if (state is GtinLoadingState) {
               return ListView.builder(
@@ -57,17 +68,6 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
 
             if (state is GtinErrorState) {
               return Center(child: Text(state.message));
-            }
-
-            List<GTIN_Model> products = [];
-            bool hasMore = false;
-
-            if (state is GtinLoadedState) {
-              products = state.data;
-              hasMore = state.hasMoreData;
-            } else if (state is GtinLoadingMoreState) {
-              products = state.currentData;
-              hasMore = state.hasMoreData;
             }
 
             return Padding(
