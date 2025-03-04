@@ -25,7 +25,7 @@ class GlnController {
     String glnLocation,
     String locationNameAr,
   ) async {
-    String? id = await AppPreferences.getUserId();
+    String? id = await AppPreferences.getGs1UserId();
     String? token = await AppPreferences.getToken();
 
     final url = Uri.parse('${AppUrls.gs1Url}api/gln');
