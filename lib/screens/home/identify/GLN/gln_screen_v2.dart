@@ -87,7 +87,6 @@ class _GlnScreenV2State extends State<GlnScreenV2>
     return BlocConsumer<GlnCubit, GlnState>(
       listener: (context, state) {
         if (state is GlnErrorState) {
-          print(state.message);
           AppSnackbars.danger(context, state.message);
         } else if (state is GlnDeleteState) {
           context.read<GlnCubit>().getGlnData();
@@ -360,61 +359,19 @@ class _GlnScreenV2State extends State<GlnScreenV2>
           center = markers.first.position;
         }
 
-        return Stack(
-          children: [
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: center,
-                zoom: 12,
-              ),
-              markers: markers,
-              onMapCreated: (controller) {
-                _mapController = controller;
-              },
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              zoomControlsEnabled: true,
-              mapToolbarEnabled: true,
-            ),
-            // Search bar overlay
-            Positioned(
-              top: 16,
-              left: 16,
-              right: 16,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.black.withValues(alpha: 0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.search, color: AppColors.grey),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          hintText: 'Search GLN locations',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 16),
-                        ),
-                        onChanged: (value) {
-                          // Implement search functionality if needed
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        return GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: center,
+            zoom: 12,
+          ),
+          markers: markers,
+          onMapCreated: (controller) {
+            _mapController = controller;
+          },
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          zoomControlsEnabled: true,
+          mapToolbarEnabled: true,
         );
       },
     );
