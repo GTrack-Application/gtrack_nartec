@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class PrimaryButtonWidget extends StatelessWidget {
@@ -12,6 +12,7 @@ class PrimaryButtonWidget extends StatelessWidget {
     this.isLoading = false,
     this.loadingColor,
     this.height,
+    this.width,
   });
   final String text;
   final VoidCallback onPressed;
@@ -20,10 +21,11 @@ class PrimaryButtonWidget extends StatelessWidget {
   final bool isLoading;
   final Color? loadingColor;
   final double? height;
+  final double? width;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: context.width,
+      width: width ?? context.width ,
       height: height ?? 45,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,

@@ -1,7 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/brand_model.dart';
@@ -206,7 +208,7 @@ class FatsController {
       'Authorization': 'Bearer $token',
     };
 
-    final body = {'memberId': memberId};
+    final body = {'memberId': "$memberId"};
 
     final response = await http.post(
       Uri.parse(url),
@@ -214,14 +216,15 @@ class FatsController {
       body: jsonEncode(body),
     );
 
-    print(response.body);
+    log(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = jsonDecode(response.body);
       return data;
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['error']);
+      throw Exception(
+          data['error'] ?? data['message'] ?? "Something went wrong");
     }
   }
 

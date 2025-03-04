@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/cubit/fats_cubit.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/cubit/fats_state.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/generate_tag_model.dart';
@@ -74,21 +75,14 @@ class _GenerateTagsScreenState extends State<GenerateTagsScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      FilledButton(
+                      PrimaryButtonWidget(
+                        text: "Generate Tag",
+                        height: 35,
+                        backgroungColor: AppColors.skyBlue,
                         onPressed: () {
                           fatsCubit.generateTags();
                         },
-                        child: state is FatsGenerateTagsLoading
-                            ? const CircularProgressIndicator(
-                                color: AppColors.white,
-                              )
-                            : const Text(
-                                'Generate Tag',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                        isLoading: state is FatsGenerateTagsLoading,
                       ),
                     ],
                   ),
