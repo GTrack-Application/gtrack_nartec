@@ -21,6 +21,7 @@ class GLNCubit extends Cubit<GLNState> {
     String glnLocation,
     String locationNameAr,
   ) async {
+    if (state is GLNLoading) return;
     emit(GLNLoading());
     try {
       await GlnController.postGln(

@@ -1,15 +1,18 @@
 // ignore_for_file: unused_catch_clause
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 import 'logs_service.dart';
 
-enum HttpMethod { get, post, put, delete, patch }
+enum HttpMethod { get, post, put, delete, patch, multipart }
 
 class HttpService {
   final String _baseUrl;
@@ -108,7 +111,72 @@ class HttpService {
           headers: headers,
           body: body != null ? json.encode(body) : null,
         );
+      case HttpMethod.multipart:
+        return await _multipartRequest(url, headers ?? {}, body ?? {});
     }
+  }
+
+  // Helper function to get MIME type from file extension
+  MediaType? _getMediaType(String path) {
+    final mimeType = lookupMimeType(path);
+    if (mimeType != null) {
+      final parts = mimeType.split('/');
+      if (parts.length == 2) {
+        return MediaType(parts[0], parts[1]);
+      }
+    }
+    return MediaType('application', 'octet-stream');
+  }
+
+  Future<http.Response> _multipartRequest(
+    Uri url,
+    Map<String, String> headers,
+    Map<String, dynamic> fields,
+  ) async {
+    var request = http.MultipartRequest('POST', url);
+
+    // Add headers
+    request.headers.addAll(headers);
+
+    // Add fields
+    fields.forEach((key, value) {
+      if (value != null) {
+        if (value is File) {
+          // Handle File fields
+          request.files.add(
+            http.MultipartFile(
+              key,
+              value.readAsBytes().asStream(),
+              value.lengthSync(),
+              filename: value.path.split('/').last,
+              contentType: _getMediaType(value.path),
+            ),
+          );
+        } else if (value is List<File>) {
+          // Handle List<File> fields
+          for (var file in value) {
+            request.files.add(
+              http.MultipartFile(
+                key,
+                file.readAsBytes().asStream(),
+                file.lengthSync(),
+                filename: file.path.split('/').last,
+                contentType: _getMediaType(file.path),
+              ),
+            );
+          }
+        } else {
+          // Handle regular fields
+          request.fields[key] = value.toString();
+        }
+      }
+    });
+
+    // Send the request
+    final streamedResponse = await request.send();
+
+    // Convert to regular response
+    return await http.Response.fromStream(streamedResponse);
   }
 }
 

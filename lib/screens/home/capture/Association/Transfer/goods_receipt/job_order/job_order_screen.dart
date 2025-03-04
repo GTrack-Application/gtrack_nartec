@@ -231,14 +231,25 @@ class _JobOrderScreenState extends State<JobOrderScreen> {
               Row(
                 children: [
                   const Spacer(),
-                  FilledButton(
-                    onPressed: () {
-                      AppNavigator.goToPage(
-                        context: context,
-                        screen: JobOrderItemDetailsScreen(order: order),
-                      );
-                    },
-                    child: const Text('Assign to Production'),
+                  SizedBox(
+                    height: 35,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        AppNavigator.goToPage(
+                          context: context,
+                          screen: JobOrderItemDetailsScreen(order: order),
+                        );
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.pink,
+                        foregroundColor: AppColors.white,
+                        textStyle: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      child: const Text('Assign to Production'),
+                    ),
                   ),
                 ],
               ),

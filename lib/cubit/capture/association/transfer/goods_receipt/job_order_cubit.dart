@@ -172,8 +172,8 @@ class JobOrderCubit extends Cubit<JobOrderState> {
         data: {
           'jobOrderMasterId': jobOrderMasterId,
           'productionExecutionDateTime':
-              productionExecutionDateTime.toIso8601String(),
-          'tblAssetMasterEncodeAssetCaptureIDs': _assets
+              productionExecutionDateTime.toUtc().toIso8601String(),
+          'tblAssetMasterEncodeAssetCaptureIDs': assets
               .map(
                 (asset) => asset.tblAssetMasterEncodeAssetCaptureID.toInt(),
               )

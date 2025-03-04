@@ -33,3 +33,5 @@ class GlnErrorState extends GlnState {
 
   GlnErrorState({required this.message});
 }
+
+class GlnAddedState extends GlnState {}

@@ -48,11 +48,8 @@ class _GlnScreenV2State extends State<GlnScreenV2>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'GLN',
-          style: TextStyle(color: AppColors.white),
-        ),
-        backgroundColor: AppColors.pink,
+        title: const Text('GLN'),
+        backgroundColor: AppColors.skyBlue,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Navigator.pop(context),

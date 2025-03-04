@@ -33,7 +33,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   Future<void> getProductionJobOrders() async {
     emit(ProductionJobOrderLoading());
     try {
-      final memberId = await AppPreferences.getUserId();
+      final memberId = await AppPreferences.getMemberId();
       final token = await AppPreferences.getToken();
 
       final response = await _httpService

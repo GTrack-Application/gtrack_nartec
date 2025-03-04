@@ -6,10 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/screens/home/identify/GLN/gln_cubit/gln_cubit.dart';
 import 'package:gtrack_nartec/screens/home/identify/GLN/gln_cubit/gln_state.dart';
 import 'package:image_picker/image_picker.dart';
@@ -348,86 +350,71 @@ class _AddGlnScreenState extends State<AddGlnScreen> {
                   ),
                   SizedBox(height: 20),
                   // Save button
-                  BlocConsumer<GLNCubit, GLNState>(
-                    bloc: glnCubit,
-                    listener: (context, state) {
-                      if (state is GLNLoaded) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("GLN added successfully"),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                        context.read<GlnCubit>().identifyGln();
-                        Navigator.of(context).pop();
-                      }
-                      if (state is GLNError) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                state.message.replaceAll('Exception:', '')),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 50),
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_locationNameEngController.text
-                                    .trim()
-                                    .isEmpty ||
-                                _addressController.text.trim().isEmpty ||
-                                _addressArController.text.trim().isEmpty ||
-                                _poBoxController.text.trim().isEmpty ||
-                                _postalCodeController.text.trim().isEmpty ||
-                                _lngController.text.trim().isEmpty ||
-                                _selectedImageText == null ||
-                                glnLocation.toString().isEmpty ||
-                                _latController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Please fill all the fields"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              return;
-                            }
-                            glnCubit.postGln(
-                              _locationNameEngController.text.trim(),
-                              _addressController.text.trim(),
-                              _addressArController.text.trim(),
-                              _poBoxController.text.trim(),
-                              _postalCodeController.text.trim(),
-                              _lngController.text.trim(),
-                              _latController.text.trim(),
-                              status,
-                              image,
-                              _selectedImageText!,
-                              glnLocation.toString(),
-                              _locationNameArController.text.trim(),
-                            );
-                          },
-                          child: state is GLNLoading
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Text('Add GLN'),
-                        ),
-                      );
-                    },
-                  ),
                 ],
               ),
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BlocConsumer<GLNCubit, GLNState>(
+        bloc: glnCubit,
+        listener: (context, state) {
+          if (state is GLNLoaded) {
+            AppSnackbars.success(
+              context,
+              "GLN added successfully",
+            );
+            context.read<GlnCubit>().getGlnData();
+            Navigator.of(context).pop();
+          }
+          if (state is GLNError) {
+            AppSnackbars.danger(context, state.message);
+          }
+        },
+        builder: (context, state) {
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 50),
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(8.0),
+            child: PrimaryButtonWidget(
+              text: 'Add GLN',
+              isLoading: state is GLNLoading,
+              backgroungColor: AppColors.skyBlue,
+              loadingColor: AppColors.skyBlue,
+              onPressed: () {
+                if (_locationNameEngController.text.trim().isEmpty ||
+                    _addressController.text.trim().isEmpty ||
+                    _addressArController.text.trim().isEmpty ||
+                    _poBoxController.text.trim().isEmpty ||
+                    _postalCodeController.text.trim().isEmpty ||
+                    _lngController.text.trim().isEmpty ||
+                    _selectedImageText == null ||
+                    glnLocation.toString().isEmpty ||
+                    _latController.text.trim().isEmpty) {
+                  AppSnackbars.warning(
+                    context,
+                    "Please fill all the fields",
+                  );
+                  return;
+                }
+                glnCubit.postGln(
+                  _locationNameEngController.text.trim(),
+                  _addressController.text.trim(),
+                  _addressArController.text.trim(),
+                  _poBoxController.text.trim(),
+                  _postalCodeController.text.trim(),
+                  _lngController.text.trim(),
+                  _latController.text.trim(),
+                  status,
+                  image,
+                  _selectedImageText!,
+                  glnLocation.toString(),
+                  _locationNameArController.text.trim(),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -464,7 +451,7 @@ class _AddGlnScreenState extends State<AddGlnScreen> {
                 height: height,
                 color: Colors.grey[200],
                 child: image != null
-                    ? Image.file(image)
+                    ? Image.file(image, fit: BoxFit.cover)
                     : Center(
                         child: Text(
                           label,
@@ -536,56 +523,113 @@ class ImageSelectorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      // #EAF7F6
       backgroundColor: const Color(0xFFEAF7F6),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(15.0),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: GridView.builder(
-          shrinkWrap: true,
-          itemCount: images.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Adjust the number of columns
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1,
-          ),
-          itemBuilder: (context, index) {
-            return Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.white),
-                borderRadius: BorderRadius.circular(10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: AppColors.skyBlue,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
               ),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context, images[index]['text']);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                      child: Image.asset(
-                        images[index]['path'].toString(),
-                        width: 80,
-                        fit: BoxFit.cover,
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.image, color: Colors.white, size: 20),
+                SizedBox(width: 8),
+                Text(
+                  'Select GLN Type Icon',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Grid content
+          Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6,
+            ),
+            padding: const EdgeInsets.all(16),
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 0.75,
+              ),
+              itemCount: images.length,
+              itemBuilder: (context, index) {
+                return Material(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => Navigator.pop(context, images[index]['text']),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade200),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            images[index]['path'].toString(),
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.contain,
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: Text(
+                              images[index]['text'].toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              // maxLines: 2,
+                              // overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      images[index]['text'].toString(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12), // Adjust font size
-                    ),
-                  ],
+                  ),
+                );
+              },
+            ),
+          ),
+          // Footer
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: AppColors.grey),
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

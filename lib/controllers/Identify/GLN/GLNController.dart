@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 class GLNController {
   static HttpService httpService = HttpService(baseUrl: AppUrls.gs1Url);
+  
   static Future<List<PackedItemsModel>> getData() async {
     String? token = await AppPreferences.getToken();
     String url = "${AppUrls.baseUrlWith7010}/api/getAllPackedItems";

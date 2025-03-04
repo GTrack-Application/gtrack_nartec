@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class PrimaryButtonWidget extends StatelessWidget {
   const PrimaryButtonWidget({
@@ -9,18 +10,21 @@ class PrimaryButtonWidget extends StatelessWidget {
     this.backgroungColor,
     this.fontSize,
     this.isLoading = false,
+    this.loadingColor,
+    this.height,
   });
   final String text;
   final VoidCallback onPressed;
   final Color? backgroungColor;
   final double? fontSize;
   final bool isLoading;
-
+  final Color? loadingColor;
+  final double? height;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: context.width,
-      height: 45,
+      height: height ?? 45,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
@@ -30,11 +34,13 @@ class PrimaryButtonWidget extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    loadingColor ?? AppColors.white,
+                  ),
                 ),
               )
             : Text(

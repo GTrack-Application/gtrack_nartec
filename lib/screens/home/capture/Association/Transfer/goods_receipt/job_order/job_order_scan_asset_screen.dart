@@ -72,7 +72,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                   padding: const EdgeInsets.all(16),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: AppColors.skyBlue.withValues(alpha: 0.1),
+                    color: AppColors.pink.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -109,7 +109,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                             controller.text.trim(),
                           );
                         },
-                        backgroungColor: AppColors.skyBlue,
+                        backgroungColor: AppColors.pink,
                         isLoading: state is AssetsByTagNumberLoading,
                       ),
                     ),
@@ -135,6 +135,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                   children: [
                     Expanded(
                       child: PrimaryButtonWidget(
+                        height: 35,
                         text: "Back",
                         onPressed: () {
                           Navigator.pop(context);
@@ -144,10 +145,11 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                     ),
                     Expanded(
                       child: PrimaryButtonWidget(
+                        height: 35,
                         text: "Save",
                         onPressed: () {
                           jobOrderCubit.saveAssetTags(
-                            widget.bom.id.toString(),
+                            widget.order.jobOrderId,
                             transferDate,
                           );
                         },
@@ -174,20 +176,20 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           decoration: BoxDecoration(
-            color: AppColors.skyBlue.withValues(alpha: 0.1),
+            color: AppColors.pink.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
+            border: Border.all(color: AppColors.pink.withValues(alpha: 0.3)),
           ),
           child: Row(
             children: [
-              Icon(Icons.info_outline, color: AppColors.skyBlue, size: 18),
+              Icon(Icons.info_outline, color: AppColors.pink, size: 18),
               const SizedBox(width: 8),
               Text(
                 "Scanned Assets: ${jobOrderCubit.assets.length}",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.skyBlue,
+                  color: AppColors.pink,
                 ),
               ),
             ],
@@ -199,7 +201,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           decoration: BoxDecoration(
-            color: AppColors.skyBlue,
+            color: AppColors.pink,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(8),
               topRight: Radius.circular(8),
@@ -258,7 +260,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                           Icon(
                             Icons.qr_code_scanner_rounded,
                             size: 16,
-                            color: AppColors.skyBlue,
+                            color: AppColors.pink,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
@@ -308,7 +310,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                       return Theme(
                         data: Theme.of(context).copyWith(
                           colorScheme: ColorScheme.light(
-                            primary: AppColors.skyBlue,
+                            primary: AppColors.pink,
                             onPrimary: AppColors.white,
                             surface: AppColors.white,
                           ),
@@ -325,7 +327,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                         return Theme(
                           data: Theme.of(context).copyWith(
                             colorScheme: ColorScheme.light(
-                              primary: AppColors.skyBlue,
+                              primary: AppColors.pink,
                             ),
                           ),
                           child: child!,
@@ -357,7 +359,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                     children: [
                       Icon(
                         Icons.calendar_today,
-                        color: AppColors.skyBlue,
+                        color: AppColors.pink,
                         size: 16,
                       ),
                       const SizedBox(width: 8),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_states.dart';
@@ -93,6 +95,31 @@ class GlnCubit extends Cubit<GlnState> {
     try {
       await GLNController.deleteGlnV2(id);
       emit(GlnDeleteState());
+    } catch (e) {
+      emit(GlnErrorState(message: e.toString()));
+    }
+  }
+
+  // Add new method for posting GLN
+  Future<void> addGln({
+    required String locationNameEn,
+    required String locationNameAr,
+    required String addressEn,
+    required String addressAr,
+    required String poBox,
+    required String postalCode,
+    required String longitude,
+    required String latitude,
+    required String status,
+    required File? image,
+    required String selectedImageText,
+    required String glnLocation,
+  }) async {
+    emit(GlnLoadingState());
+    try {
+      // Add your API call here
+      // await GLNController.postGln(...);
+      emit(GlnAddedState());
     } catch (e) {
       emit(GlnErrorState(message: e.toString()));
     }
