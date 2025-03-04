@@ -63,7 +63,7 @@ class FatsController {
   }
 
   static Future<List<CategoryModel>> getCategories() async {
-    final memberId = await AppPreferences.getUserId();
+    final memberId = await AppPreferences.getMemberId();
     final url =
         '${AppUrls.baseUrlWith7010}/api/giai/categories?memberId=$memberId';
     print(url);
@@ -98,7 +98,7 @@ class FatsController {
     final url =
         '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder/insertAssetMasterEncoder';
     final token = await AppPreferences.getToken();
-    final memberId = await AppPreferences.getUserId();
+    final memberId = await AppPreferences.getMemberId();
 
     final headers = {
       'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ class FatsController {
 
   // get tags
   static Future<List<GenerateTagsModel>> getTags() async {
-    final memberId = await AppPreferences.getUserId();
+    final memberId = await AppPreferences.getMemberId();
 
     final url =
         '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder?memberId=$memberId';
@@ -197,7 +197,7 @@ class FatsController {
     final url =
         '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder/generateAssetMasterEncodeAssetCaptureTagNumber';
     final token = await AppPreferences.getToken();
-    final memberId = await AppPreferences.getUserId();
+    final memberId = await AppPreferences.getMemberId();
 
     print(url);
 
@@ -226,7 +226,7 @@ class FatsController {
   }
 
   static Future<List<EmployeeNameModel>> getEmployeeNames() async {
-    final memberId = await AppPreferences.getUserId();
+    final memberId = await AppPreferences.getMemberId();
     final token = await AppPreferences.getToken();
 
     final url =
@@ -254,7 +254,7 @@ class FatsController {
 
   // get tag details
   static Future<TagModel> getTagDetails(String tagNumber) async {
-    final memberId = await AppPreferences.getUserId();
+    final memberId = await AppPreferences.getMemberId();
     final url =
         '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder?memberId=$memberId&TagNumber=$tagNumber';
     final response = await http.get(Uri.parse(url));
@@ -284,7 +284,7 @@ class FatsController {
     String fullLocationDetails,
     List<File> selectedFiles,
   ) async {
-    final memberData = await AppPreferences.getUserId();
+    final memberData = await AppPreferences.getMemberId();
     final token = await AppPreferences.getToken();
     final url =
         '${AppUrls.baseUrlWith7010}/api/assetCapture/createAssetMasterEncodeAssetCaptureFinal';

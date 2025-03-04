@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class GIAIController {
   static Future<List<GIAIModel>> getGIAI() async {
-    final memberId = await AppPreferences.getUserId();
+    final memberId = await AppPreferences.getMemberId();
 
     final url =
         "${AppUrls.baseUrlWith7010}/api/assetMasterEncoder?memberId=$memberId";
