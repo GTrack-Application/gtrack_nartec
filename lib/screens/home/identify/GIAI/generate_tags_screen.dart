@@ -78,6 +78,7 @@ class _GenerateTagsScreenState extends State<GenerateTagsScreen> {
                       PrimaryButtonWidget(
                         text: "Generate Tag",
                         height: 35,
+                        width: 150,
                         backgroungColor: AppColors.skyBlue,
                         onPressed: () {
                           fatsCubit.generateTags();
