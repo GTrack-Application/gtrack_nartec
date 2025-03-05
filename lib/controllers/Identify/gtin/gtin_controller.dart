@@ -7,11 +7,14 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
 import 'package:http/http.dart' as http;
 
 class GTINController {
   static final HttpService httpService = HttpService(baseUrl: AppUrls.gs1Url);
+  static final HttpService gs1710Service =
+      HttpService(baseUrl: AppUrls.baseUrlWith7010);
   static final HttpService upcHubService = HttpService(baseUrl: AppUrls.upcHub);
 
   // static Future<List<GTIN_Model>> getProducts() async {
@@ -126,6 +129,21 @@ class GTINController {
     return packagingResponse;
   }
 
+  static Future<PromotionalOfferResponse> getPromotionalOffers(
+    String gtin, {
+    required int page,
+    required int limit,
+  }) async {
+    final response = await gs1710Service.request(
+      '/api/getPromotionalOffersByGtin/$gtin',
+      method: HttpMethod.get,
+    );
+
+    final promotionalResponse =
+        PromotionalOfferResponse.fromJson(response.data);
+    return promotionalResponse;
+  }
+
   static Future<Map<String, dynamic>> getDigitalLinkViewData(
     String gtin, {
     int page = 1,
@@ -137,6 +155,7 @@ class GTINController {
         getRetailerInformation(gtin, page: page, limit: limit),
         getIngredientInformation(gtin, page: page, limit: limit),
         getPackagingInformation(gtin, page: page, limit: limit),
+        getPromotionalOffers(gtin, page: page, limit: limit),
       ]);
 
       return {
@@ -144,6 +163,7 @@ class GTINController {
         'retailers': responses[1],
         'ingredients': responses[2],
         'packagings': responses[3],
+        'promotions': responses[4],
       };
     } catch (e) {
       throw Exception('Failed to fetch digital link data: $e');

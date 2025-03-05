@@ -7,6 +7,7 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
 
 class GtinCubit extends Cubit<GtinState> {
@@ -43,6 +44,11 @@ class GtinCubit extends Cubit<GtinState> {
   int _currentPackagingPage = 1;
   static const int _packagingPageSize = 10;
 
+  List<PromotionalOfferModel> _promotions = [];
+  bool _hasMorePromotions = true;
+  int _currentPromotionPage = 1;
+  static const int _promotionPageSize = 10;
+
   // * Getters
   int get page => _currentPage;
   int get pageSize => _pageSize;
@@ -56,6 +62,8 @@ class GtinCubit extends Cubit<GtinState> {
   bool get hasMoreIngredients => _hasMoreIngredients;
   List<PackagingModel> get packagings => _packagings;
   bool get hasMorePackagings => _hasMorePackagings;
+  List<PromotionalOfferModel> get promotions => _promotions;
+  bool get hasMorePromotions => _hasMorePromotions;
 
   void getProducts() async {
     if (state is GtinLoadingState) return;
@@ -145,12 +153,14 @@ class GtinCubit extends Cubit<GtinState> {
       _currentRetailerPage = 1;
       _currentIngredientPage = 1;
       _currentPackagingPage = 1;
+      _currentPromotionPage = 1;
     } else {
       emit(GtinLoadingMoreDigitalLinkDataState(
         currentAllergens: _allergens,
         currentRetailers: _retailers,
         currentIngredients: _ingredients,
         currentPackagings: _packagings,
+        currentPromotions: _promotions,
       ));
     }
 
@@ -165,17 +175,21 @@ class GtinCubit extends Cubit<GtinState> {
       final retailerResponse = response['retailers'] as RetailerResponse;
       final ingredientResponse = response['ingredients'] as IngredientResponse;
       final packagingResponse = response['packagings'] as PackagingResponse;
+      final promotionalResponse =
+          response['promotions'] as PromotionalOfferResponse;
 
       if (loadMore) {
         _allergens.addAll(allergenResponse.allergens);
         _retailers.addAll(retailerResponse.retailers);
         _ingredients.addAll(ingredientResponse.ingredients);
         _packagings.addAll(packagingResponse.packagings);
+        _promotions.addAll(promotionalResponse.offers);
       } else {
         _allergens = allergenResponse.allergens;
         _retailers = retailerResponse.retailers;
         _ingredients = ingredientResponse.ingredients;
         _packagings = packagingResponse.packagings;
+        _promotions = promotionalResponse.offers;
       }
 
       _hasMoreAllergens =
@@ -185,16 +199,20 @@ class GtinCubit extends Cubit<GtinState> {
       _hasMoreIngredients =
           _currentIngredientPage < ingredientResponse.pagination.totalPages;
       _hasMorePackagings = _currentPackagingPage < packagingResponse.totalPages;
+      _hasMorePromotions =
+          _currentPromotionPage < promotionalResponse.totalPages;
 
       emit(GtinDigitalLinkViewDataLoadedState(
         allergens: _allergens,
         retailers: _retailers,
         ingredients: _ingredients,
         packagings: _packagings,
+        promotions: _promotions,
         hasMoreAllergens: _hasMoreAllergens,
         hasMoreRetailers: _hasMoreRetailers,
         hasMoreIngredients: _hasMoreIngredients,
         hasMorePackagings: _hasMorePackagings,
+        hasMorePromotions: _hasMorePromotions,
       ));
     } catch (e) {
       emit(GtinDigitalLinkViewDataErrorState(message: e.toString()));
@@ -210,6 +228,7 @@ class GtinCubit extends Cubit<GtinState> {
       _currentRetailerPage++;
       _currentIngredientPage++;
       _currentPackagingPage++;
+      _currentPromotionPage++;
       getDigitalLinkViewData(gtin, loadMore: true);
     }
   }

@@ -5,10 +5,10 @@ class PromotionalOfferModel {
   final String lang;
   final String targetUrl;
   final String gtin;
-  final DateTime expiryDate;
+  final String expiryDate;
   final double price;
   final String banner;
-  final String? companyId;
+  final dynamic companyId;
 
   PromotionalOfferModel({
     required this.id,
@@ -25,17 +25,34 @@ class PromotionalOfferModel {
 
   factory PromotionalOfferModel.fromJson(Map<String, dynamic> json) {
     return PromotionalOfferModel(
-      id: json['ID'] ?? 0,
-      promotionalOffers: json['PromotionalOffers'] ?? '',
-      linkType: json['LinkType'] ?? '',
-      lang: json['Lang'] ?? '',
-      targetUrl: json['TargetURL'] ?? '',
-      gtin: json['GTIN'] ?? '',
-      expiryDate:
-          DateTime.parse(json['ExpiryDate'] ?? DateTime.now().toString()),
-      price: (json['price'] ?? 0).toDouble(),
-      banner: json['banner'] ?? '',
+      id: json['ID'],
+      promotionalOffers: json['PromotionalOffers'],
+      linkType: json['LinkType'],
+      lang: json['Lang'],
+      targetUrl: json['TargetURL'],
+      gtin: json['GTIN'],
+      expiryDate: json['ExpiryDate'],
+      price: json['price']?.toDouble() ?? 0.0,
+      banner: json['banner'],
       companyId: json['companyId'],
+    );
+  }
+}
+
+class PromotionalOfferResponse {
+  final List<PromotionalOfferModel> offers;
+  final int totalPages;
+
+  PromotionalOfferResponse({
+    required this.offers,
+    required this.totalPages,
+  });
+
+  factory PromotionalOfferResponse.fromJson(List<dynamic> json) {
+    final offers = json.map((e) => PromotionalOfferModel.fromJson(e)).toList();
+    return PromotionalOfferResponse(
+      offers: offers,
+      totalPages: 1, // Since pagination isn't implemented in the API yet
     );
   }
 }

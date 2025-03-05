@@ -4,11 +4,16 @@ import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_nartec/global/widgets/card/gtin_card.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_reviews_screen.dart';
 
 class DigitalLinkViewDataScreen extends StatefulWidget {
-  const DigitalLinkViewDataScreen({super.key, required this.barcode});
+  const DigitalLinkViewDataScreen(
+      {super.key, required this.barcode, required this.gtin});
   final String barcode;
+  final GTIN_Model gtin;
 
   @override
   State<DigitalLinkViewDataScreen> createState() =>
@@ -38,18 +43,8 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Details',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Product Details'),
         backgroundColor: AppColors.skyBlue,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              // Share functionality
-            },
-          ),
-        ],
       ),
       body: BlocConsumer<GtinCubit, GtinState>(
         bloc: gtinCubit,
@@ -126,21 +121,17 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
         children: [
           // Product Hero Section
-          _buildProductHeroSection(),
-
-          const SizedBox(height: 24),
+          //   _buildProductHeroSection(),
+          GtinProductCard(product: widget.gtin),
 
           // Quick Info Cards
           _buildQuickInfoCards(),
 
-          const SizedBox(height: 24),
-
-          // Product Description
-          _buildProductDescription(),
-
-          const SizedBox(height: 24),
+          //   // Product Description
+          //   _buildProductDescription(),
 
           // Reviews Section
           _buildReviewsSection(),
@@ -336,6 +327,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
   Widget _buildReviewsSection() {
     return Card(
       elevation: 2,
+      color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -376,23 +368,15 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
               ],
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                AppNavigator.goToPage(
-                  context: context,
-                  screen: const DigitalLinkViewReviewsScreen(),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.skyBlue,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text('View All Reviews'),
-            ),
+            PrimaryButtonWidget(
+                text: "View All Reviews",
+                backgroungColor: AppColors.skyBlue,
+                onPressed: () {
+                  AppNavigator.goToPage(
+                    context: context,
+                    screen: const DigitalLinkViewReviewsScreen(),
+                  );
+                })
           ],
         ),
       ),
@@ -437,7 +421,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           title: 'Promotion',
           icon: Icons.local_offer_outlined,
           iconColor: AppColors.danger,
-          child: const Text('Promotional information'),
+          child: buildPromotionalInformation(context),
         ),
         _InfoExpansionTile(
           title: 'Recipe Info',
@@ -1075,7 +1059,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                     spreadRadius: 1,
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -1091,8 +1075,8 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: packaging.status == 'active'
-                          ? Colors.green.withOpacity(0.1)
-                          : Colors.grey.withOpacity(0.1),
+                          ? Colors.green.withValues(alpha: 0.1)
+                          : Colors.grey.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -1119,7 +1103,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
+                      color: Colors.green.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -1225,6 +1209,200 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
             child: Text(
               value,
               style: const TextStyle(color: Colors.black87),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPromotionalInformation(BuildContext context) {
+    return BlocBuilder<GtinCubit, GtinState>(
+      builder: (context, state) {
+        if (state is GtinDigitalLinkViewDataLoadedState) {
+          if (state.promotions.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.local_offer_outlined,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No promotional offers available',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.promotions.length,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            itemBuilder: (context, index) {
+              final offer = state.promotions[index];
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.1),
+                      spreadRadius: 1,
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Offer Header
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.danger.withValues(alpha: 0.1),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.local_offer,
+                            color: AppColors.danger,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              offer.promotionalOffers,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.danger,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Offer Details
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Price Tag
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Price: \$${offer.price}',
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Other Details
+                          _promotionDetailRow(
+                            Icons.link,
+                            'Link Type',
+                            offer.linkType,
+                          ),
+                          _promotionDetailRow(
+                            Icons.language,
+                            'Language',
+                            offer.lang,
+                          ),
+                          _promotionDetailRow(
+                            Icons.calendar_today,
+                            'Expires',
+                            offer.expiryDate,
+                          ),
+
+                          if (offer.targetUrl.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                // Handle URL opening
+                              },
+                              icon: const Icon(Icons.open_in_new),
+                              label: const Text('View Offer'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.danger,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _promotionDetailRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: Colors.grey,
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],

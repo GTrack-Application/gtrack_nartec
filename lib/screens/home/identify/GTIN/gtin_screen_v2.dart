@@ -1,12 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
-import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/global/widgets/card/gtin_card.dart';
 import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_data_screen.dart';
 
 class GTINScreenV2 extends StatefulWidget {
@@ -39,8 +37,10 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
 
   @override
   Widget build(BuildContext context) {
-    List<GTIN_Model> products = [];
-    bool hasMore = false;
+    // List<GTIN_Model> products = [];
+    // bool hasMore = false;
+    final products = gtinCubit.products;
+    bool hasMore = gtinCubit.hasMoreData;
     return Scaffold(
       appBar: AppBar(
         title: const Text('GTIN'),
@@ -49,13 +49,13 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
       body: SafeArea(
         child: BlocConsumer<GtinCubit, GtinState>(
           listener: (context, state) {
-            if (state is GtinLoadedState) {
-              products = state.data;
-              hasMore = state.hasMoreData;
-            } else if (state is GtinLoadingMoreState) {
-              products = state.currentData;
-              hasMore = state.hasMoreData;
-            }
+            // if (state is GtinLoadedState) {
+            //   products = state.data;
+            //   hasMore = state.hasMoreData;
+            // } else if (state is GtinLoadingMoreState) {
+            //   products = state.currentData;
+            //   hasMore = state.hasMoreData;
+            // }
           },
           builder: (context, state) {
             if (state is GtinLoadingState) {
@@ -96,8 +96,20 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                               ),
                             );
                           }
-
-                          return ProductCard(product: products[index]);
+                          final product = products[index];
+                          return GtinProductCard(
+                            product: products[index],
+                            borderColor: AppColors.grey,
+                            backgroundColor: Color(0xFFFFFBEB),
+                            onTap: () {
+                              AppNavigator.goToPage(
+                                  context: context,
+                                  screen: DigitalLinkViewDataScreen(
+                                    barcode: product.barcode ?? '',
+                                    gtin: product,
+                                  ));
+                            },
+                          );
                         },
                       ),
                     ),
@@ -205,196 +217,6 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final GTIN_Model product;
-
-  const ProductCard({super.key, required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    final isVerified = product.gepirPosted == "1";
-    return Card(
-      color: Color(0xFFFFFBEB),
-      margin: const EdgeInsets.all(8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: AppColors.skyBlue),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Status and Actions Bar
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFBEB),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-              ),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  isVerified ? 'Verified' : 'Un-Verified',
-                  style: TextStyle(
-                    color: isVerified ? Colors.green[700] : Colors.red[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const Spacer(),
-                // QR Code
-                GestureDetector(
-                  onTap: () {
-                    AppNavigator.goToPage(
-                        context: context,
-                        screen: DigitalLinkViewDataScreen(
-                          barcode: product.barcode ?? '',
-                        ));
-                  },
-                  child: Image.network(
-                    'https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${product.barcode}',
-                    width: 24,
-                    height: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                // Action Icons
-                Icon(Icons.visibility_outlined,
-                    size: 20, color: Colors.grey[600]),
-                const SizedBox(width: 12),
-                // Icon(Icons.edit_outlined, size: 20, color: Colors.grey[600]),
-                // const SizedBox(width: 12),
-                // Icon(Icons.copy_outlined, size: 20, color: Colors.grey[600]),
-                const SizedBox(width: 12),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.skyBlue, width: 2),
-                  ),
-                  child: CircleAvatar(
-                    radius: 12,
-                    backgroundColor:
-                        isVerified ? AppColors.green : AppColors.danger,
-                    child: Icon(
-                      isVerified ? Icons.check : Icons.close,
-                      size: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Product Details
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Product Image
-              if (product.frontImage != null)
-                Container(
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.only(right: 12),
-                  child: CachedNetworkImage(
-                    imageUrl: '${AppUrls.gs1Url}${product.frontImage}',
-                    fit: BoxFit.contain,
-                    errorWidget: (context, error, stackTrace) => const Icon(
-                      Icons.image_not_supported,
-                      size: 40,
-                    ),
-                  ),
-                ),
-              // Product Information
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.background,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        color: Colors.grey[700],
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          children: [
-                            Text(
-                              'GTIN: ${product.barcode ?? ""}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildInfoRow('Brand Name:', product.brandName),
-                            _buildInfoRow('Product Description:',
-                                product.productnameenglish),
-                            _buildInfoRow('GPC:', product.gpc),
-                            _buildInfoRow('Country of Origin:', product.origin),
-                            _buildInfoRow(
-                                'Country of Sale:', product.countrySale),
-                            _buildInfoRow('Net Content:',
-                                '${product.size} ${product.unit}'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 140,
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 13),
-            ),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value ?? 'N/A',
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                ),
-                Icon(
-                  value != null ? Icons.check_circle : Icons.cancel,
-                  size: 16,
-                  color: value != null ? Colors.green : Colors.red,
                 ),
               ],
             ),
