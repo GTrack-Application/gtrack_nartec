@@ -1,6 +1,7 @@
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
 
 abstract class GtinState {}
@@ -53,17 +54,21 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
   final List<AllergenModel> allergens;
   final List<RetailerModel> retailers;
   final List<IngredientModel> ingredients;
+  final List<PackagingModel> packagings;
   final bool hasMoreAllergens;
   final bool hasMoreRetailers;
   final bool hasMoreIngredients;
+  final bool hasMorePackagings;
 
   GtinDigitalLinkViewDataLoadedState({
     required this.allergens,
     required this.retailers,
     required this.ingredients,
+    required this.packagings,
     required this.hasMoreAllergens,
     required this.hasMoreRetailers,
     required this.hasMoreIngredients,
+    required this.hasMorePackagings,
   });
 }
 
@@ -78,10 +83,12 @@ class GtinLoadingMoreDigitalLinkDataState extends GtinState {
   final List<AllergenModel> currentAllergens;
   final List<RetailerModel> currentRetailers;
   final List<IngredientModel> currentIngredients;
+  final List<PackagingModel> currentPackagings;
 
   GtinLoadingMoreDigitalLinkDataState({
     required this.currentAllergens,
     required this.currentRetailers,
     required this.currentIngredients,
+    required this.currentPackagings,
   });
 }

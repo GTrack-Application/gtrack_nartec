@@ -431,7 +431,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           title: 'Packaging',
           icon: Icons.inventory_2_outlined,
           iconColor: Colors.brown,
-          child: const Text('Packaging details'),
+          child: buildPackagingInformation(context),
         ),
         _InfoExpansionTile(
           title: 'Promotion',
@@ -1055,6 +1055,181 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
 
   String _formatDateTime(DateTime dateTime) {
     return "${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}";
+  }
+
+  Widget buildPackagingInformation(BuildContext context) {
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: gtinCubit.packagings.length,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          itemBuilder: (context, index) {
+            final packaging = gtinCubit.packagings[index];
+            return Container(
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Status Badge
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: packaging.status == 'active'
+                          ? Colors.green.withOpacity(0.1)
+                          : Colors.grey.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'Status: ${packaging.status}',
+                      style: TextStyle(
+                        color: packaging.status == 'active'
+                            ? Colors.green
+                            : Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Basic Information
+                  _packagingDetailRow('Type', packaging.packagingType),
+                  _packagingDetailRow('Material', packaging.material),
+                  _packagingDetailRow('Weight', '${packaging.weight}'),
+                  _packagingDetailRow('Color', packaging.color),
+                  _packagingDetailRow('Labeling', packaging.labeling),
+
+                  const SizedBox(height: 16),
+                  // Environmental Information
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Environmental Information',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.green,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Icon(
+                              packaging.recyclable
+                                  ? Icons.check_circle
+                                  : Icons.cancel,
+                              color: packaging.recyclable
+                                  ? Colors.green
+                                  : Colors.red,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text('Recyclable'),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(
+                              packaging.biodegradable
+                                  ? Icons.check_circle
+                                  : Icons.cancel,
+                              color: packaging.biodegradable
+                                  ? Colors.green
+                                  : Colors.red,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text('Biodegradable'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+                  // Additional Information
+                  Text(
+                    'Last Updated: ${_formatDateTime(packaging.updatedAt)}',
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        if (gtinCubit.hasMorePackagings)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: ElevatedButton(
+              onPressed: () {
+                gtinCubit.loadMoreData(widget.barcode);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.skyBlue,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 48),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text('Load More'),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _packagingDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(color: Colors.black87),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

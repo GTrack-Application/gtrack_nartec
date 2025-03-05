@@ -6,6 +6,7 @@ import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -111,6 +112,20 @@ class GTINController {
     return ingredientResponse;
   }
 
+  static Future<PackagingResponse> getPackagingInformation(
+    String gtin, {
+    required int page,
+    required int limit,
+  }) async {
+    final response = await upcHubService.request(
+      'digitalLinks/packagings?page=$page&pageSize=$limit&barcode=$gtin',
+      method: HttpMethod.get,
+    );
+
+    final packagingResponse = PackagingResponse.fromJson(response.data);
+    return packagingResponse;
+  }
+
   static Future<Map<String, dynamic>> getDigitalLinkViewData(
     String gtin, {
     int page = 1,
@@ -121,12 +136,14 @@ class GTINController {
         getAllergenInformation(gtin, page: page, limit: limit),
         getRetailerInformation(gtin, page: page, limit: limit),
         getIngredientInformation(gtin, page: page, limit: limit),
+        getPackagingInformation(gtin, page: page, limit: limit),
       ]);
 
       return {
         'allergens': responses[0],
         'retailers': responses[1],
         'ingredients': responses[2],
+        'packagings': responses[3],
       };
     } catch (e) {
       throw Exception('Failed to fetch digital link data: $e');
