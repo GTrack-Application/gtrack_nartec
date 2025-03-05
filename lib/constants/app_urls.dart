@@ -16,7 +16,7 @@ abstract class AppUrls {
   static const String baseUrlWith4044 = 'https://gs1ksa.org:4044/';
 
   // UPC Hub
-  static const String upcHub = 'https://upchub.online/api/';
+  static const String upcHub = 'https://upchub.online';
 
   // GS1
   static const String gs1Url = 'https://gs1ksa.org/';

@@ -1,8 +1,12 @@
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/image_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/instruction_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/leaflet_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
 
 abstract class GtinState {}
@@ -57,12 +61,20 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
   final List<IngredientModel> ingredients;
   final List<PackagingModel> packagings;
   final List<PromotionalOfferModel> promotions;
+  final List<RecipeModel> recipes;
+  final List<LeafletModel> leaflets;
+  final List<ImageModel> images;
+  final List<InstructionModel> instructions;
 
   final bool hasMoreAllergens;
   final bool hasMoreRetailers;
   final bool hasMoreIngredients;
   final bool hasMorePackagings;
   final bool hasMorePromotions;
+  final bool hasMoreRecipes;
+  final bool hasMoreLeaflets;
+  final bool hasMoreImages;
+  final bool hasMoreInstructions;
 
   GtinDigitalLinkViewDataLoadedState({
     required this.allergens,
@@ -70,11 +82,19 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
     required this.ingredients,
     required this.packagings,
     required this.promotions,
+    required this.recipes,
+    required this.leaflets,
+    required this.images,
+    required this.instructions,
     required this.hasMoreAllergens,
     required this.hasMoreRetailers,
     required this.hasMoreIngredients,
     required this.hasMorePackagings,
     required this.hasMorePromotions,
+    required this.hasMoreRecipes,
+    required this.hasMoreLeaflets,
+    required this.hasMoreImages,
+    required this.hasMoreInstructions,
   });
 }
 

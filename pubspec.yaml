@@ -59,6 +59,9 @@ dependencies:
   barcode_widget: ^2.0.4
   easy_stepper: ^0.8.5+1
   mime: ^2.0.0
+  syncfusion_flutter_pdfviewer: ^28.2.9
+  url_launcher: ^6.3.1
+  flutter_pdfview: ^1.4.0
 
 icons_launcher:
   image_path: "assets/images/logo.png"

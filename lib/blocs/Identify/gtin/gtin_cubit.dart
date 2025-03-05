@@ -5,9 +5,13 @@ import 'package:gtrack_nartec/controllers/Identify/gtin/gtin_controller.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/image_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/instruction_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/leaflet_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
 
 class GtinCubit extends Cubit<GtinState> {
@@ -49,6 +53,26 @@ class GtinCubit extends Cubit<GtinState> {
   int _currentPromotionPage = 1;
   static const int _promotionPageSize = 10;
 
+  List<RecipeModel> _recipes = [];
+  bool _hasMoreRecipes = true;
+  int _currentRecipePage = 1;
+  static const int _recipePageSize = 10;
+
+  List<LeafletModel> _leaflets = [];
+  bool _hasMoreLeaflets = true;
+  int _currentLeafletPage = 1;
+  static const int _leafletPageSize = 10;
+
+  List<ImageModel> _images = [];
+  bool _hasMoreImages = true;
+  int _currentImagePage = 1;
+  static const int _imagePageSize = 10;
+
+  List<InstructionModel> _instructions = [];
+  bool _hasMoreInstructions = true;
+  int _currentInstructionPage = 1;
+  static const int _instructionPageSize = 10;
+
   // * Getters
   int get page => _currentPage;
   int get pageSize => _pageSize;
@@ -64,6 +88,14 @@ class GtinCubit extends Cubit<GtinState> {
   bool get hasMorePackagings => _hasMorePackagings;
   List<PromotionalOfferModel> get promotions => _promotions;
   bool get hasMorePromotions => _hasMorePromotions;
+  List<RecipeModel> get recipes => _recipes;
+  bool get hasMoreRecipes => _hasMoreRecipes;
+  List<LeafletModel> get leaflets => _leaflets;
+  bool get hasMoreLeaflets => _hasMoreLeaflets;
+  List<ImageModel> get images => _images;
+  bool get hasMoreImages => _hasMoreImages;
+  List<InstructionModel> get instructions => _instructions;
+  bool get hasMoreInstructions => _hasMoreInstructions;
 
   void getProducts() async {
     if (state is GtinLoadingState) return;
@@ -154,6 +186,8 @@ class GtinCubit extends Cubit<GtinState> {
       _currentIngredientPage = 1;
       _currentPackagingPage = 1;
       _currentPromotionPage = 1;
+      _currentImagePage = 1;
+      _currentInstructionPage = 1;
     } else {
       emit(GtinLoadingMoreDigitalLinkDataState(
         currentAllergens: _allergens,
@@ -167,8 +201,8 @@ class GtinCubit extends Cubit<GtinState> {
     try {
       final response = await GTINController.getDigitalLinkViewData(
         gtin,
-        page: _currentAllergenPage,
-        limit: _allergenPageSize,
+        page: _currentInstructionPage,
+        limit: _instructionPageSize,
       );
 
       final allergenResponse = response['allergens'] as AllergenResponse;
@@ -177,6 +211,10 @@ class GtinCubit extends Cubit<GtinState> {
       final packagingResponse = response['packagings'] as PackagingResponse;
       final promotionalResponse =
           response['promotions'] as PromotionalOfferResponse;
+      final recipeResponse = response['recipes'] as RecipeResponse;
+      final leafletResponse = response['leaflets'] as LeafletResponse;
+      final instructionResponse =
+          response['instructions'] as InstructionResponse;
 
       if (loadMore) {
         _allergens.addAll(allergenResponse.allergens);
@@ -184,12 +222,18 @@ class GtinCubit extends Cubit<GtinState> {
         _ingredients.addAll(ingredientResponse.ingredients);
         _packagings.addAll(packagingResponse.packagings);
         _promotions.addAll(promotionalResponse.offers);
+        _recipes.addAll(recipeResponse.recipes);
+        _leaflets.addAll(leafletResponse.leaflets);
+        _instructions.addAll(instructionResponse.instructions);
       } else {
         _allergens = allergenResponse.allergens;
         _retailers = retailerResponse.retailers;
         _ingredients = ingredientResponse.ingredients;
         _packagings = packagingResponse.packagings;
         _promotions = promotionalResponse.offers;
+        _recipes = recipeResponse.recipes;
+        _leaflets = leafletResponse.leaflets;
+        _instructions = instructionResponse.instructions;
       }
 
       _hasMoreAllergens =
@@ -201,6 +245,20 @@ class GtinCubit extends Cubit<GtinState> {
       _hasMorePackagings = _currentPackagingPage < packagingResponse.totalPages;
       _hasMorePromotions =
           _currentPromotionPage < promotionalResponse.totalPages;
+      _hasMoreRecipes = _currentRecipePage < recipeResponse.totalPages;
+      _hasMoreLeaflets = _currentLeafletPage < leafletResponse.totalPages;
+      _hasMoreInstructions =
+          _currentInstructionPage < instructionResponse.totalPages;
+
+      final imageResponse = response['images'] as ImageResponse;
+
+      if (loadMore) {
+        _images.addAll(imageResponse.images);
+      } else {
+        _images = imageResponse.images;
+      }
+
+      _hasMoreImages = _currentImagePage < imageResponse.totalPages;
 
       emit(GtinDigitalLinkViewDataLoadedState(
         allergens: _allergens,
@@ -208,11 +266,19 @@ class GtinCubit extends Cubit<GtinState> {
         ingredients: _ingredients,
         packagings: _packagings,
         promotions: _promotions,
+        recipes: _recipes,
         hasMoreAllergens: _hasMoreAllergens,
         hasMoreRetailers: _hasMoreRetailers,
         hasMoreIngredients: _hasMoreIngredients,
         hasMorePackagings: _hasMorePackagings,
         hasMorePromotions: _hasMorePromotions,
+        hasMoreRecipes: _hasMoreRecipes,
+        leaflets: _leaflets,
+        hasMoreLeaflets: _hasMoreLeaflets,
+        images: _images,
+        hasMoreImages: _hasMoreImages,
+        instructions: _instructions,
+        hasMoreInstructions: _hasMoreInstructions,
       ));
     } catch (e) {
       emit(GtinDigitalLinkViewDataErrorState(message: e.toString()));

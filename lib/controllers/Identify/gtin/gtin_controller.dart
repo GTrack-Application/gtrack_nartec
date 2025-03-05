@@ -5,9 +5,13 @@ import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/image_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/instruction_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/leaflet_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -78,7 +82,7 @@ class GTINController {
     required int limit,
   }) async {
     final response = await upcHubService.request(
-      'digitalLinks/allergens?page=$page&pageSize=$limit&barcode=$gtin',
+      '/api/digitalLinks/allergens?page=$page&pageSize=$limit&barcode=$gtin',
       method: HttpMethod.get,
     );
 
@@ -93,7 +97,7 @@ class GTINController {
     required int limit,
   }) async {
     final response = await upcHubService.request(
-      'digitalLinks/retailers?page=$page&pageSize=$limit&barcode=$gtin',
+      '/api/digitalLinks/retailers?page=$page&pageSize=$limit&barcode=$gtin',
       method: HttpMethod.get,
     );
 
@@ -107,7 +111,7 @@ class GTINController {
     required int limit,
   }) async {
     final response = await upcHubService.request(
-      'digitalLinks/ingredients?page=$page&pageSize=$limit&barcode=$gtin',
+      '/api/digitalLinks/ingredients?page=$page&pageSize=$limit&barcode=$gtin',
       method: HttpMethod.get,
     );
 
@@ -121,7 +125,7 @@ class GTINController {
     required int limit,
   }) async {
     final response = await upcHubService.request(
-      'digitalLinks/packagings?page=$page&pageSize=$limit&barcode=$gtin',
+      '/api/digitalLinks/packagings?page=$page&pageSize=$limit&barcode=$gtin',
       method: HttpMethod.get,
     );
 
@@ -144,6 +148,66 @@ class GTINController {
     return promotionalResponse;
   }
 
+  static Future<RecipeResponse> getRecipeInformation(
+    String gtin, {
+    required int page,
+    required int limit,
+  }) async {
+    final response = await gs1710Service.request(
+      '/api/getRecipeDataByGtin/$gtin',
+      method: HttpMethod.get,
+    );
+
+    final recipeResponse = RecipeResponse.fromJson(response.data);
+    return recipeResponse;
+  }
+
+  static Future<LeafletResponse> getLeafletInformation(
+    String gtin, {
+    required int page,
+    required int limit,
+  }) async {
+    final response = await gs1710Service.request(
+      '/api/getProductLeafLetsDataByGtin/$gtin',
+      method: HttpMethod.get,
+    );
+
+    final leafletResponse = LeafletResponse.fromJson(response.data);
+    return leafletResponse;
+  }
+
+  static Future<ImageResponse> getImageInformation(
+    String gtin, {
+    required int page,
+    required int limit,
+  }) async {
+    final response = await upcHubService.request(
+        "/api/digitalLinks/images?page=$page&pageSize=$limit&barcode=$gtin");
+
+    if (response.success) {
+      return ImageResponse.fromJson(response.data);
+    } else {
+      throw Exception(response.data['error'] ??
+          response.data['message'] ??
+          'Failed to load images');
+    }
+  }
+
+  static Future<InstructionResponse> getInstructionInformation(
+    String gtin, {
+    required int page,
+    required int limit,
+  }) async {
+    final response = await upcHubService.request(
+        "/api/digitalLinks/instructions?page=$page&pageSize=$limit&barcode=$gtin");
+
+    if (response.success) {
+      return InstructionResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load instructions');
+    }
+  }
+
   static Future<Map<String, dynamic>> getDigitalLinkViewData(
     String gtin, {
     int page = 1,
@@ -156,6 +220,10 @@ class GTINController {
         getIngredientInformation(gtin, page: page, limit: limit),
         getPackagingInformation(gtin, page: page, limit: limit),
         getPromotionalOffers(gtin, page: page, limit: limit),
+        getRecipeInformation(gtin, page: page, limit: limit),
+        getLeafletInformation(gtin, page: page, limit: limit),
+        getImageInformation(gtin, page: page, limit: limit),
+        getInstructionInformation(gtin, page: page, limit: limit),
       ]);
 
       return {
@@ -164,6 +232,10 @@ class GTINController {
         'ingredients': responses[2],
         'packagings': responses[3],
         'promotions': responses[4],
+        'recipes': responses[5],
+        'leaflets': responses[6],
+        'images': responses[7],
+        'instructions': responses[8],
       };
     } catch (e) {
       throw Exception('Failed to fetch digital link data: $e');

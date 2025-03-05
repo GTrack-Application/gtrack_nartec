@@ -11,3 +11,7 @@ String dateFormat(String date) {
 String dateTimeFormat(String date) {
   return DateFormat('dd MMM yyyy hh:mm a').format(DateTime.parse(date));
 }
+
+String formatDate(DateTime date) {
+  return DateFormat('dd MMM yyyy').format(date);
+}

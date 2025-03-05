@@ -1,13 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
+import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/card/gtin_card.dart';
+import 'package:gtrack_nartec/global/widgets/pdf/pdf_viewer.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_reviews_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DigitalLinkViewDataScreen extends StatefulWidget {
   const DigitalLinkViewDataScreen(
@@ -409,7 +414,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           title: 'Instructions',
           icon: Icons.info_outline,
           iconColor: Colors.purple,
-          child: const Text('Usage instructions'),
+          child: buildInstructionInformation(context),
         ),
         _InfoExpansionTile(
           title: 'Packaging',
@@ -427,19 +432,19 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           title: 'Recipe Info',
           icon: Icons.restaurant_menu,
           iconColor: Colors.amber,
-          child: const Text('Recipe details'),
+          child: buildRecipeInformation(context),
         ),
         _InfoExpansionTile(
           title: 'Electronic Leaflets',
           icon: Icons.description_outlined,
           iconColor: Colors.teal,
-          child: const Text('Digital documentation'),
+          child: buildLeafletInformation(context),
         ),
         _InfoExpansionTile(
           title: 'Images',
           icon: Icons.image_outlined,
           iconColor: Colors.indigo,
-          child: const Text('Product images'),
+          child: buildImageInformation(context),
         ),
         _InfoExpansionTile(
           title: 'Videos',
@@ -1347,8 +1352,11 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                           if (offer.targetUrl.isNotEmpty) ...[
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
-                              onPressed: () {
-                                // Handle URL opening
+                              onPressed: () async {
+                                final url = Uri.parse(offer.targetUrl);
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                }
                               },
                               icon: const Icon(Icons.open_in_new),
                               label: const Text('View Offer'),
@@ -1403,6 +1411,523 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                 color: Colors.black87,
                 fontWeight: FontWeight.w500,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRecipeInformation(BuildContext context) {
+    return BlocBuilder<GtinCubit, GtinState>(
+      builder: (context, state) {
+        if (state is GtinDigitalLinkViewDataLoadedState) {
+          if (state.recipes.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.restaurant_menu,
+                      size: 48,
+                      color: AppColors.grey,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No recipe information available',
+                      style: TextStyle(
+                        color: AppColors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.recipes.length,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            itemBuilder: (context, index) {
+              final recipe = state.recipes[index];
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.grey.withValues(alpha: 0.1),
+                      spreadRadius: 1,
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Recipe Header
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.gold.withValues(alpha: 0.1),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.restaurant_menu,
+                            color: AppColors.gold,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              recipe.title,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.gold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Recipe Details
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Description',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            recipe.description,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Ingredients',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            recipe.ingredients,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget buildLeafletInformation(BuildContext context) {
+    return BlocBuilder<GtinCubit, GtinState>(
+      builder: (context, state) {
+        if (state is GtinDigitalLinkViewDataLoadedState) {
+          if (state.leaflets.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.description_outlined,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No electronic leaflets available',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.leaflets.length,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            itemBuilder: (context, index) {
+              final leaflet = state.leaflets[index];
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Leaflet Header
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.1),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.description,
+                            color: Colors.blue,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              leaflet.productLeafletInformation,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Leaflet Details
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          _leafletDetailRow(
+                            Icons.language,
+                            'Language',
+                            leaflet.lang,
+                          ),
+                          _leafletDetailRow(
+                            Icons.link,
+                            'Link Type',
+                            leaflet.linkType,
+                          ),
+                          const SizedBox(height: 16),
+                          if (leaflet.pdfDoc.isNotEmpty) ...[
+                            PdfViewer(
+                                path:
+                                    "${AppUrls.baseUrlWith7010}/${leaflet.pdfDoc}")
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _leafletDetailRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: Colors.grey,
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildImageInformation(BuildContext context) {
+    return BlocBuilder<GtinCubit, GtinState>(
+      builder: (context, state) {
+        if (state is GtinDigitalLinkViewDataLoadedState) {
+          if (state.images.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.image_not_supported_outlined,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No images available',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(8),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 1,
+            ),
+            itemCount: state.images.length,
+            itemBuilder: (context, index) {
+              final image = state.images[index];
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: '${AppUrls.upcHub}/${image.photos}',
+                    fit: BoxFit.cover,
+                    errorWidget: (context, error, stackTrace) {
+                      return const Center(
+                        child: Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 24,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget buildInstructionInformation(BuildContext context) {
+    return BlocBuilder<GtinCubit, GtinState>(
+      builder: (context, state) {
+        if (state is GtinDigitalLinkViewDataLoadedState) {
+          if (state.instructions.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.description_outlined,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No instructions available',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.instructions.length,
+            itemBuilder: (context, index) {
+              final instruction = state.instructions[index];
+              return Card(
+                color: AppColors.background,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Description Section
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Description:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            instruction.description,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Additional Information Section
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Additional Information:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          _buildInfoRow(
+                            Icons.calendar_today,
+                            'Created:',
+                            formatDate(instruction.createdAt),
+                          ),
+                          _buildInfoRow(
+                            Icons.update,
+                            'Last Updated:',
+                            formatDate(instruction.updatedAt),
+                          ),
+                          _buildInfoRow(
+                            Icons.business,
+                            'Brand Owner ID:',
+                            instruction.brandOwnerId,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // PDF Document Section
+                    if (instruction.pdfDoc.isNotEmpty) ...[
+                      PdfViewer(path: "${AppUrls.upcHub}/${instruction.pdfDoc}")
+                    ],
+                  ],
+                ),
+              );
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 18,
+            color: Colors.grey[600],
+          ),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
             ),
           ),
         ],

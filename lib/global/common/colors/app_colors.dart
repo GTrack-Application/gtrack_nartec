@@ -26,4 +26,6 @@ abstract class AppColors {
 
   //background: rgba(29, 174, 17, 1);
   static const Color green = Color.fromRGBO(29, 174, 17, 1);
+
+  static const Color gold = Color.fromRGBO(244, 207, 45, 1);
 }
