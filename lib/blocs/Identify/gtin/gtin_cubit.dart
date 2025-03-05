@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
@@ -7,6 +5,8 @@ import 'package:gtrack_nartec/controllers/Identify/gtin/gtin_controller.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
 
 class GtinCubit extends Cubit<GtinState> {
   GtinCubit() : super(GtinInitState());
@@ -27,6 +27,16 @@ class GtinCubit extends Cubit<GtinState> {
   int _currentAllergenPage = 1;
   static const int _allergenPageSize = 20;
 
+  List<RetailerModel> _retailers = [];
+  bool _hasMoreRetailers = true;
+  int _currentRetailerPage = 1;
+  static const int _retailerPageSize = 10;
+
+  List<IngredientModel> _ingredients = [];
+  bool _hasMoreIngredients = true;
+  int _currentIngredientPage = 1;
+  static const int _ingredientPageSize = 10;
+
   // * Getters
   int get page => _currentPage;
   int get pageSize => _pageSize;
@@ -34,6 +44,10 @@ class GtinCubit extends Cubit<GtinState> {
   List<GTIN_Model> get products => _allProducts;
   List<AllergenModel> get allergens => _allergens;
   bool get hasMoreAllergens => _hasMoreAllergens;
+  List<RetailerModel> get retailers => _retailers;
+  bool get hasMoreRetailers => _hasMoreRetailers;
+  List<IngredientModel> get ingredients => _ingredients;
+  bool get hasMoreIngredients => _hasMoreIngredients;
 
   void getProducts() async {
     if (state is GtinLoadingState) return;
@@ -116,45 +130,65 @@ class GtinCubit extends Cubit<GtinState> {
     if (!loadMore) {
       emit(GtinDigitalLinkViewDataLoadingState());
       _allergens.clear();
+      _retailers.clear();
+      _ingredients.clear();
       _currentAllergenPage = 1;
+      _currentRetailerPage = 1;
+      _currentIngredientPage = 1;
     } else {
-      emit(GtinLoadingMoreAllergensState(currentData: _allergens));
+      emit(GtinLoadingMoreDigitalLinkDataState(
+        currentAllergens: _allergens,
+        currentRetailers: _retailers,
+        currentIngredients: _ingredients,
+      ));
     }
 
     try {
-      final response = await upcHubService.request(
-        'digitalLinks/allergens?page=$_currentAllergenPage&pageSize=$_allergenPageSize&barcode=$gtin',
+      final response = await GTINController.getDigitalLinkViewData(
+        gtin,
+        page: _currentAllergenPage,
+        limit: _allergenPageSize,
       );
 
-      if (response.success) {
-        final allergenResponse =
-            AllergenResponse.fromJson(json.decode(response.body));
+      final allergenResponse = response['allergens'] as AllergenResponse;
+      final retailerResponse = response['retailers'] as RetailerResponse;
+      final ingredientResponse = response['ingredients'] as IngredientResponse;
 
-        if (loadMore) {
-          _allergens.addAll(allergenResponse.allergens);
-        } else {
-          _allergens = allergenResponse.allergens;
-        }
-
-        _hasMoreAllergens =
-            _currentAllergenPage < allergenResponse.pagination.totalPages;
-
-        emit(GtinDigitalLinkViewDataLoadedState(
-          allergens: _allergens,
-          hasMore: _hasMoreAllergens,
-        ));
+      if (loadMore) {
+        _allergens.addAll(allergenResponse.allergens);
+        _retailers.addAll(retailerResponse.retailers);
+        _ingredients.addAll(ingredientResponse.ingredients);
       } else {
-        emit(GtinDigitalLinkViewDataErrorState(
-            message: 'Failed to load allergens'));
+        _allergens = allergenResponse.allergens;
+        _retailers = retailerResponse.retailers;
+        _ingredients = ingredientResponse.ingredients;
       }
+
+      _hasMoreAllergens =
+          _currentAllergenPage < allergenResponse.pagination.totalPages;
+      _hasMoreRetailers =
+          _currentRetailerPage < retailerResponse.pagination.totalPages;
+      _hasMoreIngredients =
+          _currentIngredientPage < ingredientResponse.pagination.totalPages;
+
+      emit(GtinDigitalLinkViewDataLoadedState(
+        allergens: _allergens,
+        retailers: _retailers,
+        ingredients: _ingredients,
+        hasMoreAllergens: _hasMoreAllergens,
+        hasMoreRetailers: _hasMoreRetailers,
+        hasMoreIngredients: _hasMoreIngredients,
+      ));
     } catch (e) {
       emit(GtinDigitalLinkViewDataErrorState(message: e.toString()));
     }
   }
 
-  void loadMoreAllergens(String gtin) {
-    if (_hasMoreAllergens) {
+  void loadMoreData(String gtin) {
+    if (_hasMoreAllergens || _hasMoreRetailers || _hasMoreIngredients) {
       _currentAllergenPage++;
+      _currentRetailerPage++;
+      _currentIngredientPage++;
       getDigitalLinkViewData(gtin, loadMore: true);
     }
   }
