@@ -51,11 +51,8 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
         title: const Text('Product Details'),
         backgroundColor: AppColors.skyBlue,
       ),
-      body: BlocConsumer<GtinCubit, GtinState>(
+      body: BlocBuilder<GtinCubit, GtinState>(
         bloc: gtinCubit,
-        listener: (context, state) {
-          // TODO: implement listener
-        },
         builder: (context, state) {
           if (state is GtinDigitalLinkViewDataLoadingState) {
             return const Center(
@@ -1117,7 +1114,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                   // Basic Information
                   _packagingDetailRow('Type', packaging.packagingType),
                   _packagingDetailRow('Material', packaging.material),
-                  _packagingDetailRow('Weight', '${packaging.weight}'),
+                  _packagingDetailRow('Weight', packaging.weight),
                   _packagingDetailRow('Color', packaging.color),
                   _packagingDetailRow('Labeling', packaging.labeling),
 
@@ -1619,7 +1616,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 1,
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -1633,7 +1630,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.1),
+                        color: Colors.blue.withValues(alpha: 0.1),
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(12),
                           topRight: Radius.circular(12),
@@ -1778,7 +1775,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 1,
                       blurRadius: 4,
                       offset: const Offset(0, 2),
