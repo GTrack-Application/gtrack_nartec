@@ -424,114 +424,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
     );
   }
 
-  Widget _buildProductHeroSection() {
-    return Card(
-      elevation: 4,
-      color: AppColors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Product Image with Verified Badge
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(16)),
-                child: Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOB9XBRhgoFm4-tIWZDhS3GedlETu8JP20KA&s',
-                  height: 250,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const Positioned(
-                top: 16,
-                right: 16,
-                child: Chip(
-                  label: Text(
-                    'Verified',
-                    style: TextStyle(
-                        color: AppColors.white, fontWeight: FontWeight.bold),
-                  ),
-                  backgroundColor: AppColors.green,
-                  avatar: Icon(Icons.verified, color: Colors.white, size: 18),
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                ),
-              ),
-            ],
-          ),
-
-          // Product Details
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Alkozay Cola',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppColors.skyBlue.withValues(alpha: .1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        widget.barcode,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.skyBlue,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Cola Regular 250Ml Can, Carbonated Drinks',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on_outlined,
-                        color: Colors.grey, size: 20),
-                    const SizedBox(width: 8),
-                    const Text(
-                      'Origin: United Arab Emirates',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.favorite_border,
-                          color: AppColors.danger),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildQuickInfoCards() {
     return GridView.count(
       crossAxisCount: 2,
@@ -599,30 +491,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildProductDescription() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Product Description',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        const Text(
-          'Alkozay Cola is a refreshing carbonated drink with a classic cola taste. Perfect for any occasion, this 250ml can provides a convenient serving size for on-the-go refreshment.',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black87,
-            height: 1.5,
-          ),
-        ),
-      ],
     );
   }
 
@@ -925,7 +793,9 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                       const SizedBox(width: 8),
                       Text(
                         'Last Updated: ${_formatDate(ingredient.updatedAt)}',
-                        style: const TextStyle(color: Colors.black87),
+                        style: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ],
                   ),
