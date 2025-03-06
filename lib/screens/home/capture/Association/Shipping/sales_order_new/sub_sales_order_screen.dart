@@ -6,27 +6,30 @@ import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sal
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sales_order_model.dart';
-import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/sub_sales_order_screen.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/route_screen.dart';
 
-class SalesOrderScreen extends StatefulWidget {
-  const SalesOrderScreen({super.key});
+class SubSalesOrderScreen extends StatefulWidget {
+  const SubSalesOrderScreen({super.key, required this.salesOrderId});
+
+  final String salesOrderId;
 
   @override
-  State<SalesOrderScreen> createState() => _SalesOrderScreenState();
+  State<SubSalesOrderScreen> createState() => _SubSalesOrderScreenState();
 }
 
-class _SalesOrderScreenState extends State<SalesOrderScreen> {
+class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
   late SalesOrderCubit salesOrderCubit;
 
   @override
   void initState() {
     super.initState();
     salesOrderCubit = context.read<SalesOrderCubit>();
-    salesOrderCubit.getSalesOrder();
+    salesOrderCubit.getSubSalesOrder(widget.salesOrderId);
   }
 
-  List<SalesOrderModel> salesOrder = [];
+  List<SubSalesOrderModel> subSalesOrder = [];
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +42,15 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
       body: BlocConsumer<SalesOrderCubit, SalesOrderState>(
         bloc: salesOrderCubit,
         listener: (context, state) {
-          if (state is SalesOrderError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          } else if (state is SalesOrderLoaded) {
-            salesOrder = state.salesOrder;
+          if (state is SubSalesOrderLoaded) {
+            subSalesOrder = state.subSalesOrder;
+          } else if (state is SubSalesOrderError) {
+            AppSnackbars.danger(context,
+                state.message.toString().replaceAll('Exception: ', ''));
           }
         },
         builder: (context, state) {
-          if (state is SalesOrderLoading) {
+          if (state is SubSalesOrderLoading) {
             return ListView.builder(
               itemCount: 5, // Show 5 placeholder items
               padding: const EdgeInsets.all(16),
@@ -102,18 +104,59 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
           }
 
           return ListView.builder(
-            itemCount: salesOrder.length,
+            itemCount:
+                subSalesOrder.length + 1, // Increased by 1 for the button
             padding: const EdgeInsets.all(16),
             itemBuilder: (context, index) {
-              final order = salesOrder[index];
+              if (index == 0) {
+                // Start Journey button at the top
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      AppNavigator.replaceTo(
+                        context: context,
+                        screen: RouteScreen(
+                          customerId: subSalesOrder[index]
+                                  .salesInvoiceMaster
+                                  ?.customerId ??
+                              '',
+                          salesOrderId: widget.salesOrderId,
+                          subSalesOrder: subSalesOrder,
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.pink,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Start Journey',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              final order =
+                  subSalesOrder[index - 1]; // Adjust index for the list items
               return GestureDetector(
                 onTap: () {
-                  AppNavigator.goToPage(
-                    context: context,
-                    screen: SubSalesOrderScreen(
-                      salesOrderId: order.id ?? '',
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => SalesOrderDetailScreen(
+                  //       salesOrder: order,
+                  //     ),
+                  //   ),
+                  // );
                 },
                 child: Card(
                   color: AppColors.white,
@@ -128,7 +171,7 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Invoice #${order.salesInvoiceNumber ?? ''}',
+                          'Invoice #${order.salesInvoiceMaster?.salesInvoiceNumber ?? ''}',
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
@@ -139,23 +182,36 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
                         _buildInfoRow(
                           icon: Icons.attach_money,
                           label: 'Amount:',
-                          value: 'SAR ${order.totalAmount ?? ''}',
+                          value: 'SAR ${order.totalPrice ?? ''}',
                         ),
                         _buildInfoRow(
                           icon: Icons.local_shipping,
                           label: 'Delivery:',
-                          value: _formatDate(order.deliveryDate ?? ''),
+                          value: _formatDate(
+                              order.salesInvoiceMaster?.deliveryDate ?? ''),
                         ),
                         _buildInfoRow(
                           icon: Icons.calendar_today,
                           label: 'Order:',
-                          value: _formatDate(order.orderDate ?? ''),
+                          value: _formatDate(
+                              order.salesInvoiceMaster?.pickDate ?? ''),
                         ),
                         _buildInfoRow(
                           icon: Icons.info_outline,
                           label: 'Status:',
-                          value: order.status ?? '',
-                          valueColor: _getStatusColor(order.status ?? ''),
+                          value: order.salesInvoiceMaster?.status ?? '',
+                          valueColor: _getStatusColor(
+                              order.salesInvoiceMaster?.status ?? ''),
+                        ),
+                        _buildInfoRow(
+                          icon: Icons.info_outline,
+                          label: 'Quantity Picked:',
+                          value: order.quantityPicked?.toString() ?? '',
+                        ),
+                        _buildInfoRow(
+                          icon: Icons.info_outline,
+                          label: 'Quantity:',
+                          value: order.quantity?.toString() ?? '',
                         ),
                       ],
                     ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/controllers/capture/Association/Shipping/sales_order_new/sales_order_controller.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
@@ -12,6 +14,58 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
       emit(SalesOrderLoaded(salesOrder));
     } catch (e) {
       emit(SalesOrderError(e.toString()));
+    }
+  }
+
+  Future<void> getSubSalesOrder(String salesOrderId) async {
+    try {
+      emit(SubSalesOrderLoading());
+      final subSalesOrder =
+          await SalesOrderController.getSubSalesOrder(salesOrderId);
+      emit(SubSalesOrderLoaded(subSalesOrder));
+    } catch (e) {
+      emit(SubSalesOrderError(e.toString()));
+    }
+  }
+
+  Future<void> getMapModel(String customerId) async {
+    try {
+      emit(MapModelLoading());
+      final mapModel = await SalesOrderController.getMapModel(customerId);
+      emit(MapModelLoaded(mapModel));
+    } catch (e) {
+      emit(MapModelError(e.toString()));
+    }
+  }
+
+  Future<void> statusUpdate(String id, Map<String, dynamic> body) async {
+    try {
+      emit(StatusUpdateLoading());
+      await SalesOrderController.statusUpdate(id, body);
+      emit(StatusUpdateLoaded("Status updated successfully"));
+    } catch (e) {
+      emit(StatusUpdateError(e.toString()));
+    }
+  }
+
+  Future<void> uploadSignature(File image, String id) async {
+    try {
+      emit(SignatureUploadLoading());
+      await SalesOrderController.uploadImage(image, id);
+      emit(SignatureUploadLoaded("Signature uploaded successfully"));
+    } catch (e) {
+      emit(SignatureUploadError(e.toString()));
+    }
+  }
+
+  Future<void> uploadImages(
+      List<File> images, String id, String salesInvoiceId) async {
+    try {
+      emit(ImageUploadLoading());
+      await SalesOrderController.uploadImages(images, id, salesInvoiceId);
+      emit(ImageUploadLoaded("Images uploaded successfully"));
+    } catch (e) {
+      emit(ImageUploadError(e.toString()));
     }
   }
 }

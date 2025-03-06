@@ -19,9 +19,9 @@
 	<string>This app needs access to the photo library to scan barcodes.</string> 
 	<!-- location permission --> 
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to the location to scan barcodes.</string>
+	<string>This app needs access to location for navigation.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to the location to scan barcodes.</string>
+	<string>This app needs access to location for navigation when in background.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -64,6 +64,8 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>
 </plist>

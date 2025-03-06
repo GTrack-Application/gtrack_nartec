@@ -152,6 +152,7 @@ class FatsCubit extends Cubit<FatsState> {
         fullLocationDetails,
         selectedFiles,
       );
+
       emit(FatsHandleSubmitLoaded(message: "Assets inserted successfully."));
 
       final deleteResponse =
