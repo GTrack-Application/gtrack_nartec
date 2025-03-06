@@ -13,6 +13,7 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/video_model.dart';
 
 class GtinCubit extends Cubit<GtinState> {
   GtinCubit() : super(GtinInitState());
@@ -73,6 +74,11 @@ class GtinCubit extends Cubit<GtinState> {
   int _currentInstructionPage = 1;
   static const int _instructionPageSize = 10;
 
+  List<VideoModel> _videos = [];
+  bool _hasMoreVideos = true;
+  int _currentVideoPage = 1;
+  static const int _videoPageSize = 10;
+
   // * Getters
   int get page => _currentPage;
   int get pageSize => _pageSize;
@@ -96,6 +102,8 @@ class GtinCubit extends Cubit<GtinState> {
   bool get hasMoreImages => _hasMoreImages;
   List<InstructionModel> get instructions => _instructions;
   bool get hasMoreInstructions => _hasMoreInstructions;
+  List<VideoModel> get videos => _videos;
+  bool get hasMoreVideos => _hasMoreVideos;
 
   void getProducts() async {
     if (state is GtinLoadingState) return;
@@ -181,13 +189,22 @@ class GtinCubit extends Cubit<GtinState> {
       _retailers.clear();
       _ingredients.clear();
       _packagings.clear();
+      _promotions.clear();
+      _recipes.clear();
+      _leaflets.clear();
+      _images.clear();
+      _instructions.clear();
+      _videos.clear();
       _currentAllergenPage = 1;
       _currentRetailerPage = 1;
       _currentIngredientPage = 1;
       _currentPackagingPage = 1;
       _currentPromotionPage = 1;
+      _currentRecipePage = 1;
+      _currentLeafletPage = 1;
       _currentImagePage = 1;
       _currentInstructionPage = 1;
+      _currentVideoPage = 1;
     } else {
       emit(GtinLoadingMoreDigitalLinkDataState(
         currentAllergens: _allergens,
@@ -195,14 +212,19 @@ class GtinCubit extends Cubit<GtinState> {
         currentIngredients: _ingredients,
         currentPackagings: _packagings,
         currentPromotions: _promotions,
+        currentRecipes: _recipes,
+        currentLeaflets: _leaflets,
+        currentImages: _images,
+        currentInstructions: _instructions,
+        currentVideos: _videos,
       ));
     }
 
     try {
       final response = await GTINController.getDigitalLinkViewData(
         gtin,
-        page: _currentInstructionPage,
-        limit: _instructionPageSize,
+        page: _currentVideoPage,
+        limit: _videoPageSize,
       );
 
       final allergenResponse = response['allergens'] as AllergenResponse;
@@ -260,6 +282,16 @@ class GtinCubit extends Cubit<GtinState> {
 
       _hasMoreImages = _currentImagePage < imageResponse.totalPages;
 
+      final videoResponse = response['videos'] as VideoResponse;
+
+      if (loadMore) {
+        _videos.addAll(videoResponse.videos);
+      } else {
+        _videos = videoResponse.videos;
+      }
+
+      _hasMoreVideos = _currentVideoPage < videoResponse.totalPages;
+
       emit(GtinDigitalLinkViewDataLoadedState(
         allergens: _allergens,
         retailers: _retailers,
@@ -279,6 +311,8 @@ class GtinCubit extends Cubit<GtinState> {
         hasMoreImages: _hasMoreImages,
         instructions: _instructions,
         hasMoreInstructions: _hasMoreInstructions,
+        videos: _videos,
+        hasMoreVideos: _hasMoreVideos,
       ));
     } catch (e) {
       emit(GtinDigitalLinkViewDataErrorState(message: e.toString()));
@@ -289,12 +323,23 @@ class GtinCubit extends Cubit<GtinState> {
     if (_hasMoreAllergens ||
         _hasMoreRetailers ||
         _hasMoreIngredients ||
-        _hasMorePackagings) {
+        _hasMorePackagings ||
+        _hasMorePromotions ||
+        _hasMoreRecipes ||
+        _hasMoreLeaflets ||
+        _hasMoreImages ||
+        _hasMoreInstructions ||
+        _hasMoreVideos) {
       _currentAllergenPage++;
       _currentRetailerPage++;
       _currentIngredientPage++;
       _currentPackagingPage++;
       _currentPromotionPage++;
+      _currentRecipePage++;
+      _currentLeafletPage++;
+      _currentImagePage++;
+      _currentInstructionPage++;
+      _currentVideoPage++;
       getDigitalLinkViewData(gtin, loadMore: true);
     }
   }

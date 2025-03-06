@@ -13,6 +13,7 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/video_model.dart';
 import 'package:http/http.dart' as http;
 
 class GTINController {
@@ -208,6 +209,25 @@ class GTINController {
     }
   }
 
+  static Future<VideoResponse> getVideoInformation(
+    String gtin, {
+    required int page,
+    required int limit,
+  }) async {
+    final response = await upcHubService.request(
+      "/api/digitalLinks/videos?page=$page&pageSize=$limit&barcode=$gtin",
+      method: HttpMethod.get,
+    );
+
+    if (response.success) {
+      return VideoResponse.fromJson(response.data);
+    } else {
+      throw Exception(response.data['error'] ??
+          response.data['message'] ??
+          'Failed to load videos');
+    }
+  }
+
   static Future<Map<String, dynamic>> getDigitalLinkViewData(
     String gtin, {
     int page = 1,
@@ -224,6 +244,7 @@ class GTINController {
         getLeafletInformation(gtin, page: page, limit: limit),
         getImageInformation(gtin, page: page, limit: limit),
         getInstructionInformation(gtin, page: page, limit: limit),
+        getVideoInformation(gtin, page: page, limit: limit),
       ]);
 
       return {
@@ -236,6 +257,7 @@ class GTINController {
         'leaflets': responses[6],
         'images': responses[7],
         'instructions': responses[8],
+        'videos': responses[9],
       };
     } catch (e) {
       throw Exception('Failed to fetch digital link data: $e');

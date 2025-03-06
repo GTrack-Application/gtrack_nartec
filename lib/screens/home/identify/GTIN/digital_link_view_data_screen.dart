@@ -6,10 +6,10 @@ import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/card/gtin_card.dart';
 import 'package:gtrack_nartec/global/widgets/pdf/pdf_viewer.dart';
+import 'package:gtrack_nartec/global/widgets/video/video_player_widget.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_reviews_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -262,12 +262,30 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
       crossAxisSpacing: 12,
       childAspectRatio: 1.5,
       children: [
-        _infoCard('Allergens', '${gtinCubit.allergens.length} items',
-            Icons.warning_amber_rounded, Colors.orange),
-        _infoCard('Ingredients', '${gtinCubit.ingredients.length} items',
-            Icons.list_alt, AppColors.green),
-        _infoCard('Nutrition', 'Per 100ml', Icons.restaurant, AppColors.danger),
-        _infoCard('Storage', 'Keep cool', Icons.ac_unit, Colors.blue),
+        _infoCard(
+          'Allergens',
+          '${gtinCubit.allergens.length} items',
+          Icons.warning_amber_rounded,
+          AppColors.gold,
+        ),
+        _infoCard(
+          'Ingredients',
+          '${gtinCubit.ingredients.length} items',
+          Icons.list_alt,
+          AppColors.green,
+        ),
+        _infoCard(
+          'Images',
+          '${gtinCubit.images.length}',
+          Icons.image,
+          AppColors.danger,
+        ),
+        _infoCard(
+          'Videos',
+          '${gtinCubit.videos.length}',
+          Icons.video_collection,
+          AppColors.skyBlue,
+        ),
       ],
     );
   }
@@ -450,7 +468,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           title: 'Videos',
           icon: Icons.videocam_outlined,
           iconColor: Colors.deepOrange,
-          child: const Text('Product videos'),
+          child: buildVideoInformation(context),
         ),
       ],
     );
@@ -1891,7 +1909,10 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
 
                     // PDF Document Section
                     if (instruction.pdfDoc.isNotEmpty) ...[
-                      PdfViewer(path: "${AppUrls.upcHub}/${instruction.pdfDoc}")
+                      PdfViewer(
+                        path: "${AppUrls.upcHub}/${instruction.pdfDoc}"
+                            .replaceAll("\\", "/"),
+                      )
                     ],
                   ],
                 ),
@@ -1933,6 +1954,124 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
         ],
       ),
     );
+  }
+
+  Widget buildVideoInformation(BuildContext context) {
+    return BlocBuilder<GtinCubit, GtinState>(
+      builder: (context, state) {
+        if (state is GtinDigitalLinkViewDataLoadedState) {
+          if (state.videos.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.videocam_off_outlined,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No videos available',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.videos.length,
+            itemBuilder: (context, index) {
+              final video = state.videos[index];
+              return Card(
+                color: AppColors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Video Player
+                    Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: AppColors.grey.withValues(alpha: 0.2)),
+                      ),
+                      child: VideoPlayerWidget(
+                        url: "${AppUrls.upcHub}${video.videos}",
+                      ),
+                    ),
+
+                    // Video Information
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildInfoRow(
+                            Icons.calendar_today,
+                            'Created:',
+                            formatDate(video.createdAt),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildInfoRow(
+                            Icons.update,
+                            'Last Updated:',
+                            formatDate(video.updatedAt),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildInfoRow(
+                            Icons.business,
+                            'Brand Owner ID:',
+                            video.brandOwnerId,
+                          ),
+                          const SizedBox(height: 8),
+                          _buildInfoRow(
+                            Icons.domain,
+                            'Domain:',
+                            video.domainName,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  String formatDate(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')} ${_getMonth(date.month)} ${date.year}";
+  }
+
+  String _getMonth(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return months[month - 1];
   }
 }
 

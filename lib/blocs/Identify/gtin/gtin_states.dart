@@ -8,6 +8,7 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/video_model.dart';
 
 abstract class GtinState {}
 
@@ -65,7 +66,7 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
   final List<LeafletModel> leaflets;
   final List<ImageModel> images;
   final List<InstructionModel> instructions;
-
+  final List<VideoModel> videos;
   final bool hasMoreAllergens;
   final bool hasMoreRetailers;
   final bool hasMoreIngredients;
@@ -75,6 +76,7 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
   final bool hasMoreLeaflets;
   final bool hasMoreImages;
   final bool hasMoreInstructions;
+  final bool hasMoreVideos;
 
   GtinDigitalLinkViewDataLoadedState({
     required this.allergens,
@@ -86,6 +88,7 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
     required this.leaflets,
     required this.images,
     required this.instructions,
+    required this.videos,
     required this.hasMoreAllergens,
     required this.hasMoreRetailers,
     required this.hasMoreIngredients,
@@ -95,6 +98,7 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
     required this.hasMoreLeaflets,
     required this.hasMoreImages,
     required this.hasMoreInstructions,
+    required this.hasMoreVideos,
   });
 }
 
@@ -111,6 +115,11 @@ class GtinLoadingMoreDigitalLinkDataState extends GtinState {
   final List<IngredientModel> currentIngredients;
   final List<PackagingModel> currentPackagings;
   final List<PromotionalOfferModel> currentPromotions;
+  final List<RecipeModel> currentRecipes;
+  final List<LeafletModel> currentLeaflets;
+  final List<ImageModel> currentImages;
+  final List<InstructionModel> currentInstructions;
+  final List<VideoModel> currentVideos;
 
   GtinLoadingMoreDigitalLinkDataState({
     required this.currentAllergens,
@@ -118,5 +127,10 @@ class GtinLoadingMoreDigitalLinkDataState extends GtinState {
     required this.currentIngredients,
     required this.currentPackagings,
     required this.currentPromotions,
+    required this.currentRecipes,
+    required this.currentLeaflets,
+    required this.currentImages,
+    required this.currentInstructions,
+    required this.currentVideos,
   });
 }
