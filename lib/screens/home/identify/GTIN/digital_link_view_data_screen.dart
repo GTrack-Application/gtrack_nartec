@@ -408,14 +408,10 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
         spacing: 16,
         children: [
           // Product Hero Section
-          //   _buildProductHeroSection(),
           GtinProductCard(product: widget.gtin),
 
           // Quick Info Cards
           _buildQuickInfoCards(),
-
-          //   // Product Description
-          //   _buildProductDescription(),
 
           // Reviews Section
           _buildReviewsSection(),
@@ -516,7 +512,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                 const Spacer(),
                 Row(
                   children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 20),
+                    const Icon(Icons.star, color: AppColors.gold, size: 20),
                     const SizedBox(width: 4),
                     Text(
                       averageRating(gtinCubit.reviews),
@@ -560,13 +556,13 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
         _InfoExpansionTile(
           title: 'Allergen Information',
           icon: Icons.warning_amber_rounded,
-          iconColor: Colors.orange,
+          iconColor: AppColors.gold,
           child: buildAllergenInformation(context),
         ),
         _InfoExpansionTile(
           title: 'Retailers',
           icon: Icons.store,
-          iconColor: Colors.blue,
+          iconColor: AppColors.skyBlue,
           child: buildRetailerInformation(context),
         ),
         _InfoExpansionTile(
@@ -596,7 +592,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
         _InfoExpansionTile(
           title: 'Recipe Info',
           icon: Icons.restaurant_menu,
-          iconColor: Colors.amber,
+          iconColor: AppColors.gold,
           child: buildRecipeInformation(context),
         ),
         _InfoExpansionTile(
