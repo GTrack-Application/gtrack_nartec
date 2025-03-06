@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
