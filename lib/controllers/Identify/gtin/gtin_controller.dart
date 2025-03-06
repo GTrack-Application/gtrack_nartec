@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
@@ -13,8 +16,10 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/review_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/video_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:network_info_plus/network_info_plus.dart';
 
 class GTINController {
   static final HttpService httpService = HttpService(baseUrl: AppUrls.gs1Url);
@@ -63,7 +68,6 @@ class GTINController {
     required int pageSize,
   }) async {
     final userId = await AppPreferences.getGs1UserId();
-    print("userId: $userId");
 
     final url =
         "api/products/paginatedProducts?page=$page&pageSize=$pageSize&user_id=$userId";
@@ -261,6 +265,92 @@ class GTINController {
       };
     } catch (e) {
       throw Exception('Failed to fetch digital link data: $e');
+    }
+  }
+
+  static Future<List<ReviewModel>> getReviews(String gtin) async {
+    final response =
+        await upcHubService.request('/api/productReview?ProductId=$gtin');
+
+    if (response.success) {
+      return (response.data as List)
+          .map((e) => ReviewModel.fromJson(e))
+          .toList();
+    } else {
+      throw Exception('Failed to load reviews');
+    }
+  }
+
+  static Future<ReviewModel> postReview({
+    required String barcode,
+    required int rating,
+    required String comment,
+    required String productDescription,
+    required String brandName,
+  }) async {
+    final userId = await AppPreferences.getMemberId();
+    String deviceIp = await _getDeviceIp();
+
+    final response = await upcHubService.request(
+      '/api/productReview',
+      method: HttpMethod.post,
+      data: {
+        "LocationIP": deviceIp,
+        "SenderId": userId,
+        "rating": rating,
+        "Comments": comment,
+        "ProductId": barcode,
+        "ProductDescription": productDescription,
+        "BrandName": brandName,
+        "GTIN": barcode,
+        "gcpGLNID": barcode.substring(0, 7), // Taking first 7 chars as GCP
+      },
+    );
+
+    if (response.success) {
+      return ReviewModel.fromJson(response.data);
+    } else {
+      throw Exception('Failed to submit review');
+    }
+  }
+
+  // Get device IP address
+  static Future<String> _getDeviceIp() async {
+    try {
+      // First try to get WIFI IP
+      final info = NetworkInfo();
+      String? ip = await info.getWifiIP();
+
+      if (ip != null && ip.isNotEmpty) {
+        return ip;
+      }
+
+      // If WIFI IP failed, try to get any available IP
+      final connectivity = await Connectivity().checkConnectivity();
+      if (connectivity != ConnectivityResult.none) {
+        // Try to get IP using platform APIs
+        final interfaces = await NetworkInterface.list(
+          includeLoopback: false,
+          type: InternetAddressType.IPv4,
+        );
+
+        for (var interface in interfaces) {
+          for (var addr in interface.addresses) {
+            if (addr.address != '127.0.0.1') {
+              return addr.address;
+            }
+          }
+        }
+      }
+
+      // Fallback to a default value if we couldn't get the IP
+      return "0.0.0.0";
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error getting device IP: $e");
+      }
+      // Return fallback IP if error occurs
+      return "0.0.0.0";
     }
   }
 }

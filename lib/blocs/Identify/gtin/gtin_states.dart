@@ -134,3 +134,24 @@ class GtinLoadingMoreDigitalLinkDataState extends GtinState {
     required this.currentVideos,
   });
 }
+
+// * Reviews
+class GtinReviewsLoadingState extends GtinState {}
+
+class GtinReviewsLoadedState extends GtinState {}
+
+class GtinReviewsErrorState extends GtinState {
+  final String message;
+
+  GtinReviewsErrorState({required this.message});
+}
+
+class GtinReviewSubmittingState extends GtinState {}
+
+class GtinReviewSubmittedState extends GtinState {}
+
+class GtinReviewErrorState extends GtinState {
+  final String message;
+
+  GtinReviewErrorState({required this.message});
+}

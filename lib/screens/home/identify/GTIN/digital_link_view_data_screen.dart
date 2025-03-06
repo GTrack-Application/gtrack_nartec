@@ -6,6 +6,7 @@ import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/utils/average_rating.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/card/gtin_card.dart';
 import 'package:gtrack_nartec/global/widgets/pdf/pdf_viewer.dart';
@@ -36,6 +37,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
     _tabController = TabController(length: 4, vsync: this);
     gtinCubit = GtinCubit.get(context);
     gtinCubit.getDigitalLinkViewData(widget.barcode);
+    gtinCubit.getReviews(widget.barcode);
   }
 
   @override
@@ -55,9 +57,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
         bloc: gtinCubit,
         builder: (context, state) {
           if (state is GtinDigitalLinkViewDataLoadingState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return loadingPlaceholderWidget(context);
           }
 
           return Column(
@@ -65,10 +65,10 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
               // Tab Bar
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.2),
+                      color: AppColors.grey.withValues(alpha: 0.2),
                       spreadRadius: 1,
                       blurRadius: 3,
                       offset: const Offset(0, 2),
@@ -79,7 +79,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                   controller: _tabController,
                   isScrollable: true,
                   labelColor: AppColors.skyBlue,
-                  unselectedLabelColor: Colors.grey,
+                  unselectedLabelColor: AppColors.grey,
                   indicatorColor: AppColors.skyBlue,
                   indicatorWeight: 3,
                   labelStyle: const TextStyle(fontWeight: FontWeight.bold),
@@ -115,6 +115,288 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           );
         },
       ),
+    );
+  }
+
+  Column loadingPlaceholderWidget(BuildContext context) {
+    return Column(
+      children: [
+        // Tab Bar Placeholder
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.grey.withValues(alpha: 0.2),
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            child: Row(
+              children: List.generate(
+                4,
+                (index) => Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: index == 0
+                          ? AppColors.skyBlue.withValues(alpha: 0.1)
+                          : AppColors.grey.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // Content Placeholder
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Product Card Placeholder
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.grey.withValues(alpha: 0.1),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      // Image placeholder
+                      Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: AppColors.grey.withValues(alpha: 0.2),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                        ),
+                      ),
+
+                      // Text placeholders
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height: 18,
+                              decoration: BoxDecoration(
+                                color: AppColors.grey.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: AppColors.grey.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Quick Info Cards Placeholder
+                GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 1.5,
+                  children: List.generate(
+                    4,
+                    (index) => Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.grey.withValues(alpha: 0.1),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: AppColors.grey.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const Spacer(),
+                            Container(
+                              width: 80,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: AppColors.grey.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              width: 60,
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: AppColors.grey.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Reviews Section Placeholder
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.grey.withValues(alpha: 0.1),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 18,
+                            decoration: BoxDecoration(
+                              color: AppColors.grey.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            width: 40,
+                            height: 18,
+                            decoration: BoxDecoration(
+                              color: AppColors.grey.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      ...List.generate(
+                        2,
+                        (index) => Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: AppColors.grey.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.grey
+                                            .withValues(alpha: 0.2),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      width: 100,
+                                      height: 14,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.grey
+                                            .withValues(alpha: 0.2),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Container(
+                                      width: 70,
+                                      height: 14,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.grey
+                                            .withValues(alpha: 0.2),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                Container(
+                                  width: double.infinity,
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors.grey.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -368,16 +650,16 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                   children: [
                     const Icon(Icons.star, color: Colors.amber, size: 20),
                     const SizedBox(width: 4),
-                    const Text(
-                      '4.2',
-                      style: TextStyle(
+                    Text(
+                      averageRating(gtinCubit.reviews),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '(3)',
+                      '(${gtinCubit.reviews.length})',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
@@ -394,7 +676,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                 onPressed: () {
                   AppNavigator.goToPage(
                     context: context,
-                    screen: const DigitalLinkViewReviewsScreen(),
+                    screen: DigitalLinkViewReviewsScreen(gtin: widget.gtin),
                   );
                 })
           ],
@@ -1956,6 +2238,10 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
   Widget buildVideoInformation(BuildContext context) {
     return BlocBuilder<GtinCubit, GtinState>(
       builder: (context, state) {
+        if (state is GtinDigitalLinkViewDataLoadingState) {
+          return _buildVideoLoadingPlaceholder();
+        }
+
         if (state is GtinDigitalLinkViewDataLoadedState) {
           if (state.videos.isEmpty) {
             return const Center(
@@ -2045,6 +2331,91 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           );
         }
         return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _buildVideoLoadingPlaceholder() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 2, // Show 2 placeholder items
+      itemBuilder: (context, index) {
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Video Player Placeholder
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.play_circle_outline,
+                    size: 50,
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+              ),
+
+              // Video Information Placeholder
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(
+                    4,
+                    (i) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 70,
+                            height: 14,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Container(
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
       },
     );
   }

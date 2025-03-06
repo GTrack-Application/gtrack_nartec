@@ -13,6 +13,7 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/review_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/video_model.dart';
 
 class GtinCubit extends Cubit<GtinState> {
@@ -23,6 +24,7 @@ class GtinCubit extends Cubit<GtinState> {
 
   // * Lists
   final List<GTIN_Model> data = [];
+  List<ReviewModel> _reviews = [];
 
   int _currentPage = 1;
   final int _pageSize = 8;
@@ -104,7 +106,7 @@ class GtinCubit extends Cubit<GtinState> {
   bool get hasMoreInstructions => _hasMoreInstructions;
   List<VideoModel> get videos => _videos;
   bool get hasMoreVideos => _hasMoreVideos;
-
+  List<ReviewModel> get reviews => _reviews;
   void getProducts() async {
     if (state is GtinLoadingState) return;
 
@@ -341,6 +343,45 @@ class GtinCubit extends Cubit<GtinState> {
       _currentInstructionPage++;
       _currentVideoPage++;
       getDigitalLinkViewData(gtin, loadMore: true);
+    }
+  }
+
+  // * Reviews
+  void getReviews(String gtin) async {
+    try {
+      final reviews = await GTINController.getReviews(gtin);
+      _reviews = reviews;
+      emit(GtinReviewsLoadedState());
+    } catch (e) {
+      emit(GtinReviewsErrorState(message: e.toString()));
+    }
+  }
+
+  void submitReview({
+    required String barcode,
+    required int rating,
+    required String comment,
+    required String productDescription,
+    required String brandName,
+  }) async {
+    emit(GtinReviewSubmittingState());
+    try {
+      final newReview = await GTINController.postReview(
+        barcode: barcode,
+        rating: rating,
+        comment: comment,
+        productDescription: productDescription,
+        brandName: brandName,
+      );
+
+      // Add the new review to the existing reviews
+      _reviews = [newReview, ..._reviews];
+
+      emit(GtinReviewSubmittedState());
+      // Notify that reviews are loaded with the updated list
+      emit(GtinReviewsLoadedState());
+    } catch (e) {
+      emit(GtinReviewErrorState(message: e.toString()));
     }
   }
 }

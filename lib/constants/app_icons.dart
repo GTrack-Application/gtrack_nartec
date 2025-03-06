@@ -125,6 +125,7 @@ class AppIcons {
   static const String transferWarehouse = 'assets/icons/transfer_warehouse.png';
   static const String goodsReceipt = 'assets/icons/goods_issue.png';
   static const String goodsIssue = 'assets/icons/goods_receipt.png';
+  static const String eventStation = 'assets/icons/ic_event_station.png';
 
   // Goods Screens
   static const String productionJobOrder =
