@@ -57,7 +57,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
         bloc: gtinCubit,
         builder: (context, state) {
           if (state is GtinDigitalLinkViewDataLoadingState) {
-            return loadingPlaceholderWidget(context);
+            return _buildLoadingPlaceholder(context);
           }
 
           return Column(
@@ -118,7 +118,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
     );
   }
 
-  Column loadingPlaceholderWidget(BuildContext context) {
+  Column _buildLoadingPlaceholder(BuildContext context) {
     return Column(
       children: [
         // Tab Bar Placeholder
