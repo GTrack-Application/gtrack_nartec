@@ -59,10 +59,10 @@ dependencies:
   barcode_widget: ^2.0.4
   easy_stepper: ^0.8.5+1
   mime: ^2.0.0
-  # syncfusion_flutter_pdfviewer: ^28.2.9
+  syncfusion_flutter_pdfviewer: ^28.2.9
   url_launcher: ^6.3.1
   # flutter_pdfview: ^1.4.0
-  easy_pdf_viewer: ^1.0.8
+  # easy_pdf_viewer: ^1.0.8
   video_player: ^2.9.3
   chewie: ^1.10.0
   flutter_rating_bar: ^4.0.1

@@ -1,5 +1,5 @@
-import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PdfViewer extends StatefulWidget {
@@ -12,32 +12,19 @@ class PdfViewer extends StatefulWidget {
 }
 
 class _PdfViewerState extends State<PdfViewer> {
-  PDFDocument? document;
   bool isLoading = true;
+  String? errorMessage;
+  final PdfViewerController _pdfViewerController = PdfViewerController();
 
   @override
   void initState() {
     super.initState();
-    loadDocument();
   }
 
-  Future<void> loadDocument() async {
-    try {
-      final doc = await PDFDocument.fromURL(widget.path);
-      if (mounted) {
-        setState(() {
-          document = doc;
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      debugPrint('Error loading PDF: $e');
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
+  @override
+  void dispose() {
+    _pdfViewerController.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,6 +37,7 @@ class _PdfViewerState extends State<PdfViewer> {
       ),
       child: Column(
         children: [
+          // PDF Header
           Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -77,6 +65,31 @@ class _PdfViewerState extends State<PdfViewer> {
                   ),
                 ),
                 const Spacer(),
+                // Zoom out button
+                IconButton(
+                  icon: const Icon(
+                    Icons.zoom_out,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    _pdfViewerController.zoomLevel =
+                        (_pdfViewerController.zoomLevel - 0.25)
+                            .clamp(0.75, 3.0);
+                  },
+                ),
+                // Zoom in button
+                IconButton(
+                  icon: const Icon(
+                    Icons.zoom_in,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    _pdfViewerController.zoomLevel =
+                        (_pdfViewerController.zoomLevel + 0.25)
+                            .clamp(0.75, 3.0);
+                  },
+                ),
+                // Open in browser button
                 IconButton(
                   icon: const Icon(
                     Icons.open_in_new,
@@ -93,28 +106,74 @@ class _PdfViewerState extends State<PdfViewer> {
               ],
             ),
           ),
+          // PDF Content
           Expanded(
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(8),
                 bottomRight: Radius.circular(8),
               ),
-              child: isLoading
-                  ? const Center(
+              child: Stack(
+                children: [
+                  SfPdfViewer.network(
+                    widget.path,
+                    controller: _pdfViewerController,
+                    onDocumentLoaded: (PdfDocumentLoadedDetails details) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    },
+                    onDocumentLoadFailed:
+                        (PdfDocumentLoadFailedDetails details) {
+                      setState(() {
+                        isLoading = false;
+                        errorMessage = details.error;
+                      });
+                    },
+                    enableDoubleTapZooming: true,
+                    canShowScrollHead: false,
+                    canShowScrollStatus: false,
+                    pageSpacing: 8,
+                    canShowPaginationDialog: false,
+                  ),
+                  if (isLoading)
+                    const Center(
                       child: CircularProgressIndicator(),
-                    )
-                  : document == null
-                      ? const Center(
-                          child: Text('Error loading PDF'),
-                        )
-                      : PDFViewer(
-                          document: document!,
-                          showPicker: false,
-                          showNavigation: true,
-                          showIndicator: true,
-                          enableSwipeNavigation: true,
-                          scrollDirection: Axis.vertical,
-                        ),
+                    ),
+                  if (!isLoading && errorMessage != null)
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 48,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Error loading PDF',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Text(
+                              errorMessage!,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ],
