@@ -1,15 +1,13 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/action_screen.dart';
 
@@ -152,7 +150,7 @@ class _JourneyScreenState extends State<JourneyScreen> {
             title: const Text('Journey'),
             centerTitle: true,
             titleTextStyle: const TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
@@ -161,11 +159,11 @@ class _JourneyScreenState extends State<JourneyScreen> {
               ? Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withValues(alpha: 0.2),
                         spreadRadius: 5,
                         blurRadius: 15,
                         offset: const Offset(0, 3),
@@ -190,7 +188,7 @@ class _JourneyScreenState extends State<JourneyScreen> {
                                 Text(
                                   'Delivery Address',
                                   style: TextStyle(
-                                    color: Colors.grey[600],
+                                    color: AppColors.grey,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),

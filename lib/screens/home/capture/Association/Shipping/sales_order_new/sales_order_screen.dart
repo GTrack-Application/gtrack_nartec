@@ -101,6 +101,12 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
             );
           }
 
+          if (salesOrder.isEmpty) {
+            return const Center(
+              child: Text('No sales order found'),
+            );
+          }
+
           return ListView.builder(
             itemCount: salesOrder.length,
             padding: const EdgeInsets.all(16),
