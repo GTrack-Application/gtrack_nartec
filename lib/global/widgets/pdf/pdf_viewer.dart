@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -147,7 +148,7 @@ class _PdfViewerState extends State<PdfViewer> {
                         children: [
                           const Icon(
                             Icons.error_outline,
-                            color: Colors.red,
+                            color: AppColors.danger,
                             size: 48,
                           ),
                           const SizedBox(height: 16),
