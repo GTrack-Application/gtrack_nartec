@@ -132,9 +132,12 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                       },
                       child: ListView.builder(
                         controller: _scrollController,
-                        itemCount: products.length + (hasMore ? 1 : 0),
+                        itemCount: products.length +
+                            (hasMore && state is GtinLoadingMoreState ? 1 : 0),
                         itemBuilder: (context, index) {
-                          if (index == products.length) {
+                          final isMoreLoading = state is GtinLoadingMoreState &&
+                              index == products.length;
+                          if (isMoreLoading) {
                             return Container(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               alignment: Alignment.center,

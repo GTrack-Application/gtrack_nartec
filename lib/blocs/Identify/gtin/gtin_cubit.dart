@@ -112,7 +112,7 @@ class GtinCubit extends Cubit<GtinState> {
   List<ReviewModel> get reviews => _reviews;
   TextEditingController get searchController => _searchController;
 
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   void getProducts({String? searchQuery}) async {
     if (state is GtinLoadingState) return;
