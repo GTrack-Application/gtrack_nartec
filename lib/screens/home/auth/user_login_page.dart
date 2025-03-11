@@ -100,6 +100,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
   // }
 
   login() async {
+    // hide the keyboard
+    FocusScope.of(context).unfocus();
     if (formKey.currentState?.validate() ?? false) {
       setState(() {
         isLoading = true;
@@ -132,6 +134,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
   }
 
   brandOwnerLogin() async {
+    FocusScope.of(context).unfocus();
+
     setState(() {
       isLoading = true;
     });
@@ -158,6 +162,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
   }
 
   supplierOwnerLogin() async {
+    FocusScope.of(context).unfocus();
+
     setState(() {
       isLoading = true;
     });

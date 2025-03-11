@@ -105,7 +105,7 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
 
           final isPicked = subSalesOrder
               .where(
-                (element) => element.quantityPicked == element.quantity,
+                (element) => element.quantityPicked != element.quantity,
               )
               .isNotEmpty;
 

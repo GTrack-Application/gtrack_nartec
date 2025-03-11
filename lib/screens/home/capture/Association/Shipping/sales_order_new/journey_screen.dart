@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -77,13 +79,9 @@ class _JourneyScreenState extends State<JourneyScreen> {
             _polylines.add(
               Polyline(
                 polylineId: const PolylineId('route'),
-                color: AppColors.pink,
+                color: Colors.blue.shade600,
                 points: polylineCoordinates,
-                width: 5,
-                patterns: [
-                  PatternItem.dash(20),
-                  PatternItem.gap(10),
-                ],
+                width: 4,
               ),
             );
           });

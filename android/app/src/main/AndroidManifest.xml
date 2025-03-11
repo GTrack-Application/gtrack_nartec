@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    
 
     <application
         android:label="GTrack"
@@ -53,8 +55,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBcdPY1bQKSv0C1lQq-nYb3kBcjANsY3Fk"/>
-        <!-- Add these permissions for directions API -->
-        <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
