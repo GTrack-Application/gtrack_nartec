@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
@@ -76,4 +77,25 @@ class ImageUploadLoaded extends SalesOrderState {
 class ImageUploadError extends SalesOrderState {
   final String message;
   ImageUploadError(this.message);
+}
+
+class LocationInitialized extends SalesOrderState {
+  final LatLng currentLocation;
+  final Set<Marker> markers;
+
+  LocationInitialized(this.currentLocation, this.markers);
+}
+
+class LocationUpdated extends SalesOrderState {
+  final LatLng currentLocation;
+  final Set<Marker> markers;
+  final bool hasArrived;
+
+  LocationUpdated(this.currentLocation, this.markers, this.hasArrived);
+}
+
+class LocationError extends SalesOrderState {
+  final String message;
+
+  LocationError(this.message);
 }

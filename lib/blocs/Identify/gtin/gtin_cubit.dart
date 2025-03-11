@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
@@ -29,7 +30,7 @@ class GtinCubit extends Cubit<GtinState> {
   List<ReviewModel> _reviews = [];
 
   int _currentPage = 1;
-  final int _pageSize = 8;
+  final int _pageSize = 20;
   bool _hasMoreData = true;
   final List<GTIN_Model> _allProducts = [];
 
@@ -109,7 +110,11 @@ class GtinCubit extends Cubit<GtinState> {
   List<VideoModel> get videos => _videos;
   bool get hasMoreVideos => _hasMoreVideos;
   List<ReviewModel> get reviews => _reviews;
-  void getProducts() async {
+  TextEditingController get searchController => _searchController;
+
+  TextEditingController _searchController = TextEditingController();
+
+  void getProducts({String? searchQuery}) async {
     if (state is GtinLoadingState) return;
 
     if (_currentPage == 1) {
@@ -121,6 +126,7 @@ class GtinCubit extends Cubit<GtinState> {
       final response = await GTINController.getPaginatedProducts(
         page: _currentPage,
         pageSize: _pageSize,
+        searchQuery: searchQuery,
       );
 
       _allProducts.addAll(response.products);
@@ -139,7 +145,7 @@ class GtinCubit extends Cubit<GtinState> {
     }
   }
 
-  void loadMore() {
+  void loadMore({String? searchQuery}) {
     if (state is GtinLoadedState) {
       final currentState = state as GtinLoadedState;
       if (currentState.hasMoreData) {
@@ -148,7 +154,7 @@ class GtinCubit extends Cubit<GtinState> {
           hasMoreData: true,
         ));
         _currentPage++;
-        getProducts();
+        getProducts(searchQuery: searchQuery);
       }
     }
   }

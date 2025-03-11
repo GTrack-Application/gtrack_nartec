@@ -4,7 +4,9 @@ import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/card/gtin_card.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_data_screen.dart';
 
 class GTINScreenV2 extends StatefulWidget {
@@ -31,7 +33,11 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      gtinCubit.loadMore();
+      gtinCubit.loadMore(
+        searchQuery: gtinCubit.searchController.text.isNotEmpty
+            ? gtinCubit.searchController.text
+            : null,
+      );
     }
   }
 
@@ -74,7 +80,51 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8.0,
                 children: [
+                  Row(
+                    spacing: 8.0,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextFieldWidget(
+                          controller: gtinCubit.searchController,
+                          hintText: "Search by GTIN",
+                        ),
+                      ),
+                      Expanded(
+                        child: PrimaryButtonWidget(
+                          text: "Search",
+                          backgroungColor: AppColors.skyBlue,
+                          isLoading: state is GtinLoadingState,
+                          onPressed: () {
+                            gtinCubit.getProducts(
+                              searchQuery: gtinCubit.searchController.text,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (gtinCubit.searchController.text.isNotEmpty)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      spacing: 8.0,
+                      children: [
+                        const Spacer(),
+                        Expanded(
+                          child: PrimaryButtonWidget(
+                            text: "Clear",
+                            height: 35,
+                            backgroungColor: AppColors.skyBlue,
+                            onPressed: () {
+                              gtinCubit.searchController.clear();
+                              gtinCubit.getProducts();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async {

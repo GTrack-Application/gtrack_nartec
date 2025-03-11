@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
@@ -10,6 +11,7 @@ import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/action_screen.dart';
+import 'package:http/http.dart' as http;
 
 class JourneyScreen extends StatefulWidget {
   const JourneyScreen({
@@ -31,94 +33,96 @@ class JourneyScreen extends StatefulWidget {
 
 class _JourneyScreenState extends State<JourneyScreen> {
   GoogleMapController? _mapController;
-  LatLng? _currentLocation;
-  bool _hasArrived = true;
-
-  // Initialize the markers
-  final Set<Marker> _markers = {};
+  final SalesOrderCubit salesOrderCubit = SalesOrderCubit();
+  Set<Polyline> _polylines = {};
+  List<LatLng> polylineCoordinates = [];
 
   @override
   void initState() {
     super.initState();
-    _initializeLocation();
-    _addDestinationMarker();
-  }
-
-  Future<void> _initializeLocation() async {
-    try {
-      final position = await Geolocator.getCurrentPosition();
-      setState(() {
-        _currentLocation = LatLng(position.latitude, position.longitude);
-        _markers.add(
-          Marker(
-            markerId: const MarkerId('current_location'),
-            position: _currentLocation!,
-            icon:
-                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-            infoWindow: const InfoWindow(title: 'Current Location'),
-          ),
-        );
-      });
-      _startLocationUpdates();
-    } catch (e) {
-      debugPrint('Error getting location: $e');
-    }
-  }
-
-  void _startLocationUpdates() {
-    Geolocator.getPositionStream().listen((position) {
-      setState(() {
-        _currentLocation = LatLng(position.latitude, position.longitude);
-        _updateCurrentLocationMarker();
-        _checkArrival();
-      });
-    });
-  }
-
-  void _addDestinationMarker() {
     final destinationLocation = LatLng(
       double.parse(widget.mapModel[0].latitude!),
       double.parse(widget.mapModel[0].longitude!),
     );
-    _markers.add(
-      Marker(
-        markerId: const MarkerId('destination'),
-        position: destinationLocation,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        infoWindow: const InfoWindow(title: 'Destination'),
-      ),
-    );
+    salesOrderCubit.initializeLocation(destinationLocation);
+
+    // Update polylines when location changes
+    salesOrderCubit.stream.listen((state) {
+      if (state is LocationUpdated) {
+        getPolylinePoints(
+          state.currentLocation,
+          destinationLocation,
+        );
+      }
+    });
   }
 
-  void _updateCurrentLocationMarker() {
-    _markers.removeWhere(
-        (marker) => marker.markerId == const MarkerId('current_location'));
-    _markers.add(
-      Marker(
-        markerId: const MarkerId('current_location'),
-        position: _currentLocation!,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        infoWindow: const InfoWindow(title: 'Current Location'),
-      ),
-    );
-  }
+  Future<void> getPolylinePoints(LatLng origin, LatLng destination) async {
+    String apiKey = 'AIzaSyBcdPY1bQKSv0C1lQq-nYb3kBcjANsY3Fk';
+    String url = 'https://maps.googleapis.com/maps/api/directions/json?'
+        'origin=${origin.latitude},${origin.longitude}'
+        '&destination=${destination.latitude},${destination.longitude}'
+        '&key=$apiKey';
 
-  void _checkArrival() {
-    if (_currentLocation != null) {
-      final distance = Geolocator.distanceBetween(
-        _currentLocation!.latitude,
-        _currentLocation!.longitude,
-        double.parse(widget.mapModel[0].latitude!),
-        double.parse(widget.mapModel[0].longitude!),
-      );
-      // Consider arrived if within 50 meters
-      setState(() {
-        _hasArrived = distance <= 50;
-      });
+    try {
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var decoded = json.decode(response.body);
+        if (decoded['routes'].isNotEmpty) {
+          String points = decoded['routes'][0]['overview_polyline']['points'];
+          polylineCoordinates = _decodePolyline(points);
+
+          setState(() {
+            _polylines.clear(); // Clear existing polylines
+            _polylines.add(
+              Polyline(
+                polylineId: const PolylineId('route'),
+                color: AppColors.pink,
+                points: polylineCoordinates,
+                width: 5,
+                patterns: [
+                  PatternItem.dash(20),
+                  PatternItem.gap(10),
+                ],
+              ),
+            );
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching route: $e');
     }
   }
 
-  final SalesOrderCubit salesOrderCubit = SalesOrderCubit();
+  List<LatLng> _decodePolyline(String encoded) {
+    List<LatLng> points = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lng += dlng;
+
+      points.add(LatLng((lat / 1E5).toDouble(), (lng / 1E5).toDouble()));
+    }
+    return points;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +159,7 @@ class _JourneyScreenState extends State<JourneyScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          bottomNavigationBar: !_hasArrived
+          bottomNavigationBar: state is LocationUpdated && !state.hasArrived
               ? Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -297,18 +301,19 @@ class _JourneyScreenState extends State<JourneyScreen> {
                   ),
                 )
               : null,
-          body: _currentLocation == null
-              ? const Center(child: CircularProgressIndicator())
-              : GoogleMap(
+          body: state is LocationInitialized || state is LocationUpdated
+              ? GoogleMap(
                   initialCameraPosition: CameraPosition(
-                    target: _currentLocation!,
+                    target: (state as dynamic).currentLocation,
                     zoom: 15,
                   ),
-                  markers: _markers,
+                  markers: (state as dynamic).markers,
                   myLocationEnabled: true,
                   myLocationButtonEnabled: true,
                   onMapCreated: (controller) => _mapController = controller,
-                ),
+                  polylines: _polylines,
+                )
+              : const Center(child: CircularProgressIndicator()),
         );
       },
     );

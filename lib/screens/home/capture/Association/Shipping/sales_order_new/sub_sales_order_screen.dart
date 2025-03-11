@@ -7,6 +7,7 @@ import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sal
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/route_screen.dart';
 
@@ -45,8 +46,7 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
           if (state is SubSalesOrderLoaded) {
             subSalesOrder = state.subSalesOrder;
           } else if (state is SubSalesOrderError) {
-            AppSnackbars.danger(context,
-                state.message.toString().replaceAll('Exception: ', ''));
+            AppSnackbars.danger(context, state.message.toString());
           }
         },
         builder: (context, state) {
@@ -103,6 +103,12 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
             );
           }
 
+          final isPicked = subSalesOrder
+              .where(
+                (element) => element.quantityPicked == element.quantity,
+              )
+              .isNotEmpty;
+
           return ListView.builder(
             itemCount:
                 subSalesOrder.length + 1, // Increased by 1 for the button
@@ -112,36 +118,30 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
                 // Start Journey button at the top
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      AppNavigator.replaceTo(
-                        context: context,
-                        screen: RouteScreen(
-                          customerId: subSalesOrder[index]
-                                  .salesInvoiceMaster
-                                  ?.customerId ??
-                              '',
-                          salesOrderId: widget.salesOrderId,
-                          subSalesOrder: subSalesOrder,
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.pink,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Start Journey',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
+                  child: PrimaryButtonWidget(
+                      text: "View Journey",
+                      backgroungColor:
+                          isPicked ? AppColors.pink : AppColors.grey,
+                      onPressed: () {
+                        if (isPicked) {
+                          AppNavigator.replaceTo(
+                            context: context,
+                            screen: RouteScreen(
+                              customerId: subSalesOrder[index]
+                                      .salesInvoiceMaster
+                                      ?.customerId ??
+                                  '',
+                              salesOrderId: widget.salesOrderId,
+                              subSalesOrder: subSalesOrder,
+                            ),
+                          );
+                        } else {
+                          AppSnackbars.warning(
+                            context,
+                            'Please pick the goods first',
+                          );
+                        }
+                      }),
                 );
               }
 

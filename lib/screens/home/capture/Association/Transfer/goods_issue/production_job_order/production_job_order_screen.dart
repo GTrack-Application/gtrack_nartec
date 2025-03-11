@@ -188,6 +188,7 @@ class _ProductionJobOrderScreenState extends State<ProductionJobOrderScreen> {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.error_outline,
@@ -201,6 +202,7 @@ class _ProductionJobOrderScreenState extends State<ProductionJobOrderScreen> {
                               color: AppColors.grey,
                               fontSize: 16,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),

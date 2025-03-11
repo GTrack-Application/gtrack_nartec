@@ -102,12 +102,12 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                               labelText: 'Select Bin Location',
                               border: OutlineInputBorder(),
                             ),
-                            items: state.binLocations.data?.map((location) {
+                            items: state.binLocations.map((location) {
                               return DropdownMenuItem(
                                 value:
-                                    "${location.binLocation}:${location.quantity}",
+                                    "${location.binNumber}:${location.availableQty}",
                                 child: Text(
-                                  '${location.binLocation} (${location.quantity})',
+                                  '${location.binNumber} (${location.availableQty})',
                                 ),
                               );
                             }).toList(),
@@ -118,6 +118,11 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                                   value?.split(':')[1] ?? '';
                               _maxQtyController.text =
                                   value?.split(':')[1] ?? '';
+                              _cubit.selectedGLN = state.binLocations
+                                  .firstWhere((location) =>
+                                      location.binNumber ==
+                                      value?.split(':')[0])
+                                  .gln;
                             },
                           ),
                           _buildKeyValue("Group Code:", _groupCodeController),

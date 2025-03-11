@@ -5,7 +5,7 @@ class SubSalesOrderModel {
   String? productName;
   String? productDescription;
   String? unitOfMeasure;
-  String? quantity;
+  num? quantity;
   num? quantityPicked;
   String? price;
   String? totalPrice;
@@ -38,7 +38,7 @@ class SubSalesOrderModel {
     productName = json['productName'];
     productDescription = json['productDescription'];
     unitOfMeasure = json['unitOfMeasure'];
-    quantity = json['quantity'];
+    quantity = num.tryParse(json['quantity'].toString()) ?? 1;
     quantityPicked = json['quantityPicked'];
     price = json['price'];
     totalPrice = json['totalPrice'];

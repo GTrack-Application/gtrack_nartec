@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
@@ -56,7 +54,7 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   color: AppColors.white,
-                  shadowColor: AppColors.black.withOpacity(0.3),
+                  shadowColor: AppColors.black.withValues(alpha: 0.3),
                   elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -123,7 +121,7 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
                 },
                 child: Card(
                   color: AppColors.white,
-                  shadowColor: AppColors.black.withOpacity(0.3),
+                  shadowColor: AppColors.black.withValues(alpha: 0.3),
                   elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

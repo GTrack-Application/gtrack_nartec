@@ -1,12 +1,13 @@
 // ignore_for_file: unused_field, unused_element, use_build_context_synchronously
 
+import 'dart:convert';
+import 'dart:developer' as developer;
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
@@ -15,6 +16,7 @@ import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/journey_screen.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
@@ -423,6 +425,7 @@ class _RouteScreenState extends State<RouteScreen> {
         markerId: const MarkerId('currentLocation'),
         position: _currentLocation!,
         infoWindow: const InfoWindow(title: 'Current Location'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       ),
     );
     _markers.add(
@@ -430,8 +433,81 @@ class _RouteScreenState extends State<RouteScreen> {
         markerId: const MarkerId('destinationLocation'),
         position: _destinationLocation!,
         infoWindow: const InfoWindow(title: 'Destination Location'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       ),
     );
+    _drawRoute();
+  }
+
+  Future<void> _drawRoute() async {
+    if (_currentLocation == null || _destinationLocation == null) return;
+
+    try {
+      String apiKey = 'AIzaSyBcdPY1bQKSv0C1lQq-nYb3kBcjANsY3Fk';
+      String url = 'https://maps.googleapis.com/maps/api/directions/json?'
+          'origin=${_currentLocation!.latitude},${_currentLocation!.longitude}'
+          '&destination=${_destinationLocation!.latitude},${_destinationLocation!.longitude}'
+          '&key=$apiKey';
+
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        developer.log(response.body);
+        var decoded = json.decode(response.body);
+        if (decoded['routes'].isNotEmpty) {
+          String points = decoded['routes'][0]['overview_polyline']['points'];
+          List<LatLng> polylineCoordinates = _decodePolyline(points);
+
+          setState(() {
+            _polylines.clear();
+            _polylines.add(
+              Polyline(
+                polylineId: const PolylineId('route'),
+                color: AppColors.pink,
+                points: polylineCoordinates,
+                width: 5,
+                patterns: [
+                  PatternItem.dash(20),
+                  PatternItem.gap(10),
+                ],
+              ),
+            );
+          });
+        }
+      }
+    } catch (e) {
+      AppSnackbars.danger(context, 'Error drawing route: $e');
+      print('Error drawing route: $e');
+    }
+  }
+
+  List<LatLng> _decodePolyline(String encoded) {
+    List<LatLng> points = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lng += dlng;
+
+      points.add(LatLng((lat / 1E5).toDouble(), (lng / 1E5).toDouble()));
+    }
+    return points;
   }
 }
 

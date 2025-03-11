@@ -2,8 +2,10 @@
 
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
@@ -15,21 +17,23 @@ import 'package:mime/mime.dart';
 final _logger = Logger();
 
 class SalesOrderController {
+  static HttpService httpWith7010 =
+      HttpService(baseUrl: AppUrls.baseUrlWith7010);
+
   static Future<List<SalesOrderModel>> getSalesOrder() async {
     final subUser = await AppPreferences.getUserId();
     final token = await AppPreferences.getToken();
 
-    final url =
-        '${AppUrls.baseUrlWith7010}/api/salesInvoice/master?subUser_id=$subUser';
+    final url = '/api/salesInvoice/master?subUser_id=$subUser';
 
     final headers = {
       'Authorization': 'Bearer $token',
     };
 
-    final response = await http.get(Uri.parse(url), headers: headers);
+    final response = await httpWith7010.request(url, headers: headers);
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      var data = jsonDecode(response.body)['data'] as List;
+    if (response.success) {
+      var data = response.data['data'] as List;
       return data.map((e) => SalesOrderModel.fromJson(e)).toList();
     } else {
       return [];
@@ -41,14 +45,14 @@ class SalesOrderController {
     final token = await AppPreferences.getToken();
 
     final url =
-        '${AppUrls.baseUrlWith7010}/api/salesInvoice/details/getSalesInvoiceDetails?salesInvoiceId=$salesOrderId&association=true';
+        '/api/salesInvoice/details/getSalesInvoiceDetails?salesInvoiceId=$salesOrderId&association=true';
 
     final headers = {'Authorization': 'Bearer $token'};
 
-    final response = await http.get(Uri.parse(url), headers: headers);
+    final response = await httpWith7010.request(url, headers: headers);
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      var data = jsonDecode(response.body)['data'] as List;
+    if (response.success) {
+      var data = response.data['data'] as List;
       return data.map((e) => SubSalesOrderModel.fromJson(e)).toList();
     } else {
       throw Exception(jsonDecode(response.body)['message']);

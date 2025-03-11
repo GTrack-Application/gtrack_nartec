@@ -47,7 +47,7 @@ class ProductionJobOrderBomStartError extends ProductionJobOrderState {
 class ProductionJobOrderBinLocationsLoading extends ProductionJobOrderState {}
 
 class ProductionJobOrderBinLocationsLoaded extends ProductionJobOrderState {
-  final BinLocationsResponse binLocations;
+  final List<BinLocation> binLocations;
   ProductionJobOrderBinLocationsLoaded({required this.binLocations});
 }
 

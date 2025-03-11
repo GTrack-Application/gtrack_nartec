@@ -63,16 +63,23 @@ class GTINController {
   static Future<PaginatedGTINResponse> getPaginatedProducts({
     required int page,
     required int pageSize,
+    String? searchQuery,
   }) async {
     final userId = await AppPreferences.getGs1UserId();
 
-    final url =
-        "api/products/paginatedProducts?page=$page&pageSize=$pageSize&user_id=$userId";
+    String url = 'api/products/';
+
+    if (searchQuery != null && searchQuery.isNotEmpty) {
+      url +=
+          "searchProductsBySelectedFields?searchText=$searchQuery&page=$page&limit=$pageSize";
+    } else {
+      url += "paginatedProducts?page=$page&pageSize=$pageSize&user_id=$userId";
+    }
 
     final response = await httpService.request(url);
 
     if (response.success) {
-      return PaginatedGTINResponse.fromJson(json.decode(response.body));
+      return PaginatedGTINResponse.fromJson(response.data);
     } else {
       throw Exception('Failed to load paginated products');
     }

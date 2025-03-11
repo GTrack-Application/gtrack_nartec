@@ -29,6 +29,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   List<ProductionJobOrder> _orders = [];
 
   int quantityPicked = 0;
+  String? selectedGLN;
 
   Future<void> getProductionJobOrders() async {
     emit(ProductionJobOrderLoading());
@@ -133,25 +134,31 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   Future<void> getBinLocations(String gtin) async {
     emit(ProductionJobOrderBinLocationsLoading());
     try {
+      final memberId = await AppPreferences.getMemberId();
       final token = await AppPreferences.getToken();
 
+      // final url = "/api/mappedBarcodes/getlocationsByGTIN?GTIN=$gtin";
+      final url = "/api/binLocation?memberId=$memberId";
+
       final response = await _httpService.request(
-        "/api/mappedBarcodes/getlocationsByGTIN?GTIN=$gtin",
+        url,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
+      final data = response.data;
       if (response.success) {
-        final data = response.data;
-        final binLocations = BinLocationsResponse.fromJson(data);
+        final data = response.data as List;
+        final binLocations = data.map((e) => BinLocation.fromJson(e)).toList();
         emit(ProductionJobOrderBinLocationsLoaded(binLocations: binLocations));
       } else {
         emit(ProductionJobOrderBinLocationsError(
             message: 'Failed to fetch bin locations'));
       }
     } catch (e) {
+      log(e.toString());
       emit(ProductionJobOrderBinLocationsError(message: e.toString()));
     }
   }
@@ -239,6 +246,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     List<MappedBarcode> scannedItems, {
     ProductionJobOrder? oldOrder,
     int? qty,
+    String? gln,
   }) async {
     emit(ProductionJobOrderUpdateMappedBarcodesLoading());
 
@@ -271,6 +279,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
           action: "ADD",
           bizStep: "shipping",
           disposition: "in_transit",
+          gln: gln,
         ),
         _httpService.request(
           "/api/workInProgress/checkAndCreateWIPItems",
@@ -278,7 +287,15 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
           data: {
             'jobOrderDetailId': "${bomStartData?.jobOrderDetailsId}",
           },
-        )
+        ),
+        // update mapped barcodes API call
+        _httpService.request(
+          "/api/salesInvoice/master/${oldOrder?.id}",
+          method: HttpMethod.put,
+          data: {
+            'binLocationId': location,
+          },
+        ),
       ]);
 
       // // EPCIS API Call

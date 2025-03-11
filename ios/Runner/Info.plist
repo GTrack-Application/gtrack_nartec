@@ -19,9 +19,9 @@
 	<string>This app needs access to the photo library to scan barcodes.</string> 
 	<!-- location permission --> 
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location for navigation.</string>
+	<string>This app needs access to location when open to show your position on the map.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location for navigation when in background.</string>
+	<string>This app needs access to location when in the background.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

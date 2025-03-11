@@ -212,7 +212,7 @@ class PaginatedGTINResponse {
   factory PaginatedGTINResponse.fromJson(Map<String, dynamic> json) {
     return PaginatedGTINResponse(
       currentPage: json['currentPage'],
-      pageSize: json['pageSize'],
+      pageSize: json['pageSize'] ?? json['limit'] ?? 10,
       totalProducts: json['totalProducts'],
       products: (json['products'] as List)
           .map((product) => GTIN_Model.fromJson(product))
