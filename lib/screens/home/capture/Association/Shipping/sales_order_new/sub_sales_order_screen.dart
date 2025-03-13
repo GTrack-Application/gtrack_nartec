@@ -103,11 +103,14 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
             );
           }
 
-          final isPicked = subSalesOrder
-              .where(
-                (element) => element.quantityPicked != element.quantity,
-              )
-              .isNotEmpty;
+          //   final isPicked = subSalesOrder
+          //       .where(
+          //         (element) => element.quantityPicked == element.quantity,
+          //       )
+          //       .isNotEmpty;
+
+          //TODO: remove this after module is completed
+          final isPicked = true;
 
           return ListView.builder(
             itemCount:
