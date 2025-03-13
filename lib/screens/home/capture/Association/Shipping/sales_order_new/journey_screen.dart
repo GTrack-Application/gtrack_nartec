@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, avoid_print
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,11 +34,16 @@ class JourneyScreen extends StatefulWidget {
   State<JourneyScreen> createState() => _JourneyScreenState();
 }
 
-class _JourneyScreenState extends State<JourneyScreen> {
+class _JourneyScreenState extends State<JourneyScreen>
+    with TickerProviderStateMixin {
   GoogleMapController? _mapController;
   final SalesOrderCubit salesOrderCubit = SalesOrderCubit();
   Set<Polyline> _polylines = {};
   List<LatLng> polylineCoordinates = [];
+  BitmapDescriptor? carIcon;
+  AnimationController? _animationController;
+  Marker? _carMarker;
+  int _currentPointIndex = 0;
 
   @override
   void initState() {
@@ -47,6 +53,7 @@ class _JourneyScreenState extends State<JourneyScreen> {
       double.parse(widget.mapModel[0].longitude!),
     );
     salesOrderCubit.initializeLocation(destinationLocation);
+    _loadCarIcon();
 
     // Update polylines when location changes
     salesOrderCubit.stream.listen((state) {
@@ -59,32 +66,156 @@ class _JourneyScreenState extends State<JourneyScreen> {
     });
   }
 
-  Future<void> getPolylinePoints(LatLng origin, LatLng destination) async {
+  void _loadCarIcon() async {
+    carIcon = await BitmapDescriptor.asset(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/images/logo.png',
+    );
+  }
+
+  void _animateCarAlongRoute() {
+    if (polylineCoordinates.isEmpty || _mapController == null) return;
+
+    // Dispose previous animation if exists
+    _animationController?.dispose();
+
+    // Create new animation controller
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 10), // Adjust duration as needed
+      vsync: this,
+    );
+
+    _currentPointIndex = 0;
+
+    _animationController!.addListener(() {
+      // Calculate the position along the route based on animation value
+      double animationValue = _animationController!.value;
+      int totalPoints = polylineCoordinates.length;
+      int targetIndex = (animationValue * (totalPoints - 1)).floor();
+
+      if (targetIndex != _currentPointIndex && targetIndex < totalPoints) {
+        _currentPointIndex = targetIndex;
+        LatLng currentPosition = polylineCoordinates[_currentPointIndex];
+
+        // Calculate bearing for car rotation
+        double bearing = 0;
+        if (_currentPointIndex < totalPoints - 1) {
+          LatLng nextPosition = polylineCoordinates[_currentPointIndex + 1];
+          bearing = _getBearing(currentPosition, nextPosition);
+        }
+
+        // Update car marker position
+        setState(() {
+          _carMarker = Marker(
+            markerId: const MarkerId('car'),
+            position: currentPosition,
+            icon: carIcon ?? BitmapDescriptor.defaultMarker,
+            rotation: bearing,
+            flat: true,
+          );
+
+          // Add car marker to the map markers
+          if (salesOrderCubit.state is LocationUpdated) {
+            final state = salesOrderCubit.state as LocationUpdated;
+            Set<Marker> updatedMarkers = {...state.markers};
+            updatedMarkers
+                .removeWhere((marker) => marker.markerId.value == 'car');
+            updatedMarkers.add(_carMarker!);
+            // salesOrderCubit.updateMarkers(updatedMarkers);
+          }
+        });
+
+        // Don't move camera to follow the car - removed camera animation here
+      }
+    });
+
+    _animationController!.repeat();
+  }
+
+  double _getBearing(LatLng start, LatLng end) {
+    double lat1 = start.latitude * (pi / 180);
+    double lng1 = start.longitude * (pi / 180);
+    double lat2 = end.latitude * (pi / 180);
+    double lng2 = end.longitude * (pi / 180);
+
+    double dLon = lng2 - lng1;
+    double y = sin(dLon) * cos(lat2);
+    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
+    double bearing = atan2(y, x);
+
+    // Convert to degrees
+    bearing = bearing * (180 / pi);
+    bearing = (bearing + 360) % 360;
+
+    return bearing;
+  }
+
+  void getPolylinePoints(LatLng origin, LatLng destination) async {
     String apiKey = 'AIzaSyBcdPY1bQKSv0C1lQq-nYb3kBcjANsY3Fk';
     String url = 'https://maps.googleapis.com/maps/api/directions/json?'
         'origin=${origin.latitude},${origin.longitude}'
         '&destination=${destination.latitude},${destination.longitude}'
+        '&mode=driving'
+        '&alternatives=false'
+        '&units=metric'
+        '&language=en'
+        '&optimizeWaypoints=true'
         '&key=$apiKey';
+
+    print('url: $url');
 
     try {
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var decoded = json.decode(response.body);
         if (decoded['routes'].isNotEmpty) {
-          String points = decoded['routes'][0]['overview_polyline']['points'];
-          polylineCoordinates = _decodePolyline(points);
+          // Clear previous coordinates
+          polylineCoordinates = [];
+
+          // Extract each leg and step for complete detail
+          List<dynamic> legs = decoded['routes'][0]['legs'];
+          for (var leg in legs) {
+            List<dynamic> steps = leg['steps'];
+            for (var step in steps) {
+              String points = step['polyline']['points'];
+              List<LatLng> stepPoints = _decodePolyline(points);
+              polylineCoordinates.addAll(stepPoints);
+            }
+          }
+
+          // Extract the duration (in seconds) from the API response
+          int durationInSeconds =
+              decoded['routes'][0]['legs'][0]['duration']['value'];
+
+          // Calculate the estimated time of arrival
+          DateTime now = DateTime.now();
+          DateTime eta = now.add(Duration(seconds: durationInSeconds));
+
+          // Format the ETA (you can add this to your state if needed)
+          String formattedEta =
+              '${eta.hour}:${eta.minute.toString().padLeft(2, '0')}';
+          print('ETA: $formattedEta');
 
           setState(() {
-            _polylines.clear(); // Clear existing polylines
+            _polylines.clear();
             _polylines.add(
               Polyline(
                 polylineId: const PolylineId('route'),
-                color: Colors.blue.shade600,
+                color: Colors.blue.shade700,
                 points: polylineCoordinates,
-                width: 4,
+                width: 5,
+                jointType: JointType.mitered,
+                geodesic: true,
+                endCap: Cap.roundCap,
+                startCap: Cap.roundCap,
+                visible: true,
+                zIndex: 1,
               ),
             );
           });
+
+          // Start car animation after getting route
+          _animateCarAlongRoute();
         }
       }
     } catch (e) {
@@ -299,17 +430,58 @@ class _JourneyScreenState extends State<JourneyScreen> {
                   ),
                 )
               : null,
-          body: state is LocationInitialized || state is LocationUpdated
-              ? GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: (state as dynamic).currentLocation,
-                    zoom: 15,
-                  ),
-                  markers: (state as dynamic).markers,
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
-                  onMapCreated: (controller) => _mapController = controller,
-                  polylines: _polylines,
+          body: state is LocationUpdated
+              ? Stack(
+                  children: [
+                    GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: (state as dynamic).currentLocation,
+                        zoom: 15,
+                      ),
+                      markers: (state as dynamic).markers,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: true,
+                      onMapCreated: (controller) {
+                        _mapController = controller;
+                        // Apply custom map style
+                        _setMapStyle();
+
+                        // No camera movement here - removed camera animation
+                      },
+                      polylines: _polylines,
+                    ),
+                    // a button to start the journey
+                    // Positioned(
+                    //   bottom: 16,
+                    //   left: 16,
+                    //   child: FilledButton.icon(
+                    //     style: FilledButton.styleFrom(
+                    //       backgroundColor: AppColors.pink,
+                    //       padding: const EdgeInsets.symmetric(
+                    //         horizontal: 15,
+                    //         vertical: 12,
+                    //       ),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(12),
+                    //       ),
+                    //     ),
+                    //     onPressed: () {
+                    //       AppNavigator.replaceTo(
+                    //         context: context,
+                    //         screen: FullScreenMap(
+                    //           currentLat:
+                    //               (state as dynamic).currentLocation.latitude,
+                    //           currentLong:
+                    //               (state as dynamic).currentLocation.longitude,
+                    //           markers: (state as dynamic).markers,
+                    //         ),
+                    //       );
+                    //     },
+                    //     icon: const Icon(Icons.play_arrow),
+                    //     label: const Text('Start'),
+                    //   ),
+                    // ),
+                  ],
                 )
               : const Center(child: CircularProgressIndicator()),
         );
@@ -317,9 +489,36 @@ class _JourneyScreenState extends State<JourneyScreen> {
     );
   }
 
+  void _setMapStyle() async {
+    String style = '''
+    [
+      {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+          {
+            "color": "#f5f5f5"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "geometry.stroke",
+        "stylers": [
+          {
+            "color": "#e0e0e0"
+          }
+        ]
+      }
+    ]
+    ''';
+    _mapController?.setMapStyle(style);
+  }
+
   @override
   void dispose() {
     _mapController?.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 }

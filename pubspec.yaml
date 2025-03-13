@@ -69,6 +69,7 @@ dependencies:
   location: ^5.0.0
   syncfusion_flutter_signaturepad: ^28.2.9
   path_provider: ^2.1.5
+  equatable: ^2.0.7
 
 icons_launcher:
   image_path: "assets/images/logo.png"
