@@ -40,7 +40,10 @@ class _PrintDeliveryInvoiceScreenState
         if (state is StatusUpdateLoaded) {
           Navigator.pop(context);
           Navigator.pop(context);
+          Navigator.pop(context);
           AppSnackbars.success(context, "Sales Invoice updated successfully.");
+
+          salesOrderCubit.getSalesOrder();
         }
         if (state is StatusUpdateError) {
           AppSnackbars.danger(

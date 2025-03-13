@@ -46,130 +46,147 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
           }
         },
         builder: (context, state) {
-          if (state is SalesOrderLoading) {
-            return ListView.builder(
-              itemCount: 5, // Show 5 placeholder items
-              padding: const EdgeInsets.all(16),
-              itemBuilder: (context, index) {
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  color: AppColors.white,
-                  shadowColor: AppColors.black.withValues(alpha: 0.3),
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 120,
-                          height: 14,
-                          color: Colors.grey[300],
-                        ),
-                        const SizedBox(height: 12),
-                        for (int i = 0; i < 4; i++) ...[
-                          Row(
-                            children: [
-                              Container(
-                                width: 16,
-                                height: 16,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                width: 200,
-                                height: 12,
-                                color: Colors.grey[300],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                        ],
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-
-          if (salesOrder.isEmpty) {
-            return const Center(
-              child: Text('No sales order found'),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: salesOrder.length,
-            padding: const EdgeInsets.all(16),
-            itemBuilder: (context, index) {
-              final order = salesOrder[index];
-              return GestureDetector(
-                onTap: () {
-                  AppNavigator.goToPage(
-                    context: context,
-                    screen: SubSalesOrderScreen(
-                      salesOrderId: order.id ?? '',
-                    ),
-                  );
-                },
-                child: Card(
-                  color: AppColors.white,
-                  shadowColor: AppColors.black.withValues(alpha: 0.3),
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Invoice #${order.salesInvoiceNumber ?? ''}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.pink,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        _buildInfoRow(
-                          icon: Icons.attach_money,
-                          label: 'Amount:',
-                          value: 'SAR ${order.totalAmount ?? ''}',
-                        ),
-                        _buildInfoRow(
-                          icon: Icons.local_shipping,
-                          label: 'Delivery:',
-                          value: _formatDate(order.deliveryDate ?? ''),
-                        ),
-                        _buildInfoRow(
-                          icon: Icons.calendar_today,
-                          label: 'Order:',
-                          value: _formatDate(order.orderDate ?? ''),
-                        ),
-                        _buildInfoRow(
-                          icon: Icons.info_outline,
-                          label: 'Status:',
-                          value: order.status ?? '',
-                          valueColor: _getStatusColor(order.status ?? ''),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+          return RefreshIndicator(
+            strokeWidth: 2,
+            color: AppColors.pink,
+            backgroundColor: AppColors.white,
+            onRefresh: () async {
+              salesOrderCubit.getSalesOrder();
             },
+            child: _buildContent(state),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildContent(SalesOrderState state) {
+    if (state is SalesOrderLoading) {
+      return ListView.builder(
+        itemCount: 5, // Show 5 placeholder items
+        padding: const EdgeInsets.all(16),
+        itemBuilder: (context, index) {
+          return Card(
+            margin: const EdgeInsets.only(bottom: 16),
+            color: AppColors.white,
+            shadowColor: AppColors.black.withValues(alpha: 0.3),
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 14,
+                    color: Colors.grey[300],
+                  ),
+                  const SizedBox(height: 12),
+                  for (int i = 0; i < 4; i++) ...[
+                    Row(
+                      children: [
+                        Container(
+                          width: 16,
+                          height: 16,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 200,
+                          height: 12,
+                          color: Colors.grey[300],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    if (salesOrder.isEmpty) {
+      return ListView(
+        children: const [
+          SizedBox(height: 200),
+          Center(
+            child: Text('No sales order found'),
+          ),
+        ],
+      );
+    }
+
+    return ListView.builder(
+      itemCount: salesOrder.length,
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (context, index) {
+        final order = salesOrder[index];
+        return GestureDetector(
+          onTap: () {
+            AppNavigator.goToPage(
+              context: context,
+              screen: SubSalesOrderScreen(
+                salesOrderId: order.id ?? '',
+              ),
+            );
+          },
+          child: Card(
+            color: AppColors.white,
+            shadowColor: AppColors.black.withValues(alpha: 0.3),
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Invoice #${order.salesInvoiceNumber ?? ''}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.pink,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildInfoRow(
+                    icon: Icons.attach_money,
+                    label: 'Amount:',
+                    value: 'SAR ${order.totalAmount ?? ''}',
+                  ),
+                  _buildInfoRow(
+                    icon: Icons.local_shipping,
+                    label: 'Delivery:',
+                    value: _formatDate(order.deliveryDate ?? ''),
+                  ),
+                  _buildInfoRow(
+                    icon: Icons.calendar_today,
+                    label: 'Order:',
+                    value: _formatDate(order.orderDate ?? ''),
+                  ),
+                  _buildInfoRow(
+                    icon: Icons.info_outline,
+                    label: 'Status:',
+                    value: order.status ?? '',
+                    valueColor: _getStatusColor(order.status ?? ''),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
