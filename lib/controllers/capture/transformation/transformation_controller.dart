@@ -46,6 +46,47 @@ class TransformationController {
     }
   }
 
+  Future<dynamic> saveStationAttributeHistory(Map<String, dynamic> formValues,
+      Map<String, List<String>> arrayValues) async {
+    final url = "/api/stationAttribute/history";
+
+    // Combine regular form values with array values into a single payload
+    final Map<String, dynamic> payload = {...formValues};
+
+    // Add all array values to the payload
+    arrayValues.forEach((fieldName, items) {
+      payload[fieldName] = items;
+    });
+
+    final response = await http7010.request(
+      url,
+      method: HttpMethod.post,
+      payload: payload,
+    );
+
+    if (response.success) {
+      return response.data;
+    } else {
+      throw Exception(response.message);
+    }
+  }
+
+  Future<void> saveTransaction(
+      String eventStationId, EventStation station) async {
+    final url = "/api/eventStation/saveTransaction";
+
+    final response = await http7010.request(
+      url,
+      method: HttpMethod.post,
+    );
+
+    if (response.success) {
+      return response.data;
+    } else {
+      throw Exception(response.message);
+    }
+  }
+
   /*
   ##########################################################################
     EVENT STATION END

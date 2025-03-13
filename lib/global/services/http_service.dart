@@ -33,7 +33,7 @@ class HttpService {
   Future<Response> request(
     String endpoint, {
     HttpMethod method = HttpMethod.get,
-    Map<String, dynamic>? data,
+    Map<String, dynamic>? payload,
     Map<String, String>? headers,
     BuildContext? context,
   }) async {
@@ -43,10 +43,10 @@ class HttpService {
 
     try {
       _logger.logRequest(
-          url.toString(), method.toString(), requestHeaders, data);
+          url.toString(), method.toString(), requestHeaders, payload);
 
       final response = await _performRequest(url, method,
-          headers: requestHeaders, body: data);
+          headers: requestHeaders, body: payload);
       stopwatch.stop();
       _logger.logResponse(response, stopwatch.elapsed);
 

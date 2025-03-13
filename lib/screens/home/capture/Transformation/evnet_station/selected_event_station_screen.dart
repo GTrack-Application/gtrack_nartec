@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/transformation/transformation_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/transformation/transformation_states.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
 
 class SelectedEventStationScreen extends StatefulWidget {
@@ -22,6 +25,11 @@ class SelectedEventStationScreen extends StatefulWidget {
 class _SelectedEventStationScreenState
     extends State<SelectedEventStationScreen> {
   late SelectedEventStationCubit _selectedEventStationCubit;
+  final Map<String, dynamic> _formValues = {};
+  final Map<String, List<String>> _arrayValues = {};
+  final Map<String, TextEditingController> _controllers = {};
+  final TextEditingController _arrayInputController = TextEditingController();
+  String? _currentArrayField;
 
   @override
   void initState() {
@@ -31,6 +39,13 @@ class _SelectedEventStationScreenState
       widget.station.id,
       widget.station,
     );
+  }
+
+  @override
+  void dispose() {
+    _controllers.forEach((_, controller) => controller.dispose());
+    _arrayInputController.dispose();
+    super.dispose();
   }
 
   @override
@@ -72,16 +87,35 @@ class _SelectedEventStationScreenState
           },
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: PrimaryButtonWidget(
-          text: "Save Transaction",
-          backgroungColor: AppColors.pink,
-          onPressed: () {},
-        ),
+      bottomNavigationBar:
+          BlocConsumer<SelectedEventStationCubit, SelectedEventStationState>(
+        bloc: _selectedEventStationCubit,
+        listener: (context, state) {
+          if (state is TransactionSavedState) {
+            AppSnackbars.success(context, 'Transaction saved successfully');
+            Navigator.pop(context);
+          } else if (state is TransactionSaveErrorState) {
+            AppSnackbars.danger(context, state.message);
+          }
+        },
+        builder: (context, state) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: PrimaryButtonWidget(
+              text: "Save Transaction",
+              backgroungColor: AppColors.pink,
+              isLoading: state is TransactionSavingState,
+              onPressed: _saveTransaction,
+            ),
+          );
+        },
       ),
     );
+  }
+
+  void _saveTransaction() {
+    _selectedEventStationCubit.saveTransaction(_formValues, _arrayValues);
   }
 
   Widget _buildLoadingPlaceholders() {
@@ -100,7 +134,15 @@ class _SelectedEventStationScreenState
                 height: 20,
                 width: 150,
                 decoration: BoxDecoration(
-                  color: AppColors.grey.withValues(alpha: 0.2),
+                  color: AppColors.grey.withAlpha(50),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.grey.withAlpha(30),
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -133,6 +175,17 @@ class _SelectedEventStationScreenState
       if (!fieldNames.contains(field.fieldName)) {
         fieldNames.add(field.fieldName);
         uniqueFields.add(field);
+
+        // Initialize controllers for each field
+        if (!_controllers.containsKey(field.fieldName)) {
+          _controllers[field.fieldName] = TextEditingController();
+        }
+
+        // Initialize array values
+        if (field.fieldType == 'Array' &&
+            !_arrayValues.containsKey(field.fieldName)) {
+          _arrayValues[field.fieldName] = [];
+        }
       }
     }
 
@@ -148,18 +201,237 @@ class _SelectedEventStationScreenState
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 12,
               children: [
-                Text(
-                  attribute.fieldName.toUpperCase(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        attribute.fieldName.toUpperCase(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      attribute.fieldType,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
                 ),
+                _buildInputField(attribute),
               ],
             ),
           ),
         );
+      },
+    );
+  }
+
+  Widget _buildInputField(AttributeInfo attribute) {
+    switch (attribute.fieldType) {
+      case 'DateTime':
+        return _buildDateTimeField(attribute);
+      case 'Array':
+        return _buildArrayField(attribute);
+      case 'String':
+      default:
+        return _buildStringField(attribute);
+    }
+  }
+
+  Widget _buildDateTimeField(AttributeInfo attribute) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () => _selectDateTime(context, attribute.fieldName),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppColors.fields,
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: AppColors.fields, width: 2),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _formValues[attribute.fieldName] != null
+                        ? formatDate(_formValues[attribute.fieldName],
+                            isDateTime: true)
+                        : 'Select date and time',
+                    style: TextStyle(
+                      color: _formValues[attribute.fieldName] != null
+                          ? Colors.black
+                          : AppColors.grey,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const Icon(Icons.calendar_today, color: AppColors.grey),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _selectDateTime(BuildContext context, String fieldName) async {
+    final DateTime now = DateTime.now();
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _formValues[fieldName] ?? now,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.pink,
+              onPrimary: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_formValues[fieldName] ?? now),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: AppColors.pink,
+                onPrimary: Colors.white,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          _formValues[fieldName] = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+        });
+      }
+    }
+  }
+
+  Widget _buildArrayField(AttributeInfo attribute) {
+    final items = _arrayValues[attribute.fieldName] ?? [];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextFieldWidget(
+                controller: _controllers[attribute.fieldName]!,
+                hintText: 'Scan or enter item',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.add_circle, color: AppColors.pink),
+                  onPressed: () {
+                    final value =
+                        _controllers[attribute.fieldName]!.text.trim();
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        _arrayValues[attribute.fieldName]!.add(value);
+                        _controllers[attribute.fieldName]!.clear();
+                      });
+                    }
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              icon: const Icon(Icons.qr_code_scanner, color: AppColors.pink),
+              onPressed: () {
+                // TODO: Implement barcode scanning
+                setState(() {
+                  _currentArrayField = attribute.fieldName;
+                  // Simulate a scan for demo purposes
+                  _controllers[attribute.fieldName]!.text =
+                      'SCANNED_ITEM_${DateTime.now().millisecondsSinceEpoch}';
+                });
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'User input as an array of items or SKU or GTIN',
+          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+        ),
+        if (items.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.fields.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Items (${items.length}):',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: items
+                      .map((item) => _buildChip(item, attribute.fieldName))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildChip(String label, String fieldName) {
+    return Chip(
+      label: Text(label, style: const TextStyle(fontSize: 12)),
+      backgroundColor: AppColors.pink.withOpacity(0.2),
+      deleteIconColor: AppColors.pink,
+      onDeleted: () {
+        setState(() {
+          _arrayValues[fieldName]!.remove(label);
+        });
+      },
+    );
+  }
+
+  Widget _buildStringField(AttributeInfo attribute) {
+    return TextFieldWidget(
+      controller: _controllers[attribute.fieldName]!,
+      hintText: 'Enter ${attribute.fieldName}',
+      onFieldSubmitted: (value) {
+        _formValues[attribute.fieldName] = value;
       },
     );
   }

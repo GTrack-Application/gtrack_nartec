@@ -298,7 +298,7 @@ class GTINController {
     final response = await upcHubService.request(
       '/api/productReview',
       method: HttpMethod.post,
-      data: {
+      payload: {
         "LocationIP": deviceIp,
         "SenderId": userId,
         "rating": rating,

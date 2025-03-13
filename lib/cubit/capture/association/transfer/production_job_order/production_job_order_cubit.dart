@@ -256,7 +256,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       final response = await _httpService.request(
         "/api/mappedBarcodes/updateBinLocationForMappedBarcodes",
         method: HttpMethod.put,
-        data: {
+        payload: {
           'ids': itemIds,
           'newBinLocation': location,
         },
@@ -268,7 +268,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
           // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
           "/api/bom/${bomStartData?.id}", // jobOrderId || id
           method: HttpMethod.put,
-          data: {
+          payload: {
             'binLocation': location,
             'quantityPicked': "$qty",
           },
@@ -284,7 +284,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         _httpService.request(
           "/api/workInProgress/checkAndCreateWIPItems",
           method: HttpMethod.post,
-          data: {
+          payload: {
             'jobOrderDetailId': "${bomStartData?.jobOrderDetailsId}",
           },
         ),
@@ -292,7 +292,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         _httpService.request(
           "/api/salesInvoice/master/${oldOrder?.id}",
           method: HttpMethod.put,
-          data: {
+          payload: {
             'binLocationId': location,
           },
         ),

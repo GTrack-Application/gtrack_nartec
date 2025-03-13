@@ -8,6 +8,12 @@ class EventStationCubit extends Cubit<EventStationState> {
 
   final transformationController = TransformationController();
 
+  /* 
+  ########################################################################## 
+    EVENT STATION START
+  ##########################################################################
+  */
+
   // Lists
   List<EventStation> stations = [];
 
@@ -46,4 +52,33 @@ class SelectedEventStationCubit extends Cubit<SelectedEventStationState> {
       emit(SelectedEventStationErrorState(message: e.toString()));
     }
   }
+
+  Future<void> saveTransaction(Map<String, dynamic> formValues,
+      Map<String, List<String>> arrayValues) async {
+    emit(TransactionSavingState());
+    try {
+      // Process form values if needed (e.g., formatting dates)
+      final processedFormValues = Map<String, dynamic>.from(formValues);
+
+      // Convert DateTime objects to ISO format strings if present
+      processedFormValues.forEach((key, value) {
+        if (value is DateTime) {
+          processedFormValues[key] = value.toIso8601String();
+        }
+      });
+
+      final result = await transformationController.saveStationAttributeHistory(
+          processedFormValues, arrayValues);
+
+      emit(TransactionSavedState(data: result));
+    } catch (e) {
+      emit(TransactionSaveErrorState(message: e.toString()));
+    }
+  }
+
+  /* 
+  ########################################################################## 
+    EVENT STATION END
+  ##########################################################################
+  */
 }

@@ -72,7 +72,7 @@ class PackagingCubit extends Cubit<PackagingState> {
     try {
       final memberId = await AppPreferences.getMemberId();
       final response = await httpService
-          .request("/api/packaging/insert", method: HttpMethod.post, data: {
+          .request("/api/packaging/insert", method: HttpMethod.post, payload: {
         "memberId": memberId.toString(),
         "palletCodes": items.map((e) => "${e.palletCode}").toList(),
         "type": type,

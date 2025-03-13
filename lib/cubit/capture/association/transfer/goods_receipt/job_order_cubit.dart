@@ -169,7 +169,7 @@ class JobOrderCubit extends Cubit<JobOrderState> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        data: {
+        payload: {
           'jobOrderMasterId': jobOrderMasterId,
           'productionExecutionDateTime':
               productionExecutionDateTime.toUtc().toIso8601String(),

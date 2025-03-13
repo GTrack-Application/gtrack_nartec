@@ -244,7 +244,7 @@ class _PackagingScreenState extends State<PackagingScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
           ),
@@ -259,7 +259,7 @@ class _PackagingScreenState extends State<PackagingScreen> {
                 width: 120,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: AppColors.grey.withOpacity(0.1),
+                  color: AppColors.grey.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -268,7 +268,7 @@ class _PackagingScreenState extends State<PackagingScreen> {
                 width: 80,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: AppColors.grey.withOpacity(0.1),
+                  color: AppColors.grey.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -279,7 +279,7 @@ class _PackagingScreenState extends State<PackagingScreen> {
             width: double.infinity,
             height: 16,
             decoration: BoxDecoration(
-              color: AppColors.grey.withOpacity(0.1),
+              color: AppColors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -288,7 +288,7 @@ class _PackagingScreenState extends State<PackagingScreen> {
             width: 200,
             height: 16,
             decoration: BoxDecoration(
-              color: AppColors.grey.withOpacity(0.1),
+              color: AppColors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4),
             ),
           ),

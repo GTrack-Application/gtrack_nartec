@@ -26,3 +26,18 @@ class SelectedEventStationErrorState extends SelectedEventStationState {
 
   SelectedEventStationErrorState({required this.message});
 }
+
+// Transaction Save States
+class TransactionSavingState extends SelectedEventStationState {}
+
+class TransactionSavedState extends SelectedEventStationState {
+  final dynamic data;
+
+  TransactionSavedState({this.data});
+}
+
+class TransactionSaveErrorState extends SelectedEventStationState {
+  final String message;
+
+  TransactionSaveErrorState({required this.message});
+}
