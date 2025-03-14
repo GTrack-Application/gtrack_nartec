@@ -1,22 +1,20 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/controllers/capture/transformation/transformation_controller.dart';
 import 'package:gtrack_nartec/cubit/capture/transformation/transformation_states.dart';
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
 
-class TransformationCubit extends Cubit<EventStationState> {
+class TransformationCubit extends Cubit<TransformationState> {
   TransformationCubit() : super(EventStationInitState());
 
   final transformationController = TransformationController();
 
   /* 
   ########################################################################## 
-    EVENT STATION START
+  ?  EVENT STATION START
   ##########################################################################
   */
 
-  // ? Lists
+  //  Lists
   List<EventStation> stations = [];
   List<StationAttributeMaster> attributes = [];
 
@@ -65,9 +63,6 @@ class TransformationCubit extends Cubit<EventStationState> {
         }
       });
 
-      log(processedFormValues.toString());
-      log(arrayValues.toString());
-
       final result = await transformationController.saveStationAttributeHistory(
         processedFormValues,
         arrayValues,
@@ -81,7 +76,7 @@ class TransformationCubit extends Cubit<EventStationState> {
 
   /* 
   ########################################################################## 
-    EVENT STATION END
+  !  EVENT STATION END
   ##########################################################################
   */
 }

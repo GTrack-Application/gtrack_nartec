@@ -77,7 +77,10 @@ class AppSnackbars {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                cleanMessage,
+                // limit the message to 128 characters
+                cleanMessage.length > 128
+                    ? '${cleanMessage.substring(0, 128)}...'
+                    : cleanMessage,
                 style: TextStyle(
                   color: AppColors.white,
                   fontWeight: FontWeight.w500,

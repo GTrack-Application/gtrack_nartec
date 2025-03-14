@@ -58,7 +58,7 @@ class _SelectedEventStationScreenState
         ),
         backgroundColor: AppColors.pink,
       ),
-      body: BlocBuilder<TransformationCubit, EventStationState>(
+      body: BlocBuilder<TransformationCubit, TransformationState>(
         builder: (context, state) {
           if (state is SelectedEventStationLoadingState) {
             return _buildLoadingPlaceholders();
@@ -83,7 +83,8 @@ class _SelectedEventStationScreenState
           return _buildAttributesList();
         },
       ),
-      bottomNavigationBar: BlocConsumer<TransformationCubit, EventStationState>(
+      bottomNavigationBar:
+          BlocConsumer<TransformationCubit, TransformationState>(
         listener: (context, state) {
           if (state is TransactionSavedState) {
             AppSnackbars.success(context, 'Transaction saved successfully');

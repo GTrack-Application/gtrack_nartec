@@ -1,39 +1,39 @@
-abstract class EventStationState {}
+abstract class TransformationState {}
 
-class EventStationInitState extends EventStationState {}
+class EventStationInitState extends TransformationState {}
 
-class EventStationLoadingState extends EventStationState {}
+class EventStationLoadingState extends TransformationState {}
 
-class EventStationLoadedState extends EventStationState {}
+class EventStationLoadedState extends TransformationState {}
 
-class EventStationErrorState extends EventStationState {
+class EventStationErrorState extends TransformationState {
   final String message;
 
   EventStationErrorState({required this.message});
 }
 
-class SelectedEventStationInitState extends EventStationState {}
+class SelectedEventStationInitState extends TransformationState {}
 
-class SelectedEventStationLoadingState extends EventStationState {}
+class SelectedEventStationLoadingState extends TransformationState {}
 
-class SelectedEventStationLoadedState extends EventStationState {}
+class SelectedEventStationLoadedState extends TransformationState {}
 
-class SelectedEventStationErrorState extends EventStationState {
+class SelectedEventStationErrorState extends TransformationState {
   final String message;
 
   SelectedEventStationErrorState({required this.message});
 }
 
 // Transaction Save States
-class TransactionSavingState extends EventStationState {}
+class TransactionSavingState extends TransformationState {}
 
-class TransactionSavedState extends EventStationState {
+class TransactionSavedState extends TransformationState {
   final dynamic data;
 
   TransactionSavedState({this.data});
 }
 
-class TransactionSaveErrorState extends EventStationState {
+class TransactionSaveErrorState extends TransformationState {
   final String message;
 
   TransactionSaveErrorState({required this.message});

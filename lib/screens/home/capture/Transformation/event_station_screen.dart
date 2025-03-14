@@ -3,9 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/transformation/transformation_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/transformation/transformation_states.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
-import 'package:gtrack_nartec/screens/home/capture/Transformation/evnet_station/selected_event_station_screen.dart';
 
 class EventStationScreen extends StatefulWidget {
   const EventStationScreen({super.key});
@@ -28,37 +26,31 @@ class _EventStationScreenState extends State<EventStationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Station'),
-        backgroundColor: AppColors.pink,
-      ),
+          title: const Text('Event Station'), backgroundColor: AppColors.pink),
       body: BlocBuilder<TransformationCubit, TransformationState>(
         builder: (context, state) {
           if (state is EventStationLoadingState) {
             return _buildLoadingPlaceholders();
           } else if (state is EventStationErrorState) {
-            return _buildErrorWidget(state);
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 48,
+                  ),
+                  Text(
+                    'Error: ${state.message}',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
           }
           return _buildEventStationGrid();
         },
-      ),
-    );
-  }
-
-  Center _buildErrorWidget(EventStationErrorState state) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.error_outline,
-            color: AppColors.danger,
-            size: 48,
-          ),
-          Text(
-            'Error: ${state.message}',
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }
@@ -95,7 +87,7 @@ class _EventStationScreenState extends State<EventStationScreen> {
               height: 16,
               width: 120,
               decoration: BoxDecoration(
-                color: AppColors.grey.withValues(alpha: 0.2),
+                color: AppColors.grey.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -105,7 +97,7 @@ class _EventStationScreenState extends State<EventStationScreen> {
               height: 14,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: AppColors.grey.withValues(alpha: 0.2),
+                color: AppColors.grey.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -119,7 +111,7 @@ class _EventStationScreenState extends State<EventStationScreen> {
                   height: 12,
                   width: 80,
                   decoration: BoxDecoration(
-                    color: AppColors.grey.withValues(alpha: 0.2),
+                    color: AppColors.grey.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -128,7 +120,7 @@ class _EventStationScreenState extends State<EventStationScreen> {
                   height: 10,
                   width: 60,
                   decoration: BoxDecoration(
-                    color: AppColors.grey.withValues(alpha: 0.2),
+                    color: AppColors.grey.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -169,51 +161,35 @@ class _EventStationScreenState extends State<EventStationScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
-        splashColor: AppColors.pink.withValues(alpha: 0.2),
         onTap: () {
-          AppNavigator.goToPage(
-            context: context,
-            screen: SelectedEventStationScreen(station: station),
-          );
+          // TODO: Navigate to station details or actions
         },
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Hero(
-                tag: station.id,
-                child: Text(
-                  station.eventStationName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+              Text(
+                station.eventStationName,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
               Text(
                 station.eventStationSubProcess?.name ?? 'No subprocess',
                 style: const TextStyle(
                   fontSize: 14,
-                  color: AppColors.grey,
+                  color: Colors.grey,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
               const Spacer(),
-              // Flexible(
-              //   child: Text(
-              //     station.eventStationSubProcess?.eventStationMainProcess?.name ??
-              //         'N/A',
-              //     style: const TextStyle(fontSize: 12),
-              //     maxLines: 1,
-              //     overflow: TextOverflow.ellipsis,
-              //   ),
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
