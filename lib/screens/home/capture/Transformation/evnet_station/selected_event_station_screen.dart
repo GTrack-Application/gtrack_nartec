@@ -7,6 +7,7 @@ import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
+import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
 
 class SelectedEventStationScreen extends StatefulWidget {
@@ -24,18 +25,17 @@ class SelectedEventStationScreen extends StatefulWidget {
 
 class _SelectedEventStationScreenState
     extends State<SelectedEventStationScreen> {
-  late SelectedEventStationCubit _selectedEventStationCubit;
+  late TransformationCubit _transformationCubit;
   final Map<String, dynamic> _formValues = {};
   final Map<String, List<String>> _arrayValues = {};
   final Map<String, TextEditingController> _controllers = {};
   final TextEditingController _arrayInputController = TextEditingController();
-  String? _currentArrayField;
 
   @override
   void initState() {
     super.initState();
-    _selectedEventStationCubit = SelectedEventStationCubit();
-    _selectedEventStationCubit.getStationAttributes(
+    _transformationCubit = context.read<TransformationCubit>();
+    _transformationCubit.getStationAttributes(
       widget.station.id,
       widget.station,
     );
@@ -58,38 +58,32 @@ class _SelectedEventStationScreenState
         ),
         backgroundColor: AppColors.pink,
       ),
-      body: BlocProvider(
-        create: (context) => _selectedEventStationCubit,
-        child:
-            BlocBuilder<SelectedEventStationCubit, SelectedEventStationState>(
-          builder: (context, state) {
-            if (state is SelectedEventStationLoadingState) {
-              return _buildLoadingPlaceholders();
-            } else if (state is SelectedEventStationErrorState) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 48,
-                    ),
-                    Text(
-                      'Error: ${state.message}',
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              );
-            }
-            return _buildAttributesList();
-          },
-        ),
+      body: BlocBuilder<TransformationCubit, EventStationState>(
+        builder: (context, state) {
+          if (state is SelectedEventStationLoadingState) {
+            return _buildLoadingPlaceholders();
+          } else if (state is SelectedEventStationErrorState) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 48,
+                  ),
+                  Text(
+                    'Error: ${state.message}',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
+          }
+          return _buildAttributesList();
+        },
       ),
-      bottomNavigationBar:
-          BlocConsumer<SelectedEventStationCubit, SelectedEventStationState>(
-        bloc: _selectedEventStationCubit,
+      bottomNavigationBar: BlocConsumer<TransformationCubit, EventStationState>(
         listener: (context, state) {
           if (state is TransactionSavedState) {
             AppSnackbars.success(context, 'Transaction saved successfully');
@@ -115,7 +109,7 @@ class _SelectedEventStationScreenState
   }
 
   void _saveTransaction() {
-    _selectedEventStationCubit.saveTransaction(_formValues, _arrayValues);
+    _transformationCubit.saveTransaction(_formValues, _arrayValues);
   }
 
   Widget _buildLoadingPlaceholders() {
@@ -154,7 +148,7 @@ class _SelectedEventStationScreenState
   }
 
   Widget _buildAttributesList() {
-    final attributes = _selectedEventStationCubit.attributes;
+    final attributes = _transformationCubit.attributes;
 
     if (attributes.isEmpty) {
       return const Center(child: Text('No attributes found for this station'));
@@ -368,7 +362,6 @@ class _SelectedEventStationScreenState
               onPressed: () {
                 // TODO: Implement barcode scanning
                 setState(() {
-                  _currentArrayField = attribute.fieldName;
                   // Simulate a scan for demo purposes
                   _controllers[attribute.fieldName]!.text =
                       'SCANNED_ITEM_${DateTime.now().millisecondsSinceEpoch}';
@@ -387,7 +380,7 @@ class _SelectedEventStationScreenState
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.fields.withOpacity(0.5),
+              color: AppColors.fields.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(5),
             ),
             child: Column(
@@ -416,7 +409,7 @@ class _SelectedEventStationScreenState
   Widget _buildChip(String label, String fieldName) {
     return Chip(
       label: Text(label, style: const TextStyle(fontSize: 12)),
-      backgroundColor: AppColors.pink.withOpacity(0.2),
+      backgroundColor: AppColors.pink.withValues(alpha: 0.2),
       deleteIconColor: AppColors.pink,
       onDeleted: () {
         setState(() {
@@ -427,9 +420,12 @@ class _SelectedEventStationScreenState
   }
 
   Widget _buildStringField(AttributeInfo attribute) {
-    return TextFieldWidget(
+    return TextFormFieldWidget(
       controller: _controllers[attribute.fieldName]!,
       hintText: 'Enter ${attribute.fieldName}',
+      onChanged: (p0) {
+        _formValues[attribute.fieldName] = p0;
+      },
       onFieldSubmitted: (value) {
         _formValues[attribute.fieldName] = value;
       },

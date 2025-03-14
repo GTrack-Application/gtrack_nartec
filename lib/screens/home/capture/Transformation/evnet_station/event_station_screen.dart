@@ -15,12 +15,12 @@ class EventStationScreen extends StatefulWidget {
 }
 
 class _EventStationScreenState extends State<EventStationScreen> {
-  late EventStationCubit _eventStationCubit;
+  late TransformationCubit _eventStationCubit;
 
   @override
   void initState() {
     super.initState();
-    _eventStationCubit = context.read<EventStationCubit>();
+    _eventStationCubit = context.read<TransformationCubit>();
     _eventStationCubit.getEventStations();
   }
 
@@ -31,7 +31,7 @@ class _EventStationScreenState extends State<EventStationScreen> {
         title: const Text('Event Station'),
         backgroundColor: AppColors.pink,
       ),
-      body: BlocBuilder<EventStationCubit, EventStationState>(
+      body: BlocBuilder<TransformationCubit, EventStationState>(
         builder: (context, state) {
           if (state is EventStationLoadingState) {
             return _buildLoadingPlaceholders();

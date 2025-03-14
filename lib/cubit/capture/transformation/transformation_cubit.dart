@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/controllers/capture/transformation/transformation_controller.dart';
 import 'package:gtrack_nartec/cubit/capture/transformation/transformation_states.dart';
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
 
-class EventStationCubit extends Cubit<EventStationState> {
-  EventStationCubit() : super(EventStationInitState());
+class TransformationCubit extends Cubit<EventStationState> {
+  TransformationCubit() : super(EventStationInitState());
 
   final transformationController = TransformationController();
 
@@ -14,8 +16,12 @@ class EventStationCubit extends Cubit<EventStationState> {
   ##########################################################################
   */
 
-  // Lists
+  // ? Lists
   List<EventStation> stations = [];
+  List<StationAttributeMaster> attributes = [];
+
+  // ! Selected
+  EventStation? selectedStation;
 
   Future<void> getEventStations() async {
     emit(EventStationLoadingState());
@@ -27,19 +33,11 @@ class EventStationCubit extends Cubit<EventStationState> {
       emit(EventStationErrorState(message: e.toString()));
     }
   }
-}
-
-class SelectedEventStationCubit extends Cubit<SelectedEventStationState> {
-  SelectedEventStationCubit() : super(SelectedEventStationInitState());
-
-  final transformationController = TransformationController();
-
-  // Data
-  List<StationAttributeMaster> attributes = [];
-  EventStation? selectedStation;
 
   Future<void> getStationAttributes(
-      String eventStationId, EventStation station) async {
+    String eventStationId,
+    EventStation station,
+  ) async {
     emit(SelectedEventStationLoadingState());
     try {
       selectedStation = station;
@@ -67,8 +65,13 @@ class SelectedEventStationCubit extends Cubit<SelectedEventStationState> {
         }
       });
 
+      log(processedFormValues.toString());
+      log(arrayValues.toString());
+
       final result = await transformationController.saveStationAttributeHistory(
-          processedFormValues, arrayValues);
+        processedFormValues,
+        arrayValues,
+      );
 
       emit(TransactionSavedState(data: result));
     } catch (e) {

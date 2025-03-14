@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           // Goods Receipt --> Job Order
           BlocProvider(create: (context) => JobOrderCubit()),
           BlocProvider(create: (context) => SalesOrderCubit()),
-          BlocProvider(create: (context) => EventStationCubit()),
+          BlocProvider(create: (context) => TransformationCubit()),
         ],
         child: GetMaterialApp(
           debugShowCheckedModeBanner: false,

@@ -12,31 +12,28 @@ class EventStationErrorState extends EventStationState {
   EventStationErrorState({required this.message});
 }
 
-// Selected Event Station States
-abstract class SelectedEventStationState {}
+class SelectedEventStationInitState extends EventStationState {}
 
-class SelectedEventStationInitState extends SelectedEventStationState {}
+class SelectedEventStationLoadingState extends EventStationState {}
 
-class SelectedEventStationLoadingState extends SelectedEventStationState {}
+class SelectedEventStationLoadedState extends EventStationState {}
 
-class SelectedEventStationLoadedState extends SelectedEventStationState {}
-
-class SelectedEventStationErrorState extends SelectedEventStationState {
+class SelectedEventStationErrorState extends EventStationState {
   final String message;
 
   SelectedEventStationErrorState({required this.message});
 }
 
 // Transaction Save States
-class TransactionSavingState extends SelectedEventStationState {}
+class TransactionSavingState extends EventStationState {}
 
-class TransactionSavedState extends SelectedEventStationState {
+class TransactionSavedState extends EventStationState {
   final dynamic data;
 
   TransactionSavedState({this.data});
 }
 
-class TransactionSaveErrorState extends SelectedEventStationState {
+class TransactionSaveErrorState extends EventStationState {
   final String message;
 
   TransactionSaveErrorState({required this.message});
