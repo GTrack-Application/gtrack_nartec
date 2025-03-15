@@ -3,6 +3,7 @@
 // ignore_for_file: deprecated_member_use, non_constant_identifier_names
 
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
@@ -309,7 +310,7 @@ class _UnloadItemsScreenState extends State<UnloadItemsScreen> {
                       child: PrimaryButtonWidget(
                         text: "Save Image",
                         isLoading: state is ImageUploadLoading,
-                        backgroungColor: AppColors.pink,
+                        backgroundColor: AppColors.pink,
                         onPressed: () async {
                           await _salesOrderCubit.uploadImages(
                             _images.map((image) => File(image.path)).toList(),

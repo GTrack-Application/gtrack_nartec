@@ -204,7 +204,7 @@ class _PackagingTypeScreenState extends State<PackagingTypeScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: PrimaryButtonWidget(
-                    backgroungColor: packagingCubit.itemsWithPallet.isNotEmpty
+                    backgroundColor: packagingCubit.itemsWithPallet.isNotEmpty
                         ? AppColors.pink
                         : Colors.grey,
                     text: "Complete Transaction",

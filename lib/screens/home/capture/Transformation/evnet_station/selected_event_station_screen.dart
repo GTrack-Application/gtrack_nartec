@@ -99,7 +99,7 @@ class _SelectedEventStationScreenState
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: PrimaryButtonWidget(
               text: "Save Transaction",
-              backgroungColor: AppColors.pink,
+              backgroundColor: AppColors.pink,
               isLoading: state is TransactionSavingState,
               onPressed: _saveTransaction,
             ),

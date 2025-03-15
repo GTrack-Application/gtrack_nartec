@@ -379,7 +379,7 @@ class _AddGlnScreenState extends State<AddGlnScreen> {
             child: PrimaryButtonWidget(
               text: 'Add GLN',
               isLoading: state is GLNLoading,
-              backgroungColor: AppColors.skyBlue,
+              backgroundColor: AppColors.skyBlue,
               loadingColor: AppColors.skyBlue,
               onPressed: () {
                 if (_locationNameEngController.text.trim().isEmpty ||

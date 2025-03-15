@@ -79,7 +79,7 @@ class _GenerateTagsScreenState extends State<GenerateTagsScreen> {
                         text: "Generate Tag",
                         height: 35,
                         width: 150,
-                        backgroungColor: AppColors.skyBlue,
+                        backgroundColor: AppColors.skyBlue,
                         onPressed: () {
                           fatsCubit.generateTags();
                         },

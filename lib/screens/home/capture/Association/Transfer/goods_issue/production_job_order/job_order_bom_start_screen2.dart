@@ -138,7 +138,7 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                           is ProductionJobOrderUpdateMappedBarcodesLoading;
                       return PrimaryButtonWidget(
                         text: "Save",
-                        backgroungColor: AppColors.pink,
+                        backgroundColor: AppColors.pink,
                         onPressed: () {
                           if (locationController.text.isEmpty) {
                             AppSnackbars.normal(context,

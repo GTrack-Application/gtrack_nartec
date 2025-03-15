@@ -123,7 +123,7 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: PrimaryButtonWidget(
                       text: "View Journey",
-                      backgroungColor:
+                      backgroundColor:
                           isPicked ? AppColors.pink : AppColors.grey,
                       onPressed: () {
                         if (isPicked) {

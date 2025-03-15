@@ -152,7 +152,7 @@ class _DigitalLinkViewReviewsScreenState
                       return PrimaryButtonWidget(
                         text: 'Submit',
                         onPressed: _submitReview,
-                        backgroungColor: _selectedRating > 0
+                        backgroundColor: _selectedRating > 0
                             ? AppColors.skyBlue
                             : AppColors.grey.withAlpha(50),
                         isLoading: isLoading,

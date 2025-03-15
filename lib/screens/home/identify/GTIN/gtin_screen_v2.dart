@@ -95,7 +95,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                       Expanded(
                         child: PrimaryButtonWidget(
                           text: "Search",
-                          backgroungColor: AppColors.skyBlue,
+                          backgroundColor: AppColors.skyBlue,
                           isLoading: state is GtinLoadingState,
                           onPressed: () {
                             gtinCubit.getProducts(
@@ -116,7 +116,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                           child: PrimaryButtonWidget(
                             text: "Clear",
                             height: 35,
-                            backgroungColor: AppColors.skyBlue,
+                            backgroundColor: AppColors.skyBlue,
                             onPressed: () {
                               gtinCubit.searchController.clear();
                               gtinCubit.getProducts();

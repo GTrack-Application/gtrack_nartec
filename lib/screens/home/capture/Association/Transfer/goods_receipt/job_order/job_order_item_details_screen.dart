@@ -67,7 +67,7 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
               child: PrimaryButtonWidget(
                 text: "Back",
                 onPressed: () {},
-                backgroungColor: AppColors.danger,
+                backgroundColor: AppColors.danger,
               ),
             ),
             Expanded(
@@ -83,7 +83,7 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
                   onPressed: () {
                     JobOrderCubit.get(context).addToProduction();
                   },
-                  backgroungColor: AppColors.green,
+                  backgroundColor: AppColors.green,
                 ),
               ),
             ),
@@ -141,12 +141,13 @@ class _JobOrderItemDetailsScreenState extends State<JobOrderItemDetailsScreen> {
                           // navigate to scan asset screen
                           AppNavigator.goToPage(
                             context: context,
-                            screen: JobOrderScanAssetScreen(order: widget.order, bom: bom),
+                            screen: JobOrderScanAssetScreen(
+                                order: widget.order, bom: bom),
                           );
                         }
                         return;
                       },
-                      backgroungColor: picked ? AppColors.grey : AppColors.pink,
+                      backgroundColor: picked ? AppColors.grey : AppColors.pink,
                     ),
                   )
                 ],

@@ -536,7 +536,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
             const SizedBox(height: 16),
             PrimaryButtonWidget(
                 text: "View All Reviews",
-                backgroungColor: AppColors.skyBlue,
+                backgroundColor: AppColors.skyBlue,
                 onPressed: () {
                   AppNavigator.goToPage(
                     context: context,

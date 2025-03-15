@@ -109,7 +109,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                             controller.text.trim(),
                           );
                         },
-                        backgroungColor: AppColors.pink,
+                        backgroundColor: AppColors.pink,
                         isLoading: state is AssetsByTagNumberLoading,
                       ),
                     ),
@@ -140,7 +140,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        backgroungColor: AppColors.pink,
+                        backgroundColor: AppColors.pink,
                       ),
                     ),
                     Expanded(
@@ -153,7 +153,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                             transferDate,
                           );
                         },
-                        backgroungColor: AppColors.green,
+                        backgroundColor: AppColors.green,
                         isLoading: state is SaveAssetTagsLoading,
                       ),
                     )

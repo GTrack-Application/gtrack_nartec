@@ -78,7 +78,7 @@ class _ShippingJobOrderScreenState extends State<ShippingJobOrderScreen> {
               child: PrimaryButtonWidget(
                 text: "Find",
                 onPressed: () {},
-                backgroungColor: AppColors.green,
+                backgroundColor: AppColors.green,
               ),
             )
           ],

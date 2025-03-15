@@ -394,7 +394,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   ),
                   const SizedBox(height: 20),
                   PrimaryButtonWidget(
-                    backgroungColor: const Color(0xFF4200FF),
+                    backgroundColor: const Color(0xFF4200FF),
                     onPressed: () {
                       if (dropdownValue.toString() == "Normal User") {
                         if (stakeHolderValue == "Brand Owner") {
