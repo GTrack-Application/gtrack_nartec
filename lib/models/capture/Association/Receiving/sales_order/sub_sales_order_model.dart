@@ -38,8 +38,8 @@ class SubSalesOrderModel {
     productName = json['productName'];
     productDescription = json['productDescription'];
     unitOfMeasure = json['unitOfMeasure'];
-    quantity = num.tryParse(json['quantity'].toString()) ?? 1;
-    quantityPicked = json['quantityPicked'];
+    quantity = num.tryParse(json['quantity'].toString()) ?? 0;
+    quantityPicked = json['quantityPicked'] ?? 0;
     price = json['price'];
     totalPrice = json['totalPrice'];
     images = json['images'];
@@ -69,6 +69,25 @@ class SubSalesOrderModel {
       data['SalesInvoiceMaster'] = salesInvoiceMaster!.toJson();
     }
     return data;
+  }
+
+  SubSalesOrderModel increasePickedQuantity() {
+    return SubSalesOrderModel(
+      id: id,
+      salesInvoiceId: salesInvoiceId,
+      productId: productId,
+      productName: productName,
+      productDescription: productDescription,
+      unitOfMeasure: unitOfMeasure,
+      quantity: quantity,
+      quantityPicked: (quantityPicked ?? 0) + 1,
+      price: price,
+      totalPrice: totalPrice,
+      images: images,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      salesInvoiceMaster: salesInvoiceMaster,
+    );
   }
 }
 

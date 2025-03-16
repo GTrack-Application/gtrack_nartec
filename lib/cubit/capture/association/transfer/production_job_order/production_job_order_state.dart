@@ -3,6 +3,7 @@ import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobO
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
+import 'package:gtrack_nartec/models/capture/Association/shipping/vehicle_model.dart';
 
 abstract class ProductionJobOrderState {}
 
@@ -87,4 +88,17 @@ class ProductionJobOrderUpdateMappedBarcodesError
     extends ProductionJobOrderState {
   final String message;
   ProductionJobOrderUpdateMappedBarcodesError({required this.message});
+}
+
+// Vehicle states
+class VehiclesLoading extends ProductionJobOrderState {}
+
+class VehiclesLoaded extends ProductionJobOrderState {
+  final List<VehicleModel> vehicles;
+  VehiclesLoaded({required this.vehicles});
+}
+
+class VehiclesError extends ProductionJobOrderState {
+  final String message;
+  VehiclesError({required this.message});
 }

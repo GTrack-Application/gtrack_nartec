@@ -4,16 +4,19 @@ import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_
 import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/sales_order_transfer_by_pallet_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_start_screen2.dart';
 
 class JobOrderBomStartScreen1 extends StatefulWidget {
   final String gtin;
   final String productName;
+  final bool? isSalesOrder;
 
   const JobOrderBomStartScreen1({
     super.key,
     required this.gtin,
     required this.productName,
+    this.isSalesOrder = false,
   });
 
   @override
@@ -172,10 +175,17 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
 
                               if (isValidated) {
                                 // Add next button functionality
-                                AppNavigator.goToPage(
-                                  context: context,
-                                  screen: JobOrderBomStartScreen2(),
-                                );
+                                if (widget.isSalesOrder == true) {
+                                  AppNavigator.goToPage(
+                                    context: context,
+                                    screen: SalesOrderTransferByPalletScreen(),
+                                  );
+                                } else {
+                                  AppNavigator.goToPage(
+                                    context: context,
+                                    screen: JobOrderBomStartScreen2(),
+                                  );
+                                }
                               }
                               return;
                             },
@@ -210,7 +220,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
           width: 200,
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
-            color: AppColors.grey.withOpacity(0.1),
+            color: AppColors.grey.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -219,7 +229,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
           width: double.infinity,
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
-            color: AppColors.grey.withOpacity(0.1),
+            color: AppColors.grey.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
         ),
@@ -233,7 +243,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                   height: 16,
                   width: 100,
                   decoration: BoxDecoration(
-                    color: AppColors.grey.withOpacity(0.1),
+                    color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -242,7 +252,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                   height: 40,
                   width: 200,
                   decoration: BoxDecoration(
-                    color: AppColors.grey.withOpacity(0.1),
+                    color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
@@ -255,7 +265,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
           width: double.infinity,
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
-            color: AppColors.grey.withOpacity(0.1),
+            color: AppColors.grey.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
         ),
@@ -263,7 +273,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
           height: 48,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppColors.grey.withOpacity(0.1),
+            color: AppColors.grey.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
         ),

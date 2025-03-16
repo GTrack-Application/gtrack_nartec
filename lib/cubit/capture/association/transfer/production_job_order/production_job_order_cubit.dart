@@ -8,11 +8,13 @@ import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/controllers/epcis_controller.dart';
 import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
+import 'package:gtrack_nartec/models/capture/Association/shipping/vehicle_model.dart';
 
 class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   ProductionJobOrderCubit() : super(ProductionJobOrderInitial());
@@ -27,9 +29,17 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
 
   List<ProductionJobOrder> filteredOrders = [];
   List<ProductionJobOrder> _orders = [];
+  List<VehicleModel> _vehicles = [];
+  VehicleModel? selectedVehicle;
 
   int quantityPicked = 0;
   String? selectedGLN;
+
+  // Getters
+  List<VehicleModel> get vehicles => _vehicles;
+
+  // Selected Data
+  SubSalesOrderModel? selectedSubSalesOrder;
 
   Future<void> getProductionJobOrders() async {
     emit(ProductionJobOrderLoading());
@@ -241,7 +251,86 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     }
   }
 
-  Future<void> updateMappedBarcodes(
+  Future<void> getMappedBarcodesByVehicle(
+    String gtin, {
+    String? palletCode,
+    String? serialNo,
+  }) async {
+    if (state is ProductionJobOrderMappedBarcodesLoading) return;
+    if (palletCode != null) {
+      if (palletCode.isEmpty) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'Pallet code is required',
+        ));
+        return;
+      }
+    } else if (serialNo != null) {
+      if (serialNo.isEmpty) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'Serial number is required',
+        ));
+        return;
+      }
+    }
+    emit(ProductionJobOrderMappedBarcodesLoading());
+    try {
+      // If picked quantity is equal to the quantity, don't fetch mapped barcodes
+      if (quantityPicked >= (selectedSubSalesOrder?.quantity ?? 0)) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'You have reached the maximum quantity',
+        ));
+        return;
+      }
+      final token = await AppPreferences.getToken();
+      String url = '/api/mappedBarcodes?';
+      if (palletCode != null) {
+        url += 'PalletCode=$palletCode&GTIN=$gtin';
+      } else if (serialNo != null) {
+        url += 'ItemSerialNo=$serialNo&GTIN=$gtin';
+      }
+
+      final response = await _httpService.request(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.success) {
+        final data = response.data;
+        final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
+        if (mappedBarcodes.data?.isEmpty ?? true) {
+          emit(ProductionJobOrderMappedBarcodesError(
+            message: 'No mapped barcodes found',
+          ));
+          return;
+        }
+        // add all new list but don't add duplicates
+        // final newItems = mappedBarcodes.data
+        //     ?.where((element) => !items.any((e) => e.id == element.id))
+        //     .toList();
+        final newItems = mappedBarcodes.data;
+        items.addAll(newItems ?? []);
+        // increment quantity
+        if (selectedSubSalesOrder != null) {
+          selectedSubSalesOrder =
+              selectedSubSalesOrder?.increasePickedQuantity();
+          quantityPicked++;
+        }
+
+        emit(ProductionJobOrderMappedBarcodesLoaded(
+            mappedBarcodes: mappedBarcodes));
+      } else {
+        emit(ProductionJobOrderMappedBarcodesError(
+            message: 'Failed to fetch mapped barcodes'));
+      }
+    } catch (e) {
+      emit(ProductionJobOrderMappedBarcodesError(message: e.toString()));
+    }
+  }
+
+  void updateMappedBarcodes(
     String location,
     List<MappedBarcode> scannedItems, {
     ProductionJobOrder? oldOrder,
@@ -331,6 +420,65 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     }
   }
 
+  void updateMappedBarcodesByVehicle(
+    String location,
+    List<MappedBarcode> scannedItems, {
+    int? qty,
+  }) async {
+    emit(ProductionJobOrderUpdateMappedBarcodesLoading());
+
+    try {
+      final itemIds = scannedItems.map((item) => item.id).toList();
+
+      final response = await _httpService.request(
+        "/api/mappedBarcodes/updateBinLocationForMappedBarcodes",
+        method: HttpMethod.put,
+        payload: {
+          'ids': itemIds,
+          'newBinLocation': location,
+        },
+      );
+
+      final result = await Future.any([
+        // EPCIS API Call
+        EPCISController.insertEPCISEvent(
+          type: "Transaction Event",
+          action: "ADD",
+          bizStep: "shipping",
+          disposition: "in_transit",
+          gln: selectedVehicle?.glnIdNumber,
+        ),
+
+        // update mapped barcodes API call
+        _httpService.request(
+          "/api/salesInvoice/details/${selectedSubSalesOrder?.id}",
+          method: HttpMethod.put,
+          payload: {
+            'quantityPicked': qty,
+            'vehicleId': selectedVehicle?.id.toString(),
+          },
+        ).catchError((error) {
+          log(error.toString());
+          throw Exception(error.data['message'] ??
+              error.data['error'] ??
+              'Failed to update mapped barcodes');
+        }),
+      ]);
+
+      if (response.success) {
+        final data = response.data;
+        emit(ProductionJobOrderUpdateMappedBarcodesLoaded(
+          message: data['message'],
+          updatedCount: data['updatedCount'],
+        ));
+      } else {
+        throw Exception('Failed to update mapped barcodes');
+      }
+    } catch (e) {
+      emit(ProductionJobOrderUpdateMappedBarcodesError(message: e.toString()));
+    }
+  }
+
   void clearItems() {
     items = [];
     quantityPicked = 0;
@@ -347,6 +495,63 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     emit(ProductionJobOrderMappedBarcodesLoaded(
       mappedBarcodes: MappedBarcodesResponse(
           data: items, message: "Item removed successfully"),
+    ));
+  }
+
+  /*
+  ##############################################################################
+  ! Sales Order
+  ##############################################################################
+  */
+
+  Future<void> getVehicles() async {
+    emit(VehiclesLoading());
+    try {
+      final token = await AppPreferences.getToken();
+      final memberId = await AppPreferences.getMemberId();
+
+      if (memberId == null) {
+        throw Exception("Member ID not found");
+      }
+
+      final response = await _httpService.request(
+        '/api/vehicle?member_id=$memberId',
+        method: HttpMethod.get,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.success) {
+        final List<dynamic> data = response.data;
+        _vehicles = data.map((e) => VehicleModel.fromJson(e)).toList();
+        emit(VehiclesLoaded(vehicles: _vehicles));
+      } else {
+        emit(VehiclesError(message: response.message));
+      }
+    } catch (error) {
+      emit(VehiclesError(message: error.toString()));
+    }
+  }
+
+  void setSelectedVehicle(VehicleModel vehicle) {
+    selectedVehicle = vehicle;
+    emit(VehiclesLoaded(vehicles: _vehicles));
+    emit(ProductionJobOrderMappedBarcodesLoaded(
+      mappedBarcodes: MappedBarcodesResponse(
+        data: items,
+        message: null,
+      ),
+    ));
+  }
+
+  void clearAll() {
+    items = [];
+    quantityPicked = 0;
+    // selectedSubSalesOrder?.quantityPicked = 0;
+    emit(ProductionJobOrderMappedBarcodesLoaded(
+      mappedBarcodes: MappedBarcodesResponse(data: items),
     ));
   }
 }

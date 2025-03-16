@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
+import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/route_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_details_screen.dart';
 
 class SubSalesOrderScreen extends StatefulWidget {
   const SubSalesOrderScreen({super.key, required this.salesOrderId});
@@ -35,10 +37,9 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.pink,
         title: const Text('Sales Order'),
+        backgroundColor: AppColors.pink,
       ),
       body: BlocConsumer<SalesOrderCubit, SalesOrderState>(
         bloc: salesOrderCubit,
@@ -101,16 +102,37 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
                 );
               },
             );
+          } else if (state is SubSalesOrderError) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 100,
+                  color: AppColors.pink,
+                ),
+                Center(
+                  child: Text(
+                    state.message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            );
           }
 
-          //   final isPicked = subSalesOrder
-          //       .where(
-          //         (element) => element.quantityPicked == element.quantity,
-          //       )
-          //       .isNotEmpty;
+          final isPicked = subSalesOrder
+              .where(
+                (element) => element.quantityPicked == element.quantity,
+              )
+              .isNotEmpty;
 
-          //TODO: remove this after module is completed
-          final isPicked = true;
+          // //TODO: remove this after module is completed
+          // final isPicked = true;
 
           return ListView.builder(
             itemCount:
@@ -119,32 +141,35 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
             itemBuilder: (context, index) {
               if (index == 0) {
                 // Start Journey button at the top
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: PrimaryButtonWidget(
-                      text: "View Journey",
-                      backgroundColor:
-                          isPicked ? AppColors.pink : AppColors.grey,
-                      onPressed: () {
-                        if (isPicked) {
-                          AppNavigator.replaceTo(
-                            context: context,
-                            screen: RouteScreen(
-                              customerId: subSalesOrder[index]
-                                      .salesInvoiceMaster
-                                      ?.customerId ??
-                                  '',
-                              salesOrderId: widget.salesOrderId,
-                              subSalesOrder: subSalesOrder,
-                            ),
-                          );
-                        } else {
-                          AppSnackbars.warning(
-                            context,
-                            'Please pick the goods first',
-                          );
-                        }
-                      }),
+
+                return Visibility(
+                  visible: isPicked,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: PrimaryButtonWidget(
+                        text: isPicked ? "View Journey" : "Pick Goods",
+                        backgroundColor: AppColors.pink,
+                        onPressed: () {
+                          if (isPicked) {
+                            AppNavigator.replaceTo(
+                              context: context,
+                              screen: RouteScreen(
+                                customerId: subSalesOrder[index]
+                                        .salesInvoiceMaster
+                                        ?.customerId ??
+                                    '',
+                                salesOrderId: widget.salesOrderId,
+                                subSalesOrder: subSalesOrder,
+                              ),
+                            );
+                          } else {
+                            AppSnackbars.warning(
+                              context,
+                              'Please pick the goods first',
+                            );
+                          }
+                        }),
+                  ),
                 );
               }
 
@@ -216,6 +241,35 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
                           label: 'Quantity:',
                           value: order.quantity?.toString() ?? '',
                         ),
+                        Visibility(
+                          visible: !isPicked,
+                          child: Row(
+                            children: [
+                              const Spacer(),
+                              PrimaryButtonWidget(
+                                text: 'Pick Goods',
+                                height: 30,
+                                width: 150,
+                                backgroundColor: AppColors.pink,
+                                onPressed: () {
+                                  context
+                                      .read<ProductionJobOrderCubit>()
+                                      .selectedSubSalesOrder = order;
+                                  AppNavigator.goToPage(
+                                    context: context,
+                                    screen: JobOrderBomDetailsScreen(
+                                      isSalesOrder: true,
+                                      barcode: order.productId ?? '',
+                                      jobOrderNumber: order.salesInvoiceMaster
+                                              ?.salesInvoiceNumber ??
+                                          '',
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),

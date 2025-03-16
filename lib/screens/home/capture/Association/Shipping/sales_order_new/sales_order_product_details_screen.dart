@@ -8,24 +8,21 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_start_screen1.dart';
 
-class JobOrderBomDetailsScreen extends StatefulWidget {
+class SalesOrderProductDetailsScreen extends StatefulWidget {
   final String barcode;
-  final String jobOrderNumber;
-  final bool? isSalesOrder;
 
-  const JobOrderBomDetailsScreen({
+  const SalesOrderProductDetailsScreen({
     super.key,
     required this.barcode,
-    required this.jobOrderNumber,
-    this.isSalesOrder = false,
   });
 
   @override
-  State<JobOrderBomDetailsScreen> createState() =>
-      _JobOrderBomDetailsScreenState();
+  State<SalesOrderProductDetailsScreen> createState() =>
+      _SalesOrderProductDetailsScreenState();
 }
 
-class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
+class _SalesOrderProductDetailsScreenState
+    extends State<SalesOrderProductDetailsScreen> {
   late ProductionJobOrderCubit _productionJobOrderCubit;
   @override
   void initState() {
@@ -39,7 +36,7 @@ class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Product Details - ${widget.jobOrderNumber}',
+          'Product Details',
           style: const TextStyle(
             fontWeight: FontWeight.w600,
             color: AppColors.white,
@@ -134,13 +131,11 @@ class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
                       FilledButton(
                           onPressed: () {
                             AppNavigator.goToPage(
-                              context: context,
-                              screen: JobOrderBomStartScreen1(
-                                gtin: widget.barcode,
-                                productName: product.productnameenglish ?? '',
-                                isSalesOrder: widget.isSalesOrder,
-                              ),
-                            );
+                                context: context,
+                                screen: JobOrderBomStartScreen1(
+                                  gtin: widget.barcode,
+                                  productName: product.productnameenglish ?? '',
+                                ));
                           },
                           child: Text("Start Picking")),
                     ],
