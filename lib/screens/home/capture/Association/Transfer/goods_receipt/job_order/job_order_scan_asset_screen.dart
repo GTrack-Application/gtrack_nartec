@@ -256,13 +256,13 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                             : AppColors.white,
                       ),
                       child: Row(
+                        spacing: 8,
                         children: [
                           Icon(
                             Icons.qr_code_scanner_rounded,
                             size: 16,
                             color: AppColors.pink,
                           ),
-                          const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               jobOrderCubit.assets[index].tagNumber ?? '',
@@ -270,7 +270,6 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 8),
                           Text(
                             dateFormat(transferDate.toIso8601String()),
                             style: TextStyle(fontSize: 14),
