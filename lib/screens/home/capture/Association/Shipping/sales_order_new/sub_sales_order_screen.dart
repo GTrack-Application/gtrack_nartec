@@ -131,9 +131,6 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
               )
               .isNotEmpty;
 
-          // //TODO: remove this after module is completed
-          // final isPicked = true;
-
           return ListView.builder(
             itemCount:
                 subSalesOrder.length + 1, // Increased by 1 for the button
