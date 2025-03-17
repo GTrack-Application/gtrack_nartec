@@ -56,6 +56,8 @@ class AppIcons {
   static const String gsin = 'assets/icons/gsin.png';
   static const String gdti = 'assets/icons/identify_gdti.png';
   static const String ginc = 'assets/icons/identify_ginc.png';
+  static const String varifiedIcon = "assets/icons/varified_icon.png";
+  static const String unvarifiedIcon = "assets/icons/unvarified_icon.png";
 
   // Capture Screen
   static const String association = 'assets/icons/association.png';

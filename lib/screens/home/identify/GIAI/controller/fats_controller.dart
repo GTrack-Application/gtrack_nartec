@@ -14,6 +14,7 @@ import 'package:gtrack_nartec/screens/home/identify/GIAI/model/employee_name_mod
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/generate_tag_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/state_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/tag_model.dart';
+import 'package:gtrack_nartec/screens/home/identify/GIAI/model/varified_asset_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/send_barcode_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -265,6 +266,22 @@ class FatsController {
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = jsonDecode(response.body) as List;
       return TagModel.fromJson(data[0]);
+    } else {
+      var data = jsonDecode(response.body);
+      throw Exception(data['message']);
+    }
+  }
+
+  // get varified assets
+  static Future<List<VarifiedAssetModel>> getVarifiedAsset() async {
+    final memberId = await AppPreferences.getMemberId();
+    final url =
+        '${AppUrls.baseUrlWith7010}/api/assetCapture/getMasterEncodeAssetCaptureFinal?memberId=$memberId';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = jsonDecode(response.body)["data"] as List;
+      return data.map((e) => VarifiedAssetModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
       throw Exception(data['message']);

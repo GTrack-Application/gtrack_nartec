@@ -113,6 +113,16 @@ class FatsCubit extends Cubit<FatsState> {
     }
   }
 
+  Future<void> getVerifiedAsset() async {
+    emit(VerifiedAssetLoading());
+    try {
+      final verifiedAssets = await FatsController.getVarifiedAsset();
+      emit(VerifiedAssetLoaded(data: verifiedAssets));
+    } catch (e) {
+      emit(VerifiedAssetError(message: e.toString()));
+    }
+  }
+
   Future<void> handleSubmit(
     String id,
     String subUserId,

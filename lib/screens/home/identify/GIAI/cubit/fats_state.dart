@@ -6,6 +6,7 @@ import 'package:gtrack_nartec/screens/home/identify/GIAI/model/employee_name_mod
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/generate_tag_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/state_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/model/tag_model.dart';
+import 'package:gtrack_nartec/screens/home/identify/GIAI/model/varified_asset_model.dart';
 
 class FatsState {}
 
@@ -141,4 +142,16 @@ class FatsHandleSubmitLoaded extends FatsState {
 class FatsHandleSubmitError extends FatsState {
   final String message;
   FatsHandleSubmitError({required this.message});
+}
+
+class VerifiedAssetLoading extends FatsState {}
+
+class VerifiedAssetLoaded extends FatsState {
+  final List<VarifiedAssetModel> data;
+  VerifiedAssetLoaded({required this.data});
+}
+
+class VerifiedAssetError extends FatsState {
+  final String message;
+  VerifiedAssetError({required this.message});
 }

@@ -118,6 +118,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
         AppPreferences.setCurrentUser("Admin User").then((_) {});
         AppPreferences.setMemberId(value.subUser!.memberId.toString())
             .then((_) {});
+        AppPreferences.setGs1Prefix(
+                value.subUser!.parentUserData!.gs1CompanyPrefix.toString())
+            .then((_) {});
 
         AppNavigator.goToPage(context: context, screen: const HomeScreen());
       }).onError((error, stackTrace) {

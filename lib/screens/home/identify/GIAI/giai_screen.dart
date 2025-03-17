@@ -34,7 +34,7 @@ class _GIAIScreenState extends State<GIAIScreen> {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.skyBlue,
-        title: const Text('GIAI'),
+        title: const Text('Un-Verified Assets'),
       ),
       body: BlocConsumer<GIAICubit, GIAIState>(
         bloc: giaiCubit,
