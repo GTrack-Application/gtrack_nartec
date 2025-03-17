@@ -265,7 +265,7 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              jobOrderCubit.assets[index].tagNumber,
+                              jobOrderCubit.assets[index].tagNumber ?? '',
                               style: TextStyle(fontSize: 14),
                               overflow: TextOverflow.ellipsis,
                             ),

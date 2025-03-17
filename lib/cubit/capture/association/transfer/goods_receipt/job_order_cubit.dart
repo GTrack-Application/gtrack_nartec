@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
@@ -136,6 +138,7 @@ class JobOrderCubit extends Cubit<JobOrderState> {
       );
       if (response.success) {
         final List<dynamic> data = response.data["data"];
+        log(data.toString());
         final assets = data.map((e) => JobOrderAssetModel.fromJson(e)).toList();
 
         _assets.addAll(assets);
