@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class JobOrderAssetModel {
   final int tblAssetMasterEncodeAssetCaptureID;
   final String? memberId;
@@ -46,6 +48,7 @@ class JobOrderAssetModel {
   final String? fullLocationDetails;
   final String? journalRefNo;
   final List<AssetImage>? images;
+  final TextEditingController? productionLine;
 
   JobOrderAssetModel({
     required this.tblAssetMasterEncodeAssetCaptureID,
@@ -95,6 +98,7 @@ class JobOrderAssetModel {
     this.fullLocationDetails,
     this.journalRefNo,
     this.images,
+    this.productionLine,
   });
 
   factory JobOrderAssetModel.fromJson(Map<String, dynamic> json) {
@@ -159,6 +163,7 @@ class JobOrderAssetModel {
       fullLocationDetails: json['FullLocationDetails'],
       journalRefNo: json['JournalRefNo'],
       images: imagesList,
+      productionLine: TextEditingController(),
     );
   }
 
@@ -214,6 +219,10 @@ class JobOrderAssetModel {
 
     if (images != null) {
       data['Images'] = images!.map((i) => i.toJson()).toList();
+    }
+
+    if (productionLine != null) {
+      data['productionLine'] = productionLine!.text;
     }
 
     return data;

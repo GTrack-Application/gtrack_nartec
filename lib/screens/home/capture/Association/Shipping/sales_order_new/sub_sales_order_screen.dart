@@ -257,9 +257,6 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
                                     screen: JobOrderBomDetailsScreen(
                                       isSalesOrder: true,
                                       barcode: order.productId ?? '',
-                                      jobOrderNumber: order.salesInvoiceMaster
-                                              ?.salesInvoiceNumber ??
-                                          '',
                                     ),
                                   );
                                 },

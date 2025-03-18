@@ -6,17 +6,17 @@ import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_
 import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/sales_order_scan_asset_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_start_screen1.dart';
 
 class JobOrderBomDetailsScreen extends StatefulWidget {
   final String barcode;
-  final String jobOrderNumber;
   final bool? isSalesOrder;
 
   const JobOrderBomDetailsScreen({
     super.key,
     required this.barcode,
-    required this.jobOrderNumber,
     this.isSalesOrder = false,
   });
 
@@ -39,7 +39,7 @@ class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Product Details - ${widget.jobOrderNumber}',
+          'Product Details',
           style: const TextStyle(
             fontWeight: FontWeight.w600,
             color: AppColors.white,
@@ -131,8 +131,18 @@ class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
                   Row(
                     children: [
                       const Spacer(),
-                      FilledButton(
-                          onPressed: () {
+                      PrimaryButtonWidget(
+                        onPressed: () {
+                          if (widget.isSalesOrder == true) {
+                            AppNavigator.goToPage(
+                              context: context,
+                              screen: SalesOrderScanAssetScreen(
+                                barcode: widget.barcode,
+                                bomStartData: product,
+                                isSalesOrder: widget.isSalesOrder,
+                              ),
+                            );
+                          } else {
                             AppNavigator.goToPage(
                               context: context,
                               screen: JobOrderBomStartScreen1(
@@ -141,8 +151,13 @@ class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
                                 isSalesOrder: widget.isSalesOrder,
                               ),
                             );
-                          },
-                          child: Text("Start Picking")),
+                          }
+                        },
+                        text: "Start Picking",
+                        height: 40,
+                        width: 150,
+                        backgroundColor: AppColors.pink,
+                      ),
                     ],
                   ),
                 ],

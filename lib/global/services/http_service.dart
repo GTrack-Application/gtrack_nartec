@@ -33,7 +33,7 @@ class HttpService {
   Future<Response> request(
     String endpoint, {
     HttpMethod method = HttpMethod.get,
-    Map<String, dynamic>? payload,
+    dynamic payload,
     Map<String, String>? headers,
     BuildContext? context,
   }) async {
@@ -86,7 +86,7 @@ class HttpService {
     Uri url,
     HttpMethod method, {
     Map<String, String>? headers,
-    Map<String, dynamic>? body,
+    dynamic body,
   }) async {
     switch (method) {
       case HttpMethod.get:

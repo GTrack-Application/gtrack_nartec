@@ -102,6 +102,8 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                           ),
                           DropdownButtonFormField<String>(
                             decoration: const InputDecoration(
+                              fillColor: AppColors.background,
+                              focusColor: AppColors.background,
                               labelText: 'Select Bin Location',
                               border: OutlineInputBorder(),
                             ),

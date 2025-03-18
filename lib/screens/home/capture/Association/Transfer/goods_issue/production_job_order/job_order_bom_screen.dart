@@ -179,7 +179,6 @@ class _JobOrderBomScreenState extends State<JobOrderBomScreen> {
                                     context: context,
                                     screen: JobOrderBomDetailsScreen(
                                       barcode: bom.productId ?? '',
-                                      jobOrderNumber: widget.jobOrderNumber,
                                     ),
                                   );
                                 },

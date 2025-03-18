@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_asset_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
 
@@ -28,6 +29,9 @@ class JobOrderCubit extends Cubit<JobOrderState> {
   // Getters
   get items => _selectedItems;
   List<JobOrderAssetModel> get assets => _assets;
+
+  // Other Variables
+  bool isSaveAssetTagsForSalesOrder = false;
 
   Future<void> getJobOrders() async {
     emit(JobOrderLoading());
@@ -184,6 +188,53 @@ class JobOrderCubit extends Cubit<JobOrderState> {
         },
       );
       if (response.success) {
+        emit(SaveAssetTagsLoaded());
+      } else {
+        emit(SaveAssetTagsError(message: response.message));
+      }
+    } catch (error) {
+      emit(SaveAssetTagsError(message: error.toString()));
+    }
+  }
+
+  void saveAssetTagsForSalesOrder(
+    String jobOrderMasterId,
+    DateTime productionExecutionDateTime,
+    SubSalesOrderModel? order,
+  ) async {
+    if (state is SaveAssetTagsLoading) {
+      return;
+    }
+    emit(SaveAssetTagsLoading());
+    try {
+      if (_assets.isEmpty) {
+        throw Exception("No assets selected");
+      }
+      final token = await AppPreferences.getToken();
+      final response = await _httpService.request(
+        '/api/equipmentUsage',
+        method: HttpMethod.post,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        payload: assets
+            .map(
+              (e) => {
+                "jobOrderNo": "${order?.id}",
+                "poNumber": "${e.poNumber}",
+                "productionLine": e.productionLine?.text,
+                "TblAssetMasterEncodeAssetCaptureID":
+                    e.tblAssetMasterEncodeAssetCaptureID,
+                "processName": "sales_delivery"
+              },
+            )
+            .toList(),
+      );
+      if (response.success) {
+        // will show a button to navigate to bin location screen
+        isSaveAssetTagsForSalesOrder = true;
+
         emit(SaveAssetTagsLoaded());
       } else {
         emit(SaveAssetTagsError(message: response.message));
