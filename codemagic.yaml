@@ -1,0 +1,22 @@
+workflows:
+  android-release:
+    name: Android Release
+    max_build_duration: 60
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'new_gtrack'
+          include: true
+    environment:
+      flutter: stable
+      groups:
+        - SECRET
+    scripts:
+      - brew install jq python3
+      - pip3 install pyjwt cryptography
+      - flutter pub get
+      - flutter build apk --release
+      - bash upload_apk.sh
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk

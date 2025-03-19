@@ -200,7 +200,7 @@ class JobOrderCubit extends Cubit<JobOrderState> {
   void saveAssetTagsForSalesOrder(
     String jobOrderMasterId,
     DateTime productionExecutionDateTime,
-    SubSalesOrderModel? order,
+    SubSalesOrderModel? salesOrder,
   ) async {
     if (state is SaveAssetTagsLoading) {
       return;
@@ -221,7 +221,11 @@ class JobOrderCubit extends Cubit<JobOrderState> {
         payload: assets
             .map(
               (e) => {
-                "jobOrderNo": "${order?.id}",
+                "salesInvoiceNumber":
+                    "${salesOrder?.salesInvoiceMaster?.salesInvoiceNumber}",
+                "salesInvoiceDetailsId":
+                    "${salesOrder?.salesInvoiceMaster?.id}",
+                "jobOrderNo": "${salesOrder?.id}",
                 "poNumber": "${e.poNumber}",
                 "productionLine": e.productionLine?.text,
                 "TblAssetMasterEncodeAssetCaptureID":

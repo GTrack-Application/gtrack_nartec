@@ -51,3 +51,6 @@ app.*.map.json
 
 # Vs code
 .vscode/
+
+# Google Drive
+service-account-key.json
