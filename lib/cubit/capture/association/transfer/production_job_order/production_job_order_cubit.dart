@@ -224,7 +224,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
         if (mappedBarcodes.data?.isEmpty ?? true) {
           emit(ProductionJobOrderMappedBarcodesError(
-            message: 'No mapped barcodes found',
+            message: 'No mapped barcodes found for $gtin',
           ));
           return;
         }
@@ -302,7 +302,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
         if (mappedBarcodes.data?.isEmpty ?? true) {
           emit(ProductionJobOrderMappedBarcodesError(
-            message: 'No mapped barcodes found',
+            message: 'No mapped barcodes found for $gtin',
           ));
           return;
         }
