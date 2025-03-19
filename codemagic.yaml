@@ -17,6 +17,6 @@ workflows:
       - pip3 install pyjwt cryptography
       - flutter pub get
       - flutter build apk --release
-      - bash upload_apk.sh
+      - bash upload_apk_with_deletion.sh
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
