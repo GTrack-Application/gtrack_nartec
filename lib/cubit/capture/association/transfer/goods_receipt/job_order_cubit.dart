@@ -224,8 +224,8 @@ class JobOrderCubit extends Cubit<JobOrderState> {
                 "salesInvoiceNumber": "${salesOrder?.id}",
                 "salesInvoiceDetailsId":
                     "${salesOrder?.salesInvoiceMaster?.id}",
-                "jobOrderNo": "${salesOrder?.id}",
-                "poNumber": "${e.poNumber}",
+                // "jobOrderNo": "${salesOrder?.id}",
+                // "poNumber": "${e.poNumber}",
                 "productionLine": e.productionLine?.text,
                 "TblAssetMasterEncodeAssetCaptureID":
                     e.tblAssetMasterEncodeAssetCaptureID,
