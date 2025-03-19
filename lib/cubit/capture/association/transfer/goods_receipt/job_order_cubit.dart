@@ -221,9 +221,9 @@ class JobOrderCubit extends Cubit<JobOrderState> {
         payload: assets
             .map(
               (e) => {
-                "salesInvoiceNumber": "${salesOrder?.id}",
-                "salesInvoiceDetailsId":
-                    "${salesOrder?.salesInvoiceMaster?.id}",
+                "salesInvoiceNumber":
+                    "${salesOrder?.salesInvoiceMaster?.salesInvoiceNumber}",
+                "salesInvoiceDetailsId": "${salesOrder?.id}",
                 // "jobOrderNo": "${salesOrder?.id}",
                 // "poNumber": "${e.poNumber}",
                 "productionLine": e.productionLine?.text,
