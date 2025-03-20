@@ -522,7 +522,7 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                                 const Text(
                                   'Successfully Send for Barcode',
                                   style: TextStyle(
-                                    color: Colors.green,
+                                    color: AppColors.primary,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
