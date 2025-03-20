@@ -112,23 +112,29 @@ class _GIAIScreenState extends State<GIAIScreen> {
                 const SizedBox(height: 16),
 
                 // Action buttons row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildActionButton(Icons.visibility, 'Asset\nCapture', () {
-                      AppNavigator.goToPage(
-                          context: context, screen: AssetCaptureScreen());
-                    }),
-                    _buildActionButton(Icons.upload, 'Generate\nGIAI Tag', () {
-                      AppNavigator.goToPage(
-                          context: context, screen: GenerateTagsScreen());
-                    }),
-                    _buildActionButton(Icons.refresh, 'Asset\nVerification',
-                        () {
-                      AppNavigator.goToPage(
-                          context: context, screen: AssetVerificationScreen());
-                    }),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildActionButton(Icons.visibility, 'Asset\nCapture',
+                          () {
+                        AppNavigator.goToPage(
+                            context: context, screen: AssetCaptureScreen());
+                      }),
+                      _buildActionButton(Icons.upload, 'Generate\nGIAI Tag',
+                          () {
+                        AppNavigator.goToPage(
+                            context: context, screen: GenerateTagsScreen());
+                      }),
+                      _buildActionButton(Icons.refresh, 'Asset\nVerification',
+                          () {
+                        AppNavigator.goToPage(
+                            context: context,
+                            screen: AssetVerificationScreen());
+                      }),
+                    ],
+                  ),
                 ),
 
                 const SizedBox(height: 24),
@@ -214,17 +220,53 @@ class _GIAIScreenState extends State<GIAIScreen> {
   Widget _buildActionButton(IconData icon, String label, Function()? onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.blue, size: 24),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.23,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.2),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+          border: Border.all(
+            color: AppColors.skyBlue.withValues(alpha: 0.3),
+            width: 1.5,
           ),
-        ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.skyBlue.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                color: AppColors.skyBlue,
+                size: 20,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+                height: 1.2,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -255,7 +297,7 @@ class _GIAIScreenState extends State<GIAIScreen> {
                   Text(
                     "Created: $created",
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -266,35 +308,50 @@ class _GIAIScreenState extends State<GIAIScreen> {
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Text(
-                      'New',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: isCompleted
+                        ? const Text(
+                            'Completed',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : const Text(
+                            'Pending',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
               Text(
                 tagNumber,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-              // Barcode image would go here - you'll need to implement barcode generation
-              Align(
-                alignment: Alignment.centerLeft,
-                child: BarcodeWidget(
-                  barcode: Barcode.code128(),
-                  data: tagNumber,
-                  color: Colors.black,
-                  width: 200,
-                  height: 60,
+              // Separate the barcode into its own Hero widget
+              SizedBox(
+                // Wrap with SizedBox for better control
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Hero(
+                  tag: "barcode_${tagNumber}",
+                  child: Material(
+                    // Add Material widget to preserve the widget tree
+                    color: Colors.transparent,
+                    child: BarcodeWidget(
+                      barcode: Barcode.code128(),
+                      data: tagNumber,
+                      color: Colors.black,
+                      height: 60,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GIAI/giai_model.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:barcode_widget/barcode_widget.dart';
 
 class GIAIDetailsScreen extends StatefulWidget {
   const GIAIDetailsScreen({super.key, required this.giai});
@@ -49,14 +49,20 @@ class _GIAIDetailsScreenState extends State<GIAIDetailsScreen> {
                         fontSize: 13,
                       ),
                     ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    // qr code
-                    PrettyQr(
-                      data: widget.giai.tagNumber ?? '',
-                      size: 70,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Hero(
+                        tag: "barcode_${widget.giai.tagNumber ?? ''}",
+                        child: Material(
+                          color: Colors.transparent,
+                          child: BarcodeWidget(
+                            barcode: Barcode.code128(),
+                            data: widget.giai.tagNumber ?? '',
+                            color: Colors.black,
+                            height: 60,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

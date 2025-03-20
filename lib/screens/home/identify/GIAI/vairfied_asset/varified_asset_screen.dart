@@ -199,7 +199,7 @@ class AssetCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(barcode),
+              _buildHeader(barcode, context),
               const Divider(height: 16),
               _buildAssetDetails(),
               if (asset.images != null && asset.images!.isNotEmpty)
@@ -213,7 +213,7 @@ class AssetCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(String barcode) {
+  Widget _buildHeader(String barcode, BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -222,15 +222,6 @@ class AssetCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                asset.tagNumber ?? 'No Tag Number',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 2),
               Text(
                 barcode,
                 style: const TextStyle(
@@ -241,6 +232,15 @@ class AssetCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
+              Text(
+                asset.tagNumber ?? 'No Tag Number',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 2),
               Text(
                 asset.aSSETdESCRIPTION ?? 'No Description',
                 style: const TextStyle(
@@ -255,7 +255,7 @@ class AssetCard extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          flex: 2,
+          flex: 3,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -279,13 +279,17 @@ class AssetCard extends StatelessWidget {
               const SizedBox(height: 8),
               Hero(
                 tag: 'qr_code_${asset.tagNumber}_$index',
-                child: SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: BarcodeWidget(
-                    barcode: Barcode.qrCode(),
-                    data: barcode,
-                    drawText: false,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    color: Colors.white,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: 60,
+                    child: BarcodeWidget(
+                      barcode: Barcode.code128(),
+                      data: barcode,
+                      backgroundColor: Colors.white,
+                    ),
                   ),
                 ),
               ),

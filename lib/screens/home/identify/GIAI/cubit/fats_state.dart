@@ -155,3 +155,17 @@ class VerifiedAssetError extends FatsState {
   final String message;
   VerifiedAssetError({required this.message});
 }
+
+class FatsAddBrandLoading extends FatsState {}
+
+class FatsAddBrandLoaded extends FatsState {
+  final String message;
+
+  FatsAddBrandLoaded(this.message);
+}
+
+class FatsAddBrandError extends FatsState {
+  final String message;
+
+  FatsAddBrandError(this.message);
+}

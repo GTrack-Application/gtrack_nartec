@@ -1,9 +1,9 @@
 class BrandModel {
-  String? id;
-  String? name;
-  String? mainCode;
-  String? majorCode;
-  String? giaiCategoryId;
+  final String? id;
+  final String? name;
+  final String? mainCode;
+  final String? majorCode;
+  final String? giaiCategoryId;
   String? createdAt;
   String? updatedAt;
 
@@ -17,14 +17,14 @@ class BrandModel {
     this.updatedAt,
   });
 
-  BrandModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    mainCode = json['mainCode'];
-    majorCode = json['majorCode'];
-    giaiCategoryId = json['giaiCategoryId'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+  factory BrandModel.fromJson(Map<String, dynamic> json) {
+    return BrandModel(
+      id: json['id']?.toString(),
+      name: json['name']?.toString(),
+      mainCode: json['mainCode']?.toString(),
+      majorCode: json['majorCode']?.toString(),
+      giaiCategoryId: json['giaiCategoryId']?.toString(),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -38,4 +38,13 @@ class BrandModel {
     data['updatedAt'] = updatedAt;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is BrandModel && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

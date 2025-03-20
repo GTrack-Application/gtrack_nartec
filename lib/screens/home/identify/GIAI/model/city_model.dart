@@ -1,5 +1,5 @@
 class CityModel {
-  String? id;
+  int? id;
   String? name;
   String? nameAr;
   String? stateId;
@@ -17,11 +17,11 @@ class CityModel {
 
   CityModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
-    nameAr = json['name_ar'];
-    stateId = json['state_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    name = json['name'].toString();
+    nameAr = json['name_ar'].toString();
+    stateId = json['state_id'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
   }
 
   Map<String, dynamic> toJson() {

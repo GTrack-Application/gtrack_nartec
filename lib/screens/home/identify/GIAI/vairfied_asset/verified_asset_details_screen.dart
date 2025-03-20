@@ -1,8 +1,8 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
 import '../model/varified_asset_model.dart';
 
 class VerifiedAssetDetailsScreen extends StatefulWidget {
@@ -65,12 +65,18 @@ class _VerifiedAssetDetailsScreenState
                     Hero(
                       tag:
                           'qr_code_${widget.asset.tagNumber}_${widget.heroIndex}',
-                      child: SizedBox(
-                        width: 80,
-                        height: 80,
-                        child: PrettyQr(
-                          data: widget.asset.tagNumber ?? '',
-                          size: 80,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          height: 80,
+                          child: BarcodeWidget(
+                            barcode: Barcode.code128(),
+                            data: widget.asset.tagNumber ?? '',
+                            backgroundColor: Colors.white,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),

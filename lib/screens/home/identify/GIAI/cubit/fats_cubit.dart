@@ -23,22 +23,26 @@ class FatsCubit extends Cubit<FatsState> {
     }
   }
 
-  Future<void> getStates(String countryId) async {
+  Future<void> getStates(int countryId) async {
     emit(FatsStateLoading());
     try {
       final states = await FatsController.getStates(countryId);
       emit(FatsStateLoaded(states: states));
     } catch (e) {
+      print(e);
+
       emit(FatsStateError(message: e.toString()));
     }
   }
 
-  Future<void> getCities(String stateId) async {
+  Future<void> getCities(int stateId) async {
     emit(FatsCityLoading());
     try {
       final cities = await FatsController.getCities(stateId);
       emit(FatsCityLoaded(cities: cities));
     } catch (e) {
+      print(e);
+
       emit(FatsCityError(message: e.toString()));
     }
   }
@@ -179,6 +183,31 @@ class FatsCubit extends Cubit<FatsState> {
       }
     } catch (e) {
       emit(FatsHandleSubmitError(message: e.toString()));
+    }
+  }
+
+  Future<void> addBrand({
+    required String name,
+    required String mainCode,
+    required String majorCode,
+    required String giaiCategoryId,
+  }) async {
+    try {
+      emit(FatsAddBrandLoading());
+
+      await FatsController.addBrand(
+        name: name,
+        mainCode: mainCode,
+        majorCode: majorCode,
+        giaiCategoryId: giaiCategoryId,
+      );
+
+      emit(FatsAddBrandLoaded('Brand added successfully'));
+
+      // Refresh brands list after adding new brand
+      await getBrands(giaiCategoryId);
+    } catch (e) {
+      emit(FatsAddBrandError(e.toString()));
     }
   }
 }

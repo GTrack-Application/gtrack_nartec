@@ -1,5 +1,5 @@
 class CountryModel {
-  String? id;
+  int? id;
   String? nameEn;
   String? nameAr;
   String? countryCode;
@@ -8,25 +8,26 @@ class CountryModel {
   String? createdAt;
   String? updatedAt;
 
-  CountryModel(
-      {this.id,
-      this.nameEn,
-      this.nameAr,
-      this.countryCode,
-      this.countryShortName,
-      this.status,
-      this.createdAt,
-      this.updatedAt});
+  CountryModel({
+    this.id,
+    this.nameEn,
+    this.nameAr,
+    this.countryCode,
+    this.countryShortName,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   CountryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    nameEn = json['name_en'];
-    nameAr = json['name_ar'];
-    countryCode = json['country_code'];
-    countryShortName = json['country_shortName'];
-    status = json['status'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    nameEn = json['name_en'].toString();
+    nameAr = json['name_ar'].toString();
+    countryCode = json['country_code'].toString();
+    countryShortName = json['country_shortName'].toString();
+    status = json['status'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
   }
 
   Map<String, dynamic> toJson() {

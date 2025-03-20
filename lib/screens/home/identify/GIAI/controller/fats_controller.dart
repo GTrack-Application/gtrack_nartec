@@ -23,7 +23,6 @@ import 'package:mime/mime.dart';
 class FatsController {
   static Future<List<CountryModel>> getContries() async {
     final url = '${AppUrls.baseUrlWith7010}/api/countries';
-    print(url);
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -36,10 +35,12 @@ class FatsController {
   }
 
   // /api/states?country_id=12'
-  static Future<List<StateModel>> getStates(String countryId) async {
+  static Future<List<StateModel>> getStates(int countryId) async {
     final url = '${AppUrls.baseUrlWith7010}/api/states?country_id=$countryId';
     print(url);
     final response = await http.get(Uri.parse(url));
+
+    print(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = jsonDecode(response.body) as List;
@@ -51,10 +52,12 @@ class FatsController {
   }
 
   // http://localhost:7000/api/cities?state_id=269
-  static Future<List<CityModel>> getCities(String stateId) async {
+  static Future<List<CityModel>> getCities(int stateId) async {
     final url = '${AppUrls.baseUrlWith7010}/api/cities?state_id=$stateId';
     print(url);
     final response = await http.get(Uri.parse(url));
+
+    print(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = jsonDecode(response.body) as List;
@@ -350,6 +353,40 @@ class FatsController {
       print(response.body);
     } else {
       print(response.body);
+    }
+  }
+
+  static Future<void> addBrand({
+    required String name,
+    required String mainCode,
+    required String majorCode,
+    required String giaiCategoryId,
+  }) async {
+    final url = '${AppUrls.baseUrlWith7010}/api/giai/brands';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = {
+      'name': name,
+      'mainCode': mainCode,
+      'majorCode': majorCode,
+      'giaiCategoryId': giaiCategoryId,
+    };
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      var data = jsonDecode(response.body);
+      throw Exception(data['message']);
     }
   }
 }

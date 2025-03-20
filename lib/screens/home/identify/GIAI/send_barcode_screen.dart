@@ -190,6 +190,11 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                           BlocBuilder<FatsCubit, FatsState>(
                             bloc: fatsCubit,
                             builder: (context, state) {
+                              // Clear selected brand when loading new brands
+                              if (state is FatsBrandLoading) {
+                                selectedBrand = null;
+                              }
+
                               return DropdownButtonFormField<BrandModel>(
                                 dropdownColor: Colors.white,
                                 decoration: const InputDecoration(
@@ -209,7 +214,7 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                                 }).toList(),
                                 onChanged: selectedCategory == null
                                     ? null
-                                    : (value) {
+                                    : (BrandModel? value) {
                                         setState(() {
                                           selectedBrand = value;
                                         });
@@ -235,6 +240,17 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                               color: AppColors.primary,
                             ),
                             onPressed: () {
+                              if (selectedCategory == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Please select a category first'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -243,21 +259,47 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                                   return AlertDialog(
                                     backgroundColor: Colors.white,
                                     title: const Text('Add Brand'),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('Brand of Assets'),
-                                        const SizedBox(height: 8),
-                                        TextField(
-                                          controller: brandController,
-                                          decoration: const InputDecoration(
-                                            hintText: 'Type the asset brand',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                      ],
+                                    content: BlocConsumer<FatsCubit, FatsState>(
+                                      bloc: fatsCubit,
+                                      listener: (context, state) {
+                                        if (state is FatsAddBrandLoaded) {
+                                          Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(state.message),
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          );
+                                        } else if (state is FatsAddBrandError) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(state.message),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      builder: (context, state) {
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Brand of Assets'),
+                                            const SizedBox(height: 8),
+                                            TextField(
+                                              controller: brandController,
+                                              decoration: const InputDecoration(
+                                                hintText:
+                                                    'Type the asset brand',
+                                                border: OutlineInputBorder(),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     ),
                                     actions: [
                                       FilledButton(
@@ -272,7 +314,29 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                                       ),
                                       FilledButton(
                                         onPressed: () {
-                                          Navigator.pop(context);
+                                          if (brandController.text.isEmpty) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Please enter brand name'),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                            return;
+                                          }
+
+                                          fatsCubit.addBrand(
+                                            name: brandController.text,
+                                            mainCode: selectedCategory!
+                                                    .mainCategoryCode ??
+                                                '',
+                                            majorCode: selectedCategory!
+                                                    .subCategoryCode ??
+                                                '',
+                                            giaiCategoryId:
+                                                selectedCategory!.id.toString(),
+                                          );
                                         },
                                         child: const Text(
                                           'Submit & Save',
@@ -499,7 +563,7 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1A237E),
+                          backgroundColor: AppColors.skyBlue,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         onPressed: () {
