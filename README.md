@@ -47,7 +47,19 @@ GTrack Nartec is a mobile application built with Flutter that provides solutions
 
 The project uses Codemagic for continuous integration and deployment:
 
-After building the APK, it gets automatically uploaded to Google Drive for distribution.
+- **Build Automation**: The `codemagic.yaml` file defines workflows for building the Android release. The build process includes running scripts such as `flutter build apk --release` and executing `upload_apk_new.sh` to upload the APK to Google Drive.
+
+- **APK Upload**: The `upload_apk_new.sh` script automates the process of uploading the APK to a specified Google Drive folder using a service account for authentication.
+
+## Dependencies
+
+Key dependencies used in the project include:
+
+- **Flutter SDK**: The core framework for building the application.
+- **BLoC/Cubit**: State management solution for managing application state.
+- **HTTP**: For RESTful API communication.
+- **Google Maps Flutter**: Integrates Google Maps for geolocation services.
+- **Image Picker**: Allows image selection from the device gallery or camera.
 
 ## Getting Started
 
@@ -87,17 +99,25 @@ flutter run
 
 ### Building for Release
 
-#### Android
+#### Platform-Specific Instructions
+
+### Android
+
+To build the Android application, ensure you have the Flutter SDK installed and run the following command:
 
 ```bash
 flutter build apk --release
 ```
 
-#### iOS
+### iOS
+
+For iOS, ensure you have Xcode installed and run:
 
 ```bash
 flutter build ios --release
 ```
+
+Ensure all necessary configurations and permissions are set in the `ios` directory for a successful build.
 
 ## Project Structure
 
@@ -116,4 +136,4 @@ API endpoints and services are configured in `lib/constants/app_urls.dart`.
 
 ## License
 
-Copyright © 2025 GS1 Saudi Arabia. All rights reserved.
+Copyright 2025 GS1 Saudi Arabia. All rights reserved.
