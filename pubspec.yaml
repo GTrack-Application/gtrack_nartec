@@ -24,7 +24,7 @@ dependencies:
   awesome_dialog: ^3.2.1
   flutter_animate: ^4.5.2
   # nb_utils: ^7.1.1
-  flutter_bloc: ^9.0.0
+  flutter_bloc: ^7.0.0
   # flutter_screenutil: ^5.9.3
   page_transition: ^2.2.1
   ionicons: ^0.2.2
