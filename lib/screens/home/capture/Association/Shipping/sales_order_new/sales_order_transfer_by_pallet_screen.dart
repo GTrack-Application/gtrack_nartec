@@ -6,7 +6,7 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/sub_sales_order_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/sales_order_screen.dart';
 
 class SalesOrderTransferByPalletScreen extends StatefulWidget {
   const SalesOrderTransferByPalletScreen({super.key});
@@ -206,9 +206,7 @@ class _SalesOrderTransferByPalletScreenState
           Navigator.pop(context);
           AppNavigator.replaceTo(
             context: context,
-            screen: SubSalesOrderScreen(
-              salesOrderId: subSalesOrder?.id ?? '',
-            ),
+            screen: SalesOrderScreen(),
           );
         }
       },
