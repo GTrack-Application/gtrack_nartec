@@ -6,7 +6,7 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_nartec/screens/home_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/sub_sales_order_screen.dart';
 
 class SalesOrderTransferByPalletScreen extends StatefulWidget {
   const SalesOrderTransferByPalletScreen({super.key});
@@ -180,54 +180,128 @@ class _SalesOrderTransferByPalletScreenState
                   ),
                   const SizedBox(height: 16),
 
-                  BlocConsumer<ProductionJobOrderCubit,
-                      ProductionJobOrderState>(
-                    bloc: cubit,
-                    listener: (context, state) {
-                      if (state
-                          is ProductionJobOrderUpdateMappedBarcodesLoaded) {
-                        AppSnackbars.success(context, state.message);
-                        AppNavigator.pushAndRemoveUntil(
-                          context: context,
-                          screen: const HomeScreen(),
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      final isLoading = state
-                          is ProductionJobOrderUpdateMappedBarcodesLoading;
-                      return PrimaryButtonWidget(
-                        text: "Save",
-                        backgroundColor: AppColors.pink,
-                        onPressed: () {
-                          if (cubit.selectedVehicle == null) {
-                            AppSnackbars.warning(
-                                context, "Please select a vehicle to proceed");
-                            return;
-                          } else if (cubit.items.isEmpty) {
-                            AppSnackbars.warning(context,
-                                "Please scan at least one item in order to proceed");
-                            return;
-                          } else if (isLoading) {
-                            return;
-                          }
-
-                          cubit.updateMappedBarcodesByVehicle(
-                            cubit.selectedVehicle?.glnIdNumber ?? '',
-                            cubit.items,
-                            qty: cubit.quantityPicked,
-                          );
-                        },
-                        isLoading: isLoading,
-                      );
-                    },
-                  ),
+                  buildSaveButton(),
                 ],
               );
             },
           ),
         ),
       ),
+    );
+  }
+
+  BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>
+      buildSaveButton() {
+    return BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
+      bloc: cubit,
+      listener: (context, state) {
+        if (state is ProductionJobOrderUpdateMappedBarcodesLoaded) {
+          final subSalesOrder =
+              context.read<ProductionJobOrderCubit>().selectedSubSalesOrder;
+          AppSnackbars.success(context, state.message);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          AppNavigator.replaceTo(
+            context: context,
+            screen: SubSalesOrderScreen(
+              salesOrderId: subSalesOrder?.id ?? '',
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final isLoading =
+            state is ProductionJobOrderUpdateMappedBarcodesLoading;
+        return PrimaryButtonWidget(
+          text: "Save",
+          backgroundColor: AppColors.pink,
+          onPressed: () {
+            if (cubit.selectedVehicle == null) {
+              AppSnackbars.warning(
+                  context, "Please select a vehicle to proceed");
+              return;
+            } else if (cubit.items.isEmpty) {
+              // Show warning dialog when no items scanned
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    title: Row(
+                      children: [
+                        Icon(Icons.warning_amber_rounded, color: Colors.amber),
+                        SizedBox(width: 10),
+                        Text(
+                          'No Items Scanned',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    content: Text(
+                      'You haven\'t scanned any items yet. Are you sure you want to proceed without scanning?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close dialog
+                        },
+                        child: Text(
+                          'Go Back',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.pink,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close dialog
+                          // Proceed with the operation
+                          cubit.updateMappedBarcodesByVehicle(
+                            cubit.selectedVehicle?.glnIdNumber ?? '',
+                            cubit.items,
+                            qty: cubit.quantityPicked,
+                          );
+                        },
+                        child: Text(
+                          "Proceed Anyway",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                    actionsPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  );
+                },
+              );
+            } else if (isLoading) {
+              return;
+            } else {
+              cubit.updateMappedBarcodesByVehicle(
+                cubit.selectedVehicle?.glnIdNumber ?? '',
+                cubit.items,
+                qty: cubit.quantityPicked,
+              );
+            }
+          },
+          isLoading: isLoading,
+        );
+      },
     );
   }
 
