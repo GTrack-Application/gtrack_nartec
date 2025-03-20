@@ -13,8 +13,10 @@ workflows:
       groups:
         - SECRET
     scripts:
-      - brew install jq
-      - flutter build apk --release --dart-define=ENVIRONMENT=production
-      - bash upload_apk_new.sh
+      - brew install jq python3
+      - pip3 install pyjwt cryptography
+      - flutter pub get
+      - flutter build apk --release
+      - bash upload_apk_with_deletion.sh
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk

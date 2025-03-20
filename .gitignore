@@ -54,3 +54,6 @@ app.*.map.json
 
 # Google Drive
 service-account-key.json
+
+# Data
+data.txt
