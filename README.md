@@ -1,5 +1,9 @@
 # GTrack Nartec
 
+<p align="center">
+  <img src="assets/images/logo.png" alt="GTrack Logo" width="200"/>
+</p>
+
 A comprehensive Flutter application for GS1 standards-based tracking, identification, and inventory management with digital link capabilities.
 
 ## Overview
@@ -8,7 +12,13 @@ GTrack Nartec is a mobile application built with Flutter that provides solutions
 
 ## Features
 
-### Identify
+- **Identify**: Manage GS1 identifiers including GTIN, GLN, SSCC, and GIAI
+- **Share**: Product information sharing and digital link capabilities
+- **Capture**: Barcode scanning and RFID integration
+- **Supply Chain Visibility**: Track products throughout the supply chain
+- **Inventory Management**: Real-time inventory tracking and management
+- **Digital Link**: Connect physical products to online resources
+- **GS1 Standards Compliance**: Full compliance with GS1 standards
 
 - **GTIN Management**: Global Trade Item Number handling with digital link capabilities
 - **GLN Management**: Global Location Number management with geolocation support
@@ -73,10 +83,10 @@ Key dependencies used in the project include:
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-organization/gtrack_nartec.git
+git clone https://github.com/GTrack-Nartec/gtrack_nartec.git
 cd gtrack_nartec
 ```
 
