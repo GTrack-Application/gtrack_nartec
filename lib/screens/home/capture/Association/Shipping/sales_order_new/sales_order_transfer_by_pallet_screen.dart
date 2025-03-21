@@ -196,8 +196,6 @@ class _SalesOrderTransferByPalletScreenState
       bloc: cubit,
       listener: (context, state) {
         if (state is ProductionJobOrderUpdateMappedBarcodesLoaded) {
-          final subSalesOrder =
-              context.read<ProductionJobOrderCubit>().selectedSubSalesOrder;
           AppSnackbars.success(context, state.message);
           Navigator.pop(context);
           Navigator.pop(context);
