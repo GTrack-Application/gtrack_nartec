@@ -194,6 +194,9 @@ class JobOrderCubit extends Cubit<JobOrderState> {
     }
   }
 
+  // 000000193023
+  // 062870232900000283
+
   void saveAssetTagsForSalesOrder(
     String jobOrderMasterId,
     DateTime productionExecutionDateTime,

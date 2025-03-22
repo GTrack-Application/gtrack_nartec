@@ -88,6 +88,11 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
                       child: TextFormFieldWidget(
                         controller: controller,
                         hintText: "Enter/Scan Tag Number",
+                        onEditingComplete: () {
+                          jobOrderCubit.getAssetsByTagNumber(
+                            controller.text.trim(),
+                          );
+                        },
                       ),
                     ),
                     Expanded(

@@ -1,7 +1,7 @@
 // ignore_for_file: unused_field, unused_element, use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -44,6 +44,7 @@ class _RouteScreenState extends State<RouteScreen> {
   final Set<Marker> _markers = {};
   final Set<Polyline> _polylines = {};
   double _distanceInKm = 0.0;
+  DateTime? _lastRouteUpdateTime;
 
   @override
   void initState() {
@@ -82,10 +83,10 @@ class _RouteScreenState extends State<RouteScreen> {
     Location location = Location();
 
     try {
-      // Configure location settings first
+      // Configure location settings first - reduce update frequency to prevent overloading
       await location.changeSettings(
-        interval: 1000,
-        distanceFilter: 10,
+        interval: 5000, // Increase to 5 seconds from 1 second
+        distanceFilter: 20, // Increase to 20 meters from 10
       );
 
       // Check if location service is enabled
@@ -117,27 +118,53 @@ class _RouteScreenState extends State<RouteScreen> {
       }
 
       // Get initial location before starting stream
-      final initialLocation = await location.getLocation();
-      if (!mounted) return;
-
-      setState(() {
-        _currentLocation =
-            LatLng(initialLocation.latitude!, initialLocation.longitude!);
-        _destinationLocation = LatLng(latitude, longitude);
-        _updateMarkers();
-        _calculateDistance();
-      });
-
-      // Start location updates after initial setup
-      location.onLocationChanged.listen((LocationData currentLocation) {
+      try {
+        final initialLocation = await location.getLocation().timeout(
+              const Duration(seconds: 10),
+              onTimeout: () =>
+                  throw TimeoutException("Location request timed out"),
+            );
         if (!mounted) return;
+
+        if (initialLocation.latitude == null ||
+            initialLocation.longitude == null) {
+          throw Exception("Invalid location data received");
+        }
+
         setState(() {
           _currentLocation =
-              LatLng(currentLocation.latitude!, currentLocation.longitude!);
+              LatLng(initialLocation.latitude!, initialLocation.longitude!);
+          _destinationLocation = LatLng(latitude, longitude);
           _updateMarkers();
           _calculateDistance();
         });
-      });
+
+        // Use a less frequent listener for location updates
+        location.onLocationChanged.listen((LocationData currentLocation) {
+          if (!mounted) return;
+
+          if (currentLocation.latitude != null &&
+              currentLocation.longitude != null) {
+            setState(() {
+              _currentLocation =
+                  LatLng(currentLocation.latitude!, currentLocation.longitude!);
+              _updateMarkers();
+              _calculateDistance();
+            });
+          }
+        });
+      } catch (e) {
+        print("Error getting initial location: $e");
+        // Fallback to setting destination only
+        if (!mounted) return;
+        setState(() {
+          _destinationLocation = LatLng(latitude, longitude);
+          // Use a default current location if needed
+          _currentLocation =
+              LatLng(latitude - 0.01, longitude - 0.01); // Small offset
+          _updateMarkers();
+        });
+      }
 
       setState(() => _isLoading = false);
     } catch (e) {
@@ -151,23 +178,48 @@ class _RouteScreenState extends State<RouteScreen> {
   }
 
   void _updateCameraPosition() {
-    if (_currentLocation != null && _destinationLocation != null) {
+    if (mapController == null ||
+        _currentLocation == null ||
+        _destinationLocation == null) return;
+
+    try {
       LatLngBounds bounds = LatLngBounds(
         southwest: LatLng(
-          min(_currentLocation!.latitude, _destinationLocation!.latitude),
-          min(_currentLocation!.longitude, _destinationLocation!.longitude),
+          min(_currentLocation!.latitude, _destinationLocation!.latitude) -
+              0.005,
+          min(_currentLocation!.longitude, _destinationLocation!.longitude) -
+              0.005,
         ),
         northeast: LatLng(
-          max(_currentLocation!.latitude, _destinationLocation!.latitude),
-          max(_currentLocation!.longitude, _destinationLocation!.longitude),
+          max(_currentLocation!.latitude, _destinationLocation!.latitude) +
+              0.005,
+          max(_currentLocation!.longitude, _destinationLocation!.longitude) +
+              0.005,
         ),
       );
-      mapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+      mapController
+          ?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50))
+          .catchError((error) {
+        print("Error updating camera position: $error");
+        // Fallback to a simpler camera position
+        mapController?.animateCamera(
+          CameraUpdate.newLatLngZoom(_currentLocation!, 13),
+        );
+      });
+    } catch (e) {
+      print("Error setting camera bounds: $e");
+      // Fallback to focusing on current location
+      mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(_currentLocation!, 13),
+      );
     }
   }
 
   void _calculateDistance() {
     if (!mounted) return; // Exit if the widget is no longer in the tree
+
+    // Check if both locations are available before calculating distance
+    if (_currentLocation == null || _destinationLocation == null) return;
 
     setState(() {
       _distanceInKm = Geolocator.distanceBetween(
@@ -183,6 +235,7 @@ class _RouteScreenState extends State<RouteScreen> {
   @override
   void dispose() {
     mapController?.dispose();
+    // Cancel any active streams or timers here
     super.dispose();
   }
 
@@ -216,10 +269,16 @@ class _RouteScreenState extends State<RouteScreen> {
         listener: (context, state) {
           if (state is MapModelLoaded) {
             mapModel = state.mapModel;
-            _initializeLocation(
-              double.parse(mapModel![0].latitude!),
-              double.parse(mapModel![0].longitude!),
-            );
+            if (mapModel != null && mapModel!.isNotEmpty) {
+              _initializeLocation(
+                double.parse(mapModel![0].latitude!),
+                double.parse(mapModel![0].longitude!),
+              );
+            } else {
+              // Handle empty map model with a default location or error message
+              _initializeLocation(24.774369, 46.738586); // Default coordinates
+              AppSnackbars.danger(context, "No location data available");
+            }
           }
           if (state is MapModelError) {
             _initializeLocation(24.774369, 46.738586);
@@ -313,42 +372,55 @@ class _RouteScreenState extends State<RouteScreen> {
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.primary),
           ),
-          child: GoogleMap(
-            onMapCreated: (controller) {
-              setState(() {
-                mapController = controller;
-              });
-              // Animate to show both markers
-              if (_currentLocation != null && _destinationLocation != null) {
-                LatLngBounds bounds = LatLngBounds(
-                  southwest: LatLng(
-                    min(_currentLocation!.latitude,
-                        _destinationLocation!.latitude),
-                    min(_currentLocation!.longitude,
-                        _destinationLocation!.longitude),
+          child: _currentLocation == null
+              ? const Center(
+                  child: Text("Waiting for location data..."),
+                )
+              : GoogleMap(
+                  onMapCreated: (controller) {
+                    setState(() {
+                      mapController = controller;
+                    });
+                    // Animate to show both markers
+                    if (_currentLocation != null &&
+                        _destinationLocation != null) {
+                      try {
+                        LatLngBounds bounds = LatLngBounds(
+                          southwest: LatLng(
+                            min(_currentLocation!.latitude,
+                                _destinationLocation!.latitude),
+                            min(_currentLocation!.longitude,
+                                _destinationLocation!.longitude),
+                          ),
+                          northeast: LatLng(
+                            max(_currentLocation!.latitude,
+                                _destinationLocation!.latitude),
+                            max(_currentLocation!.longitude,
+                                _destinationLocation!.longitude),
+                          ),
+                        );
+                        controller.animateCamera(
+                            CameraUpdate.newLatLngBounds(bounds, 50));
+                      } catch (e) {
+                        print("Error setting camera bounds: $e");
+                        // Fallback to focusing on current location
+                        controller.animateCamera(
+                          CameraUpdate.newLatLngZoom(_currentLocation!, 14),
+                        );
+                      }
+                    }
+                  },
+                  initialCameraPosition: CameraPosition(
+                    target: _currentLocation!,
+                    zoom: 14,
                   ),
-                  northeast: LatLng(
-                    max(_currentLocation!.latitude,
-                        _destinationLocation!.latitude),
-                    max(_currentLocation!.longitude,
-                        _destinationLocation!.longitude),
-                  ),
-                );
-                controller
-                    .animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
-              }
-            },
-            initialCameraPosition: CameraPosition(
-              target: _currentLocation!,
-              zoom: 14,
-            ),
-            markers: _markers,
-            polylines: _polylines,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
-            zoomControlsEnabled: true,
-            mapType: MapType.normal,
-          ),
+                  markers: _markers,
+                  polylines: _polylines,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  zoomControlsEnabled: true,
+                  mapType: MapType.normal,
+                ),
         ),
         const SizedBox(height: 10),
         Container(
@@ -360,7 +432,7 @@ class _RouteScreenState extends State<RouteScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (mapModel != null) ...[
+              if (mapModel != null && mapModel!.isNotEmpty) ...[
                 InfoRow(
                   label: "Customer's Name:",
                   value: mapModel![0].companyNameEnglish ?? "N/A",
@@ -419,6 +491,8 @@ class _RouteScreenState extends State<RouteScreen> {
   }
 
   void _updateMarkers() {
+    if (_currentLocation == null || _destinationLocation == null) return;
+
     _markers.clear();
     _markers.add(
       Marker(
@@ -442,6 +516,15 @@ class _RouteScreenState extends State<RouteScreen> {
   Future<void> _drawRoute() async {
     if (_currentLocation == null || _destinationLocation == null) return;
 
+    // Don't redraw the route too frequently - add debouncing
+    if (_polylines.isNotEmpty) {
+      // Only update route every 20 seconds or 100 meters to prevent API overuse
+      if (_lastRouteUpdateTime != null &&
+          DateTime.now().difference(_lastRouteUpdateTime!).inSeconds < 20) {
+        return;
+      }
+    }
+
     try {
       String apiKey = 'AIzaSyBcdPY1bQKSv0C1lQq-nYb3kBcjANsY3Fk';
       String url = 'https://maps.googleapis.com/maps/api/directions/json?'
@@ -449,14 +532,19 @@ class _RouteScreenState extends State<RouteScreen> {
           '&destination=${_destinationLocation!.latitude},${_destinationLocation!.longitude}'
           '&key=$apiKey';
 
-      var response = await http.get(Uri.parse(url));
+      var response = await http.get(Uri.parse(url)).timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException("Directions API request timed out"),
+          );
+
       if (response.statusCode == 200) {
-        developer.log(response.body);
         var decoded = json.decode(response.body);
-        if (decoded['routes'].isNotEmpty) {
+        if (decoded['routes'] != null && decoded['routes'].isNotEmpty) {
           String points = decoded['routes'][0]['overview_polyline']['points'];
           List<LatLng> polylineCoordinates = _decodePolyline(points);
 
+          if (!mounted) return;
           setState(() {
             _polylines.clear();
             _polylines.add(
@@ -472,11 +560,18 @@ class _RouteScreenState extends State<RouteScreen> {
               ),
             );
           });
+        } else {
+          print('No routes found in the response');
         }
+      } else {
+        print(
+            'Failed to fetch directions. Status code: ${response.statusCode}');
       }
+
+      _lastRouteUpdateTime = DateTime.now();
     } catch (e) {
-      AppSnackbars.danger(context, 'Error drawing route: $e');
       print('Error drawing route: $e');
+      // Don't show an error snackbar as this might be disruptive if it keeps failing
     }
   }
 

@@ -57,6 +57,7 @@ class _SalesOrderTransferByPalletScreenState
               return current is ProductionJobOrderMappedBarcodesLoaded;
             },
             listener: (context, state) {
+              print(state);
               if (state is ProductionJobOrderMappedBarcodesError) {
                 AppSnackbars.danger(context, state.message);
               } else if (state is ProductionJobOrderMappedBarcodesLoaded) {
@@ -66,6 +67,8 @@ class _SalesOrderTransferByPalletScreenState
                     state.mappedBarcodes.message ?? '',
                   );
                 }
+              } else if (state is ProductionJobOrderUpdateMappedBarcodesError) {
+                AppSnackbars.danger(context, state.message);
               }
             },
             builder: (context, state) {

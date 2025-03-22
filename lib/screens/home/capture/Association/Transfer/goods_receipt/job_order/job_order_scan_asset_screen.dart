@@ -92,16 +92,17 @@ class _JobOrderScanAssetScreenState extends State<JobOrderScanAssetScreen> {
                   ),
                 ),
                 Row(
-                  spacing: 8.0,
+                  spacing: 5.0,
                   children: [
                     Expanded(
-                      flex: 3,
+                      flex: 5,
                       child: TextFormFieldWidget(
                         controller: controller,
                         hintText: "Enter/Scan Tag Number",
                       ),
                     ),
                     Expanded(
+                      flex: 2,
                       child: PrimaryButtonWidget(
                         text: "Scan",
                         onPressed: () {
