@@ -38,6 +38,7 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
   Future<void> getMapModel(String customerId) async {
     try {
       emit(MapModelLoading());
+
       final mapModel = await SalesOrderController.getMapModel(customerId);
       emit(MapModelLoaded(mapModel));
     } catch (e) {

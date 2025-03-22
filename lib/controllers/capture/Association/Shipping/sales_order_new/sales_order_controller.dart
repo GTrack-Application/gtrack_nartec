@@ -64,9 +64,13 @@ class SalesOrderController {
 
     final url = '${AppUrls.baseUrlWith7010}/api/member?id=$customerId';
 
+    print("Raw API response: $url");
+
     final headers = {'Authorization': 'Bearer $token'};
 
     final response = await http.get(Uri.parse(url), headers: headers);
+
+    print("Raw API response: ${response.body}");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = jsonDecode(response.body) as List;

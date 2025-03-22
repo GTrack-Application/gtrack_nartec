@@ -49,6 +49,10 @@ class _RouteScreenState extends State<RouteScreen> {
   @override
   void initState() {
     super.initState();
+    print(widget.subSalesOrder);
+    print(widget.subSalesOrder.length);
+    print(widget.subSalesOrder[0].id);
+
     salesOrderCubit = SalesOrderCubit();
     _loadMapData();
   }
@@ -268,7 +272,9 @@ class _RouteScreenState extends State<RouteScreen> {
         bloc: salesOrderCubit,
         listener: (context, state) {
           if (state is MapModelLoaded) {
+            print("MapModelLoaded: ${state.mapModel}");
             mapModel = state.mapModel;
+
             if (mapModel != null && mapModel!.isNotEmpty) {
               _initializeLocation(
                 double.parse(mapModel![0].latitude!),
@@ -277,7 +283,11 @@ class _RouteScreenState extends State<RouteScreen> {
             } else {
               // Handle empty map model with a default location or error message
               _initializeLocation(24.774369, 46.738586); // Default coordinates
-              AppSnackbars.danger(context, "No location data available");
+              AppSnackbars.danger(
+                  context, "No location data available for this customer");
+              setState(() {
+                _isLoading = false;
+              });
             }
           }
           if (state is MapModelError) {
@@ -372,55 +382,89 @@ class _RouteScreenState extends State<RouteScreen> {
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.primary),
           ),
-          child: _currentLocation == null
-              ? const Center(
-                  child: Text("Waiting for location data..."),
-                )
-              : GoogleMap(
-                  onMapCreated: (controller) {
-                    setState(() {
-                      mapController = controller;
-                    });
-                    // Animate to show both markers
-                    if (_currentLocation != null &&
-                        _destinationLocation != null) {
-                      try {
-                        LatLngBounds bounds = LatLngBounds(
-                          southwest: LatLng(
-                            min(_currentLocation!.latitude,
-                                _destinationLocation!.latitude),
-                            min(_currentLocation!.longitude,
-                                _destinationLocation!.longitude),
-                          ),
-                          northeast: LatLng(
-                            max(_currentLocation!.latitude,
-                                _destinationLocation!.latitude),
-                            max(_currentLocation!.longitude,
-                                _destinationLocation!.longitude),
-                          ),
-                        );
-                        controller.animateCamera(
-                            CameraUpdate.newLatLngBounds(bounds, 50));
-                      } catch (e) {
-                        print("Error setting camera bounds: $e");
-                        // Fallback to focusing on current location
-                        controller.animateCamera(
-                          CameraUpdate.newLatLngZoom(_currentLocation!, 14),
-                        );
-                      }
-                    }
-                  },
-                  initialCameraPosition: CameraPosition(
-                    target: _currentLocation!,
-                    zoom: 14,
+          child: Stack(
+            children: [
+              _currentLocation == null
+                  ? const Center(
+                      child: Text("Waiting for location data..."),
+                    )
+                  : GoogleMap(
+                      onMapCreated: (controller) {
+                        setState(() {
+                          mapController = controller;
+                        });
+                        // Animate to show both markers
+                        if (_currentLocation != null &&
+                            _destinationLocation != null) {
+                          try {
+                            LatLngBounds bounds = LatLngBounds(
+                              southwest: LatLng(
+                                min(_currentLocation!.latitude,
+                                    _destinationLocation!.latitude),
+                                min(_currentLocation!.longitude,
+                                    _destinationLocation!.longitude),
+                              ),
+                              northeast: LatLng(
+                                max(_currentLocation!.latitude,
+                                    _destinationLocation!.latitude),
+                                max(_currentLocation!.longitude,
+                                    _destinationLocation!.longitude),
+                              ),
+                            );
+                            controller.animateCamera(
+                                CameraUpdate.newLatLngBounds(bounds, 50));
+                          } catch (e) {
+                            print("Error setting camera bounds: $e");
+                            // Fallback to focusing on current location
+                            controller.animateCamera(
+                              CameraUpdate.newLatLngZoom(_currentLocation!, 14),
+                            );
+                          }
+                        }
+                      },
+                      initialCameraPosition: CameraPosition(
+                        target: _currentLocation!,
+                        zoom: 14,
+                      ),
+                      markers: _markers,
+                      polylines: _polylines,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: true,
+                      zoomControlsEnabled: true,
+                      mapType: MapType.normal,
+                    ),
+              // Show overlay message when map model is empty or null
+              if (mapModel == null || mapModel!.isEmpty)
+                Container(
+                  color: Colors.black.withOpacity(0.5),
+                  alignment: Alignment.center,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const Text(
+                      "This customer has no data for latitude and longitude",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.pink,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  markers: _markers,
-                  polylines: _polylines,
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
-                  zoomControlsEnabled: true,
-                  mapType: MapType.normal,
                 ),
+            ],
+          ),
         ),
         const SizedBox(height: 10),
         Container(
@@ -472,20 +516,41 @@ class _RouteScreenState extends State<RouteScreen> {
           ),
         ),
         const SizedBox(height: 10),
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
+        // Only show the button if map model has data
+        if (mapModel != null && mapModel!.isNotEmpty)
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(5),
+              height: 50,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.pink,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: buttonWidget,
+            ),
+          ),
+        // Show a disabled message instead of the button when no data is available
+        if (mapModel == null || mapModel!.isEmpty)
+          Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             padding: const EdgeInsets.all(5),
             height: 50,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: AppColors.pink,
+              color: Colors.grey[300],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: buttonWidget,
+            child: Center(
+              child: Text(
+                "Journey unavailable\nNo customer location data",
+                style: TextStyle(color: Colors.grey[700]),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
-        ),
       ],
     );
   }
