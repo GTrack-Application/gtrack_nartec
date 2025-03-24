@@ -32,7 +32,7 @@ class TransformationController {
   Future<List<StationAttributeMaster>> getStationAttributes(
       String eventStationId) async {
     final url =
-        "/api/stationAttribute/inUsed/master?eventStationId=$eventStationId";
+        "/api/stationAttribute/inUsed/master?eventStationId=$eventStationId&association=true";
 
     final response = await http7010.request(url);
 
