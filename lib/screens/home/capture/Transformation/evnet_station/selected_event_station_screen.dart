@@ -184,6 +184,20 @@ class _SelectedEventStationScreenState
       }
     }
 
+    if (uniqueFields.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 12,
+          children: [
+            Icon(Icons.info_outline, color: AppColors.grey, size: 48),
+            Text('No attributes found for this station'),
+          ],
+        ),
+      );
+    }
+
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
       itemCount: uniqueFields.length,
