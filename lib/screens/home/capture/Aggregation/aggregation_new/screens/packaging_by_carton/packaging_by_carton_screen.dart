@@ -5,6 +5,7 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/packaging_by_carton/packaging_scan_item_screen.dart';
+
 import '../../cubit/aggregation_cubit_v2.dart';
 import '../../model/packaging_model.dart';
 
@@ -63,18 +64,15 @@ class _PackagingByCartonScreenState extends State<PackagingByCartonScreen> {
                 color: AppColors.danger,
               ),
             ));
-          } else if (state is AggregationLoaded) {
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: context.read<AggregationCubit>().packaging.length,
-              itemBuilder: (context, index) {
-                final package =
-                    context.read<AggregationCubit>().packaging[index];
-                return PackageCard(package: package);
-              },
-            );
           }
-          return const SizedBox();
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: context.read<AggregationCubit>().packaging.length,
+            itemBuilder: (context, index) {
+              final package = context.read<AggregationCubit>().packaging[index];
+              return PackageCard(package: package);
+            },
+          );
         },
       ),
     );

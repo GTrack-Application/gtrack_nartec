@@ -19,6 +19,8 @@ class CaptureCubit extends Cubit<CaptureState> {
 
   static CaptureCubit get(context) => BlocProvider.of<CaptureCubit>(context);
 
+  // Lists
+  List<SerializationModel> scannedBarcodes = [];
   List mainScreens(context) => [
         {
           "text": "ASSOCIATION",
@@ -109,6 +111,8 @@ class CaptureCubit extends Cubit<CaptureState> {
       if (data.isEmpty) {
         emit(CaptureSerializationEmpty());
       } else {
+        scannedBarcodes = data;
+
         emit(CaptureSerializationSuccess(data));
       }
     } catch (error) {
