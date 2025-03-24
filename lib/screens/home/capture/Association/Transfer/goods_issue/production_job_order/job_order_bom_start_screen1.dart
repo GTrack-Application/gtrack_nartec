@@ -45,7 +45,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
     _itemBinTypeController.text = 'x';
     _whLocationCodeController.text = '1106';
     _cubit = ProductionJobOrderCubit();
-    _cubit.getBinLocations(widget.gtin);
+    _cubit.getBinLocations();
   }
 
   @override

@@ -42,6 +42,17 @@ class _JobOrderScreenState extends State<JobOrderScreen> {
           if (state is JobOrderError) {
             return Center(child: Text(state.message));
           }
+          if (jobOrderCubit.orders.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.info_outline, color: AppColors.grey, size: 48),
+                  Text('No job orders found'),
+                ],
+              ),
+            );
+          }
           return RefreshIndicator(
             onRefresh: () => jobOrderCubit.getJobOrders(),
             child: ListView.builder(

@@ -18,7 +18,7 @@ import 'package:gtrack_nartec/global/themes/themes.dart';
 import 'package:gtrack_nartec/screens/home/auth/providers/dispatch_management/gln_provider.dart';
 import 'package:gtrack_nartec/screens/home/auth/providers/login/login_provider.dart';
 import 'package:gtrack_nartec/screens/home/auth/user_login_page.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_cubit.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_cubit_v2.dart';
 import 'package:provider/provider.dart';
 
 extension ColorExtension on Color {

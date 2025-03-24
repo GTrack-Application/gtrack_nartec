@@ -28,6 +28,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   List<ProductionJobOrder> filteredOrders = [];
   List<ProductionJobOrder> _orders = [];
   List<VehicleModel> _vehicles = [];
+  List<BinLocation> binLocations = [];
   VehicleModel? selectedVehicle;
 
   int quantityPicked = 0;
@@ -139,7 +140,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     }
   }
 
-  Future<void> getBinLocations(String gtin) async {
+  Future<void> getBinLocations() async {
     emit(ProductionJobOrderBinLocationsLoading());
     try {
       final memberId = await AppPreferences.getMemberId();
@@ -160,6 +161,8 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       if (response.success) {
         final data = response.data as List;
         final binLocations = data.map((e) => BinLocation.fromJson(e)).toList();
+        this.binLocations = binLocations;
+
         emit(ProductionJobOrderBinLocationsLoaded(binLocations: binLocations));
       } else {
         emit(ProductionJobOrderBinLocationsError(
