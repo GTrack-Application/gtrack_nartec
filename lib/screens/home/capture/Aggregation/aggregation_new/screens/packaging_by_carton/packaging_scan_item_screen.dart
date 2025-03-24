@@ -24,6 +24,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
   String? selectedBatch;
   List<SerializationModel> scannedItems = [];
   Map<String, List<SerializationModel>> batchGroups = {};
+  List<String> uniqueBatches = [];
 
   @override
   void initState() {
@@ -49,14 +50,242 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
     }
   }
 
+  void _showBatchDetailsDialog(BuildContext context, String batchName,
+      List<SerializationModel> batchItems) {
+    // Get the first item to extract common batch information
+    final firstItem = batchItems.first;
+    final expiryDate = firstItem.eXPIRYDATE != null
+        ? DateTime.parse(firstItem.eXPIRYDATE!).toLocal()
+        : null;
+    final manufacturingDate = firstItem.mANUFACTURINGDATE != null
+        ? DateTime.parse(firstItem.mANUFACTURINGDATE!).toLocal()
+        : null;
+
+    final TextEditingController recordsController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Container(
+            width: double.infinity,
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Batch Details: $batchName',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Available Items: ${batchItems.length}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Manufacturing Date: ${manufacturingDate != null ? "${manufacturingDate.day.toString().padLeft(2, '0')}/${manufacturingDate.month.toString().padLeft(2, '0')}/${manufacturingDate.year}" : "N/A"}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Expiry Date: ${expiryDate != null ? "${expiryDate.day.toString().padLeft(2, '0')}/${expiryDate.month.toString().padLeft(2, '0')}/${expiryDate.year}" : "N/A"}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Stakeholder: N/A',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        controller: recordsController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter number of records to add',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Enter a number between 1 and ${batchItems.length}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    'Available Serial Numbers:',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Flexible(
+                  child: Container(
+                    constraints: const BoxConstraints(maxHeight: 300),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: batchItems.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          color: index % 2 == 0
+                              ? Colors.grey.shade100
+                              : Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 12.0),
+                          child: Text(
+                            batchItems[index].serialNo ?? 'No Serial',
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('CANCEL'),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0A1172),
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: () {
+                          // Add records logic
+                          final recordCount =
+                              int.tryParse(recordsController.text);
+                          if (recordCount != null &&
+                              recordCount > 0 &&
+                              recordCount <= batchItems.length) {
+                            // Add the first 'recordCount' items to scannedItems
+                            setState(() {
+                              scannedItems =
+                                  batchItems.take(recordCount).toList();
+                            });
+                            Navigator.pop(context);
+                          } else {
+                            // Show error
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Please enter a valid number of records'),
+                              ),
+                            );
+                          }
+                        },
+                        child: const Text('ADD RECORDS'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _processSerializationData(List<SerializationModel> data) {
+    setState(() {
+      // Clear previous data
+      batchGroups.clear();
+      uniqueBatches.clear();
+
+      // Group items by batch
+      for (var item in data) {
+        if (item.bATCH != null) {
+          if (!batchGroups.containsKey(item.bATCH)) {
+            batchGroups[item.bATCH!] = [];
+            uniqueBatches.add(item.bATCH!);
+          }
+          batchGroups[item.bATCH]!.add(item);
+        }
+      }
+
+      // Reset selected batch
+      selectedBatch = null;
+      scannedItems = [];
+
+      // Debug print to verify data
+      print('Found ${uniqueBatches.length} unique batches');
+      print('Batch groups: ${batchGroups.keys.join(', ')}');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final uniqueBatches = context
-        .read<CaptureCubit>()
-        .scannedBarcodes
-        .map((batch) => batch.bATCH)
-        .toSet()
-        .toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scan Item Barcode (GTIN)'),
@@ -156,14 +385,14 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                       backgroundColor: AppColors.darkNavy,
                       child: state is CaptureSerializationLoading
                           ? const CircularProgressIndicator(
-                              color: Colors.white,
+                              color: AppColors.white,
                               strokeWidth: 1,
                             )
                           : Center(
                               child: IconButton(
                                 icon: const Icon(
                                   Icons.qr_code_scanner,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   size: 20,
                                 ),
                                 onPressed: _scanBarcode,
@@ -177,7 +406,21 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
             const SizedBox(height: 24),
 
             // Batch Selection - Only show after barcode is scanned
-            BlocBuilder<CaptureCubit, CaptureState>(
+            BlocConsumer<CaptureCubit, CaptureState>(
+              listener: (context, state) {
+                if (state is CaptureSerializationSuccess) {
+                  // Process the data when serialization is successful
+                  _processSerializationData(state.data);
+
+                  // Show success message
+                  AppSnackbars.success(context, 'Items loaded successfully');
+                } else if (state is CaptureSerializationError) {
+                  AppSnackbars.danger(context, state.message);
+                } else if (state is CaptureSerializationEmpty) {
+                  AppSnackbars.warning(
+                      context, 'No items found for this barcode');
+                }
+              },
               builder: (context, state) {
                 return Visibility(
                   visible:
@@ -215,19 +458,17 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                                   items: uniqueBatches.map((batch) {
                                     return DropdownMenuItem<String>(
                                       value: batch,
-                                      child: Text(batch ?? ''),
+                                      child: Text(batch),
                                     );
                                   }).toList(),
                                   onChanged: (value) {
                                     setState(() {
                                       selectedBatch = value;
-                                      if (value != null) {
-                                        scannedItems = context
-                                            .read<CaptureCubit>()
-                                            .scannedBarcodes
-                                            .where(
-                                                (batch) => batch.bATCH == value)
-                                            .toList();
+                                      if (value != null &&
+                                          batchGroups.containsKey(value)) {
+                                        scannedItems = batchGroups[value]!;
+                                      } else {
+                                        scannedItems = [];
                                       }
                                     });
                                   },
@@ -242,9 +483,14 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                               foregroundColor: Colors.white,
                               minimumSize: const Size(120, 56),
                             ),
-                            onPressed: () {
-                              // View details functionality
-                            },
+                            onPressed: selectedBatch != null &&
+                                    batchGroups.containsKey(selectedBatch)
+                                ? () => _showBatchDetailsDialog(
+                                      context,
+                                      selectedBatch!,
+                                      batchGroups[selectedBatch]!,
+                                    )
+                                : null,
                             child: const Text('VIEW DETAILS'),
                           ),
                         ],
@@ -284,7 +530,21 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
             ),
             const SizedBox(height: 16),
 
-            BlocBuilder<CaptureCubit, CaptureState>(
+            BlocConsumer<CaptureCubit, CaptureState>(
+              listener: (context, state) {
+                if (state is CaptureSerializationSuccess) {
+                  // Process the data when serialization is successful
+                  _processSerializationData(state.data);
+
+                  // Show success message
+                  AppSnackbars.success(context, 'Items loaded successfully');
+                } else if (state is CaptureSerializationError) {
+                  AppSnackbars.danger(context, state.message);
+                } else if (state is CaptureSerializationEmpty) {
+                  AppSnackbars.warning(
+                      context, 'No items found for this barcode');
+                }
+              },
               builder: (context, state) {
                 if (selectedBatch != null && scannedItems.isNotEmpty) {
                   return ListView.builder(
@@ -315,7 +575,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                 return Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
@@ -427,7 +687,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
           alignment: Alignment.center,
           margin: const EdgeInsets.only(right: 12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(4),
             border: Border.all(color: AppColors.primary),
           ),
