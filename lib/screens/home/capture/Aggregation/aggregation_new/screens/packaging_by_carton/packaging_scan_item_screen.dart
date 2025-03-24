@@ -228,10 +228,11 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                           if (recordCount != null &&
                               recordCount > 0 &&
                               recordCount <= batchItems.length) {
-                            // Add the first 'recordCount' items to scannedItems
+                            // CHANGE: Append items instead of replacing
                             setState(() {
-                              scannedItems =
-                                  batchItems.take(recordCount).toList();
+                              // Take the first 'recordCount' items and append to scannedItems
+                              scannedItems.addAll(
+                                  batchItems.take(recordCount).toList());
                             });
                             Navigator.pop(context);
                           } else {
@@ -259,7 +260,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
 
   void _processSerializationData(List<SerializationModel> data) {
     setState(() {
-      // Clear previous data
+      // Clear previous batch data
       batchGroups.clear();
       uniqueBatches.clear();
 
@@ -270,13 +271,15 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
             batchGroups[item.bATCH!] = [];
             uniqueBatches.add(item.bATCH!);
           }
-          batchGroups[item.bATCH]!.add(item);
+          batchGroups[item.bATCH!]!.add(item);
         }
       }
 
       // Reset selected batch
       selectedBatch = null;
-      scannedItems = [];
+
+      // Do NOT set scannedItems here - keep it as is
+      // This ensures items are only added when explicitly selected
 
       // Debug print to verify data
       print('Found ${uniqueBatches.length} unique batches');
@@ -464,12 +467,8 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                                   onChanged: (value) {
                                     setState(() {
                                       selectedBatch = value;
-                                      if (value != null &&
-                                          batchGroups.containsKey(value)) {
-                                        scannedItems = batchGroups[value]!;
-                                      } else {
-                                        scannedItems = [];
-                                      }
+                                      // Don't automatically set scannedItems here
+                                      // This ensures items are only added when explicitly selected
                                     });
                                   },
                                 ),
@@ -520,7 +519,8 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Scanned Items Section
+            // Scanned Items Section - Only show when there are items
+            const SizedBox(height: 24),
             Text(
               'Scanned Items (${scannedItems.length}) Serial',
               style: const TextStyle(
@@ -528,103 +528,105 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 16),
-
-            BlocConsumer<CaptureCubit, CaptureState>(
-              listener: (context, state) {
-                if (state is CaptureSerializationSuccess) {
-                  // Process the data when serialization is successful
-                  _processSerializationData(state.data);
-
-                  // Show success message
-                  AppSnackbars.success(context, 'Items loaded successfully');
-                } else if (state is CaptureSerializationError) {
-                  AppSnackbars.danger(context, state.message);
-                } else if (state is CaptureSerializationEmpty) {
-                  AppSnackbars.warning(
-                      context, 'No items found for this barcode');
-                }
-              },
-              builder: (context, state) {
-                if (selectedBatch != null && scannedItems.isNotEmpty) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: scannedItems.length,
-                    itemBuilder: (context, index) {
-                      final item = scannedItems[index];
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        child: ListTile(
-                          title: Text(item.serialNo ?? 'No Serial'),
-                          subtitle: Text('Batch: ${item.bATCH ?? 'N/A'}'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                scannedItems.removeAt(index);
-                              });
-                            },
+            const SizedBox(height: 8),
+            scannedItems.isEmpty
+                ? Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'No Items Scanned Yet',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Start by selecting a bin location and scanning items to add them to your aggregation list.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        _buildInstructionStep(
+                            '1', 'Select a bin location from the dropdown'),
+                        const SizedBox(height: 16),
+                        _buildInstructionStep(
+                            '2', 'Scan or enter the serial number'),
+                        const SizedBox(height: 16),
+                        _buildInstructionStep(
+                            '3', 'Select the appropriate batch'),
+                        const SizedBox(height: 16),
+                        _buildInstructionStep('4', 'View scanned items below'),
+                      ],
+                    ),
+                  )
+                : Column(
+                    children: scannedItems.map((item) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.serialNo ?? 'No Serial',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Batch: ${item.bATCH ?? 'N/A'}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  scannedItems.remove(item);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       );
-                    },
-                  );
-                }
-
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
+                    }).toList(),
                   ),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'No Items Scanned Yet',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Start by selecting a bin location and scanning items to add them to your aggregation list.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Instructions
-                      _buildInstructionStep(
-                          '1', 'Select a bin location from the dropdown'),
-                      const SizedBox(height: 16),
-                      _buildInstructionStep(
-                          '2', 'Scan or enter the serial number'),
-                      const SizedBox(height: 16),
-                      _buildInstructionStep(
-                          '3', 'Select the appropriate batch'),
-                      const SizedBox(height: 16),
-                      _buildInstructionStep('4', 'View scanned items below'),
-                    ],
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
 
             // Total Scanned
+            const SizedBox(height: 24),
             Text(
               'Total Scanned: (${scannedItems.length})',
               style: const TextStyle(
