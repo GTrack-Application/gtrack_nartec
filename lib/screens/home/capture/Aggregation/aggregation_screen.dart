@@ -5,8 +5,8 @@ import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/Assembling/assembling_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/Bundling/bundling_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/Palletization/new_palletization_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/packaging_by_carton/packaging_by_carton_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/packaging/packaging_by_many_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/palletization_containerization/palletization_containerization_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/packing_screen.dart';
 
 class AggregationScreen extends StatefulWidget {
@@ -101,7 +101,9 @@ class _AggregationScreenState extends State<AggregationScreen> {
           floatingActionButtonText: "Perform Aggregation By Batches",
         ));
     data[8]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const NewPalletizationScreen());
+          context: context,
+          screen: const PalletizationContainerizationScreen(),
+        );
   }
 
   final gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(

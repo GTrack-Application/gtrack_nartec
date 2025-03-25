@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
@@ -269,9 +267,71 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                         ),
                       ),
 
+                      // Action buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          OutlinedButton.icon(
+                            icon: const Icon(Icons.cancel),
+                            label: const Text('CANCEL'),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          const SizedBox(width: 12),
+                          ElevatedButton.icon(
+                            icon: const Icon(
+                              Icons.add_circle,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              'ADD RECORDS',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: AppColors.pink,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                            ),
+                            onPressed: () {
+                              final recordCount = int.tryParse(
+                                recordsController.text,
+                              );
+
+                              if (recordCount != null &&
+                                  recordCount > 0 &&
+                                  recordCount <= batchItems.length) {
+                                setState(() {
+                                  // Take the first 'recordCount' items and append to scannedItems
+                                  cubit.scannedItems.addAll(
+                                    batchItems.take(recordCount).toList(),
+                                  );
+                                });
+                                Navigator.pop(context);
+                              } else {
+                                // Show error
+                                AppSnackbars.danger(
+                                  context,
+                                  'Please enter a valid number of records',
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+
                       // Serial numbers
                       Card(
-                        elevation: 2,
+                        color: AppColors.white,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -336,72 +396,6 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Action buttons
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      OutlinedButton.icon(
-                        icon: const Icon(Icons.cancel),
-                        label: const Text('CANCEL'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      const SizedBox(width: 12),
-                      ElevatedButton.icon(
-                        icon: const Icon(
-                          Icons.add_circle,
-                          color: Colors.white,
-                        ),
-                        label: const Text(
-                          'ADD RECORDS',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: AppColors.pink,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
-                        onPressed: () {
-                          //TODO: Check if the records you are adding is greater then the total number of items in the batch
-
-                          final recordCount =
-                              int.tryParse(recordsController.text);
-
-                          if (recordCount != null &&
-                              recordCount > 0 &&
-                              recordCount <= batchItems.length) {
-                            setState(() {
-                              // Take the first 'recordCount' items and append to scannedItems
-                              cubit.scannedItems.addAll(
-                                batchItems.take(recordCount).toList(),
-                              );
-                            });
-                            Navigator.pop(context);
-                          } else {
-                            // Show error
-                            AppSnackbars.danger(
-                              context,
-                              'Please enter a valid number of records',
-                            );
-                          }
-                        },
                       ),
                     ],
                   ),
@@ -484,11 +478,6 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                       }).toList(),
                       onChanged: (value) {
                         if (value != null) {
-                          final selectedLocation = binLocations.firstWhere(
-                            (location) => location.id == value,
-                            orElse: () => binLocations.first,
-                          );
-
                           cubit.setSelectedBinLocation(value);
                         }
                       },

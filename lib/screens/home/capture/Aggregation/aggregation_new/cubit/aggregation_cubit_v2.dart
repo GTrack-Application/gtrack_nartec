@@ -5,7 +5,9 @@ import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/bin_location.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/packaging_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/palletization_model.dart';
 
 class AggregationCubit extends Cubit<AggregationState> {
   AggregationCubit() : super(AggregationInitial());
@@ -19,6 +21,7 @@ class AggregationCubit extends Cubit<AggregationState> {
   String? selectedBatch;
   String? selectedBinLocationId;
   BinLocation? selectedBinLocation;
+  List<PalletizationModel> pallets = [];
 
   void getPackaging(String type) async {
     try {
@@ -158,6 +161,30 @@ class AggregationCubit extends Cubit<AggregationState> {
       }
     } catch (e) {
       emit(AggregationError(message: e.toString()));
+    }
+  }
+
+  // Fetch palletization data
+  Future<void> fetchPalletizationData() async {
+    try {
+      emit(PalletizationLoading());
+
+      final response = await httpService.request(
+        '/api/palletPackaging?status=active&association=true',
+      );
+
+      if (response.success) {
+        final data = response.data['data'] as List;
+        pallets =
+            data.map((item) => PalletizationModel.fromJson(item)).toList();
+        emit(PalletizationLoaded(pallets: pallets));
+      } else {
+        emit(PalletizationError(
+            message: response.data['message'] ??
+                'Failed to load palletization data'));
+      }
+    } catch (e) {
+      emit(PalletizationError(message: e.toString()));
     }
   }
 }
