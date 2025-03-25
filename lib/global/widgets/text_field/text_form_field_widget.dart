@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class TextFormFieldWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -41,7 +42,7 @@ class TextFormFieldWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: color ?? Colors.white,
+        color: color ?? AppColors.background,
       ),
       width: width ?? MediaQuery.of(context).size.width * 0.9,
       height: height ?? 50,

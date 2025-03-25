@@ -5,9 +5,12 @@ import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_
 import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_cubit_v2.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
 
 class PackagingScanItemScreen extends StatefulWidget {
   const PackagingScanItemScreen({super.key});
@@ -20,18 +23,31 @@ class PackagingScanItemScreen extends StatefulWidget {
 class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
   final TextEditingController _barcodeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  String? selectedBinLocation;
-  String? selectedBatch;
-  List<SerializationModel> scannedItems = [];
-  Map<String, List<SerializationModel>> batchGroups = {};
-  List<String> uniqueBatches = [];
+
+  // Cubits
+  late AggregationCubit cubit;
+  late ProductionJobOrderCubit productionJobOrderCubit;
+  late CaptureCubit captureCubit;
 
   @override
   void initState() {
     super.initState();
+    initCubits();
+  }
+
+  void initCubits() {
+    cubit = context.read<AggregationCubit>();
+    productionJobOrderCubit = context.read<ProductionJobOrderCubit>();
+    captureCubit = context.read<CaptureCubit>();
+
     // Fetch bin locations when screen initializes
-    context.read<ProductionJobOrderCubit>().getBinLocations();
-    context.read<CaptureCubit>().scannedBarcodes.clear();
+    productionJobOrderCubit.getBinLocations();
+    captureCubit.scannedBarcodes.clear();
+    cubit.scannedItems.clear();
+    cubit.selectedBatch = null;
+    cubit.selectedBinLocation = null;
+    cubit.batchGroups.clear();
+    cubit.uniqueBatches.clear();
   }
 
   @override
@@ -44,7 +60,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
   void _scanBarcode() {
     final barcode = _barcodeController.text.trim();
     if (barcode.isNotEmpty) {
-      context.read<CaptureCubit>().getSerializationData(barcode);
+      captureCubit.getSerializationData(barcode);
     } else {
       AppSnackbars.danger(context, 'Please enter a barcode');
     }
@@ -68,8 +84,9 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
+          backgroundColor: AppColors.background,
           child: Container(
             width: double.infinity,
             constraints: const BoxConstraints(maxWidth: 600),
@@ -77,175 +94,310 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
+                // Gradient header
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [AppColors.pink, AppColors.danger],
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Batch Details: $batchName',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      const Icon(
+                        Icons.batch_prediction,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Batch: $batchName',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close),
+                        icon: const Icon(Icons.close, color: Colors.white),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
                   ),
                 ),
-                const Divider(height: 1),
+
+                // Batch info cards
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Available Items: ${batchItems.length}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Manufacturing Date: ${manufacturingDate != null ? "${manufacturingDate.day.toString().padLeft(2, '0')}/${manufacturingDate.month.toString().padLeft(2, '0')}/${manufacturingDate.year}" : "N/A"}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Expiry Date: ${expiryDate != null ? "${expiryDate.day.toString().padLeft(2, '0')}/${expiryDate.month.toString().padLeft(2, '0')}/${expiryDate.year}" : "N/A"}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Stakeholder: N/A',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 16,
                     children: [
-                      TextField(
-                        controller: recordsController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter number of records to add',
-                          border: OutlineInputBorder(),
+                      // Batch information cards
+                      Row(
+                        children: [
+                          // Expiry date card
+                          Expanded(
+                            child: Card(
+                              elevation: 2,
+                              color: Colors.orange.shade50,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(Icons.event_available,
+                                            color: Colors.orange.shade700),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: const Text(
+                                            'Expiry Date',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      expiryDate != null
+                                          ? formatDate(expiryDate)
+                                          : 'N/A',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          // Manufacturing date card
+                          Expanded(
+                            child: Card(
+                              elevation: 2,
+                              color: Colors.blue.shade50,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(Icons.date_range,
+                                            color: AppColors.primary),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: const Text(
+                                            'Manufacturing Date',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      manufacturingDate == null
+                                          ? "N/A"
+                                          : formatDate(manufacturingDate),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // Records input
+                      Card(
+                        color: AppColors.background,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.inventory_2,
+                                    color: AppColors.green,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    'Records to Add',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              TextFormFieldWidget(
+                                controller: recordsController,
+                                hintText: 'Enter number of records',
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Enter a number between 1 and ${batchItems.length}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+
+                      // Serial numbers
+                      Card(
+                        elevation: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.format_list_numbered,
+                                    color: Colors.pinkAccent,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Serial Numbers (${batchItems.length})',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Divider(height: 1),
+                            Container(
+                              constraints: const BoxConstraints(
+                                maxHeight: 200,
+                              ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: batchItems.length,
+                                itemBuilder: (context, index) {
+                                  final item = batchItems[index];
+                                  return Container(
+                                    color: index % 2 == 0
+                                        ? Colors.grey.shade50
+                                        : Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.qr_code,
+                                          size: 16,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            item.serialNo ?? 'N/A',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    'Available Serial Numbers:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Flexible(
-                  child: Container(
-                    constraints: const BoxConstraints(maxHeight: 300),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: batchItems.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          color: index % 2 == 0
-                              ? Colors.grey.shade100
-                              : Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 12.0),
-                          child: Text(
-                            batchItems[index].serialNo ?? 'No Serial',
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+
+                // Action buttons
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('CANCEL'),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0A1172),
-                          foregroundColor: Colors.white,
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.cancel),
+                        label: const Text('CANCEL'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                         ),
                         onPressed: () {
-                          // Add records logic
+                          Navigator.pop(context);
+                        },
+                      ),
+                      const SizedBox(width: 12),
+                      ElevatedButton.icon(
+                        icon: const Icon(
+                          Icons.add_circle,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          'ADD RECORDS',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.pink,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                        onPressed: () {
+                          //TODO: Check if the records you are adding is greater then the total number of items in the batch
+
                           final recordCount =
                               int.tryParse(recordsController.text);
+
                           if (recordCount != null &&
                               recordCount > 0 &&
                               recordCount <= batchItems.length) {
-                            // CHANGE: Append items instead of replacing
                             setState(() {
                               // Take the first 'recordCount' items and append to scannedItems
-                              scannedItems.addAll(
-                                  batchItems.take(recordCount).toList());
+                              cubit.scannedItems.addAll(
+                                batchItems.take(recordCount).toList(),
+                              );
                             });
                             Navigator.pop(context);
                           } else {
                             // Show error
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                    'Please enter a valid number of records'),
-                              ),
+                            AppSnackbars.danger(
+                              context,
+                              'Please enter a valid number of records',
                             );
                           }
                         },
-                        child: const Text('ADD RECORDS'),
                       ),
                     ],
                   ),
@@ -256,35 +408,6 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
         );
       },
     );
-  }
-
-  void _processSerializationData(List<SerializationModel> data) {
-    setState(() {
-      // Clear previous batch data
-      batchGroups.clear();
-      uniqueBatches.clear();
-
-      // Group items by batch
-      for (var item in data) {
-        if (item.bATCH != null) {
-          if (!batchGroups.containsKey(item.bATCH)) {
-            batchGroups[item.bATCH!] = [];
-            uniqueBatches.add(item.bATCH!);
-          }
-          batchGroups[item.bATCH!]!.add(item);
-        }
-      }
-
-      // Reset selected batch
-      selectedBatch = null;
-
-      // Do NOT set scannedItems here - keep it as is
-      // This ensures items are only added when explicitly selected
-
-      // Debug print to verify data
-      print('Found ${uniqueBatches.length} unique batches');
-      print('Batch groups: ${batchGroups.keys.join(', ')}');
-    });
   }
 
   @override
@@ -325,12 +448,13 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                 }
               },
               builder: (context, state) {
-                final binLocations =
-                    context.read<ProductionJobOrderCubit>().binLocations;
+                final binLocations = productionJobOrderCubit.binLocations;
                 return Container(
+                  height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: AppColors.grey),
                     borderRadius: BorderRadius.circular(4),
+                    color: AppColors.background,
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
@@ -339,19 +463,23 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                         padding: EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text('Select Bin Location'),
                       ),
-                      value: selectedBinLocation,
+                      value: cubit.selectedBinLocation,
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       items: binLocations.map((location) {
                         return DropdownMenuItem<String>(
                           value: location.binNumber ?? '',
                           child: Text(
-                            location.binNumber ?? '',
+                            "${location.binNumber}-${location.groupWarehouse} (${location.availableQty})",
+                            style: const TextStyle(
+                              fontSize: 11,
+                            ),
                           ),
                         );
                       }).toList(),
                       onChanged: (value) {
                         setState(() {
-                          selectedBinLocation = value;
+                          final binLocation = value?.split('-')[0];
+                          cubit.setSelectedBinLocation(binLocation);
                         });
                       },
                     ),
@@ -388,14 +516,14 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                       backgroundColor: AppColors.darkNavy,
                       child: state is CaptureSerializationLoading
                           ? const CircularProgressIndicator(
-                              color: AppColors.white,
+                              color: Colors.white,
                               strokeWidth: 1,
                             )
                           : Center(
                               child: IconButton(
                                 icon: const Icon(
                                   Icons.qr_code_scanner,
-                                  color: AppColors.white,
+                                  color: Colors.white,
                                   size: 20,
                                 ),
                                 onPressed: _scanBarcode,
@@ -413,7 +541,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
               listener: (context, state) {
                 if (state is CaptureSerializationSuccess) {
                   // Process the data when serialization is successful
-                  _processSerializationData(state.data);
+                  cubit.processSerializationData(state.data);
 
                   // Show success message
                   AppSnackbars.success(context, 'Items loaded successfully');
@@ -425,77 +553,88 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                 }
               },
               builder: (context, state) {
-                return Visibility(
-                  visible:
-                      context.read<CaptureCubit>().scannedBarcodes.isNotEmpty,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Select Batch',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
+                return BlocBuilder<AggregationCubit, AggregationState>(
+                  builder: (context, aggState) {
+                    final uniqueBatches = cubit.uniqueBatches;
+
+                    return Visibility(
+                      visible: uniqueBatches.isNotEmpty,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  isExpanded: true,
-                                  hint: const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 12.0),
-                                    child: Text('Select Batch'),
-                                  ),
-                                  value: selectedBatch,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0),
-                                  items: uniqueBatches.map((batch) {
-                                    return DropdownMenuItem<String>(
-                                      value: batch,
-                                      child: Text(batch),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedBatch = value;
-                                      // Don't automatically set scannedItems here
-                                      // This ensures items are only added when explicitly selected
-                                    });
-                                  },
-                                ),
-                              ),
+                          const Text(
+                            'Select Batch',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.darkNavy,
-                              foregroundColor: Colors.white,
-                              minimumSize: const Size(120, 56),
-                            ),
-                            onPressed: selectedBatch != null &&
-                                    batchGroups.containsKey(selectedBatch)
-                                ? () => _showBatchDetailsDialog(
-                                      context,
-                                      selectedBatch!,
-                                      batchGroups[selectedBatch]!,
-                                    )
-                                : null,
-                            child: const Text('VIEW DETAILS'),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: AppColors.grey),
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: AppColors.background,
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      isExpanded: true,
+                                      hint: const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12.0),
+                                        child: Text('Select Batch'),
+                                      ),
+                                      value: cubit.selectedBatch,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0),
+                                      items: uniqueBatches.map((batch) {
+                                        return DropdownMenuItem<String>(
+                                          value: batch,
+                                          child: Text(
+                                            batch,
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          cubit.setSelectedBatch(value);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                  child: PrimaryButtonWidget(
+                                text: "Details",
+                                height: 40,
+                                backgroundColor: AppColors.darkNavy,
+                                onPressed: cubit.selectedBatch != null &&
+                                        cubit.batchGroups
+                                            .containsKey(cubit.selectedBatch!)
+                                    ? () => _showBatchDetailsDialog(
+                                          context,
+                                          cubit.selectedBatch!,
+                                          cubit.batchGroups[
+                                              cubit.selectedBatch]!,
+                                        )
+                                    : null,
+                              ))
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
             ),
@@ -510,129 +649,137 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            TextField(
+            TextFormFieldWidget(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                hintText: 'Enter description for the box/carton',
-                border: OutlineInputBorder(),
-              ),
+              hintText: 'Enter description for the box/carton',
+              height: 40,
             ),
             const SizedBox(height: 24),
 
-            // Scanned Items Section - Only show when there are items
-            const SizedBox(height: 24),
-            Text(
-              'Scanned Items (${scannedItems.length}) Serial',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            scannedItems.isEmpty
-                ? Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 2,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'No Items Scanned Yet',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Start by selecting a bin location and scanning items to add them to your aggregation list.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        _buildInstructionStep(
-                            '1', 'Select a bin location from the dropdown'),
-                        const SizedBox(height: 16),
-                        _buildInstructionStep(
-                            '2', 'Scan or enter the serial number'),
-                        const SizedBox(height: 16),
-                        _buildInstructionStep(
-                            '3', 'Select the appropriate batch'),
-                        const SizedBox(height: 16),
-                        _buildInstructionStep('4', 'View scanned items below'),
-                      ],
-                    ),
-                  )
-                : Column(
-                    children: scannedItems.map((item) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.serialNo ?? 'No Serial',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Batch: ${item.bATCH ?? 'N/A'}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  scannedItems.remove(item);
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
+            // Scanned Items Section
+            BlocBuilder<AggregationCubit, AggregationState>(
+              builder: (context, state) {
+                final scannedItems = cubit.scannedItems;
 
-            // Total Scanned
-            const SizedBox(height: 24),
-            Text(
-              'Total Scanned: (${scannedItems.length})',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Scanned Items (${scannedItems.length}) Serial',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    scannedItems.isEmpty
+                        ? Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withValues(alpha: 0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  'No Items Scanned Yet',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'Start by selecting a bin location and scanning items to add them to your aggregation list.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                _buildInstructionStep('1',
+                                    'Select a bin location from the dropdown'),
+                                const SizedBox(height: 16),
+                                _buildInstructionStep(
+                                    '2', 'Scan or enter the serial number'),
+                                const SizedBox(height: 16),
+                                _buildInstructionStep(
+                                    '3', 'Select the appropriate batch'),
+                                const SizedBox(height: 16),
+                                _buildInstructionStep(
+                                    '4', 'View scanned items below'),
+                              ],
+                            ),
+                          )
+                        : Column(
+                            children: scannedItems.map((item) {
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.serialNo ?? 'No Serial',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Batch: ${item.bATCH ?? 'N/A'}',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        cubit.removeItem(item);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+
+                    // Total Scanned
+                    const SizedBox(height: 24),
+                    Text(
+                      'Total Scanned: (${scannedItems.length})',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -652,25 +799,36 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: PrimaryButtonWidget(
-                text: 'Save',
-                onPressed: () {
-                  // Implement save functionality
-                  if (selectedBinLocation == null) {
-                    AppSnackbars.danger(
-                        context, 'Please select a bin location');
-                    return;
+              child: BlocConsumer<AggregationCubit, AggregationState>(
+                listener: (context, state) {
+                  if (state is PackagingSaved) {
+                    AppSnackbars.success(context, state.message);
+                    Navigator.pop(context);
+                  } else if (state is AggregationError) {
+                    AppSnackbars.danger(context, state.message);
                   }
-
-                  if (scannedItems.isEmpty) {
-                    AppSnackbars.danger(context, 'No items scanned');
-                    return;
-                  }
-
-                  // Save logic here
-                  AppSnackbars.success(context, 'Items saved successfully');
                 },
-                backgroundColor: Colors.green,
+                builder: (context, state) {
+                  return PrimaryButtonWidget(
+                    text: 'Save',
+                    onPressed: () {
+                      if (cubit.selectedBinLocation == null) {
+                        AppSnackbars.danger(
+                            context, 'Please select a bin location');
+                        return;
+                      }
+
+                      if (cubit.scannedItems.isEmpty) {
+                        AppSnackbars.danger(context, 'No items scanned');
+                        return;
+                      }
+
+                      // Save logic here
+                      cubit.savePackaging(_descriptionController.text);
+                    },
+                    backgroundColor: Colors.green,
+                  );
+                },
               ),
             ),
           ],
@@ -689,7 +847,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
           alignment: Alignment.center,
           margin: const EdgeInsets.only(right: 12),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(4),
             border: Border.all(color: AppColors.primary),
           ),

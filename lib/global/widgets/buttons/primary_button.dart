@@ -15,7 +15,7 @@ class PrimaryButtonWidget extends StatelessWidget {
     this.width,
   });
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? backgroundColor;
   final double? fontSize;
   final bool isLoading;
