@@ -402,7 +402,7 @@ class PackageCard extends StatelessWidget {
     final isToday = _isCreatedToday();
 
     return Card(
-      color: isToday ? Colors.blue.shade50 : Colors.white,
+      color: isToday ? Colors.pink.shade50 : AppColors.white,
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(
