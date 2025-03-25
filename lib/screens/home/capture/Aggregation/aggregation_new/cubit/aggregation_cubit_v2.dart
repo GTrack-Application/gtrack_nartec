@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
@@ -16,8 +17,8 @@ class AggregationCubit extends Cubit<AggregationState> {
   Set<String> uniqueBatches = {};
   List<SerializationModel> scannedItems = [];
   String? selectedBatch;
-  String? selectedBinLocation;
-
+  String? selectedBinLocationId;
+  BinLocation? selectedBinLocation;
   void getPackaging() async {
     try {
       emit(AggregationLoading());
@@ -80,8 +81,8 @@ class AggregationCubit extends Cubit<AggregationState> {
   }
 
   // Set selected bin location
-  void setSelectedBinLocation(String? location) {
-    selectedBinLocation = location;
+  void setSelectedBinLocation(String? binLocationId) {
+    selectedBinLocationId = binLocationId;
     emit(PackagingBatchesLoaded(
       batchGroups: batchGroups,
       uniqueBatches: uniqueBatches,
@@ -114,12 +115,46 @@ class AggregationCubit extends Cubit<AggregationState> {
     try {
       emit(AggregationLoading());
 
-      // Here you would implement the API call to save the packaging
-      // For now, we'll just simulate a successful save
+      // Get memberId from preferences
+      final memberId = await AppPreferences.getMemberId();
 
-      await Future.delayed(const Duration(seconds: 1));
+      // Get the bin location ID (using the selectedBinLocation from state)
+      final binLocationId = selectedBinLocationId;
 
-      emit(PackagingSaved(message: 'Packaging saved successfully'));
+      if (memberId == null || binLocationId == null) {
+        emit(AggregationError(message: 'Missing member ID or bin location'));
+        return;
+      }
+
+      // Prepare the serialsList from scanned items
+      final serialsList = scannedItems
+          .map((item) => {
+                "serialGTIN": "${item.gTIN}",
+                "serialNo": "${item.serialNo}",
+              })
+          .toList();
+
+      // Make the API call
+      final response = await httpService.request(
+        "/api/ssccPackaging",
+        method: HttpMethod.post,
+        payload: {
+          "packagingType": "box_carton",
+          "description": description,
+          "memberId": memberId,
+          "binLocationId": binLocationId,
+          "serialsList": serialsList,
+        },
+      );
+
+      if (response.success) {
+        emit(PackagingSaved(message: 'Packaging saved successfully'));
+        // Clear the scanned items after successful save
+        clearScannedItems();
+      } else {
+        emit(AggregationError(
+            message: response.data['message'] ?? 'Failed to save packaging'));
+      }
     } catch (e) {
       emit(AggregationError(message: e.toString()));
     }

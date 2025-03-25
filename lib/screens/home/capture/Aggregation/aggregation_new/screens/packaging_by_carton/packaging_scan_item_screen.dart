@@ -46,6 +46,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
     cubit.scannedItems.clear();
     cubit.selectedBatch = null;
     cubit.selectedBinLocation = null;
+    cubit.selectedBinLocationId = null;
     cubit.batchGroups.clear();
     cubit.uniqueBatches.clear();
   }
@@ -463,11 +464,13 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                         padding: EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text('Select Bin Location'),
                       ),
-                      value: cubit.selectedBinLocation,
+                      value: context
+                          .watch<AggregationCubit>()
+                          .selectedBinLocationId,
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       items: binLocations.map((location) {
                         return DropdownMenuItem<String>(
-                          value: location.binNumber ?? '',
+                          value: location.id,
                           child: Text(
                             "${location.binNumber}-${location.groupWarehouse} (${location.availableQty})",
                             style: const TextStyle(
@@ -477,10 +480,14 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                         );
                       }).toList(),
                       onChanged: (value) {
-                        setState(() {
-                          final binLocation = value?.split('-')[0];
-                          cubit.setSelectedBinLocation(binLocation);
-                        });
+                        if (value != null) {
+                          final selectedLocation = binLocations.firstWhere(
+                            (location) => location.id == value,
+                            orElse: () => binLocations.first,
+                          );
+
+                          cubit.setSelectedBinLocation(value);
+                        }
                       },
                     ),
                   ),
@@ -803,6 +810,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                 listener: (context, state) {
                   if (state is PackagingSaved) {
                     AppSnackbars.success(context, state.message);
+                    context.read<AggregationCubit>().getPackaging();
                     Navigator.pop(context);
                   } else if (state is AggregationError) {
                     AppSnackbars.danger(context, state.message);
@@ -811,8 +819,9 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                 builder: (context, state) {
                   return PrimaryButtonWidget(
                     text: 'Save',
+                    isLoading: state is AggregationLoading,
                     onPressed: () {
-                      if (cubit.selectedBinLocation == null) {
+                      if (cubit.selectedBinLocationId == null) {
                         AppSnackbars.danger(
                             context, 'Please select a bin location');
                         return;
