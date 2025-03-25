@@ -12,8 +12,13 @@ import '../../model/packaging_model.dart';
 class PackagingByCartonScreen extends StatefulWidget {
   final String type;
   final String description;
-  const PackagingByCartonScreen(
-      {super.key, required this.type, required this.description});
+  final String floatingActionButtonText;
+  const PackagingByCartonScreen({
+    super.key,
+    required this.type,
+    required this.description,
+    required this.floatingActionButtonText,
+  });
 
   @override
   State<PackagingByCartonScreen> createState() =>
@@ -43,9 +48,9 @@ class _PackagingByCartonScreenState extends State<PackagingByCartonScreen> {
           );
         },
         backgroundColor: AppColors.pink,
-        label: const Text(
-          'Perform Aggregation By Carton',
-          style: TextStyle(color: AppColors.white),
+        label: Text(
+          widget.floatingActionButtonText,
+          style: const TextStyle(color: AppColors.white),
         ),
       ),
       body: BlocConsumer<AggregationCubit, AggregationState>(

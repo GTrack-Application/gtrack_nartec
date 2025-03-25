@@ -78,6 +78,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
         screen: const PackagingByCartonScreen(
           type: "box_carton",
           description: "Packaging By Carton",
+          floatingActionButtonText: "Perform Packaging By Carton",
         ));
     data[1]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const PackingScreen());
@@ -88,6 +89,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
         screen: const PackagingByCartonScreen(
           type: "grouping",
           description: "Grouping",
+          floatingActionButtonText: "Perform Grouping",
         ));
     data[5]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const BundlingScreen());
@@ -96,6 +98,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
         screen: const PackagingByCartonScreen(
           type: "batching",
           description: "Pack By Batches",
+          floatingActionButtonText: "Perform Pack By Batches",
         ));
     data[8]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const NewPalletizationScreen());
