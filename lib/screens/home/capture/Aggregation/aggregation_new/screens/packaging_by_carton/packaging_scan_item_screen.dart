@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
@@ -774,7 +776,13 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                 listener: (context, state) {
                   if (state is PackagingSaved) {
                     AppSnackbars.success(context, state.message);
-                    context.read<AggregationCubit>().getPackaging();
+                    context.read<AggregationCubit>().getPackaging(
+                          widget.type == "box_carton"
+                              ? "box_carton"
+                              : widget.type == "grouping"
+                                  ? "grouping"
+                                  : "batching",
+                        );
                     Navigator.pop(context);
                   } else if (state is AggregationError) {
                     AppSnackbars.danger(context, state.message);
@@ -888,8 +896,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        item?.bATCH ??
-                            'N/A', // Add actual location if available
+                        item.bATCH ?? 'N/A', // Add actual location if available
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,

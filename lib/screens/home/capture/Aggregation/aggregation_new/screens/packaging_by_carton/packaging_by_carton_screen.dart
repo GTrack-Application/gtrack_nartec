@@ -29,7 +29,13 @@ class _PackagingByCartonScreenState extends State<PackagingByCartonScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AggregationCubit>().getPackaging();
+    context.read<AggregationCubit>().getPackaging(
+          widget.type == "box_carton"
+              ? "box_carton"
+              : widget.type == "grouping"
+                  ? "grouping"
+                  : "batching",
+        );
   }
 
   @override

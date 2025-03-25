@@ -19,11 +19,12 @@ class AggregationCubit extends Cubit<AggregationState> {
   String? selectedBatch;
   String? selectedBinLocationId;
   BinLocation? selectedBinLocation;
-  void getPackaging() async {
+
+  void getPackaging(String type) async {
     try {
       emit(AggregationLoading());
       final response = await httpService.request(
-        "/api/ssccPackaging?packagingType=box_carton&association=true",
+        "/api/ssccPackaging?packagingType=$type&association=true",
         method: HttpMethod.get,
       );
       final res = response.data['data'] as List;
