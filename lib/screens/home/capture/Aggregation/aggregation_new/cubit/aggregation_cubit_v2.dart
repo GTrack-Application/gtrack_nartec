@@ -111,7 +111,7 @@ class AggregationCubit extends Cubit<AggregationState> {
   }
 
   // Save packaging
-  void savePackaging(String description) async {
+  void savePackaging(String description, {required String type}) async {
     try {
       emit(AggregationLoading());
 
@@ -139,7 +139,7 @@ class AggregationCubit extends Cubit<AggregationState> {
         "/api/ssccPackaging",
         method: HttpMethod.post,
         payload: {
-          "packagingType": "box_carton",
+          "packagingType": type,
           "description": description,
           "memberId": memberId,
           "binLocationId": binLocationId,

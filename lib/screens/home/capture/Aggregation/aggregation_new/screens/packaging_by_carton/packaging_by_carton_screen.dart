@@ -10,7 +10,10 @@ import '../../cubit/aggregation_cubit_v2.dart';
 import '../../model/packaging_model.dart';
 
 class PackagingByCartonScreen extends StatefulWidget {
-  const PackagingByCartonScreen({super.key});
+  final String type;
+  final String description;
+  const PackagingByCartonScreen(
+      {super.key, required this.type, required this.description});
 
   @override
   State<PackagingByCartonScreen> createState() =>
@@ -29,14 +32,14 @@ class _PackagingByCartonScreenState extends State<PackagingByCartonScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: const Text('Packaging By Carton'),
+        title: Text(widget.description),
         backgroundColor: AppColors.pink,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           AppNavigator.goToPage(
             context: context,
-            screen: const PackagingScanItemScreen(),
+            screen: PackagingScanItemScreen(type: widget.type),
           );
         },
         backgroundColor: AppColors.pink,

@@ -7,7 +7,6 @@ import 'package:gtrack_nartec/screens/home/capture/Aggregation/Assembling/assemb
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/Bundling/bundling_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/Palletization/new_palletization_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/packaging_by_carton/packaging_by_carton_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/packaging/packaging_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/packing_screen.dart';
 
 class AggregationScreen extends StatefulWidget {
@@ -50,7 +49,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
       "onTap": () {},
     },
     {
-      "text": "Batching",
+      "text": "Pack By Batches",
       "icon": AppIcons.aggBatching,
       "onTap": () {},
     },
@@ -75,13 +74,29 @@ class _AggregationScreenState extends State<AggregationScreen> {
   void initState() {
     super.initState();
     data[0]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const PackagingByCartonScreen());
+        context: context,
+        screen: const PackagingByCartonScreen(
+          type: "box_carton",
+          description: "Packaging By Carton",
+        ));
     data[1]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const PackingScreen());
     data[3]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const AssemblingScreen());
+    data[4]["onTap"] = () => AppNavigator.goToPage(
+        context: context,
+        screen: const PackagingByCartonScreen(
+          type: "grouping",
+          description: "Grouping",
+        ));
     data[5]["onTap"] = () =>
         AppNavigator.goToPage(context: context, screen: const BundlingScreen());
+    data[6]["onTap"] = () => AppNavigator.goToPage(
+        context: context,
+        screen: const PackagingByCartonScreen(
+          type: "batching",
+          description: "Pack By Batches",
+        ));
     data[8]["onTap"] = () => AppNavigator.goToPage(
         context: context, screen: const NewPalletizationScreen());
   }
