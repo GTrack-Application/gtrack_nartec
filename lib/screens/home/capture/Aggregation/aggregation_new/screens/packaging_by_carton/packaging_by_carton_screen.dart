@@ -109,7 +109,10 @@ class PackageCard extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [AppColors.pink, AppColors.pink.withOpacity(0.8)],
+                    colors: [
+                      AppColors.pink,
+                      AppColors.pink.withValues(alpha: 0.8)
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -185,7 +188,7 @@ class PackageCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: Colors.grey.withValues(alpha: 0.1),
                             spreadRadius: 1,
                             blurRadius: 10,
                             offset: const Offset(0, 2),
@@ -290,7 +293,7 @@ class PackageCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -373,11 +376,32 @@ class PackageCard extends StatelessWidget {
     );
   }
 
+  bool _isCreatedToday() {
+    if (package.createdAt == null) return false;
+
+    try {
+      final creationDate = DateTime.parse(package.createdAt!).toLocal();
+      final today = DateTime.now();
+
+      return creationDate.year == today.year &&
+          creationDate.month == today.month &&
+          creationDate.day == today.day;
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isToday = _isCreatedToday();
+
     return Card(
-      color: Colors.white,
+      color: isToday ? Colors.blue.shade50 : Colors.white,
+      elevation: 2,
       margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -387,10 +411,11 @@ class PackageCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Created Date:\n${package.createdAt}',
+                  'Created Date: ${package.createdAt?.split('T')[0] ?? ''}',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey,
+                    color: isToday ? Colors.blue.shade700 : Colors.grey[600],
+                    fontWeight: isToday ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
                 Container(
@@ -400,11 +425,15 @@ class PackageCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: Colors.amber,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
                     package.status ?? 'Active',
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],
@@ -419,29 +448,34 @@ class PackageCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Description: ${package.description}',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
+              'Description: ${package.description ?? ''}',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey[600],
               ),
             ),
             const SizedBox(height: 8),
             Row(
               children: [
                 Text(
-                  'Packaging Type: ${package.packagingType}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
+                  'Packaging Type: ${package.packagingType ?? ''}',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[600],
                   ),
                 ),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.visibility, color: Colors.blue),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                   onPressed: () => _showPackageDetails(context),
                 ),
+                const SizedBox(width: 16),
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                   onPressed: () {
                     // Handle delete action
                   },
