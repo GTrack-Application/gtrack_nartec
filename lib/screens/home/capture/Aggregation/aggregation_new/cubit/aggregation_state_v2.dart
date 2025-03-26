@@ -1,4 +1,5 @@
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/container_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/packaging_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/palletization_model.dart';
 
@@ -110,3 +111,40 @@ class SSCCPackageSelectionChanged extends AggregationState {
 */
 
 // State for pallet creation
+
+// Containerization States
+class ContainersLoading extends AggregationState {}
+
+class ContainersLoaded extends AggregationState {
+  final List<ContainerModel> containers;
+
+  ContainersLoaded({required this.containers});
+}
+
+class ContainersError extends AggregationState {
+  final String message;
+
+  ContainersError({required this.message});
+}
+
+class ContainerSelected extends AggregationState {
+  final ContainerModel container;
+
+  ContainerSelected({required this.container});
+}
+
+class PalletsForContainerSelected extends AggregationState {
+  final List<String> palletIds;
+
+  PalletsForContainerSelected({required this.palletIds});
+}
+
+class ContainerCreationLoading extends AggregationState {}
+
+class ContainerCreated extends AggregationState {}
+
+class ContainerCreationError extends AggregationState {
+  final String message;
+
+  ContainerCreationError({required this.message});
+}

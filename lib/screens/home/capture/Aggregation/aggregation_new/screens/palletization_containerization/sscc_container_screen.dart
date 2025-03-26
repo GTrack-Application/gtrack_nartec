@@ -4,19 +4,19 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_cubit_v2.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/palletization_model.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/container_model.dart';
 import 'package:intl/intl.dart';
 
 import 'palletization_containerization_aggregation_screen.dart';
 
-class PalletizationScreen extends StatefulWidget {
-  const PalletizationScreen({super.key});
+class SSCCContainerScreen extends StatefulWidget {
+  const SSCCContainerScreen({super.key});
 
   @override
-  State<PalletizationScreen> createState() => _PalletizationScreenState();
+  State<SSCCContainerScreen> createState() => _SSCCContainerScreenState();
 }
 
-class _PalletizationScreenState extends State<PalletizationScreen> {
+class _SSCCContainerScreenState extends State<SSCCContainerScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   late final AggregationCubit cubit;
@@ -25,7 +25,7 @@ class _PalletizationScreenState extends State<PalletizationScreen> {
   void initState() {
     super.initState();
     cubit = context.read<AggregationCubit>();
-    cubit.fetchPalletizationData();
+    cubit.fetchAvailableContainers();
   }
 
   @override
@@ -48,7 +48,7 @@ class _PalletizationScreenState extends State<PalletizationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Aggregation by Palletization'),
+        title: const Text('Aggregation by Containerization'),
         backgroundColor: AppColors.pink,
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -56,41 +56,35 @@ class _PalletizationScreenState extends State<PalletizationScreen> {
           AppNavigator.goToPage(
             context: context,
             screen: PalletizationContainerizationAggregationScreen(
-              type: AggregationType.palletization,
+              type: AggregationType.containerization,
             ),
           );
         },
         icon: const Icon(Icons.inventory),
-        label: const Text('Perform Aggregation by Palletization'),
+        label: const Text('Perform Aggregation by Containerization'),
         backgroundColor: AppColors.pink,
         foregroundColor: AppColors.white,
       ),
       body: Column(
         children: [
-          // Padding(
-          //     padding: const EdgeInsets.all(16),
-          //     child: TextFormFieldWidget(
-          //       controller: _searchController,
-          //       hintText: 'Search purchase orders...',
-          //     )),
           Expanded(
             child: BlocBuilder<AggregationCubit, AggregationState>(
               builder: (context, state) {
-                if (state is PalletizationLoading) {
+                if (state is ContainersLoading) {
                   return _buildLoadingPlaceholder();
-                } else if (state is PalletizationError) {
+                } else if (state is ContainersError) {
                   return Center(child: Text('Error: ${state.message}'));
                 }
                 return RefreshIndicator(
                   onRefresh: () async {
-                    cubit.fetchPalletizationData();
+                    cubit.fetchAvailableContainers();
                   },
                   child: ListView.builder(
-                    itemCount: cubit.pallets.length,
+                    itemCount: cubit.containers.length,
                     itemBuilder: (context, index) {
-                      final pallet = cubit.pallets[index];
-                      return PalletCard(
-                        pallet: pallet,
+                      final container = cubit.containers[index];
+                      return ContainerCard(
+                        container: container,
                         formatDate: formatDate,
                       );
                     },
@@ -117,7 +111,7 @@ class _PalletizationScreenState extends State<PalletizationScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withValues(alpha: 0.1),
+                color: Colors.grey.withOpacity(0.1),
                 spreadRadius: 1,
                 blurRadius: 4,
                 offset: const Offset(0, 2),
@@ -126,12 +120,12 @@ class _PalletizationScreenState extends State<PalletizationScreen> {
           ),
           child: Column(
             children: [
-              // Pallet header
+              // Container header
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    // Pallet icon placeholder
+                    // Container icon placeholder
                     ShimmerEffect(
                       child: Container(
                         height: 48,
@@ -144,7 +138,7 @@ class _PalletizationScreenState extends State<PalletizationScreen> {
                     ),
                     const SizedBox(width: 16),
 
-                    // Pallet info
+                    // Container info
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +188,7 @@ class _PalletizationScreenState extends State<PalletizationScreen> {
 
               Divider(height: 1, color: Colors.grey.shade200),
 
-              // Pallet details section
+              // Container details section
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -317,17 +311,17 @@ class _PalletizationScreenState extends State<PalletizationScreen> {
   }
 }
 
-class PalletCard extends StatelessWidget {
-  final PalletizationModel pallet;
+class ContainerCard extends StatelessWidget {
+  final ContainerModel container;
   final Function(String?) formatDate;
 
-  const PalletCard({
+  const ContainerCard({
     super.key,
-    required this.pallet,
+    required this.container,
     required this.formatDate,
   });
 
-  void _showPalletDetails(BuildContext context) {
+  void _showContainerDetails(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -349,7 +343,7 @@ class PalletCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      'List of SSCC Boxes: ${pallet.sSCCNo ?? "N/A"}',
+                      'Container Details: ${container.ssccNo}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -364,7 +358,7 @@ class PalletCard extends StatelessWidget {
               ),
               const Divider(),
 
-              // Pallet Information Section
+              // Container Information Section
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -375,7 +369,7 @@ class PalletCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Pallet Information',
+                      'Container Information',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -390,10 +384,10 @@ class PalletCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Pallet SSCC:',
+                                'Container SSCC:',
                                 style: TextStyle(fontWeight: FontWeight.w500),
                               ),
-                              Text(pallet.sSCCNo ?? 'N/A'),
+                              Text(container.ssccNo),
                             ],
                           ),
                         ),
@@ -407,7 +401,7 @@ class PalletCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Text(
-                            'Status: ${pallet.status ?? "N/A"}',
+                            'Status: ${container.status}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -420,10 +414,20 @@ class PalletCard extends StatelessWidget {
                     Row(
                       children: [
                         const Text(
+                          'Container Code: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Text(container.containerCode),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Text(
                           'Description: ',
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
-                        Text(pallet.description ?? 'N/A'),
+                        Expanded(child: Text(container.description)),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -433,7 +437,7 @@ class PalletCard extends StatelessWidget {
                           'Created At: ',
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
-                        Text(formatDate(pallet.createdAt)),
+                        Text(formatDate(container.createdAt.toString())),
                       ],
                     ),
                   ],
@@ -442,7 +446,7 @@ class PalletCard extends StatelessWidget {
 
               const SizedBox(height: 16),
               const Text(
-                'Pallet Items',
+                'Pallets in Container',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -450,13 +454,12 @@ class PalletCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              // SSCC Packages List
+              // Pallets List
               Expanded(
-                child: pallet.ssccPackages == null ||
-                        pallet.ssccPackages!.isEmpty
+                child: container.pallets.isEmpty
                     ? const Center(
                         child: Text(
-                          'No packages in this pallet',
+                          'No pallets in this container',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -464,9 +467,9 @@ class PalletCard extends StatelessWidget {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: pallet.ssccPackages!.length,
+                        itemCount: container.pallets.length,
                         itemBuilder: (context, index) {
-                          final package = pallet.ssccPackages![index];
+                          final pallet = container.pallets[index];
                           return Container(
                             margin: const EdgeInsets.only(bottom: 12),
                             decoration: BoxDecoration(
@@ -490,7 +493,7 @@ class PalletCard extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          'SSCC: ${package.sSCCNo ?? "N/A"}',
+                                          'SSCC: ${pallet.ssccNo}',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -500,18 +503,17 @@ class PalletCard extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 8, vertical: 2),
                                         decoration: BoxDecoration(
-                                          color: package.status == 'active'
+                                          color: pallet.status == 'active'
                                               ? Colors.green
                                               : Colors.grey,
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
                                         child: Text(
-                                          package.status ?? 'N/A',
+                                          pallet.status,
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
-                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
@@ -525,8 +527,6 @@ class PalletCard extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
                                         children: [
                                           const Text(
                                             'Description: ',
@@ -535,27 +535,11 @@ class PalletCard extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              package.description ??
-                                                  'No description',
-                                              style: const TextStyle(
-                                                color: Colors.black87,
+                                              pallet.description,
+                                              style: TextStyle(
+                                                color: Colors.grey.shade700,
+                                                fontSize: 13,
                                               ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            'Packaging Type: ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          Text(
-                                            package.packagingType ?? 'N/A',
-                                            style: const TextStyle(
-                                              color: Colors.black87,
                                             ),
                                           ),
                                         ],
@@ -571,7 +555,8 @@ class PalletCard extends StatelessWidget {
                                                 fontWeight: FontWeight.w500),
                                           ),
                                           Text(
-                                            formatDate(package.createdAt),
+                                            formatDate(
+                                                pallet.createdAt.toString()),
                                             style: TextStyle(
                                               color: Colors.grey.shade700,
                                               fontSize: 13,
@@ -579,7 +564,7 @@ class PalletCard extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: 8),
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -590,7 +575,8 @@ class PalletCard extends StatelessWidget {
                                                 fontWeight: FontWeight.w500),
                                           ),
                                           Text(
-                                            formatDate(package.updatedAt),
+                                            formatDate(
+                                                pallet.updatedAt.toString()),
                                             style: TextStyle(
                                               color: Colors.grey.shade700,
                                               fontSize: 13,
@@ -601,8 +587,6 @@ class PalletCard extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-
-                                // Add barcodes in the future if needed
                               ],
                             ),
                           );
@@ -631,7 +615,7 @@ class PalletCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Created Date: ${formatDate(pallet.createdAt)}',
+                    'Created Date: ${formatDate(container.createdAt.toString())}',
                     style: const TextStyle(fontSize: 14),
                   ),
                 ),
@@ -643,7 +627,7 @@ class PalletCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    pallet.status ?? 'unknown',
+                    container.status,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -654,7 +638,7 @@ class PalletCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              pallet.sSCCNo ?? 'No SSCC',
+              container.ssccNo,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -664,11 +648,23 @@ class PalletCard extends StatelessWidget {
             Row(
               children: [
                 const Text(
+                  'Container Code: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Expanded(
+                  child: Text(container.containerCode),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Text(
                   'Description: ',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Expanded(
-                  child: Text(pallet.description ?? 'No description'),
+                  child: Text(container.description),
                 ),
               ],
             ),
@@ -679,7 +675,7 @@ class PalletCard extends StatelessWidget {
                   'Group Warehouse: ',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(pallet.binLocation?.groupWarehouse ?? 'Unknown'),
+                Text(container.binLocation.groupWarehouse),
               ],
             ),
             const SizedBox(height: 4),
@@ -687,9 +683,9 @@ class PalletCard extends StatelessWidget {
               children: [
                 const Text('Zoned: ',
                     style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(pallet.binLocation?.zoned ?? 'Unknown'),
+                Text(container.binLocation.zoned),
                 const Text(' - '),
-                Text(pallet.binLocation?.zoneCode ?? ''),
+                Text(container.binLocation.zoneCode),
               ],
             ),
             const SizedBox(height: 8),
@@ -698,7 +694,7 @@ class PalletCard extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.visibility, color: Colors.blue),
-                  onPressed: () => _showPalletDetails(context),
+                  onPressed: () => _showContainerDetails(context),
                 ),
                 IconButton(
                   icon: const Icon(Icons.print, color: Colors.blue),
@@ -721,7 +717,7 @@ class PalletCard extends StatelessWidget {
   }
 }
 
-// Add the ShimmerEffect class if it doesn't exist in this file
+// Add ShimmerEffect class if it doesn't exist in this file
 class ShimmerEffect extends StatefulWidget {
   final Widget child;
 

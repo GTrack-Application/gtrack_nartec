@@ -9,6 +9,8 @@ import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/s
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/palletization_containerization/palletization_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/packing_screen.dart';
 
+import 'aggregation_new/screens/palletization_containerization/sscc_container_screen.dart';
+
 class AggregationScreen extends StatefulWidget {
   const AggregationScreen({super.key});
 
@@ -103,6 +105,10 @@ class _AggregationScreenState extends State<AggregationScreen> {
     data[8]["onTap"] = () => AppNavigator.goToPage(
           context: context,
           screen: const PalletizationScreen(),
+        );
+    data[9]["onTap"] = () => AppNavigator.goToPage(
+          context: context,
+          screen: const SSCCContainerScreen(),
         );
   }
 

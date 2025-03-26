@@ -640,9 +640,9 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
             const SizedBox(height: 24),
 
             // Box/Carton Description
-            const Text(
-              'Box/Carton Description',
-              style: TextStyle(
+            Text(
+              '${widget.type} Description',
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),

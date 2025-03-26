@@ -12,17 +12,23 @@ import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/c
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/packaging_model.dart';
 
-class PalletizationAggregationScreen extends StatefulWidget {
-  const PalletizationAggregationScreen({super.key});
+class PalletizationContainerizationAggregationScreen extends StatefulWidget {
+  final AggregationType type;
+  const PalletizationContainerizationAggregationScreen({
+    super.key,
+    required this.type,
+  });
 
   @override
-  State<PalletizationAggregationScreen> createState() =>
-      _PalletizationAggregationScreenState();
+  State<PalletizationContainerizationAggregationScreen> createState() =>
+      _PalletizationContainerizationAggregationScreenState();
 }
 
-class _PalletizationAggregationScreenState
-    extends State<PalletizationAggregationScreen> {
+class _PalletizationContainerizationAggregationScreenState
+    extends State<PalletizationContainerizationAggregationScreen> {
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _containerCodeController =
+      TextEditingController();
 
   // Cubits
   late AggregationCubit cubit;
@@ -53,11 +59,13 @@ class _PalletizationAggregationScreenState
 
   @override
   Widget build(BuildContext context) {
+    final type =
+        widget.type == AggregationType.palletization ? 'Pallet' : 'Container';
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.pink,
         foregroundColor: AppColors.white,
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -65,7 +73,7 @@ class _PalletizationAggregationScreenState
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Text(
-              'Aggregation Pallet',
+              'Aggregation $type',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
           ],
@@ -79,7 +87,11 @@ class _PalletizationAggregationScreenState
         listener: (context, state) {
           if (state is PalletCreated) {
             AppSnackbars.success(context, state.message);
-            cubit.fetchPalletizationData();
+            if (widget.type == AggregationType.palletization) {
+              cubit.fetchPalletizationData();
+            } else {
+              cubit.fetchAvailableContainers();
+            }
             Navigator.pop(context);
           } else if (state is PalletizationError) {
             AppSnackbars.danger(context, state.message);
@@ -149,6 +161,24 @@ class _PalletizationAggregationScreenState
               ),
 
               const SizedBox(height: 24),
+
+              // Container Code
+              if (widget.type == AggregationType.containerization) ...[
+                const Text(
+                  'Container Code',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextFormFieldWidget(
+                  controller: _containerCodeController,
+                  hintText: 'Enter container code',
+                  height: 40,
+                ),
+                const SizedBox(height: 24),
+              ],
 
               // Select SSCC Packages
               const Text(
@@ -265,6 +295,8 @@ class _PalletizationAggregationScreenState
                             cubit.createPallet(
                               _descriptionController.text,
                               cubit.selectedSSCCNumbers,
+                              _containerCodeController.text,
+                              widget.type,
                             );
                           },
                     text: isLoading ? 'Saving...' : 'Save',

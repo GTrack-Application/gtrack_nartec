@@ -9,6 +9,13 @@ import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/m
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/packaging_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/palletization_model.dart';
 
+import '../model/container_model.dart';
+
+enum AggregationType {
+  palletization,
+  containerization,
+}
+
 class AggregationCubit extends Cubit<AggregationState> {
   AggregationCubit() : super(AggregationInitial());
 
@@ -20,6 +27,7 @@ class AggregationCubit extends Cubit<AggregationState> {
   List<PalletizationModel> pallets = [];
   List<PackagingModel> availableSSCCPackages = [];
   List<String> selectedSSCCNumbers = [];
+  List<ContainerModel> containers = [];
 
   // Maps
   Map<String, List<SerializationModel>> batchGroups = {};
@@ -267,6 +275,8 @@ class AggregationCubit extends Cubit<AggregationState> {
   void createPallet(
     String description,
     List<String> selectedSSCCNumbers,
+    String containerCode,
+    AggregationType type,
   ) async {
     try {
       if (state is PalletizationLoading) return;
@@ -284,6 +294,13 @@ class AggregationCubit extends Cubit<AggregationState> {
       if (description.isEmpty) {
         emit(PalletizationError(message: 'No description provided'));
         return;
+      }
+
+      if (type == AggregationType.containerization) {
+        if (containerCode.isEmpty) {
+          emit(PalletizationError(message: 'No container code provided'));
+          return;
+        }
       }
 
       emit(PalletizationLoading());
@@ -308,15 +325,29 @@ class AggregationCubit extends Cubit<AggregationState> {
         }
       }
 
+      final url = type == AggregationType.palletization
+          ? '/api/palletPackaging'
+          : '/api/containerPackaging';
+
+      final payload = type == AggregationType.palletization
+          ? {
+              "description": description,
+              "memberId": memberId,
+              "binLocationId": selectedBinLocationId,
+              "ssccPackageIds": ssccPackageIds,
+            }
+          : {
+              "description": description,
+              "memberId": memberId,
+              "binLocationId": selectedBinLocationId,
+              "palletIds": ssccPackageIds,
+              "containerCode": containerCode,
+            };
+
       final response = await httpService.request(
-        '/api/palletPackaging',
+        url,
         method: HttpMethod.post,
-        payload: {
-          "description": description,
-          "memberId": memberId,
-          "binLocationId": selectedBinLocationId,
-          "ssccPackageIds": ssccPackageIds,
-        },
+        payload: payload,
       );
 
       if (response.success) {
@@ -359,4 +390,27 @@ class AggregationCubit extends Cubit<AggregationState> {
   ? Palletization End
   ##############################################################################
   */
+
+  // Fetch available containers
+  void fetchAvailableContainers() async {
+    try {
+      emit(ContainersLoading());
+
+      final response = await httpService.request(
+        '/api/containerPackaging?status=active&association=true',
+        method: HttpMethod.get,
+      );
+
+      if (response.success) {
+        final data = response.data['data'] as List;
+        containers = data.map((item) => ContainerModel.fromJson(item)).toList();
+        emit(ContainersLoaded(containers: containers));
+      } else {
+        emit(ContainersError(
+            message: response.data['message'] ?? 'Failed to load containers'));
+      }
+    } catch (e) {
+      emit(ContainersError(message: e.toString()));
+    }
+  }
 }
