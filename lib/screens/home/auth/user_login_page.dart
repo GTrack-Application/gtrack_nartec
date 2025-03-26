@@ -263,6 +263,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
                         passwordController.clear();
                       });
                     },
+                    displayItemFn: (String item) {
+                      return item;
+                    },
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -392,6 +395,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
                           stakeHolderValue = value!;
                           currentUser = stakeHolderValue;
                         });
+                      },
+                      displayItemFn: (String item) {
+                        return item;
                       },
                     ),
                   ),

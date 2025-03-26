@@ -57,6 +57,12 @@ class PackagingSaved extends AggregationState {
   PackagingSaved({required this.message});
 }
 
+/*
+##############################################################################
+? Palletization Start
+##############################################################################
+*/
+
 class PalletizationLoading extends AggregationState {}
 
 class PalletizationLoaded extends AggregationState {
@@ -70,3 +76,37 @@ class PalletizationError extends AggregationState {
 
   PalletizationError({required this.message});
 }
+
+class SSCCPackagesLoading extends AggregationState {}
+
+class SSCCPackagesLoaded extends AggregationState {
+  final List<PackagingModel> packages;
+
+  SSCCPackagesLoaded({required this.packages});
+}
+
+class SSCCPackagesError extends AggregationState {
+  final String message;
+
+  SSCCPackagesError({required this.message});
+}
+
+class PalletCreated extends AggregationState {
+  final String message;
+
+  PalletCreated({required this.message});
+}
+
+class SSCCPackageSelectionChanged extends AggregationState {
+  final List<String> selectedSSCCNumbers;
+
+  SSCCPackageSelectionChanged({required this.selectedSSCCNumbers});
+}
+
+/*
+##############################################################################
+? Palletization End
+##############################################################################
+*/
+
+// State for pallet creation

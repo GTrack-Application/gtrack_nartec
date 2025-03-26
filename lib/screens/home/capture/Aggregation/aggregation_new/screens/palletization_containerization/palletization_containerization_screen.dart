@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_cubit_v2.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/palletization_model.dart';
 import 'package:intl/intl.dart';
+
+import 'palletization_aggregation_screen.dart';
 
 class PalletizationContainerizationScreen extends StatefulWidget {
   const PalletizationContainerizationScreen({super.key});
@@ -53,6 +56,10 @@ class _PalletizationContainerizationScreenState
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // TODO: Navigate to perform aggregation screen
+          AppNavigator.goToPage(
+            context: context,
+            screen: const PalletizationAggregationScreen(),
+          );
         },
         icon: const Icon(Icons.inventory),
         label: const Text('Perform Aggregation by Palletization'),
@@ -61,22 +68,12 @@ class _PalletizationContainerizationScreenState
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search purchase orders...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.grey[200],
-              ),
-            ),
-          ),
+          // Padding(
+          //     padding: const EdgeInsets.all(16),
+          //     child: TextFormFieldWidget(
+          //       controller: _searchController,
+          //       hintText: 'Search purchase orders...',
+          //     )),
           Expanded(
             child: BlocBuilder<AggregationCubit, AggregationState>(
               builder: (context, state) {
@@ -87,7 +84,7 @@ class _PalletizationContainerizationScreenState
                 }
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await cubit.fetchPalletizationData();
+                    cubit.fetchPalletizationData();
                   },
                   child: ListView.builder(
                     itemCount: cubit.pallets.length,

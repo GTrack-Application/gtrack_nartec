@@ -14,14 +14,23 @@ class AggregationCubit extends Cubit<AggregationState> {
 
   final HttpService httpService = HttpService();
 
+  // Lists
   List<PackagingModel> packaging = [];
+  List<SerializationModel> scannedItems = [];
+  List<PalletizationModel> pallets = [];
+  List<PackagingModel> availableSSCCPackages = [];
+  List<String> selectedSSCCNumbers = [];
+
+  // Maps
   Map<String, List<SerializationModel>> batchGroups = {};
   Set<String> uniqueBatches = {};
-  List<SerializationModel> scannedItems = [];
+
+  // Selected
   String? selectedBatch;
   String? selectedBinLocationId;
   BinLocation? selectedBinLocation;
-  List<PalletizationModel> pallets = [];
+  PackagingModel? selectedSSCCPackage;
+  String? selectedPalletId;
 
   void getPackaging(String type) async {
     try {
@@ -164,8 +173,45 @@ class AggregationCubit extends Cubit<AggregationState> {
     }
   }
 
+  /*
+  ##############################################################################
+  ? Palletization
+  ##############################################################################
+  */
+
+  // Add selected SSCC package to list
+  void addSSCCPackageToSelection(PackagingModel package) {
+    if (package.sSCCNo != null &&
+        !selectedSSCCNumbers.contains(package.sSCCNo!)) {
+      selectedSSCCNumbers.add(package.sSCCNo!);
+      emit(SSCCPackageSelectionChanged(
+          selectedSSCCNumbers: selectedSSCCNumbers));
+    }
+  }
+
+  // Remove SSCC package from selection
+  void removeSSCCPackageFromSelection(String ssccNo) {
+    if (selectedSSCCNumbers.contains(ssccNo)) {
+      selectedSSCCNumbers.remove(ssccNo);
+      emit(SSCCPackageSelectionChanged(
+          selectedSSCCNumbers: selectedSSCCNumbers));
+    }
+  }
+
+  // Clear SSCC package selection
+  void clearSSCCPackageSelection() {
+    selectedSSCCNumbers.clear();
+    emit(SSCCPackageSelectionChanged(selectedSSCCNumbers: selectedSSCCNumbers));
+  }
+
+  /*
+  ##############################################################################
+  ? Palletization Start
+  ##############################################################################
+  */
+
   // Fetch palletization data
-  Future<void> fetchPalletizationData() async {
+  void fetchPalletizationData() async {
     try {
       emit(PalletizationLoading());
 
@@ -187,4 +233,130 @@ class AggregationCubit extends Cubit<AggregationState> {
       emit(PalletizationError(message: e.toString()));
     }
   }
+
+  // Fetch available SSCC packages for palletization
+  void fetchAvailableSSCCPackages() async {
+    try {
+      emit(SSCCPackagesLoading());
+
+      final response = await httpService.request(
+        '/api/ssccPackaging?packagingType[]=box_carton&packagingType[]=batching&packagingType[]=grouping&packagingType[]=consolidating',
+        method: HttpMethod.get,
+      );
+
+      if (response.success) {
+        final data = response.data['data'] as List;
+        final ssccPackages =
+            data.map((item) => PackagingModel.fromJson(item)).toList();
+
+        // Filter out packages that already have a palletId (already assigned to a pallet)
+        availableSSCCPackages =
+            ssccPackages.where((pkg) => pkg.palletId == null).toList();
+        emit(SSCCPackagesLoaded(packages: availableSSCCPackages));
+      } else {
+        emit(SSCCPackagesError(
+            message:
+                response.data['message'] ?? 'Failed to load SSCC packages'));
+      }
+    } catch (e) {
+      emit(SSCCPackagesError(message: e.toString()));
+    }
+  }
+
+  // Create a new pallet with selected SSCC packages
+  void createPallet(
+    String description,
+    List<String> selectedSSCCNumbers,
+  ) async {
+    try {
+      if (state is PalletizationLoading) return;
+
+      if (selectedSSCCNumbers.isEmpty) {
+        emit(PalletizationError(message: 'No SSCC packages selected'));
+        return;
+      }
+
+      if (selectedBinLocationId == null) {
+        emit(PalletizationError(message: 'No bin location selected'));
+        return;
+      }
+
+      if (description.isEmpty) {
+        emit(PalletizationError(message: 'No description provided'));
+        return;
+      }
+
+      emit(PalletizationLoading());
+
+      // Get memberId from preferences
+      final memberId = await AppPreferences.getMemberId();
+
+      if (memberId == null || selectedBinLocationId == null) {
+        emit(PalletizationError(message: 'Missing member ID or bin location'));
+        return;
+      }
+
+      // Get package IDs from their SSCC numbers
+      List<String> ssccPackageIds = [];
+      for (var ssccNo in selectedSSCCNumbers) {
+        final package = availableSSCCPackages.firstWhere(
+          (pkg) => pkg.sSCCNo == ssccNo,
+          orElse: () => PackagingModel(),
+        );
+        if (package.id != null) {
+          ssccPackageIds.add(package.id!);
+        }
+      }
+
+      final response = await httpService.request(
+        '/api/palletPackaging',
+        method: HttpMethod.post,
+        payload: {
+          "description": description,
+          "memberId": memberId,
+          "binLocationId": selectedBinLocationId,
+          "ssccPackageIds": ssccPackageIds,
+        },
+      );
+
+      if (response.success) {
+        final data = response.data['data'];
+        final message =
+            response.data['message'] ?? 'Pallet created successfully';
+        final ssccNo = data['SSCCNo'] ?? '';
+        final totalPackages = data['totalSSCCPackages'] ?? 0;
+
+        emit(PalletCreated(
+          message: '$message SSCC: $ssccNo, Total packages: $totalPackages',
+        ));
+      } else {
+        emit(PalletizationError(
+            message: response.data['message'] ??
+                response.data['error'] ??
+                'Failed to create pallet'));
+      }
+    } catch (e) {
+      emit(PalletizationError(message: e.toString()));
+    }
+  }
+
+  void setSelectedSSCCPackage(PackagingModel? package) {
+    selectedSSCCPackage = package;
+    emit(PalletizationLoaded(pallets: pallets));
+  }
+
+  void resetPalletization() {
+    selectedSSCCPackage = null;
+    selectedBinLocationId = null;
+    selectedBinLocation = null;
+
+    availableSSCCPackages = [];
+    selectedSSCCNumbers = [];
+  }
+
+  /*
+  ##############################################################################
+  ? Palletization End
+  ##############################################################################
+  */
 }

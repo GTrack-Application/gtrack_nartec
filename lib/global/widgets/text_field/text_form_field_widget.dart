@@ -44,7 +44,7 @@ class TextFormFieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: color ?? AppColors.background,
       ),
-      width: width ?? MediaQuery.of(context).size.width * 0.9,
+      width: width,
       height: height ?? 50,
       child: TextFormField(
         focusNode: focusNode,
