@@ -420,8 +420,8 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Aggregation by Box/Carton',
+            Text(
+              'Aggregation by ${widget.type}',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

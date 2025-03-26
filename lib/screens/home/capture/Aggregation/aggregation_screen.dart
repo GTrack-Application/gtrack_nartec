@@ -6,7 +6,7 @@ import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/Assembling/assembling_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/Bundling/bundling_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/packaging/packaging_by_many_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/palletization_containerization/palletization_containerization_screen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/palletization_containerization/palletization_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/packing_screen.dart';
 
 class AggregationScreen extends StatefulWidget {
@@ -102,7 +102,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
         ));
     data[8]["onTap"] = () => AppNavigator.goToPage(
           context: context,
-          screen: const PalletizationContainerizationScreen(),
+          screen: const PalletizationScreen(),
         );
   }
 

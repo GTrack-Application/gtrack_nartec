@@ -9,16 +9,14 @@ import 'package:intl/intl.dart';
 
 import 'palletization_aggregation_screen.dart';
 
-class PalletizationContainerizationScreen extends StatefulWidget {
-  const PalletizationContainerizationScreen({super.key});
+class PalletizationScreen extends StatefulWidget {
+  const PalletizationScreen({super.key});
 
   @override
-  State<PalletizationContainerizationScreen> createState() =>
-      _PalletizationContainerizationScreenState();
+  State<PalletizationScreen> createState() => _PalletizationScreenState();
 }
 
-class _PalletizationContainerizationScreenState
-    extends State<PalletizationContainerizationScreen> {
+class _PalletizationScreenState extends State<PalletizationScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   late final AggregationCubit cubit;
