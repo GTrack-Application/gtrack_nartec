@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/controllers/capture/transformation/transformation_controller.dart';
 import 'package:gtrack_nartec/cubit/capture/transformation/transformation_states.dart';
+import 'package:gtrack_nartec/models/capture/transformation/attribute_option_model.dart';
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
 
 class TransformationCubit extends Cubit<TransformationState> {
@@ -20,6 +23,9 @@ class TransformationCubit extends Cubit<TransformationState> {
 
   // ! Selected
   EventStation? selectedStation;
+
+  // Map to cache attribute options by field name
+  Map<String, List<AttributeOption>> attributeOptions = {};
 
   Future<void> getEventStations() async {
     emit(EventStationLoadingState());
@@ -71,6 +77,49 @@ class TransformationCubit extends Cubit<TransformationState> {
       emit(TransactionSavedState(data: result));
     } catch (e) {
       emit(TransactionSaveErrorState(message: e.toString()));
+    }
+  }
+
+  // Fetch attribute options based on field name
+  Future<List<AttributeOption>> fetchAttributeOptions(String fieldName) async {
+    emit(AttributeOptionsLoadingState());
+    try {
+      // Return cached options if available
+      if (attributeOptions.containsKey(fieldName)) {
+        return attributeOptions[fieldName]!;
+      }
+
+      String endpoint;
+
+      switch (fieldName) {
+        case 'action':
+          endpoint = '/api/stationAttribute/getActions';
+          break;
+        case 'businessStep':
+          endpoint = '/api/stationAttribute/getBusinessSteps';
+          break;
+        case 'disposition':
+          endpoint = '/api/stationAttribute/getDispositions';
+          break;
+        case 'bizTransactionList':
+          endpoint = '/api/stationAttribute/getBusinessTypes';
+          break;
+        case 'destinationList':
+          endpoint = '/api/stationAttribute/getMasterLocations';
+          break;
+        default:
+          return [];
+      }
+
+      final response =
+          await transformationController.fetchAttributeOptions(endpoint);
+      attributeOptions[fieldName] = response.data;
+      emit(AttributeOptionsLoadedState());
+      return response.data;
+    } catch (e) {
+      log(e.toString());
+      emit(AttributeOptionsErrorState(message: e.toString()));
+      return [];
     }
   }
 

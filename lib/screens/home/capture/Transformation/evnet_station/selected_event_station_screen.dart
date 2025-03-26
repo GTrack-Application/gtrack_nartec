@@ -8,6 +8,7 @@ import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
+import 'package:gtrack_nartec/models/capture/transformation/attribute_option_model.dart';
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
 
 class SelectedEventStationScreen extends StatefulWidget {
@@ -435,6 +436,71 @@ class _SelectedEventStationScreenState
   }
 
   Widget _buildStringField(AttributeInfo attribute) {
+    final fieldName = attribute.fieldName;
+    final specialFields = [
+      'action',
+      'businessStep',
+      'disposition',
+      'bizTransactionList',
+      'destinationList'
+    ];
+
+    // Return dropdown for special fields
+    if (specialFields.contains(fieldName)) {
+      return FutureBuilder<List<AttributeOption>>(
+        future: context
+            .read<TransformationCubit>()
+            .fetchAttributeOptions(fieldName),
+        builder: (context, snapshot) {
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return const Center(child: CircularProgressIndicator());
+          // }
+
+          if (snapshot.hasError) {
+            return TextFormFieldWidget(
+              controller: _controllers[attribute.fieldName]!,
+              hintText: 'Error loading options: ${snapshot.error}',
+              onChanged: (p0) {
+                _formValues[attribute.fieldName] = p0;
+              },
+              onFieldSubmitted: (value) {
+                _formValues[attribute.fieldName] = value;
+              },
+            );
+          }
+
+          final options = snapshot.data ?? [];
+          // return Text(fieldName);
+          return DropdownButtonFormField<String>(
+            value: _formValues[fieldName] as String?,
+            decoration: InputDecoration(
+              hintText: 'Select ${attribute.fieldName}',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+            ),
+            items: options.map((option) {
+              return DropdownMenuItem<String>(
+                value: option.name,
+                child: Text(option.name),
+              );
+            }).toList(),
+            onChanged: (String? value) {
+              setState(() {
+                _formValues[fieldName] = value;
+                _controllers[fieldName]!.text = value ?? '';
+              });
+            },
+          );
+        },
+      );
+    }
+
+    // Return text field for regular fields
     return TextFormFieldWidget(
       controller: _controllers[attribute.fieldName]!,
       hintText: 'Enter ${attribute.fieldName}',

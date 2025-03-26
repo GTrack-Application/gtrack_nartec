@@ -24,6 +24,16 @@ class SelectedEventStationErrorState extends TransformationState {
   SelectedEventStationErrorState({required this.message});
 }
 
+class AttributeOptionsLoadingState extends TransformationState {}
+
+class AttributeOptionsLoadedState extends TransformationState {}
+
+class AttributeOptionsErrorState extends TransformationState {
+  final String message;
+
+  AttributeOptionsErrorState({required this.message});
+}
+
 // Transaction Save States
 class TransactionSavingState extends TransformationState {}
 

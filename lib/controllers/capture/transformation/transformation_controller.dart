@@ -1,6 +1,7 @@
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
+import 'package:gtrack_nartec/models/capture/transformation/attribute_option_model.dart';
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
 
 class TransformationController {
@@ -53,6 +54,8 @@ class TransformationController {
     // Combine regular form values with array values into a single payload
     final Map<String, dynamic> payload = {...formValues};
 
+    final memberId = await AppPreferences.getMemberId();
+
     // Add all array values to the payload
     arrayValues.forEach((fieldName, items) {
       payload[fieldName] = items;
@@ -61,7 +64,10 @@ class TransformationController {
     final response = await http7010.request(
       url,
       method: HttpMethod.post,
-      payload: payload,
+      payload: {
+        ...payload,
+        "memberId": memberId,
+      },
     );
 
     if (response.success) {
@@ -84,6 +90,29 @@ class TransformationController {
       return response.data;
     } else {
       throw Exception(response.message);
+    }
+  }
+
+  Future<AttributeOptionsResponse> fetchAttributeOptions(
+    String endpoint,
+  ) async {
+    try {
+      final response = await http7010.request(
+        endpoint,
+        method: HttpMethod.get,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${await AppPreferences.getToken()}',
+        },
+      );
+
+      if (response.success) {
+        return AttributeOptionsResponse.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load options: ${response.message}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching options: $e');
     }
   }
 
