@@ -12,6 +12,7 @@ import 'package:gtrack_nartec/screens/home/auth/user_login_page.dart';
 import 'package:gtrack_nartec/screens/home/capture/capture_screen.dart';
 import 'package:gtrack_nartec/screens/home/identify/identify_screen.dart';
 import 'package:gtrack_nartec/screens/home/share/share_screen.dart';
+import 'package:gtrack_nartec/screens/user_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -261,6 +262,14 @@ class MyDrawerWidget extends StatelessWidget {
         const SizedBox(height: 15),
         _buildMenuItem(
           context: context,
+          icon: Icons.person,
+          title: 'Profile',
+          screen: const UserProfileScreen(),
+          iconColor: AppColors.primary,
+          isBuiltInIcon: true,
+        ),
+        _buildMenuItem(
+          context: context,
           icon: AppIcons.identify,
           title: 'Identify',
           screen: const IdentifyScreen(),
@@ -305,10 +314,11 @@ class MyDrawerWidget extends StatelessWidget {
 
   Widget _buildMenuItem({
     required BuildContext context,
-    required String icon,
+    required dynamic icon,
     required String title,
     required Widget screen,
     required Color iconColor,
+    bool isBuiltInIcon = false,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -334,11 +344,20 @@ class MyDrawerWidget extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: iconColor.withOpacity(0.1),
                     border: Border.all(color: iconColor, width: 1.5),
-                    image: DecorationImage(
-                      image: AssetImage(icon),
-                      fit: BoxFit.cover,
-                    ),
+                    image: isBuiltInIcon
+                        ? null
+                        : DecorationImage(
+                            image: AssetImage(icon as String),
+                            fit: BoxFit.cover,
+                          ),
                   ),
+                  child: isBuiltInIcon
+                      ? Icon(
+                          icon as IconData,
+                          color: iconColor,
+                          size: 25,
+                        )
+                      : null,
                 ),
                 const SizedBox(width: 15),
                 Text(
@@ -375,20 +394,55 @@ class MyDrawerWidget extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('Sign Out'),
-                content: const Text('Are you sure you want to sign out?'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('CANCEL'),
+                backgroundColor: AppColors.white,
+                title: const Text(
+                  'Sign Out',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  TextButton(
+                ),
+                content: const Text(
+                  'Are you sure you want to sign out?',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                actions: [
+                  FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.grey,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'CANCEL',
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                    ),
                     onPressed: () {
                       Navigator.pop(context);
                       Navigator.pop(context);
                       Get.offAll(() => const UserLoginPage());
                     },
-                    child: const Text('SIGN OUT'),
+                    child: const Text(
+                      'SIGN OUT',
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ],
               ),

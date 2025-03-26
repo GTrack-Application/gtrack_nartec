@@ -11,8 +11,8 @@ import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/drop_down/drop_down_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_field_widget.dart';
 import 'package:gtrack_nartec/screens/home/auth/services/login_services.dart';
+import 'package:gtrack_nartec/screens/home/auth/services/nfc/nfc_scan_dialog.dart';
 import 'package:gtrack_nartec/screens/home_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -37,12 +37,91 @@ class _UserLoginPageState extends State<UserLoginPage> {
   // Add loading state variable
   bool isLoading = false;
 
-  // a method that deletes all the data from the sharedpreferences
-  void clearData() async {
-    await SharedPreferences.getInstance().then((prefs) {
-      prefs.clear();
+  // Add NFC login state and configuration variables
+  bool nfcLoginEnabled = false;
+  bool nfcAvailable = false; // Track if device supports NFC
+
+  // Method to check NFC availability
+  Future<void> checkNfcAvailability() async {
+    try {
+      // This would typically use a plugin like 'flutter_nfc_kit' to check availability
+      // For now we'll simulate this with a simple future
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Check if NFC is enabled in user preferences
+      bool isNfcEnabledInProfile =
+          await AppPreferences.getNfcEnabled() ?? false;
+
+      setState(() {
+        nfcAvailable =
+            true; // In a real app, this would be based on device capability
+        nfcLoginEnabled =
+            isNfcEnabledInProfile; // Set based on user profile setting
+      });
+    } catch (e) {
+      setState(() {
+        nfcAvailable = false;
+        nfcLoginEnabled = false; // Disable if not available
+      });
+      AppSnackbars.danger(context, "NFC not available on this device");
+    }
+  }
+
+  // Method to toggle NFC functionality
+  void toggleNfc() {
+    if (!nfcAvailable) {
+      AppSnackbars.danger(context, "NFC not available on this device");
+      return;
+    }
+
+    setState(() {
+      nfcLoginEnabled = !nfcLoginEnabled;
+    });
+
+    if (nfcLoginEnabled) {
+      AppSnackbars.success(context, "NFC login enabled", 2);
+    }
+  }
+
+  // Method to handle NFC scan for login
+  void handleNfcScan() async {
+    bool isNfcEnabledInProfile = await AppPreferences.getNfcEnabled() ?? false;
+
+    print(isNfcEnabledInProfile);
+
+    if (!isNfcEnabledInProfile) {
+      AppSnackbars.danger(
+        context,
+        "NFC is not enabled. Please enable it from user profile settings first.",
+      );
+      return;
+    }
+
+    if (!nfcLoginEnabled) {
+      setState(() {
+        nfcLoginEnabled = true;
+      });
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => const NFCScanDialog(),
+    ).then((credentials) {
+      // Handle the returned credentials from NFC scan
+      if (credentials != null) {
+        // Process the credentials returned from NFC scan
+        // This would typically populate the login fields or directly login
+        // For example: emailController.text = credentials.username;
+      }
     });
   }
+
+  // // a method that deletes all the data from the sharedpreferences
+  // void clearData() async {
+  //   await SharedPreferences.getInstance().then((prefs) {
+  //     prefs.clear();
+  //   });
+  // }
 
   @override
   void initState() {
@@ -50,7 +129,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
     Future.delayed(
       const Duration(milliseconds: 100),
       () async {
-        clearData();
+        // clearData();
+        checkNfcAvailability(); // Check NFC availability on startup
       },
     );
   }
@@ -120,6 +200,16 @@ class _UserLoginPageState extends State<UserLoginPage> {
             .then((_) {});
         AppPreferences.setGs1Prefix(
                 value.subUser!.parentUserData!.gs1CompanyPrefix.toString())
+            .then((_) {});
+        AppPreferences.setNfcEnabled(value.subUser!.isNFCEnabled ?? false);
+        AppPreferences.setUserEmail(value.subUser!.email.toString())
+            .then((_) {});
+
+        AppPreferences.userName(value.subUser!.userName.toString())
+            .then((_) {});
+
+        AppPreferences.setNfcSearchToken(
+                value.subUser!.nfcSearchToken.toString())
             .then((_) {});
 
         AppNavigator.goToPage(context: context, screen: const HomeScreen());
@@ -277,99 +367,109 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  TextFieldWidget(
-                    hintText: "Login ID",
-                    controller: emailController,
-                    focusNode: emailNode,
-                    keyboardType: TextInputType.emailAddress,
-                    leadingIcon: Image.asset(AppIcons.usernameIcon),
-                    onFieldSubmitted: (p0) {
-                      if (dropdownValue == "Admin User") {
-                        // hide the keyboard
-                        emailNode.unfocus();
-                        FocusScope.of(context).requestFocus(adminPasswordNode);
-                      } else {
-                        // scope to password node
-                        FocusScope.of(context).requestFocus(passwordNode);
-                      }
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your login ID';
-                      }
-                      // if (EmailValidator.validate(value)) {
-                      //   return null;
-                      // } else {
-                      //   return 'Please enter a valid email';
-                      // }
-                      return null;
-                    },
+                  SizedBox(
+                    height: 40,
+                    child: TextFieldWidget(
+                      hintText: "Login ID",
+                      controller: emailController,
+                      focusNode: emailNode,
+                      keyboardType: TextInputType.emailAddress,
+                      leadingIcon: Image.asset(AppIcons.usernameIcon),
+                      onFieldSubmitted: (p0) {
+                        if (dropdownValue == "Admin User") {
+                          // hide the keyboard
+                          emailNode.unfocus();
+                          FocusScope.of(context)
+                              .requestFocus(adminPasswordNode);
+                        } else {
+                          // scope to password node
+                          FocusScope.of(context).requestFocus(passwordNode);
+                        }
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your login ID';
+                        }
+                        // if (EmailValidator.validate(value)) {
+                        //   return null;
+                        // } else {
+                        //   return 'Please enter a valid email';
+                        // }
+                        return null;
+                      },
+                    ),
                   ),
                   // .box.width(context.width * 0.9).make(),
                   const SizedBox(height: 20),
                   Visibility(
                     visible: dropdownValue == "Admin User" ? true : false,
-                    child: TextFieldWidget(
-                      hintText: "Password",
-                      focusNode: adminPasswordNode,
-                      onFieldSubmitted: (p0) {
-                        // hide keyboard
-                        adminPasswordNode.unfocus();
-                      },
-                      controller: adminPasswordController,
-                      leadingIcon: Image.asset(
-                        AppIcons.passwordIcon,
-                        width: 42,
-                        height: 42,
-                      ),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: obscureText,
-                      validator: (p0) {
-                        if (p0!.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            obscureText = !obscureText;
-                          });
+                    child: SizedBox(
+                      height: 40,
+                      child: TextFieldWidget(
+                        hintText: "Password",
+                        focusNode: adminPasswordNode,
+                        onFieldSubmitted: (p0) {
+                          // hide keyboard
+                          adminPasswordNode.unfocus();
                         },
+                        controller: adminPasswordController,
+                        leadingIcon: Image.asset(
+                          AppIcons.passwordIcon,
+                          width: 42,
+                          height: 42,
+                        ),
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: obscureText,
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ),
                   Visibility(
                     visible: dropdownValue == "Admin User" ? false : true,
-                    child: TextFieldWidget(
-                      hintText: "Password",
-                      focusNode: passwordNode,
-                      onFieldSubmitted: (p0) {
-                        // hide keyboard
-                        passwordNode.unfocus();
-                      },
-                      controller: passwordController,
-                      leadingIcon: Image.asset(
-                        AppIcons.passwordIcon,
-                        width: 42,
-                        height: 42,
-                      ),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: obscureText,
-                      validator: (p0) {
-                        if (p0!.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            obscureText = !obscureText;
-                          });
+                    child: SizedBox(
+                      height: 40,
+                      child: TextFieldWidget(
+                        hintText: "Password",
+                        focusNode: passwordNode,
+                        onFieldSubmitted: (p0) {
+                          // hide keyboard
+                          passwordNode.unfocus();
                         },
+                        controller: passwordController,
+                        leadingIcon: Image.asset(
+                          AppIcons.passwordIcon,
+                          width: 42,
+                          height: 42,
+                        ),
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: obscureText,
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -387,23 +487,26 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   ),
                   Visibility(
                     visible: dropdownValue == "Admin User" ? false : true,
-                    child: DropDownWidget(
-                      items: stakeHolderList,
-                      value: stakeHolderValue,
-                      onChanged: (value) {
-                        setState(() {
-                          stakeHolderValue = value!;
-                          currentUser = stakeHolderValue;
-                        });
-                      },
-                      displayItemFn: (String item) {
-                        return item;
-                      },
+                    child: SizedBox(
+                      height: 40,
+                      child: DropDownWidget(
+                        items: stakeHolderList,
+                        value: stakeHolderValue,
+                        onChanged: (value) {
+                          setState(() {
+                            stakeHolderValue = value!;
+                            currentUser = stakeHolderValue;
+                          });
+                        },
+                        displayItemFn: (String item) {
+                          return item;
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
                   PrimaryButtonWidget(
-                    backgroundColor: const Color(0xFF4200FF),
+                    backgroundColor: AppColors.primary,
                     onPressed: () {
                       if (dropdownValue.toString() == "Normal User") {
                         if (stakeHolderValue == "Brand Owner") {
@@ -425,7 +528,54 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     isLoading: isLoading,
                   ),
                   const SizedBox(height: 20),
+                  // Replace the NFC section in the build method with this updated version
                   Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'OR Login with NFC',
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        IconButton(
+                          onPressed: nfcAvailable ? handleNfcScan : null,
+                          icon: Icon(
+                            Icons.nfc_rounded,
+                            size: 40,
+                            color: nfcAvailable && nfcLoginEnabled
+                                ? AppColors.green
+                                : AppColors.white,
+                          ),
+                        ),
+                        Text(
+                          nfcAvailable && !nfcLoginEnabled
+                              ? "NFC not enabled. Please enable from profile settings."
+                              : "Tap to scan NFC",
+                          style: TextStyle(
+                            color: nfcAvailable
+                                ? (nfcLoginEnabled
+                                    ? Colors.green
+                                    : AppColors.white)
+                                : AppColors.grey,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    height: 40,
                     margin: const EdgeInsets.only(right: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

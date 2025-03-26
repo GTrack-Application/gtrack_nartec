@@ -9,6 +9,26 @@ class AppPreferences {
     prefs.setString('gs1Prefix', gs1Prefix);
   }
 
+  static Future<void> userName(String userName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userName', userName);
+  }
+
+  static Future<void> setUserEmail(String userEmail) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userEmail', userEmail);
+  }
+
+  static Future<void> setNfcEnabled(bool nfcEnabled) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('nfcEnabled', nfcEnabled);
+  }
+
+  static Future<void> setNfcSearchToken(String nfcSearchToken) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('nfcSearchToken', nfcSearchToken);
+  }
+
   /*  Set user id  */
   static Future<void> setUserId(String userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -88,6 +108,21 @@ class AppPreferences {
   }
 
   // Getters...
+
+  static Future<String?> getUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userName');
+  }
+
+  static Future<String?> getUserEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userEmail');
+  }
+
+  static Future<bool?> getNfcEnabled() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('nfcEnabled');
+  }
 
   /* get gs1 prefix */
   static Future<String?> getGs1Prefix() async {
@@ -170,5 +205,10 @@ class AppPreferences {
   static Future<String?> getGs1UserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('gs1UserId');
+  }
+
+  static Future<String?> getNfcSearchToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('nfcSearchToken');
   }
 }

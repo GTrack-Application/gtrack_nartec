@@ -35,6 +35,8 @@ class SubUser {
   String? updatedAt;
   ParentUserData? parentUserData;
   String? gs1Userid;
+  String? nfcSearchToken;
+  bool? isNFCEnabled;
 
   SubUser(
       {this.id,
@@ -47,7 +49,9 @@ class SubUser {
       this.createdAt,
       this.updatedAt,
       this.parentUserData,
-      this.gs1Userid});
+      this.gs1Userid,
+      this.nfcSearchToken,
+      this.isNFCEnabled});
 
   SubUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -63,6 +67,8 @@ class SubUser {
         ? ParentUserData.fromJson(json['ParentUserData'])
         : null;
     gs1Userid = json['gs1Userid'];
+    nfcSearchToken = json['nfcSearchToken'];
+    isNFCEnabled = json['isNFCEnabled'];
   }
 
   Map<String, dynamic> toJson() {
@@ -80,6 +86,8 @@ class SubUser {
       data['ParentUserData'] = parentUserData!.toJson();
     }
     data['gs1Userid'] = gs1Userid;
+    data['nfcSearchToken'] = nfcSearchToken;
+    data['isNFCEnabled'] = isNFCEnabled;
     return data;
   }
 }
