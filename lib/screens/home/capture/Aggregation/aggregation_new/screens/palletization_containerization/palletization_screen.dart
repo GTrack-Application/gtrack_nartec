@@ -700,12 +700,12 @@ class PalletCard extends StatelessWidget {
                   icon: const Icon(Icons.visibility, color: AppColors.skyBlue),
                   onPressed: () => _showPalletDetails(context),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: AppColors.danger),
-                  onPressed: () {
-                    // Delete action
-                  },
-                ),
+                // IconButton(
+                //   icon: const Icon(Icons.delete, color: AppColors.danger),
+                //   onPressed: () {
+                //     // Delete action
+                //   },
+                // ),
               ],
             ),
           ],
