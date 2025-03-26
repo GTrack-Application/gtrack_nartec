@@ -63,13 +63,7 @@ class _PackagingByCartonScreenState extends State<PackagingByCartonScreen> {
         listener: (context, state) {},
         builder: (context, state) {
           if (state is AggregationLoading) {
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: 5, // Show 5 placeholder items
-              itemBuilder: (context, index) {
-                return const PackageCardPlaceholder();
-              },
-            );
+            return _buildLoadingPlaceholder();
           } else if (state is AggregationError) {
             return Center(
                 child: Text(
@@ -89,6 +83,133 @@ class _PackagingByCartonScreenState extends State<PackagingByCartonScreen> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildLoadingPlaceholder() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: 8, // Show 8 placeholder items
+      itemBuilder: (context, index) {
+        return Card(
+          color: AppColors.white,
+          margin: const EdgeInsets.only(bottom: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with date and status
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Date placeholder
+                    ShimmerEffect(
+                      child: Container(
+                        width: 150,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+
+                    // Status badge placeholder
+                    ShimmerEffect(
+                      child: Container(
+                        width: 80,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // SSCC number placeholder
+                ShimmerEffect(
+                  child: Container(
+                    width: double.infinity,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // Description placeholder
+                ShimmerEffect(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: 13,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // Bottom row with packaging type and actions
+                Row(
+                  children: [
+                    // Packaging type placeholder
+                    ShimmerEffect(
+                      child: Container(
+                        width: 170,
+                        height: 13,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    // Action buttons placeholders
+                    ShimmerEffect(
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 16),
+
+                    ShimmerEffect(
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -572,6 +693,56 @@ class PackageCardPlaceholder extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ShimmerEffect extends StatefulWidget {
+  final Widget child;
+
+  const ShimmerEffect({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  State<ShimmerEffect> createState() => _ShimmerEffectState();
+}
+
+class _ShimmerEffectState extends State<ShimmerEffect>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+
+    _animation = Tween<double>(begin: 0.4, end: 0.9).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _animation.value,
+          child: widget.child,
+        );
+      },
     );
   }
 }

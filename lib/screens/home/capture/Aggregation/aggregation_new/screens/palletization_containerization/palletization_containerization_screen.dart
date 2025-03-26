@@ -78,7 +78,7 @@ class _PalletizationContainerizationScreenState
             child: BlocBuilder<AggregationCubit, AggregationState>(
               builder: (context, state) {
                 if (state is PalletizationLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return _buildLoadingPlaceholder();
                 } else if (state is PalletizationError) {
                   return Center(child: Text('Error: ${state.message}'));
                 }
@@ -103,6 +103,217 @@ class _PalletizationContainerizationScreenState
           const SizedBox(height: 64),
         ],
       ),
+    );
+  }
+
+  Widget _buildLoadingPlaceholder() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: 8, // Show 8 placeholder items
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withValues(alpha: 0.1),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              // Pallet header
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    // Pallet icon placeholder
+                    ShimmerEffect(
+                      child: Container(
+                        height: 48,
+                        width: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+
+                    // Pallet info
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // SSCC title
+                          ShimmerEffect(
+                            child: Container(
+                              height: 18,
+                              width: 180,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+
+                          // Date
+                          ShimmerEffect(
+                            child: Container(
+                              height: 14,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Status tag
+                    ShimmerEffect(
+                      child: Container(
+                        height: 28,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Divider(height: 1, color: Colors.grey.shade200),
+
+              // Pallet details section
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Section title
+                    ShimmerEffect(
+                      child: Container(
+                        height: 16,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Details row 1
+                    Row(
+                      children: [
+                        // Label
+                        ShimmerEffect(
+                          child: Container(
+                            height: 14,
+                            width: 90,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+
+                        // Value
+                        Expanded(
+                          child: ShimmerEffect(
+                            child: Container(
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Details row 2
+                    Row(
+                      children: [
+                        // Label
+                        ShimmerEffect(
+                          child: Container(
+                            height: 14,
+                            width: 70,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+
+                        // Value
+                        Expanded(
+                          child: ShimmerEffect(
+                            child: Container(
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // Action buttons
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShimmerEffect(
+                      child: Container(
+                        height: 36,
+                        width: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    ShimmerEffect(
+                      child: Container(
+                        height: 36,
+                        width: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -507,6 +718,57 @@ class PalletCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// Add the ShimmerEffect class if it doesn't exist in this file
+class ShimmerEffect extends StatefulWidget {
+  final Widget child;
+
+  const ShimmerEffect({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  State<ShimmerEffect> createState() => _ShimmerEffectState();
+}
+
+class _ShimmerEffectState extends State<ShimmerEffect>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+
+    _animation = Tween<double>(begin: 0.4, end: 0.9).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _animation.value,
+          child: widget.child,
+        );
+      },
     );
   }
 }
