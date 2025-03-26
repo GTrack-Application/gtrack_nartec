@@ -111,7 +111,7 @@ class _SSCCContainerScreenState extends State<SSCCContainerScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 spreadRadius: 1,
                 blurRadius: 4,
                 offset: const Offset(0, 2),
@@ -693,17 +693,11 @@ class ContainerCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.visibility, color: Colors.blue),
+                  icon: const Icon(Icons.visibility, color: AppColors.skyBlue),
                   onPressed: () => _showContainerDetails(context),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.print, color: Colors.blue),
-                  onPressed: () {
-                    // Print action
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
+                  icon: const Icon(Icons.delete, color: AppColors.danger),
                   onPressed: () {
                     // Delete action
                   },

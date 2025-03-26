@@ -697,17 +697,11 @@ class PalletCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.visibility, color: Colors.blue),
+                  icon: const Icon(Icons.visibility, color: AppColors.skyBlue),
                   onPressed: () => _showPalletDetails(context),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.print, color: Colors.blue),
-                  onPressed: () {
-                    // Print action
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
+                  icon: const Icon(Icons.delete, color: AppColors.danger),
                   onPressed: () {
                     // Delete action
                   },
@@ -726,9 +720,9 @@ class ShimmerEffect extends StatefulWidget {
   final Widget child;
 
   const ShimmerEffect({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<ShimmerEffect> createState() => _ShimmerEffectState();
