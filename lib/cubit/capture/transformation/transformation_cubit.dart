@@ -69,6 +69,9 @@ class TransformationCubit extends Cubit<TransformationState> {
         }
       });
 
+      // Special handling for destinationList and bizTransactionList
+      // (they're already in the correct format in the form values)
+
       final result = await transformationController.saveStationAttributeHistory(
         processedFormValues,
         arrayValues,

@@ -437,13 +437,14 @@ class _SelectedEventStationScreenState
 
   Widget _buildStringField(AttributeInfo attribute) {
     final fieldName = attribute.fieldName;
-    final specialFields = [
-      'action',
-      'businessStep',
-      'disposition',
-      'bizTransactionList',
-      'destinationList'
-    ];
+    final specialFields = ['action', 'businessStep', 'disposition'];
+
+    final complexFields = ['destinationList', 'bizTransactionList'];
+
+    // Handle complex list fields that require type and value
+    if (complexFields.contains(fieldName)) {
+      return _buildComplexListField(attribute);
+    }
 
     // Return dropdown for special fields
     if (specialFields.contains(fieldName)) {
@@ -470,7 +471,7 @@ class _SelectedEventStationScreenState
           }
 
           final options = snapshot.data ?? [];
-          // return Text(fieldName);
+
           return DropdownButtonFormField<String>(
             value: _formValues[fieldName] as String?,
             decoration: InputDecoration(
@@ -478,6 +479,8 @@ class _SelectedEventStationScreenState
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
+              filled: true,
+              fillColor: AppColors.fields,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 12,
@@ -510,6 +513,199 @@ class _SelectedEventStationScreenState
       onFieldSubmitted: (value) {
         _formValues[attribute.fieldName] = value;
       },
+    );
+  }
+
+  // Build complex fields like destinationList and bizTransactionList
+  Widget _buildComplexListField(AttributeInfo attribute) {
+    final fieldName = attribute.fieldName;
+    // Initialize the array if it doesn't exist
+    if (!_arrayValues.containsKey(fieldName)) {
+      _arrayValues[fieldName] = [];
+    }
+
+    // Get the appropriate list from the form values or create an empty one
+    List<Map<String, String>> currentList = [];
+    if (_formValues.containsKey(fieldName)) {
+      currentList = (_formValues[fieldName] as List)
+          .map((item) => Map<String, String>.from(item))
+          .toList();
+    } else {
+      _formValues[fieldName] = currentList;
+    }
+
+    // Set up controllers for the new entry
+    final typeController = TextEditingController();
+    final valueController = TextEditingController();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Display existing entries
+        if (currentList.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          const Text('Current entries:'),
+          const SizedBox(height: 4),
+          ...currentList
+              .map((entry) => _buildComplexListItem(entry, fieldName)),
+          const SizedBox(height: 16),
+        ],
+
+        // Type dropdown
+        FutureBuilder<List<AttributeOption>>(
+          future: context
+              .read<TransformationCubit>()
+              .fetchAttributeOptions(fieldName),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError) {
+              return Text('Error loading options: ${snapshot.error}');
+            }
+
+            final options = snapshot.data ?? [];
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Type:'),
+                const SizedBox(height: 4),
+                DropdownButtonFormField<String>(
+                  value:
+                      typeController.text.isEmpty ? null : typeController.text,
+                  decoration: InputDecoration(
+                    hintText: 'Select type',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    filled: true,
+                    fillColor: AppColors.fields,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                  ),
+                  items: options.map((option) {
+                    return DropdownMenuItem<String>(
+                      value: option.name,
+                      child: Text(option.name),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    typeController.text = value ?? '';
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+
+        const SizedBox(height: 16),
+
+        // Value field
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(fieldName == 'destinationList'
+                ? 'Destination:'
+                : 'Business Transaction:'),
+            const SizedBox(height: 4),
+            TextFormFieldWidget(
+              controller: valueController,
+              hintText: fieldName == 'destinationList'
+                  ? 'Enter destination'
+                  : 'Enter business transaction',
+              onChanged: (p0) {},
+              onFieldSubmitted: (value) {},
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        // Add button
+        ElevatedButton.icon(
+          onPressed: () {
+            if (typeController.text.isNotEmpty &&
+                valueController.text.isNotEmpty) {
+              setState(() {
+                final Map<String, String> newEntry =
+                    fieldName == 'destinationList'
+                        ? {
+                            'type': typeController.text,
+                            'destination': valueController.text
+                          }
+                        : {
+                            'type': typeController.text,
+                            'bizTransaction': valueController.text
+                          };
+
+                currentList.add(newEntry);
+                _formValues[fieldName] = currentList;
+
+                // Reset controllers
+                typeController.clear();
+                valueController.clear();
+              });
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Please select a type and enter a value')),
+              );
+            }
+          },
+          icon: const Icon(Icons.add),
+          label: const Text('Add Entry'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildComplexListItem(Map<String, String> entry, String fieldName) {
+    final valueKey =
+        fieldName == 'destinationList' ? 'destination' : 'bizTransaction';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Type: ${entry['type']}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text('Value: ${entry[valueKey]}'),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () {
+              setState(() {
+                List<Map<String, String>> currentList =
+                    (_formValues[fieldName] as List)
+                        .map((item) => Map<String, String>.from(item))
+                        .toList();
+                currentList.remove(entry);
+                _formValues[fieldName] = currentList;
+              });
+            },
+          ),
+        ],
+      ),
     );
   }
 }
