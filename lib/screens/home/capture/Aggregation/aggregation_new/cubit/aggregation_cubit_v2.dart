@@ -10,6 +10,7 @@ import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/m
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/palletization_model.dart';
 
 import '../model/container_model.dart';
+import '../model/gtin_packaging_model.dart';
 
 enum AggregationType {
   palletization,
@@ -28,7 +29,7 @@ class AggregationCubit extends Cubit<AggregationState> {
   List<PackagingModel> availableSSCCPackages = [];
   List<String> selectedSSCCNumbers = [];
   List<ContainerModel> containers = [];
-
+  List<GtinPackagingModel> gtinPackaging = [];
   // Maps
   Map<String, List<SerializationModel>> batchGroups = {};
   Set<String> uniqueBatches = {};
@@ -132,12 +133,17 @@ class AggregationCubit extends Cubit<AggregationState> {
   }
 
   // Save packaging
-  void savePackaging(String description, {required String type}) async {
+  void savePackaging(
+    String description, {
+    required String type,
+    required bool isGtinPackaging,
+  }) async {
     try {
       emit(AggregationLoading());
 
       // Get memberId from preferences
       final memberId = await AppPreferences.getMemberId();
+      final gs1CompanyPrefix = await AppPreferences.getGs1Prefix();
 
       // Get the bin location ID (using the selectedBinLocation from state)
       final binLocationId = selectedBinLocationId;
@@ -155,17 +161,28 @@ class AggregationCubit extends Cubit<AggregationState> {
               })
           .toList();
 
+      final url = isGtinPackaging ? "/api/gtinPackaging" : "/api/ssccPackaging";
+      final payload = isGtinPackaging
+          ? {
+              "gs1CompanyPrefix": gs1CompanyPrefix,
+              "packagingType": type,
+              "description": description,
+              "memberId": memberId,
+              "binLocationId": binLocationId,
+              "serialsList": serialsList,
+            }
+          : {
+              "packagingType": type,
+              "description": description,
+              "memberId": memberId,
+              "binLocationId": binLocationId,
+              "serialsList": serialsList,
+            };
       // Make the API call
       final response = await httpService.request(
-        "/api/ssccPackaging",
+        url,
         method: HttpMethod.post,
-        payload: {
-          "packagingType": type,
-          "description": description,
-          "memberId": memberId,
-          "binLocationId": binLocationId,
-          "serialsList": serialsList,
-        },
+        payload: payload,
       );
 
       if (response.success) {
@@ -411,6 +428,30 @@ class AggregationCubit extends Cubit<AggregationState> {
       }
     } catch (e) {
       emit(ContainersError(message: e.toString()));
+    }
+  }
+
+  void fetchGtinPackaging(String packagingType) async {
+    emit(GtinPackagingLoading());
+
+    try {
+      final response = await HttpService().request(
+        '/api/gtinPackaging?packagingType=$packagingType&association=true',
+        method: HttpMethod.get,
+      );
+
+      if (response.success) {
+        final gtinPackagingResponse =
+            GtinPackagingResponse.fromJson(response.data);
+        gtinPackaging = gtinPackagingResponse.data;
+        emit(GtinPackagingLoaded());
+      } else {
+        emit(GtinPackagingError(
+          message: response.data['message'] ?? 'Failed to load GTIN packaging',
+        ));
+      }
+    } catch (e) {
+      emit(GtinPackagingError(message: e.toString()));
     }
   }
 }

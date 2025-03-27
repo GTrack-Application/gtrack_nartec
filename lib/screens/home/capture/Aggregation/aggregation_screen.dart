@@ -3,12 +3,10 @@ import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/Assembling/assembling_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/Bundling/bundling_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/packaging/packaging_by_many_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/screens/palletization_containerization/palletization_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/packing_screen.dart';
 
+import 'aggregation_new/screens/packaging/packaging_screen.dart';
 import 'aggregation_new/screens/palletization_containerization/sscc_container_screen.dart';
 
 class AggregationScreen extends StatefulWidget {
@@ -26,7 +24,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
       "onTap": () {},
     },
     {
-      "text": "Packing",
+      "text": "Packaging By Pack",
       "icon": AppIcons.aggPacking,
       "onTap": () {},
     },
@@ -36,7 +34,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
       "onTap": () {},
     },
     {
-      "text": "Assembling",
+      "text": "Pack By Assembly",
       "icon": AppIcons.aggAssembling,
       "onTap": () {},
     },
@@ -46,7 +44,7 @@ class _AggregationScreenState extends State<AggregationScreen> {
       "onTap": () {},
     },
     {
-      "text": "Bundling",
+      "text": "Packaging By Bundle",
       "icon": AppIcons.aggBundling,
       "onTap": () {},
     },
@@ -61,12 +59,12 @@ class _AggregationScreenState extends State<AggregationScreen> {
       "onTap": () {},
     },
     {
-      "text": "Palletization",
+      "text": "Pack By Pallets",
       "icon": AppIcons.aggCompiling,
       "onTap": () {},
     },
     {
-      "text": "Containerization",
+      "text": "Pack By SSCC Container",
       "icon": AppIcons.aggContainerization,
       "onTap": () {},
     },
@@ -82,10 +80,18 @@ class _AggregationScreenState extends State<AggregationScreen> {
           description: "Packaging By Carton",
           floatingActionButtonText: "Perform Packaging By Carton",
         ));
-    data[1]["onTap"] = () =>
-        AppNavigator.goToPage(context: context, screen: const PackingScreen());
+    data[1]["onTap"] = () => AppNavigator.goToPage(
+        context: context,
+        screen: const PackagingScreen(
+          packagingType: "packing_by_pack",
+          title: "Packaging By Pack",
+        ));
     data[3]["onTap"] = () => AppNavigator.goToPage(
-        context: context, screen: const AssemblingScreen());
+        context: context,
+        screen: const PackagingScreen(
+          packagingType: "assembling",
+          title: "Pack By Assembly",
+        ));
     data[4]["onTap"] = () => AppNavigator.goToPage(
         context: context,
         screen: const PackagingByCartonScreen(
@@ -93,8 +99,12 @@ class _AggregationScreenState extends State<AggregationScreen> {
           description: "Grouping",
           floatingActionButtonText: "Perform Aggregation By Grouping",
         ));
-    data[5]["onTap"] = () =>
-        AppNavigator.goToPage(context: context, screen: const BundlingScreen());
+    data[5]["onTap"] = () => AppNavigator.goToPage(
+        context: context,
+        screen: const PackagingScreen(
+          packagingType: "packing_by_bundle",
+          title: "Packaging By Bundle",
+        ));
     data[6]["onTap"] = () => AppNavigator.goToPage(
         context: context,
         screen: const PackagingByCartonScreen(

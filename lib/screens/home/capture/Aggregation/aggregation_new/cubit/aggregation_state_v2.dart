@@ -148,3 +148,13 @@ class ContainerCreationError extends AggregationState {
 
   ContainerCreationError({required this.message});
 }
+
+class GtinPackagingLoading extends AggregationState {}
+
+class GtinPackagingLoaded extends AggregationState {}
+
+class GtinPackagingError extends AggregationState {
+  final String message;
+
+  GtinPackagingError({required this.message});
+}

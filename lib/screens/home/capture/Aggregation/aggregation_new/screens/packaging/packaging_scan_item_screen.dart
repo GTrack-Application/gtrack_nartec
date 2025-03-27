@@ -14,7 +14,12 @@ import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/c
 
 class PackagingScanItemScreen extends StatefulWidget {
   final String type;
-  const PackagingScanItemScreen({super.key, required this.type});
+  final bool isGtinPackaging;
+  const PackagingScanItemScreen({
+    super.key,
+    required this.type,
+    this.isGtinPackaging = false,
+  });
 
   @override
   State<PackagingScanItemScreen> createState() =>
@@ -765,13 +770,17 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                 listener: (context, state) {
                   if (state is PackagingSaved) {
                     AppSnackbars.success(context, state.message);
-                    context.read<AggregationCubit>().getPackaging(
-                          widget.type == "box_carton"
-                              ? "box_carton"
-                              : widget.type == "grouping"
-                                  ? "grouping"
-                                  : "batching",
-                        );
+                    if (widget.isGtinPackaging) {
+                      cubit.fetchGtinPackaging(widget.type);
+                    } else {
+                      context.read<AggregationCubit>().getPackaging(
+                            widget.type == "box_carton"
+                                ? "box_carton"
+                                : widget.type == "grouping"
+                                    ? "grouping"
+                                    : "batching",
+                          );
+                    }
                     Navigator.pop(context);
                   } else if (state is AggregationError) {
                     AppSnackbars.danger(context, state.message);
@@ -794,8 +803,11 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                       }
 
                       // Save logic here
-                      cubit.savePackaging(_descriptionController.text,
-                          type: widget.type);
+                      cubit.savePackaging(
+                        _descriptionController.text,
+                        type: widget.type,
+                        isGtinPackaging: widget.isGtinPackaging,
+                      );
                     },
                     backgroundColor: Colors.green,
                   );
