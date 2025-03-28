@@ -466,6 +466,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                         padding: EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text('Select Bin Location'),
                       ),
+                      dropdownColor: AppColors.background,
                       value: context
                           .watch<AggregationCubit>()
                           .selectedBinLocationId,
@@ -588,6 +589,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
                                       isExpanded: true,
+                                      dropdownColor: AppColors.background,
                                       hint: const Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 12.0),
