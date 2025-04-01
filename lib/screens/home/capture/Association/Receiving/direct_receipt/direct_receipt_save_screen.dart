@@ -4,13 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_state.dart';
-import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/receiving/raw_materials/direct_receipt/unit_country_list/unit_country_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Receiving/direct_receipt/asset_details_screen.dart';
 import 'package:intl/intl.dart';
 

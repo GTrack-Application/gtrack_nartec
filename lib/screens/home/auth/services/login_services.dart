@@ -5,10 +5,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
-import 'package:gtrack_nartec/models/LoginUser/BrandOwnerLoginModel.dart';
-import 'package:gtrack_nartec/models/LoginUser/SupplierLoginModel.dart';
-import 'package:gtrack_nartec/models/Member/member_data_model.dart';
-import 'package:gtrack_nartec/models/activities/email_activities_model.dart';
+import 'package:gtrack_nartec/features/auth/models/LoginUser/BrandOwnerLoginModel.dart';
+import 'package:gtrack_nartec/features/auth/models/LoginUser/SupplierLoginModel.dart';
+import 'package:gtrack_nartec/features/auth/models/member_data_model.dart';
+import 'package:gtrack_nartec/features/auth/models/activities/email_activities_model.dart';
 import 'package:http/http.dart' as http;
 
 class LoginServices {

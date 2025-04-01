@@ -1,4 +1,4 @@
-import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
+import 'package:gtrack_nartec/features/capture/models/serialization/serialization_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/container_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/packaging_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/palletization_model.dart';

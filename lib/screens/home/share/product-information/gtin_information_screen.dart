@@ -5,7 +5,7 @@ import 'package:gtrack_nartec/blocs/share/product_information/gtin_information_b
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/widgets/loading/loading_widget.dart';
-import 'package:gtrack_nartec/models/share/product_information/gtin_information_model.dart';
+import 'package:gtrack_nartec/features/share/models/product_information/gtin_information_model.dart';
 import 'package:ionicons/ionicons.dart';
 
 GtinInformationModel? gtinInformationModel;

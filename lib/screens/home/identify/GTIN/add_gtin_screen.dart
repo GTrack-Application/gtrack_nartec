@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gpc_by_search_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/gpc_by_search_model.dart';
 import 'package:gtrack_nartec/screens/home/identify/controller/add_gtin_controller.dart';
 import 'package:gtrack_nartec/screens/home/identify/cubit/add_gtin_cubit.dart';
 import 'package:gtrack_nartec/screens/home/identify/cubit/add_gtin_state.dart';

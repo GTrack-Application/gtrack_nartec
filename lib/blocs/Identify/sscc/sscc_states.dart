@@ -1,4 +1,4 @@
-import 'package:gtrack_nartec/models/IDENTIFY/SSCC/SsccModel.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/SSCC/SsccModel.dart';
 
 abstract class SsccState {}
 

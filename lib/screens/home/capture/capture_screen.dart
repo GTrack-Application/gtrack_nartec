@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/capture_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/card_icon_button.dart';
 

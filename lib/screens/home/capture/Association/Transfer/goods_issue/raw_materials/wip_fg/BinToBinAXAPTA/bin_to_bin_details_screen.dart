@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/models/capture/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
 
 class BinToBinDetailsScreen extends StatefulWidget {
   const BinToBinDetailsScreen({super.key, required this.employees});

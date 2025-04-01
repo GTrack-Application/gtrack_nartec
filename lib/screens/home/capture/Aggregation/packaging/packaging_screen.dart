@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_icons.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packaging/packaging_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packaging/packaging_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/capture/aggregation/packaging/packaging_master_model.dart';
+import 'package:gtrack_nartec/features/capture/models/aggregation/packaging/packaging_master_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packaging/packaging_type_screen.dart';
 import 'package:intl/intl.dart';
 

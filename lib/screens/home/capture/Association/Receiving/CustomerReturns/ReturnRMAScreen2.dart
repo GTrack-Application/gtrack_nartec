@@ -3,21 +3,21 @@
 import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/GetWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesIdController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/ReturnDZones.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/generateBarcodeForRmaController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/insertIntoWmsReturnSalesOrderClController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/ReceivingController/CustomerReturns/insertManyIntoMappedBarcodeController2.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/ReceivingController/CustomerReturns/GetWmsReturnSalesOrderClCountByItemIdAndReturnItemNumAndSalesIdController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/ReceivingController/CustomerReturns/ReturnDZones.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/ReceivingController/CustomerReturns/generateBarcodeForRmaController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/ReceivingController/CustomerReturns/insertIntoWmsReturnSalesOrderClController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/ReceivingController/CustomerReturns/insertManyIntoMappedBarcodeController2.dart';
 
-import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getmapBarcodeDataByItemCodeController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getmapBarcodeDataByItemCodeController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
-import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
-import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/updateWmsJournalMovementClQtyScannedModel.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNum2Model.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/ReceivingModel/CustomerReturns/updateWmsJournalMovementClQtyScannedModel.dart';
 
 // ignore: must_be_immutable
 class ReturnRMAScreen2 extends StatefulWidget {

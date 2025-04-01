@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/global/global_states_events.dart';
 import 'package:gtrack_nartec/blocs/share/product_information/gtin_information_bloc.dart';
 import 'package:gtrack_nartec/global/widgets/loading/loading_widget.dart';
-import 'package:gtrack_nartec/models/share/product_information/gtin_information_model.dart';
+import 'package:gtrack_nartec/features/share/models/product_information/gtin_information_model.dart';
 
 GtinInformationModel? gtinInformationModel;
 GtinInformationDataModel? gtinInformationDataModel;

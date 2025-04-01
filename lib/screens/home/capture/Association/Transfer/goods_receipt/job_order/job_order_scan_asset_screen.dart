@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/goods_receipt/job_order_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/transfer/goods_receipt/job_order_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/utils/date_time_format.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_receipt/job_order/job_order_item_details_screen.dart';
 
 class JobOrderScanAssetScreen extends StatefulWidget {

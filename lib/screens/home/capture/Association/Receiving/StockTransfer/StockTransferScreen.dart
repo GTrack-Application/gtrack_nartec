@@ -1,23 +1,23 @@
 // ignore_for_file: avoid_print, sized_box_for_whitespace, file_names
 
 import 'package:dropdown_search/dropdown_search.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_nartec/constants/app_images.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/BinToBinInternalTableDataController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/GetAllDistinctItemCodesFromTblMappedBarcodesController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/NewOne.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateByPalletController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/BinToBinInternalTransfer/updateBySerialController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/BinToBinInternalTransfer/BinToBinInternalTableDataController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/BinToBinInternalTransfer/GetAllDistinctItemCodesFromTblMappedBarcodesController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/BinToBinInternalTransfer/NewOne.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/BinToBinInternalTransfer/updateByPalletController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/BinToBinInternalTransfer/updateBySerialController.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
+import 'package:gtrack_nartec/features/capture/models/reveiving/supplier_receipt/BinToBinInternalModel.dart'
+    show BinToBinInternalModel;
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_nartec/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
-import 'package:gtrack_nartec/models/reveiving/supplier_receipt/BinToBinInternalModel.dart';
 
 class StockTransferBinToBinInternalScreen extends StatefulWidget {
   const StockTransferBinToBinInternalScreen({super.key});

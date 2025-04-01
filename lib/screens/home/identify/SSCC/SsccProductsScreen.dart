@@ -8,7 +8,7 @@ import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_states.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/SSCC/SsccModel.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/SSCC/SsccModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/SSCC/add_sscc_screen.dart';
 import 'package:gtrack_nartec/screens/home/identify/SSCC/sscc_cubit/sscc_cubit.dart';
 import 'package:gtrack_nartec/screens/home/identify/SSCC/sscc_cubit/sscc_state.dart';

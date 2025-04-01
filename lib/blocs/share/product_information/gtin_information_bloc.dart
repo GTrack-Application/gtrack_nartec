@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/global/global_states_events.dart';
-import 'package:gtrack_nartec/controllers/share/product_information/gtin_information_controller.dart';
+import 'package:gtrack_nartec/features/share/controllers/product_information/gtin_information_controller.dart';
 
 class GtinInformationBloc extends Bloc<GlobalEvent, GlobalState> {
   GtinInformationBloc() : super(GlobalInitState()) {

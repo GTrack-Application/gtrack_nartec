@@ -1,15 +1,15 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_print, file_names
 
 import 'package:gtrack_nartec/constants/app_images.dart';
-import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/GetShipmentPalletizingController.dart';
-import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/ValidateShipmentIdFromShipmentReveivedClController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Aggregation/Palletization/GetShipmentPalletizingController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Aggregation/Palletization/ValidateShipmentIdFromShipmentReveivedClController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_nartec/models/capture/aggregation/palletization/GetTransferDistributionByTransferIdModel.dart';
+import 'package:gtrack_nartec/features/capture/models/aggregation/palletization/GetTransferDistributionByTransferIdModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/Palletization/PalletProceedScreen.dart';
 
 import 'package:flutter/material.dart';

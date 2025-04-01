@@ -2,17 +2,17 @@
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getPalletTableController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getSerialTableController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/insertAllDataController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getPalletTableController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/getSerialTableController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Shipping/Warehouse_Transfer/BinToBinFromAXAPTA/insertAllDataController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_nartec/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
+import 'package:gtrack_nartec/features/capture/models/mapping_barcode/GetShipmentReceivedTableModel.dart';
 
 class RMtoWIPBinToBinAxapta2Screen extends StatefulWidget {
   String TRANSFERID;

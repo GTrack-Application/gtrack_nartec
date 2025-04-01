@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/identify/GIAI/giai_cubit.dart';
+import 'package:gtrack_nartec/features/identify/cubits/GIAI/giai_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/cubit/fats_cubit.dart';
 import 'package:gtrack_nartec/screens/home/identify/GIAI/cubit/fats_state.dart';

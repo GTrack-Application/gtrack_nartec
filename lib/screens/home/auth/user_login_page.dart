@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
-import 'package:gtrack_nartec/controllers/auth/auth_controller.dart';
+import 'package:gtrack_nartec/features/auth/controllers/auth_controller.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';

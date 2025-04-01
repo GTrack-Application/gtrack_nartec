@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/receiving/purchase_order_receipt/purchase_order_receipt_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/association/receiving/purchase_order_receipt/purchase_order_receipt_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/receiving/purchase_order_receipt/purchase_order_receipt_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/receiving/purchase_order_receipt/purchase_order_receipt_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/purchase_order_details_model.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Receiving/purchase_order_receipt/purchase_order_details_model.dart';
 
 class SavePurchaseOrderScreen extends StatefulWidget {
   const SavePurchaseOrderScreen({

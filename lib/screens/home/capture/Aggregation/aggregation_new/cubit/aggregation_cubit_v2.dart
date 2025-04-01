@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
-import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
+import 'package:gtrack_nartec/features/capture/models/serialization/serialization_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/bin_location.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/model/packaging_model.dart';

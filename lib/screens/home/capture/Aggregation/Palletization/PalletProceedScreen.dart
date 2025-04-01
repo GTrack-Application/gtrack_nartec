@@ -3,7 +3,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_images.dart';
-import 'package:gtrack_nartec/controllers/Receiving/supplier_receipt/GetAllTableZoneController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/receiving_old/supplier_receipt/GetAllTableZoneController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';

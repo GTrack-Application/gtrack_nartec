@@ -1,6 +1,7 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
-import 'package:gtrack_nartec/models/identify/GLN/gln_model.dart';
+import 'package:gtrack_nartec/features/capture/models/aggregation/packing/PackedItemsModel.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GLN/gln_model.dart'
+    show GlnModel;
 
 abstract class GlnState {}
 

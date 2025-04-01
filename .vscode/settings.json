@@ -1,10 +1,5 @@
 {
   "java.configuration.updateBuildConfiguration": "interactive",
   "CodeGPT.apiKey": "Anthropic",
-"dart.flutterSdkPath": ".fvm/versions/3.29.2",
-"workbench.colorCustomizations": {
-    "activityBar.background": "#07333B",
-    "titleBar.activeBackground": "#0A4753",
-    "titleBar.activeForeground": "#F4FCFE"
-}
+"dart.flutterSdkPath": ".fvm/versions/3.29.2"
 }

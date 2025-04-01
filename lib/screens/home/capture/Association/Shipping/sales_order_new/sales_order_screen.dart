@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/shipping/sales_order/sales_order_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/shipping/sales_order/sales_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sales_order_model.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Receiving/sales_order/sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/sub_sales_order_screen.dart';
 
 class SalesOrderScreen extends StatefulWidget {

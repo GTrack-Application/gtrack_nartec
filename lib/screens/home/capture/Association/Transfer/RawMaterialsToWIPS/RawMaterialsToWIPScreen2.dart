@@ -4,14 +4,14 @@ import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_images.dart';
-import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Aggregation/Palletization/getmapBarcodeDataByItemCodeController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/RawMaterialsToWIP/GetMappedBarcodesRMByItemIdAndQtyModel.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Transfer/RawMaterialsToWIP/GetMappedBarcodesRMByItemIdAndQtyModel.dart';
 
 // ignore: must_be_immutable
 class RawMaterialsToWIPScreen2 extends StatefulWidget {

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_cubit.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_states.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packing/packed_items/packed_items_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packing/packed_items/packed_items_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
-import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
+import 'package:gtrack_nartec/features/capture/models/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/complete_packing_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/packing/packing_details_screen.dart';
 

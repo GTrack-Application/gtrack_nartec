@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
 
 class DirectReceiptDetailsScreen extends StatefulWidget {
   const DirectReceiptDetailsScreen({super.key, required this.employees});

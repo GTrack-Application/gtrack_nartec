@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_states.dart';
-import 'package:gtrack_nartec/controllers/Identify/SSCC/SsccController.dart';
+import 'package:gtrack_nartec/features/identify/controllers/SsccController.dart';
 
 class SsccCubit extends Cubit<SsccState> {
   SsccCubit() : super(SsccInitState());

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class AssetDetailsScreen extends StatelessWidget {

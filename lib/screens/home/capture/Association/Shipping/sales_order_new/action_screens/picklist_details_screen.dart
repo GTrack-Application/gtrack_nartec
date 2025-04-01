@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/shipping/sales_order/sales_order_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association/shipping/sales_order/sales_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
-import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Receiving/sales_order/map_model.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Receiving/sales_order/sub_sales_order_model.dart';
 
 class PicklistDetailsScreen extends StatefulWidget {
   const PicklistDetailsScreen({

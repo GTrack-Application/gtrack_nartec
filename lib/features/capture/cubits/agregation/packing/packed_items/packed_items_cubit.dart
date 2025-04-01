@@ -1,0 +1,20 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Aggregation/Assembling_Bundling/assembling_controller.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packing/packed_items/packed_items_state.dart';
+import 'package:gtrack_nartec/features/capture/models/aggregation/packing/PackedItemsModel.dart';
+
+class PackedItemsCubit extends Cubit<PackedItemsState> {
+  PackedItemsCubit() : super(PackedItemsInitial());
+
+  void getPackedItems() async {
+    emit(PackedItemsLoading());
+
+    try {
+      List<PackedItemsModel> data = await AssemblingController.getPackedItems();
+      emit(PackedItemsLoaded(data: data));
+    } catch (e) {
+      emit(
+          PackedItemsError(message: "No Packed items found for this Location"));
+    }
+  }
+}

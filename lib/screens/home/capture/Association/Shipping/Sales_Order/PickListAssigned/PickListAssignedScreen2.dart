@@ -4,16 +4,16 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Sales_Order/GetAllTblDZonesController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Sales_Order/GetFirstTableData.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Shipping/Sales_Order/InsertPickListController.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Shipping/Sales_Order/GetAllTblDZonesController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Shipping/Sales_Order/GetFirstTableData.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Shipping/Sales_Order/InsertPickListController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_nartec/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/Sales_Order/PickListAssigned/PickListAssignedScreen.dart';
 
 // ignore: must_be_immutable

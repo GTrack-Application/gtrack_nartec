@@ -1,4 +1,4 @@
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/review_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/review_model.dart';
 
 String averageRating(List<ReviewModel> reviews) {
   if (reviews.isEmpty) return '0';

@@ -1,12 +1,12 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packing/complete_packing/complete_packing_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packing/complete_packing/complete_packing_state.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packing/packed_items/packed_items_cubit.dart';
-import 'package:gtrack_nartec/models/capture/aggregation/packing/GtinProductDetailsModel.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packing/packing_state.dart';
-import 'package:gtrack_nartec/cubit/capture/agregation/packing/packing_cubit.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packing/complete_packing/complete_packing_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packing/complete_packing/complete_packing_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packing/packed_items/packed_items_cubit.dart';
+import 'package:gtrack_nartec/features/capture/models/aggregation/packing/GtinProductDetailsModel.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packing/packing_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/agregation/packing/packing_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';

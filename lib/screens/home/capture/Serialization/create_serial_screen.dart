@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/capture_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 
 class CreateSerialScreen extends StatefulWidget {

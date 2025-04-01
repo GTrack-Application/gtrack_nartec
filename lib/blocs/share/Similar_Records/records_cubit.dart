@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/blocs/share/Similar_Records/record_states.dart';
-import 'package:gtrack_nartec/controllers/share/product_information/search_gpc_for_codification_controller.dart';
+import 'package:gtrack_nartec/features/share/controllers/product_information/search_gpc_for_codification_controller.dart';
 
 class RecordCubit extends Cubit<RecordsState> {
   RecordCubit() : super(RecordsInitial());

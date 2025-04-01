@@ -11,7 +11,7 @@ import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/card/gtin_card.dart';
 import 'package:gtrack_nartec/global/widgets/pdf/pdf_viewer.dart';
 import 'package:gtrack_nartec/global/widgets/video/video_player_widget.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_reviews_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 

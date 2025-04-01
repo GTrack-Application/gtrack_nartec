@@ -10,7 +10,7 @@ import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
-import 'package:gtrack_nartec/models/capture/aggregation/packing/PackedItemsModel.dart';
+import 'package:gtrack_nartec/features/capture/models/aggregation/packing/PackedItemsModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/GLN/add_gln_screen.dart';
 import 'package:ionicons/ionicons.dart';
 

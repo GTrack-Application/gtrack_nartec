@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gtrack_nartec/controllers/share/product_information/events_screen_controller.dart';
+import 'package:gtrack_nartec/features/share/controllers/product_information/events_screen_controller.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_nartec/models/share/product_information/events_screen_model.dart';
+import 'package:gtrack_nartec/features/share/models/product_information/events_screen_model.dart';
 
 List<EventsScreenModel> table = [];
 

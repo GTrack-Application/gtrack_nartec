@@ -2,7 +2,7 @@
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
-import 'package:gtrack_nartec/controllers/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
@@ -12,7 +12,7 @@ import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorModel.dart';
+import 'package:gtrack_nartec/features/capture/models/Association/Transfer/RawMaterialsToWIP/GetSalesPickingListCLRMByAssignToUserAndVendorModel.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/RawMaterialsToWIPS/RawMaterialsToWIPScreen2.dart';
 
 // ignore: must_be_immutable

@@ -1,9 +1,9 @@
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/brands_name_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/origin_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/package_type_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/product_description_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/product_type_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/unit_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/brands_name_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/origin_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/package_type_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/product_description_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/product_type_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/unit_model.dart';
 
 abstract class AddGtinState {}
 

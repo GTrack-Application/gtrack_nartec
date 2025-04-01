@@ -58,3 +58,4 @@ service-account-key.json
 
 # Data
 data.txt
+lib/store/

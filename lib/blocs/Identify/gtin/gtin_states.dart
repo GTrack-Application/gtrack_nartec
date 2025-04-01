@@ -1,14 +1,14 @@
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/allergen_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/image_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/instruction_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/leaflet_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/retailer_model.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/video_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/allergen_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/image_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/ingredient_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/instruction_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/leaflet_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/packaging_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/promotional_offer_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/recipe_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/retailer_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/video_model.dart';
 
 abstract class GtinState {}
 

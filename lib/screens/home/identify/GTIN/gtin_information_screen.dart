@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class GTINInformationScreen extends StatefulWidget {

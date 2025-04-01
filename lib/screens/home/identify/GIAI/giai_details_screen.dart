@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GIAI/giai_model.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GIAI/giai_model.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 
 class GIAIDetailsScreen extends StatefulWidget {

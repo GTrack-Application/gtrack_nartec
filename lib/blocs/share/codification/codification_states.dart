@@ -1,4 +1,4 @@
-import 'package:gtrack_nartec/models/share/product_information/SearchGpcForCodification.dart';
+import 'package:gtrack_nartec/features/share/models/product_information/SearchGpcForCodification.dart';
 
 abstract class CodificationState {}
 

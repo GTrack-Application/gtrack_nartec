@@ -6,7 +6,7 @@ import 'package:gtrack_nartec/blocs/Identify/gtin/gtin_states.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
-import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GTIN/GTINModel.dart';
 
 class DigitalLinkViewReviewsScreen extends StatefulWidget {
   final GTIN_Model gtin;

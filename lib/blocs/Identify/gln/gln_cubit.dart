@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_nartec/blocs/Identify/gln/gln_states.dart';
-import 'package:gtrack_nartec/controllers/Identify/GLN/GLNController.dart';
-import 'package:gtrack_nartec/models/identify/GLN/gln_model.dart';
+import 'package:gtrack_nartec/features/identify/controllers/GLNController.dart';
+import 'package:gtrack_nartec/features/identify/models/IDENTIFY/GLN/gln_model.dart'
+    show GlnModel;
 
 class GlnCubit extends Cubit<GlnState> {
   GlnCubit() : super(GlnInitState());

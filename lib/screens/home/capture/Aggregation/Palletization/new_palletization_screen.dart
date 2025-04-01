@@ -3,14 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gtrack_nartec/constants/app_images.dart';
-import 'package:gtrack_nartec/controllers/capture/Aggregation/Palletization/generate_pallet_controller.dart';
+import 'package:gtrack_nartec/features/capture/controllers/Aggregation/Palletization/generate_pallet_controller.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
 import 'package:gtrack_nartec/global/widgets/ElevatedButtonWidget.dart';
 import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text/text_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
-import 'package:gtrack_nartec/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
+import 'package:gtrack_nartec/features/capture/models/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
 
 class NewPalletizationScreen extends StatefulWidget {
   const NewPalletizationScreen({super.key});
