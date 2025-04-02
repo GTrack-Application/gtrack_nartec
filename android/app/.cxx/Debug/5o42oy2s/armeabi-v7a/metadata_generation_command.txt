@@ -1,0 +1,20 @@
+                        -H/Users/wasimzaman/fvm/versions/3.29.2/packages/flutter_tools/gradle/src/main/groovy
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_SYSTEM_VERSION=26
+-DANDROID_PLATFORM=android-26
+-DANDROID_ABI=armeabi-v7a
+-DCMAKE_ANDROID_ARCH_ABI=armeabi-v7a
+-DANDROID_NDK=/Users/wasimzaman/Library/Android/sdk/ndk/25.1.8937393
+-DCMAKE_ANDROID_NDK=/Users/wasimzaman/Library/Android/sdk/ndk/25.1.8937393
+-DCMAKE_TOOLCHAIN_FILE=/Users/wasimzaman/Library/Android/sdk/ndk/25.1.8937393/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/Users/wasimzaman/Library/Android/sdk/cmake/3.22.1/bin/ninja
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/wasimzaman/Wasim/coding/--Flutter/Nartec/gtrack_nartec/build/app/intermediates/cxx/Debug/5o42oy2s/obj/armeabi-v7a
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/Users/wasimzaman/Wasim/coding/--Flutter/Nartec/gtrack_nartec/build/app/intermediates/cxx/Debug/5o42oy2s/obj/armeabi-v7a
+-DCMAKE_BUILD_TYPE=Debug
+-B/Users/wasimzaman/Wasim/coding/--Flutter/Nartec/gtrack_nartec/android/app/.cxx/Debug/5o42oy2s/armeabi-v7a
+-GNinja
+-Wno-dev
+--no-warn-unused-cli
+                        Build command args: []
+                        Version: 2

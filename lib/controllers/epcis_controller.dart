@@ -14,6 +14,8 @@ class EPCISController {
     required String bizStep,
     required String disposition,
     String? gln,
+    List? epcList,
+    List? bizTransactionList,
   }) async {
     // String? token;
     // await AppPreferences.getToken().then((value) => token = value.toString());
@@ -48,16 +50,17 @@ class EPCISController {
       "disposition": disposition,
       "eventTime": eventTime,
       "eventTimeZoneOffset": eventTimeZoneOffSet,
-      "epcList": ["urn:epc:id:sgtin:6285561.CV-100G SS220 PG.2268"],
+      "epcList": epcList ?? ["urn:epc:id:sgtin:6285561.CV-100G SS220 PG.2268"],
       "readPoint": {"id": "urn:epc:id:sgln:$gln"},
       "bizLocation": {"id": "urn:epc:id:sgln:$gln"},
-      "bizTransactionList": [
-        {
-          "type": "po",
-          "bizTransaction":
-              "http://transaction.acme.com/jo/cm6t2unxh0004eg3qjjt8m276"
-        }
-      ],
+      "bizTransactionList": bizTransactionList ??
+          [
+            {
+              "type": "po",
+              "bizTransaction":
+                  "http://transaction.acme.com/jo/cm6t2unxh0004eg3qjjt8m276"
+            }
+          ],
       "creationDate": createDate,
     };
 

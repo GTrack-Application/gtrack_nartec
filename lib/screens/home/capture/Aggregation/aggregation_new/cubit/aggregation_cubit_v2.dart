@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
+import 'package:gtrack_nartec/controllers/epcis_controller.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_new/cubit/aggregation_state_v2.dart';
@@ -178,6 +179,27 @@ class AggregationCubit extends Cubit<AggregationState> {
               "binLocationId": binLocationId,
               "serialsList": serialsList,
             };
+
+      // Send Epcis Event
+      final epcisResponse = await EPCISController.insertEPCISEvent(
+        type: "Aggregation Event",
+        action: "ADD",
+        bizStep: "shipping",
+        disposition: "in_transit",
+        gln: selectedBinLocation?.gln,
+        epcList: scannedItems
+            .map(
+              (e) => "urn:epc:id:sgtin:${e.gTIN}",
+            )
+            .toList(),
+        bizTransactionList: [
+          {
+            "type": "po",
+            "bizTransaction":
+                "http://transaction.acme.com/jo/${selectedBinLocation?.id}",
+          }
+        ],
+      );
       // Make the API call
       final response = await httpService.request(
         url,
@@ -360,6 +382,27 @@ class AggregationCubit extends Cubit<AggregationState> {
               "palletIds": ssccPackageIds,
               "containerCode": containerCode,
             };
+
+      // Send Epcis Event
+      final epcisResponse = await EPCISController.insertEPCISEvent(
+        type: "Aggregation Event",
+        action: "ADD",
+        bizStep: "shipping",
+        disposition: "in_transit",
+        gln: selectedBinLocation?.gln,
+        epcList: selectedSSCCNumbers
+            .map(
+              (e) => "urn:epc:id:sgtin:$e",
+            )
+            .toList(),
+        bizTransactionList: [
+          {
+            "type": "po",
+            "bizTransaction":
+                "http://transaction.acme.com/jo/${selectedBinLocation?.id}",
+          }
+        ],
+      );
 
       final response = await httpService.request(
         url,
