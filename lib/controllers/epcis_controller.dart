@@ -64,6 +64,8 @@ class EPCISController {
       "creationDate": createDate,
     };
 
+    log("EPCIS Body: ${jsonEncode(body)}");
+
     var response =
         await http.post(url, headers: headers, body: jsonEncode(body));
 
