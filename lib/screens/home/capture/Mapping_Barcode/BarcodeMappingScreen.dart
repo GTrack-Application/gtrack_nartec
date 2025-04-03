@@ -11,7 +11,6 @@ import 'package:gtrack_nartec/controllers/capture/Mapping_Barcode/getAllTblMappe
 import 'package:gtrack_nartec/controllers/capture/Mapping_Barcode/insertIntoMappedBarcodeOrUpdateBySerialNoController.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_dialogs.dart';
-import 'package:gtrack_nartec/global/widgets/appBar/appBar_widget.dart';
 import 'package:gtrack_nartec/global/widgets/text_field/text_form_field_widget.dart';
 import 'package:gtrack_nartec/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
 import 'package:gtrack_nartec/models/capture/mapping_barcode/getInventTableWMSDataByItemIdOrItemNameModel.dart';
@@ -180,16 +179,9 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: AppBarWidget(
-            backgroundColor: AppColors.pink,
-            autoImplyLeading: true,
-            onPressed: () {
-              Get.back();
-            },
-            title: "Barcode Mapping".toUpperCase(),
-          ),
+        appBar: AppBar(
+          title: const Text("Barcode Mapping"),
+          backgroundColor: AppColors.pink,
         ),
         body: Container(
           padding: const EdgeInsets.only(left: 10),

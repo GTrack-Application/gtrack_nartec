@@ -58,13 +58,13 @@ class TextFieldWidget extends StatelessWidget {
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: AppColors.fields,
+              color: AppColors.background,
               width: 2.0,
             ),
             borderRadius: BorderRadius.circular(5),
           ),
           hintText: hintText,
-          fillColor: AppColors.fields,
+          fillColor: AppColors.background,
           filled: true,
           hintStyle: const TextStyle(color: AppColors.grey, fontSize: 13),
           suffixIcon: suffixIcon ?? const SizedBox.shrink(),

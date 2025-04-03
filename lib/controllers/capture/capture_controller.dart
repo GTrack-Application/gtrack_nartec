@@ -5,6 +5,8 @@ import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gtin_model.dart';
+import 'package:gtrack_nartec/models/capture/mapping/mapped_barcode_request_model.dart';
+import 'package:gtrack_nartec/models/capture/mapping/stock_master_model.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -82,6 +84,60 @@ class CaptureController {
     } else {
       var data = json.decode(response.body);
       var msg = data['message'];
+      throw Exception(msg);
+    }
+  }
+
+  Future<List<StockMasterModel>> getStockMasterByItemName(
+    String? itemName,
+  ) async {
+    final token = await AppPreferences.getToken();
+    String url = "/api/stockMaster?page=1&limit=100";
+    if (itemName != null) {
+      url += "&ITEMNAME=$itemName";
+    }
+
+    final response = await _httpService.request(url, headers: {
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.success) {
+      var data = response.data['data'] as List;
+      List<StockMasterModel> stockMasterData =
+          data.map((e) => StockMasterModel.fromJson(e)).toList();
+      return stockMasterData;
+    } else {
+      var data = response.data;
+      var msg =
+          data['error'] ?? data['message'] ?? 'Failed to get stock master';
+      throw Exception(msg);
+    }
+  }
+
+  Future<String> createMappedBarcode(MappedBarcodeRequestModel data) async {
+    String url = "/api/mappedBarcodes/bulk";
+
+    final token = await AppPreferences.getToken();
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+
+    final body = [data.toJson()];
+
+    final response = await _httpService.request(
+      url,
+      payload: body,
+      headers: headers,
+    );
+
+    if (response.success) {
+      var data = response.data;
+      var msg = data['message'];
+      return msg;
+    } else {
+      var data = response.data;
+      var msg = data['error'] ?? data['message'] ?? 'Failed to map barcode';
       throw Exception(msg);
     }
   }

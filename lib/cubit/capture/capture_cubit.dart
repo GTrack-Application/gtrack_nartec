@@ -4,10 +4,12 @@ import 'package:gtrack_nartec/constants/app_icons.dart';
 import 'package:gtrack_nartec/controllers/capture/capture_controller.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/gtin_model.dart';
+import 'package:gtrack_nartec/models/capture/mapping/mapped_barcode_request_model.dart';
+import 'package:gtrack_nartec/models/capture/mapping/stock_master_model.dart';
 import 'package:gtrack_nartec/models/capture/serialization/serialization_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Aggregation/aggregation_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/association_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Mapping_Barcode/BarcodeMappingScreen.dart';
+import 'package:gtrack_nartec/screens/home/capture/Mapping_Barcode/barcode_mapping_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Serialization/serialization_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Transformation/transformation_screen.dart';
 import 'package:intl/intl.dart';
@@ -54,7 +56,7 @@ class CaptureCubit extends Cubit<CaptureState> {
           "text": "MAPPING BARCODE",
           "icon": AppIcons.mapping,
           "onTap": () => AppNavigator.goToPage(
-              context: context, screen: BarcodeMappingScreen()),
+              context: context, screen: const BarcodeMappingScreen()),
         },
         {
           "text": "MAPPING RFID",
@@ -147,4 +149,51 @@ class CaptureCubit extends Cubit<CaptureState> {
       emit(CaptureGetGtinProductsError(error.toString()));
     }
   }
+
+  /*
+  ?
+  ##############################################################################
+  ?
+    Barcode Mapping Start
+  ? 
+  ##############################################################################
+  ?
+  */
+
+  List<StockMasterModel> stockMasterData = [];
+
+  Future<void> getStockMasterByItemName(String? itemName) async {
+    emit(CaptureStockMasterLoading());
+    try {
+      final data = await CaptureController().getStockMasterByItemName(itemName);
+      stockMasterData = data;
+      if (stockMasterData.isEmpty) {
+        emit(CaptureStockMasterEmpty());
+      } else {
+        emit(CaptureStockMasterSuccess(stockMasterData));
+      }
+    } catch (e) {
+      emit(CaptureStockMasterError(e.toString()));
+    }
+  }
+
+  Future<void> createMappedBarcode(MappedBarcodeRequestModel data) async {
+    emit(CaptureCreateMappedBarcodeLoading());
+    try {
+      final result = await CaptureController().createMappedBarcode(data);
+      emit(CaptureCreateMappedBarcodeSuccess(result));
+    } catch (e) {
+      emit(CaptureCreateMappedBarcodeError(e.toString()));
+    }
+  }
+
+  /*
+  ?
+  ##############################################################################
+  ?
+    Barcode Mapping End
+  ? 
+  ##############################################################################
+  ?
+  */
 }

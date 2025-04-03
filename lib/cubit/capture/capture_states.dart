@@ -12,9 +12,15 @@ class CaptureCreateSerializationLoading extends CaptureState {}
 
 class CaptureGetGtinProductsLoading extends CaptureState {}
 
+class CaptureStockMasterLoading extends CaptureState {}
+
+class CaptureCreateMappedBarcodeLoading extends CaptureState {}
+
 // * EMPTY ***
 
 class CaptureSerializationEmpty extends CaptureState {}
+
+class CaptureStockMasterEmpty extends CaptureState {}
 
 // * SUCCESS ***
 
@@ -36,6 +42,16 @@ class CaptureGetGtinProductsSuccess extends CaptureState {
   CaptureGetGtinProductsSuccess(this.data);
 }
 
+class CaptureStockMasterSuccess extends CaptureState {
+  final List<StockMasterModel> data;
+  CaptureStockMasterSuccess(this.data);
+}
+
+class CaptureCreateMappedBarcodeSuccess extends CaptureState {
+  final String message;
+  CaptureCreateMappedBarcodeSuccess(this.message);
+}
+
 // * ERROR ***
 
 class CaptureSerializationError extends CaptureState {
@@ -54,4 +70,14 @@ class CaptureGetGtinProductsError extends CaptureState {
   final String message;
 
   CaptureGetGtinProductsError(this.message);
+}
+
+class CaptureStockMasterError extends CaptureState {
+  final String message;
+  CaptureStockMasterError(this.message);
+}
+
+class CaptureCreateMappedBarcodeError extends CaptureState {
+  final String message;
+  CaptureCreateMappedBarcodeError(this.message);
 }
