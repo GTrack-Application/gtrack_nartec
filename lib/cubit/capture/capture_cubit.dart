@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_icons.dart';
@@ -173,6 +175,7 @@ class CaptureCubit extends Cubit<CaptureState> {
         emit(CaptureStockMasterSuccess(stockMasterData));
       }
     } catch (e) {
+      log(e.toString());
       emit(CaptureStockMasterError(e.toString()));
     }
   }

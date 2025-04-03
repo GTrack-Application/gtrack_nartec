@@ -127,6 +127,7 @@ class CaptureController {
 
     final response = await _httpService.request(
       url,
+      method: HttpMethod.post,
       payload: body,
       headers: headers,
     );

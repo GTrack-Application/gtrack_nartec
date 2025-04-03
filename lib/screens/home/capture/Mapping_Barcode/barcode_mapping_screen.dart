@@ -33,6 +33,7 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
   void initState() {
     super.initState();
     _captureCubit = context.read<CaptureCubit>();
+    _captureCubit.getStockMasterByItemName(null);
     _manufactureController.text =
         DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
@@ -76,25 +77,21 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
     if (_serialController.text.isEmpty ||
         _gtinController.text.isEmpty ||
         _binLocationController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all required fields')),
-      );
+      AppSnackbars.normal(context, 'Please fill all required fields');
       return;
     }
 
     if (selectedItem == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please search and select an item first')),
-      );
+      AppSnackbars.normal(context, 'Please search and select an item first');
       return;
     }
 
     // Create request model
     final mappedBarcode = MappedBarcodeRequestModel(
-      itemCode: selectedItem!.itemCode ?? '',
-      itemDesc: selectedItem!.itemDesc ?? '',
+      itemCode: selectedItem?.itemCode ?? '',
+      itemDesc: selectedItem?.itemDesc ?? '',
       gtin: _gtinController.text,
-      mainLocation: selectedItem!.mainLocation ?? 'WAREHOUSE-A',
+      mainLocation: selectedItem?.mainLocation ?? 'WAREHOUSE-A',
       binLocation: _binLocationController.text,
       length: double.tryParse(selectedItem!.length ?? '10.5') ?? 10.5,
       width: double.tryParse(selectedItem!.width ?? '5.2') ?? 5.2,
@@ -108,7 +105,7 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
           _batchController.text.isNotEmpty ? _batchController.text : "123123",
     );
 
-    context.read<CaptureCubit>().createMappedBarcode(mappedBarcode);
+    _captureCubit.createMappedBarcode(mappedBarcode);
   }
 
   Future<void> _selectDate(TextEditingController controller) async {

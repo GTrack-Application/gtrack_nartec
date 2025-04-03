@@ -1,6 +1,9 @@
 class StockMasterModel {
+  String? id;
   String? itemCode;
   String? itemDesc;
+  String? itemGroupId;
+  String? groupName;
   String? gtin;
   String? mainLocation;
   String? binLocation;
@@ -8,12 +11,18 @@ class StockMasterModel {
   String? width;
   String? height;
   String? weight;
-  String? expiryDate;
+  int? prodLineId;
+  int? prodBrandId;
   String? batchNo;
+  String? expiryDate;
+  String? manufactureDate;
 
   StockMasterModel({
+    this.id,
     this.itemCode,
     this.itemDesc,
+    this.itemGroupId,
+    this.groupName,
     this.gtin,
     this.mainLocation,
     this.binLocation,
@@ -21,37 +30,56 @@ class StockMasterModel {
     this.width,
     this.height,
     this.weight,
-    this.expiryDate,
+    this.prodLineId,
+    this.prodBrandId,
     this.batchNo,
+    this.expiryDate,
+    this.manufactureDate,
   });
 
-  StockMasterModel.fromJson(Map<String, dynamic> json) {
-    itemCode = json['ItemCode'];
-    itemDesc = json['ItemDesc'];
-    gtin = json['GTIN'];
-    mainLocation = json['MainLocation'];
-    binLocation = json['BinLocation'];
-    length = json['Length']?.toString();
-    width = json['Width']?.toString();
-    height = json['Height']?.toString();
-    weight = json['Weight']?.toString();
-    expiryDate = json['ExpiryDate'];
-    batchNo = json['BatchNo'];
+  factory StockMasterModel.fromJson(Map<String, dynamic> json) {
+    return StockMasterModel(
+      id: json['id'],
+      itemCode: json['ITEMID'],
+      itemDesc: json['ITEMNAME'],
+      itemGroupId: json['ITEMGROUPID'],
+      groupName: json['GROUPNAME'],
+      gtin: json['GTIN'],
+      mainLocation: null,
+      binLocation: null,
+      length: json['Length']?.toString(),
+      width: json['Width']?.toString(),
+      height: json['Height']?.toString(),
+      weight: json['Weight']?.toString(),
+      prodLineId: json['PRODLINEID'] != null
+          ? int.tryParse(json['PRODLINEID'].toString())
+          : null,
+      prodBrandId: json['PRODBRANDID'] != null
+          ? int.tryParse(json['PRODBRANDID'].toString())
+          : null,
+      batchNo: json['BatchNo'],
+      expiryDate: json['ExpiryDate'],
+      manufactureDate: json['ManufactureDate'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['ItemCode'] = itemCode;
-    data['ItemDesc'] = itemDesc;
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['ITEMID'] = itemCode;
+    data['ITEMNAME'] = itemDesc;
+    data['ITEMGROUPID'] = itemGroupId;
+    data['GROUPNAME'] = groupName;
     data['GTIN'] = gtin;
-    data['MainLocation'] = mainLocation;
-    data['BinLocation'] = binLocation;
     data['Length'] = length;
     data['Width'] = width;
     data['Height'] = height;
     data['Weight'] = weight;
-    data['ExpiryDate'] = expiryDate;
+    data['PRODLINEID'] = prodLineId;
+    data['PRODBRANDID'] = prodBrandId;
     data['BatchNo'] = batchNo;
+    data['ExpiryDate'] = expiryDate;
+    data['ManufactureDate'] = manufactureDate;
     return data;
   }
 }
