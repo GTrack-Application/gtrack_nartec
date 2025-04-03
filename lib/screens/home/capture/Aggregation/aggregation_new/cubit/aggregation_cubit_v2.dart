@@ -181,7 +181,7 @@ class AggregationCubit extends Cubit<AggregationState> {
             };
 
       // Send Epcis Event
-      final epcisResponse = await EPCISController.insertEPCISEvent(
+      await EPCISController.insertEPCISEvent(
         type: "Aggregation Event",
         action: "ADD",
         bizStep: "shipping",
@@ -384,7 +384,7 @@ class AggregationCubit extends Cubit<AggregationState> {
             };
 
       // Send Epcis Event
-      final epcisResponse = await EPCISController.insertEPCISEvent(
+      await EPCISController.insertEPCISEvent(
         type: "Aggregation Event",
         action: "ADD",
         bizStep: "shipping",
