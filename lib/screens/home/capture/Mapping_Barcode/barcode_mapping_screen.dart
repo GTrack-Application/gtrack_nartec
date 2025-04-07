@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
+import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/global/widgets/loading/loading_widget.dart';
 import 'package:gtrack_nartec/models/capture/mapping/mapped_barcode_request_model.dart';
 import 'package:gtrack_nartec/models/capture/mapping/stock_master_model.dart';
@@ -16,14 +17,19 @@ class BarcodeMappingScreen extends StatefulWidget {
 }
 
 class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  final TextEditingController _serialController = TextEditingController();
-  final TextEditingController _gtinController = TextEditingController();
-  final TextEditingController _manufactureController = TextEditingController();
-  final TextEditingController _qrCodeController = TextEditingController();
-  final TextEditingController _binLocationController = TextEditingController();
-  final TextEditingController _batchController = TextEditingController();
-  final TextEditingController _expiryController = TextEditingController();
+  final _searchController = TextEditingController();
+  final _serialController = TextEditingController();
+  final _gtinController = TextEditingController();
+  final _manufactureController = TextEditingController();
+  final _qrCodeController = TextEditingController();
+  final _binLocationController = TextEditingController();
+  final _batchController = TextEditingController();
+  final _expiryController = TextEditingController();
+  final _referenceController = TextEditingController();
+  final _lengthController = TextEditingController();
+  final _widthController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
 
   StockMasterModel? selectedItem;
   bool isLoading = false;
@@ -34,8 +40,6 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
     super.initState();
     _captureCubit = context.read<CaptureCubit>();
     _captureCubit.getStockMasterByItemName(null);
-    _manufactureController.text =
-        DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 
   @override
@@ -48,6 +52,11 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
     _binLocationController.dispose();
     _batchController.dispose();
     _expiryController.dispose();
+    _referenceController.dispose();
+    _lengthController.dispose();
+    _widthController.dispose();
+    _heightController.dispose();
+    _weightController.dispose();
     super.dispose();
   }
 
@@ -63,10 +72,6 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
       _gtinController.text = item.gtin ?? '';
       _binLocationController.text = item.binLocation ?? '';
 
-      if (item.expiryDate != null && item.expiryDate!.isNotEmpty) {
-        _expiryController.text = item.expiryDate!;
-      }
-
       if (item.batchNo != null && item.batchNo!.isNotEmpty) {
         _batchController.text = item.batchNo!;
       }
@@ -74,9 +79,7 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
   }
 
   void _saveBarcode() {
-    if (_serialController.text.isEmpty ||
-        _gtinController.text.isEmpty ||
-        _binLocationController.text.isEmpty) {
+    if (_gtinController.text.isEmpty || _binLocationController.text.isEmpty) {
       AppSnackbars.normal(context, 'Please fill all required fields');
       return;
     }
@@ -88,21 +91,18 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
 
     // Create request model
     final mappedBarcode = MappedBarcodeRequestModel(
-      itemCode: selectedItem?.itemCode ?? '',
-      itemDesc: selectedItem?.itemDesc ?? '',
+      itemCode: selectedItem?.itemCode ?? 'N/A',
+      itemDesc: selectedItem?.itemDesc ?? 'N/A',
       gtin: _gtinController.text,
-      mainLocation: selectedItem?.mainLocation ?? 'WAREHOUSE-A',
+      mainLocation: selectedItem?.mainLocation ?? 'N/A',
       binLocation: _binLocationController.text,
-      length: double.tryParse(selectedItem!.length ?? '10.5') ?? 10.5,
-      width: double.tryParse(selectedItem!.width ?? '5.2') ?? 5.2,
-      height: double.tryParse(selectedItem!.height ?? '3.1') ?? 3.1,
-      weight: double.tryParse(selectedItem!.weight ?? '2.5') ?? 2.5,
+      length: double.tryParse(_lengthController.text) ?? 0,
+      width: double.tryParse(_widthController.text) ?? 0,
+      height: double.tryParse(_heightController.text) ?? 0,
+      weight: double.tryParse(_weightController.text) ?? 0,
       trans: 100,
-      expiryDate: _expiryController.text.isNotEmpty
-          ? _expiryController.text
-          : "2025-12-31",
-      batchNo:
-          _batchController.text.isNotEmpty ? _batchController.text : "123123",
+      expiryDate: _expiryController.text,
+      batchNo: _batchController.text,
     );
 
     _captureCubit.createMappedBarcode(mappedBarcode);
@@ -117,7 +117,7 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
     );
     if (picked != null) {
       setState(() {
-        controller.text = DateFormat('yyyy-MM-dd').format(picked);
+        controller.text = DateFormat('dd/MM/yyyy').format(picked);
       });
     }
   }
@@ -192,20 +192,20 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Scan Serial
-                      const Text('Scan Serial*',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _serialController,
-                        decoration: InputDecoration(
-                          hintText: 'Scan Serial',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                      // // Scan Serial
+                      // const Text('Scan Serial*',
+                      //     style: TextStyle(fontWeight: FontWeight.bold)),
+                      // const SizedBox(height: 5),
+                      // TextField(
+                      //   controller: _serialController,
+                      //   decoration: InputDecoration(
+                      //     hintText: 'Scan Serial',
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 20),
 
                       // Scan GTIN
                       const Text('Scan GTIN*',
@@ -342,32 +342,136 @@ class _BarcodeMappingScreenState extends State<BarcodeMappingScreen> {
                       ),
                       const SizedBox(height: 40),
 
+                      // Reference Number
+                      const Text('Reference Number',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _referenceController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter Reference Number',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Dimensions (Length, Width, Height)
+                      const Text('Dimensions',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          // Length
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Length',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                TextField(
+                                  controller: _lengthController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    hintText: 'Length',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          // Width
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Width',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                TextField(
+                                  controller: _widthController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    hintText: 'Width',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          // Height
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Height',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                TextField(
+                                  controller: _heightController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    hintText: 'Height',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Weight
+                      const Text('Weight',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _weightController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: 'Enter Weight',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+
                       // Cancel and Save Buttons
                       Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                              ),
-                              child: const Text('Cancel',
-                                  style: TextStyle(color: Colors.white)),
+                            child: PrimaryButtonWidget(
+                              text: "Cancel",
+                              isLoading: isLoading,
+                              backgroundColor: AppColors.danger,
+                              onPressed: () =>
+                                  isLoading ? null : Navigator.pop(context),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
-                            child: ElevatedButton(
-                              onPressed: isLoading ? null : _saveBarcode,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                              ),
-                              child: const Text('Save',
-                                  style: TextStyle(color: Colors.white)),
+                            child: PrimaryButtonWidget(
+                              text: "Save",
+                              isLoading: isLoading,
+                              backgroundColor: AppColors.green,
+                              onPressed: () {
+                                _saveBarcode();
+                              },
                             ),
                           ),
                         ],

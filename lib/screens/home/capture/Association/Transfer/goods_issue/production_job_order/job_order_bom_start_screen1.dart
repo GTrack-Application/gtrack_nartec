@@ -128,6 +128,11 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                                       location.binNumber ==
                                       value?.split(':')[0])
                                   .gln;
+
+                              _cubit.selectedBinLocation = state.binLocations
+                                  .firstWhere((location) =>
+                                      location.binNumber ==
+                                      value?.split(':')[0]);
                             },
                           ),
                           _buildKeyValue("Group Code:", _groupCodeController),

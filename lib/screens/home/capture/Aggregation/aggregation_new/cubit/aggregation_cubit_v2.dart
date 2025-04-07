@@ -181,25 +181,66 @@ class AggregationCubit extends Cubit<AggregationState> {
             };
 
       // Send Epcis Event
-      await EPCISController.insertEPCISEvent(
-        type: "Aggregation Event",
-        action: "ADD",
-        bizStep: "shipping",
-        disposition: "in_transit",
-        gln: selectedBinLocation?.gln,
-        epcList: scannedItems
+      // await EPCISController.insertEPCISEvent(
+      //   type: "Aggregation Event",
+      //   action: "ADD",
+      //   bizStep: "shipping",
+      //   disposition: "in_transit",
+      //   gln: selectedBinLocation?.gln,
+      //   epcList: scannedItems
+      //       .map(
+      //         (e) => "urn:epc:id:sgtin:${e.gTIN}",
+      //       )
+      //       .toList(),
+      //   bizTransactionList: [
+      //     {
+      //       "type": "po",
+      //       "bizTransaction":
+      //           "http://transaction.acme.com/jo/${selectedBinLocation?.id}",
+      //     }
+      //   ],
+      // );
+
+      // await EPCISController.insertNewEPCISEvent(
+      //   eventType: "AggregationEvent",
+      //   gln: selectedBinLocation?.gln,
+      //   latitude: selectedBinLocation?.latitude,
+      //   longitude: selectedBinLocation?.longitude,
+      //   childEPCs: scannedItems
+      //       .map(
+      //         (e) => "urn:epc:id:sgtin:$gs1CompanyPrefix.${e.gTIN}",
+      //       )
+      //       .toList(),
+      //   childQuantityList: scannedItems
+      //       .map(
+      //         (e) => {
+      //           "epcClass": "urn:epc:class:sgtin:$gs1CompanyPrefix.${e.gTIN}.*",
+      //           "quantity": scannedItems.length
+      //         },
+      //       )
+      //       .toList(),
+      // );
+
+      await EPCISController.insertNewEPCISEvent(
+        eventType: "AggregationEvent",
+        latitude: selectedBinLocation?.latitude?.toString(),
+        longitude: selectedBinLocation?.longitude?.toString(),
+        gln: selectedBinLocation?.gln?.toString(),
+        childQuantityList: scannedItems
             .map(
-              (e) => "urn:epc:id:sgtin:${e.gTIN}",
+              (e) => {
+                "epcClass": "urn:epc:class:sgtin:$gs1CompanyPrefix.${e.gTIN}.*",
+                "quantity": 1,
+              },
             )
             .toList(),
-        bizTransactionList: [
-          {
-            "type": "po",
-            "bizTransaction":
-                "http://transaction.acme.com/jo/${selectedBinLocation?.id}",
-          }
-        ],
+        childEPCs: scannedItems
+            .map(
+              (e) => "urn:epc:id:sgtin:$gs1CompanyPrefix.${e.gTIN}",
+            )
+            .toList(),
       );
+
       // Make the API call
       final response = await httpService.request(
         url,
@@ -346,6 +387,7 @@ class AggregationCubit extends Cubit<AggregationState> {
 
       // Get memberId from preferences
       final memberId = await AppPreferences.getMemberId();
+      final gs1CompanyPrefix = await AppPreferences.getGs1Prefix();
 
       if (memberId == null || selectedBinLocationId == null) {
         emit(PalletizationError(message: 'Missing member ID or bin location'));
@@ -384,24 +426,44 @@ class AggregationCubit extends Cubit<AggregationState> {
             };
 
       // Send Epcis Event
-      await EPCISController.insertEPCISEvent(
-        type: "Aggregation Event",
-        action: "ADD",
-        bizStep: "shipping",
-        disposition: "in_transit",
-        gln: selectedBinLocation?.gln,
-        epcList: selectedSSCCNumbers
+      // await EPCISController.insertEPCISEvent(
+      //   type: "Aggregation Event",
+      //   action: "ADD",
+      //   bizStep: "shipping",
+      //   disposition: "in_transit",
+      //   gln: selectedBinLocation?.gln,
+      //   epcList: selectedSSCCNumbers
+      //       .map(
+      //         (e) => "urn:epc:id:sgtin:$e",
+      //       )
+      //       .toList(),
+      //   bizTransactionList: [
+      //     {
+      //       "type": "po",
+      //       "bizTransaction":
+      //           "http://transaction.acme.com/jo/${selectedBinLocation?.id}",
+      //     }
+      //   ],
+      // );
+
+      await EPCISController.insertNewEPCISEvent(
+        eventType: "AggregationEvent",
+        latitude: selectedBinLocation?.latitude?.toString(),
+        longitude: selectedBinLocation?.longitude?.toString(),
+        gln: selectedBinLocation?.gln?.toString(),
+        childQuantityList: scannedItems
             .map(
-              (e) => "urn:epc:id:sgtin:$e",
+              (e) => {
+                "epcClass": "urn:epc:class:sgtin:$gs1CompanyPrefix.${e.gTIN}.*",
+                "quantity": 1,
+              },
             )
             .toList(),
-        bizTransactionList: [
-          {
-            "type": "po",
-            "bizTransaction":
-                "http://transaction.acme.com/jo/${selectedBinLocation?.id}",
-          }
-        ],
+        childEPCs: scannedItems
+            .map(
+              (e) => "urn:epc:id:sgtin:$gs1CompanyPrefix.${e.gTIN}",
+            )
+            .toList(),
       );
 
       final response = await httpService.request(

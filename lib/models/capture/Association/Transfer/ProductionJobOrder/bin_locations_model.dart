@@ -47,6 +47,8 @@ class BinLocation {
   String? maximum;
   String? availableQty;
   String? memberId;
+  String? latitude;
+  String? longitude;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -94,6 +96,8 @@ class BinLocation {
     maximum = json['maximum'];
     availableQty = json['availableQty'];
     memberId = json['memberId'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
     createdAt =
         json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null;
     updatedAt =
@@ -121,6 +125,8 @@ class BinLocation {
     data['maximum'] = maximum;
     data['availableQty'] = availableQty;
     data['memberId'] = memberId;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
     data['createdAt'] = createdAt?.toIso8601String();
     data['updatedAt'] = updatedAt?.toIso8601String();
     return data;

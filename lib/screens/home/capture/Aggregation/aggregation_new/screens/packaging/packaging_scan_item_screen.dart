@@ -420,337 +420,343 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
         title: const Text('Scan Item Barcode (GTIN)'),
         backgroundColor: AppColors.pink,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Aggregation by ${widget.type}',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Bin Location Dropdown
-            const Text(
-              'Suggested Bin Locations',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
-              listener: (context, state) {
-                if (state is ProductionJobOrderError) {
-                  AppSnackbars.danger(context, state.message);
-                }
-              },
-              builder: (context, state) {
-                final binLocations = productionJobOrderCubit.binLocations;
-                return Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.grey),
-                    borderRadius: BorderRadius.circular(4),
-                    color: AppColors.background,
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      hint: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Text('Select Bin Location'),
-                      ),
-                      dropdownColor: AppColors.background,
-                      value: context
-                          .watch<AggregationCubit>()
-                          .selectedBinLocationId,
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      items: binLocations.map((location) {
-                        return DropdownMenuItem<String>(
-                          value: location.id,
-                          child: Text(
-                            "${location.binNumber}-${location.groupWarehouse} (${location.availableQty})",
-                            style: const TextStyle(
-                              fontSize: 11,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        if (value != null) {
-                          cubit.setSelectedBinLocation(value);
-                        }
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-
-            // Scan Barcode Field
-            const Text(
-              'Scan Barcode',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormFieldWidget(
-                    controller: _barcodeController,
-                    hintText: 'Enter/Scan Serial Number',
-                    onFieldSubmitted: (value) => _scanBarcode(),
-                    height: 40,
-                  ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          initCubits();
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Aggregation by ${widget.type}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
                 ),
-                const SizedBox(width: 8),
-                BlocBuilder<CaptureCubit, CaptureState>(
-                  builder: (context, state) {
-                    return CircleAvatar(
-                      radius: 20,
-                      backgroundColor: AppColors.darkNavy,
-                      child: state is CaptureSerializationLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 1,
-                            )
-                          : Center(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.qr_code_scanner,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                onPressed: _scanBarcode,
+              ),
+              const SizedBox(height: 24),
+
+              // Bin Location Dropdown
+              const Text(
+                'Suggested Bin Locations',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 8),
+              BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
+                listener: (context, state) {
+                  if (state is ProductionJobOrderError) {
+                    AppSnackbars.danger(context, state.message);
+                  }
+                },
+                builder: (context, state) {
+                  final binLocations = productionJobOrderCubit.binLocations;
+                  return Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.grey),
+                      borderRadius: BorderRadius.circular(4),
+                      color: AppColors.background,
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        hint: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text('Select Bin Location'),
+                        ),
+                        dropdownColor: AppColors.background,
+                        value: context
+                            .watch<AggregationCubit>()
+                            .selectedBinLocationId,
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        items: binLocations.map((location) {
+                          return DropdownMenuItem<String>(
+                            value: location.id,
+                            child: Text(
+                              "${location.binNumber}-${location.groupWarehouse} (${location.availableQty})",
+                              style: const TextStyle(
+                                fontSize: 11,
                               ),
                             ),
-                    );
-                  },
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            cubit.setSelectedBinLocation(value);
+                          }
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+
+              // Scan Barcode Field
+              const Text(
+                'Scan Barcode',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Batch Selection - Only show after barcode is scanned
-            BlocConsumer<CaptureCubit, CaptureState>(
-              listener: (context, state) {
-                if (state is CaptureSerializationSuccess) {
-                  // Process the data when serialization is successful
-                  cubit.processSerializationData(state.data);
-
-                  // Show success message
-                  AppSnackbars.success(context, 'Items loaded successfully');
-                } else if (state is CaptureSerializationError) {
-                  AppSnackbars.danger(context, state.message);
-                } else if (state is CaptureSerializationEmpty) {
-                  AppSnackbars.warning(
-                      context, 'No items found for this barcode');
-                }
-              },
-              builder: (context, state) {
-                return BlocBuilder<AggregationCubit, AggregationState>(
-                  builder: (context, aggState) {
-                    final uniqueBatches = cubit.uniqueBatches;
-
-                    return Visibility(
-                      visible: uniqueBatches.isNotEmpty,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Select Batch',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.grey),
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: AppColors.background,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormFieldWidget(
+                      controller: _barcodeController,
+                      hintText: 'Enter/Scan Serial Number',
+                      onFieldSubmitted: (value) => _scanBarcode(),
+                      height: 40,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  BlocBuilder<CaptureCubit, CaptureState>(
+                    builder: (context, state) {
+                      return CircleAvatar(
+                        radius: 20,
+                        backgroundColor: AppColors.darkNavy,
+                        child: state is CaptureSerializationLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 1,
+                              )
+                            : Center(
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.qr_code_scanner,
+                                    color: Colors.white,
+                                    size: 20,
                                   ),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      isExpanded: true,
-                                      dropdownColor: AppColors.background,
-                                      hint: const Padding(
-                                        padding: EdgeInsets.symmetric(
+                                  onPressed: _scanBarcode,
+                                ),
+                              ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Batch Selection - Only show after barcode is scanned
+              BlocConsumer<CaptureCubit, CaptureState>(
+                listener: (context, state) {
+                  if (state is CaptureSerializationSuccess) {
+                    // Process the data when serialization is successful
+                    cubit.processSerializationData(state.data);
+
+                    // Show success message
+                    AppSnackbars.success(context, 'Items loaded successfully');
+                  } else if (state is CaptureSerializationError) {
+                    AppSnackbars.danger(context, state.message);
+                  } else if (state is CaptureSerializationEmpty) {
+                    AppSnackbars.warning(
+                        context, 'No items found for this barcode');
+                  }
+                },
+                builder: (context, state) {
+                  return BlocBuilder<AggregationCubit, AggregationState>(
+                    builder: (context, aggState) {
+                      final uniqueBatches = cubit.uniqueBatches;
+
+                      return Visibility(
+                        visible: uniqueBatches.isNotEmpty,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Select Batch',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: AppColors.grey),
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: AppColors.background,
+                                    ),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                        isExpanded: true,
+                                        dropdownColor: AppColors.background,
+                                        hint: const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12.0),
+                                          child: Text('Select Batch'),
+                                        ),
+                                        value: cubit.selectedBatch,
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 12.0),
-                                        child: Text('Select Batch'),
-                                      ),
-                                      value: cubit.selectedBatch,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12.0),
-                                      items: uniqueBatches.map((batch) {
-                                        return DropdownMenuItem<String>(
-                                          value: batch,
-                                          child: Text(
-                                            batch,
-                                            style: const TextStyle(
-                                              fontSize: 11,
+                                        items: uniqueBatches.map((batch) {
+                                          return DropdownMenuItem<String>(
+                                            value: batch,
+                                            child: Text(
+                                              batch,
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          cubit.setSelectedBatch(value);
-                                        });
-                                      },
+                                          );
+                                        }).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            cubit.setSelectedBatch(value);
+                                          });
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                  child: PrimaryButtonWidget(
-                                text: "Details",
-                                height: 40,
-                                backgroundColor: AppColors.darkNavy,
-                                onPressed: cubit.selectedBatch != null &&
-                                        cubit.batchGroups
-                                            .containsKey(cubit.selectedBatch!)
-                                    ? () => _showBatchDetailsDialog(
-                                          context,
-                                          cubit.selectedBatch!,
-                                          cubit.batchGroups[
-                                              cubit.selectedBatch]!,
-                                        )
-                                    : null,
-                              ))
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-
-            // Box/Carton Description
-            Text(
-              '${widget.type} Description',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+                                const SizedBox(width: 8),
+                                Expanded(
+                                    child: PrimaryButtonWidget(
+                                  text: "Details",
+                                  height: 40,
+                                  backgroundColor: AppColors.darkNavy,
+                                  onPressed: cubit.selectedBatch != null &&
+                                          cubit.batchGroups
+                                              .containsKey(cubit.selectedBatch!)
+                                      ? () => _showBatchDetailsDialog(
+                                            context,
+                                            cubit.selectedBatch!,
+                                            cubit.batchGroups[
+                                                cubit.selectedBatch]!,
+                                          )
+                                      : null,
+                                ))
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
-            ),
-            const SizedBox(height: 8),
-            TextFormFieldWidget(
-              controller: _descriptionController,
-              hintText: 'Enter description for the box/carton',
-              height: 40,
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Scanned Items Section
-            BlocBuilder<AggregationCubit, AggregationState>(
-              builder: (context, state) {
-                final scannedItems = cubit.scannedItems;
+              // Box/Carton Description
+              Text(
+                '${widget.type} Description',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextFormFieldWidget(
+                controller: _descriptionController,
+                hintText: 'Enter description for the box/carton',
+                height: 40,
+              ),
+              const SizedBox(height: 24),
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Scanned Items (${scannedItems.length}) Serial',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+              // Scanned Items Section
+              BlocBuilder<AggregationCubit, AggregationState>(
+                builder: (context, state) {
+                  final scannedItems = cubit.scannedItems;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Scanned Items (${scannedItems.length}) Serial',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    scannedItems.isEmpty
-                        ? Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                const Text(
-                                  'No Items Scanned Yet',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                      const SizedBox(height: 8),
+                      scannedItems.isEmpty
+                          ? Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  'Start by selecting a bin location and scanning items to add them to your aggregation list.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  const Text(
+                                    'No Items Scanned Yet',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 24),
-                                _buildInstructionStep('1',
-                                    'Select a bin location from the dropdown'),
-                                const SizedBox(height: 16),
-                                _buildInstructionStep(
-                                    '2', 'Scan or enter the serial number'),
-                                const SizedBox(height: 16),
-                                _buildInstructionStep(
-                                    '3', 'Select the appropriate batch'),
-                                const SizedBox(height: 16),
-                                _buildInstructionStep(
-                                    '4', 'View scanned items below'),
-                              ],
+                                  const SizedBox(height: 16),
+                                  const Text(
+                                    'Start by selecting a bin location and scanning items to add them to your aggregation list.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  _buildInstructionStep('1',
+                                      'Select a bin location from the dropdown'),
+                                  const SizedBox(height: 16),
+                                  _buildInstructionStep(
+                                      '2', 'Scan or enter the serial number'),
+                                  const SizedBox(height: 16),
+                                  _buildInstructionStep(
+                                      '3', 'Select the appropriate batch'),
+                                  const SizedBox(height: 16),
+                                  _buildInstructionStep(
+                                      '4', 'View scanned items below'),
+                                ],
+                              ),
+                            )
+                          : ListView.separated(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: scannedItems.length,
+                              separatorBuilder: (context, index) =>
+                                  const Divider(
+                                      height: 1, color: Colors.transparent),
+                              itemBuilder: (context, index) {
+                                final item = scannedItems[index];
+                                return buildScannedItemCard(item);
+                              },
                             ),
-                          )
-                        : ListView.separated(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: scannedItems.length,
-                            separatorBuilder: (context, index) => const Divider(
-                                height: 1, color: Colors.transparent),
-                            itemBuilder: (context, index) {
-                              final item = scannedItems[index];
-                              return buildScannedItemCard(item);
-                            },
-                          ),
 
-                    // Total Scanned
-                    const SizedBox(height: 24),
-                    Text(
-                      'Total Scanned: (${scannedItems.length})',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                      // Total Scanned
+                      const SizedBox(height: 24),
+                      Text(
+                        'Total Scanned: (${scannedItems.length})',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(

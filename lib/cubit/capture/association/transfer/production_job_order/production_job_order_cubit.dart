@@ -30,7 +30,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   List<VehicleModel> _vehicles = [];
   List<BinLocation> binLocations = [];
   VehicleModel? selectedVehicle;
-
+  BinLocation? selectedBinLocation;
   int quantityPicked = 0;
   String? selectedGLN;
 
@@ -364,13 +364,21 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
           },
         ),
         // EPCIS API Call
-        EPCISController.insertEPCISEvent(
-          type: "Transaction Event",
-          action: "ADD",
-          bizStep: "shipping",
-          disposition: "in_transit",
-          gln: gln,
+        // EPCISController.insertEPCISEvent(
+        //   type: "Transaction Event",
+        //   action: "ADD",
+        //   bizStep: "shipping",
+        //   disposition: "in_transit",
+        //   gln: gln,
+        // ),
+
+        EPCISController.insertNewEPCISEvent(
+          eventType: "TransactionEvent",
+          latitude: selectedBinLocation?.latitude?.toString(),
+          longitude: selectedBinLocation?.longitude?.toString(),
+          gln: selectedBinLocation?.gln,
         ),
+
         _httpService.request(
           "/api/workInProgress/checkAndCreateWIPItems",
           method: HttpMethod.post,
@@ -442,12 +450,19 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
 
       final result = await Future.any([
         // EPCIS API Call
-        EPCISController.insertEPCISEvent(
-          type: "Transaction Event",
-          action: "ADD",
-          bizStep: "shipping",
-          disposition: "in_transit",
-          gln: selectedVehicle?.glnIdNumber,
+        // EPCISController.insertEPCISEvent(
+        //   type: "Transaction Event",
+        //   action: "ADD",
+        //   bizStep: "shipping",
+        //   disposition: "in_transit",
+        //   gln: selectedVehicle?.glnIdNumber,
+        // ),
+
+        EPCISController.insertNewEPCISEvent(
+          eventType: "TransactionEvent",
+          latitude: selectedBinLocation?.latitude?.toString(),
+          longitude: selectedBinLocation?.longitude?.toString(),
+          gln: selectedBinLocation?.gln?.toString(),
         ),
 
         // update mapped barcodes API call

@@ -1,5 +1,5 @@
 {
   "java.configuration.updateBuildConfiguration": "interactive",
   "CodeGPT.apiKey": "Anthropic",
-  "dart.flutterSdkPath": ".fvm/versions/3.29.2"
+"dart.flutterSdkPath": ".fvm/versions/3.29.2"
 }

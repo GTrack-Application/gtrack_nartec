@@ -18,31 +18,36 @@ class BinLocation {
   String? maximum;
   String? availableQty;
   String? memberId;
+  String? latitude;
+  String? longitude;
   String? createdAt;
   String? updatedAt;
 
-  BinLocation(
-      {this.id,
-      this.groupWarehouse,
-      this.zones,
-      this.binNumber,
-      this.zoneType,
-      this.binHeight,
-      this.binRow,
-      this.binWidth,
-      this.binTotalSize,
-      this.binType,
-      this.gln,
-      this.sgln,
-      this.zoned,
-      this.zoneCode,
-      this.zoneName,
-      this.minimum,
-      this.maximum,
-      this.availableQty,
-      this.memberId,
-      this.createdAt,
-      this.updatedAt});
+  BinLocation({
+    this.id,
+    this.groupWarehouse,
+    this.zones,
+    this.binNumber,
+    this.zoneType,
+    this.binHeight,
+    this.binRow,
+    this.binWidth,
+    this.binTotalSize,
+    this.binType,
+    this.gln,
+    this.sgln,
+    this.zoned,
+    this.zoneCode,
+    this.zoneName,
+    this.minimum,
+    this.maximum,
+    this.availableQty,
+    this.memberId,
+    this.latitude,
+    this.longitude,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   BinLocation.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -64,6 +69,8 @@ class BinLocation {
     maximum = json['maximum'];
     availableQty = json['availableQty'];
     memberId = json['memberId'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
@@ -89,6 +96,8 @@ class BinLocation {
     data['maximum'] = maximum;
     data['availableQty'] = availableQty;
     data['memberId'] = memberId;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     return data;
