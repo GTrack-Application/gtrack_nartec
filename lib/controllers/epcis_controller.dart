@@ -113,6 +113,7 @@ class EPCISController {
         '$sign${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
 
     final gs1CompanyPrefix = await AppPreferences.getGs1Prefix();
+    final memberId = await AppPreferences.getMemberId();
 
     Map<String, dynamic> payload = {};
 
@@ -193,7 +194,11 @@ class EPCISController {
         "longitude": "-122.4194",
         "latitude": "37.7749"
       };
-    } 
+    }
+
+    // add createdBy
+    payload['createdBy'] = memberId.toString();
+
     log("EPCIS Body: ${jsonEncode(payload)}");
 
     var response =

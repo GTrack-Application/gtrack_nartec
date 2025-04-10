@@ -4,29 +4,23 @@ import 'dart:convert';
 
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
+import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/SSCC/SsccModel.dart';
 import 'package:http/http.dart' as http;
 
 class SsccController {
+  static HttpService httpService = HttpService(baseUrl: AppUrls.gs1Url);
+
   static Future<List<SsccModel>> getProducts() async {
-    final userId = await AppPreferences.getUserId();
-    final token = await AppPreferences.getToken();
-    // cluzof0sl000fbxonvfcedb16 userId
-    String url = '${AppUrls.baseUrlWith3093}/api/sscc?user_id=$userId';
+    final userId = await AppPreferences.getGs1UserId();
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+    String url = 'api/sscc?user_id=$userId';
 
-    print(json.decode(response.body));
+    final response = await httpService.request(url);
 
-    var data = json.decode(response.body) as List;
+    var data = response.body as List;
 
-    if (response.statusCode == 200) {
+    if (response.success) {
       List<SsccModel> products =
           data.map((e) => SsccModel.fromJson(e)).toList();
 
