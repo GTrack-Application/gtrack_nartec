@@ -150,6 +150,9 @@ class _GIAIScreenState extends State<GIAIScreen> {
                               state.giai[index].id ?? '',
                               state.giai[index].tagNumber ?? '',
                               state.giai[index].assetDescription ?? '',
+                              state.giai[index].assetType ?? '',
+                              state.giai[index].daoName ?? '',
+                              state.giai[index].majorCategory ?? '',
                               _formatDateTime(
                                   state.giai[index].createdAt ?? ""),
                               _formatDateTime(
@@ -275,6 +278,9 @@ class _GIAIScreenState extends State<GIAIScreen> {
     String id,
     String tagNumber,
     String assetDescription,
+    String assetType,
+    String area,
+    String majorCategory,
     String created,
     String lastMaintenance,
     bool isCompleted,
@@ -347,7 +353,11 @@ class _GIAIScreenState extends State<GIAIScreen> {
                     color: Colors.transparent,
                     child: BarcodeWidget(
                       barcode: Barcode.code128(),
-                      data: tagNumber,
+                      data: tagNumber == null ||
+                              tagNumber.isEmpty ||
+                              tagNumber == "null"
+                          ? ""
+                          : tagNumber,
                       color: Colors.black,
                       height: 60,
                     ),
@@ -369,7 +379,7 @@ class _GIAIScreenState extends State<GIAIScreen> {
                           ),
                         ),
                         Text(
-                          "HR", // Replace with actual area
+                          area, // Replace with actual area
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -390,7 +400,7 @@ class _GIAIScreenState extends State<GIAIScreen> {
                           ),
                         ),
                         Text(
-                          "CNC", // Replace with actual asset type
+                          assetType, // Replace with actual asset type
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -416,7 +426,7 @@ class _GIAIScreenState extends State<GIAIScreen> {
                           ),
                         ),
                         Text(
-                          "9", // Replace with actual category
+                          majorCategory, // Replace with actual category
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

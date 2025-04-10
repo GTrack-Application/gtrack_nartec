@@ -83,11 +83,13 @@ class _GIAIDetailsScreenState extends State<GIAIDetailsScreen> {
             const SizedBox(height: 10),
 
             // Asset ID Section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
               children: [
-                // avatar
+                // avatar and description
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
                       width: 50,
@@ -107,13 +109,13 @@ class _GIAIDetailsScreenState extends State<GIAIDetailsScreen> {
                       children: [
                         Text(
                           widget.giai.assetDescription ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                           ),
                         ),
                         Text(
                           widget.giai.majorCategory ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                           ),
                         ),
@@ -121,18 +123,25 @@ class _GIAIDetailsScreenState extends State<GIAIDetailsScreen> {
                     ),
                   ],
                 ),
-                Text(
-                  '1 Pcs',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  '\$120.00',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                // quantity and price
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '1 Pcs',
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      '\$120.00',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

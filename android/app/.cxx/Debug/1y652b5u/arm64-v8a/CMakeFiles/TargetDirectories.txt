@@ -1,0 +1,2 @@
+/Users/faysal/Projects/Nartec Projects/gtrack_nartec/android/app/.cxx/Debug/1y652b5u/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/faysal/Projects/Nartec Projects/gtrack_nartec/android/app/.cxx/Debug/1y652b5u/arm64-v8a/CMakeFiles/rebuild_cache.dir

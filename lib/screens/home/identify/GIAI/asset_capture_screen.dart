@@ -97,18 +97,8 @@ class _AssetCaptureScreenState extends State<AssetCaptureScreen> {
       errorMessage = 'Please select a state';
     } else if (selectedCity == null) {
       errorMessage = 'Please select a city';
-    } else if (_areaController.text.trim().isEmpty) {
-      errorMessage = 'Please enter an area';
     } else if (selectDepartment.isEmpty) {
       errorMessage = 'Please select a department';
-    } else if (_deptCodeController.text.trim().isEmpty) {
-      errorMessage = 'Please enter department code';
-    } else if (_businessNameController.text.trim().isEmpty) {
-      errorMessage = 'Please enter business name';
-    } else if (_buildingNameController.text.trim().isEmpty) {
-      errorMessage = 'Please enter building name';
-    } else if (_buildingNumberController.text.trim().isEmpty) {
-      errorMessage = 'Please enter building number';
     } else if (selectedFloor == null) {
       errorMessage = 'Please select a floor';
     }
@@ -156,6 +146,15 @@ class _AssetCaptureScreenState extends State<AssetCaptureScreen> {
           if (state is FatsCountryLoaded) {
             setState(() {
               countryList = state.countries;
+              // Set Saudi Arabia as default country
+              selectedCountry = countryList.firstWhere(
+                (country) => country.nameEn?.toLowerCase() == 'saudi arabia',
+                orElse: () => countryList.first,
+              );
+              // Fetch states for the default country
+              if (selectedCountry?.id != null) {
+                fatsCubit.getStates(selectedCountry!.id!);
+              }
             });
           } else if (state is FatsStateLoaded) {
             setState(() {

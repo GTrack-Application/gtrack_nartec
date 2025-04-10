@@ -111,6 +111,8 @@ class FatsController {
       'Authorization': 'Bearer $token',
     };
 
+    print(assetItems);
+
     // Get current date and time
     final now = DateTime.now();
     final date = now.toString().split(' ')[0]; // Format: YYYY-MM-DD
@@ -128,13 +130,13 @@ class FatsController {
               'ModelOfAsset': item.model,
               'Quantity': item.qty,
               'Country': item.country,
-              'Region': item.area,
-              'CityName': item.city,
-              'Dao': item.department,
-              'BusinessUnit': item.businessName,
-              'BuildingNo': item.buildingNumber,
-              'FloorNo': item.floorNumber,
-              'BuildingName': item.buildingName,
+              'Region': item.area ?? 'null',
+              'CityName': item.city ?? 'null',
+              'Dao': item.department ?? 'null',
+              'BusinessUnit': item.businessName ?? 'null',
+              'BuildingNo': item.buildingNumber ?? 'null',
+              'FloorNo': item.floorNumber ?? 'null',
+              'BuildingName': item.buildingName ?? 'null',
               'BuildingAddress': item.buildingName,
               'SerialNumber': item.model,
               'AssetDescription': item.majorDescription,
@@ -170,6 +172,8 @@ class FatsController {
       headers: headers,
       body: jsonEncode(body),
     );
+
+    print(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = jsonDecode(response.body);

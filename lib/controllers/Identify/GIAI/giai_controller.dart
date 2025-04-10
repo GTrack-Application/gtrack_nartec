@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GIAI/giai_model.dart';
@@ -16,6 +18,7 @@ class GIAIController {
     };
 
     final response = await http.get(Uri.parse(url), headers: header);
+    log(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body) as List;

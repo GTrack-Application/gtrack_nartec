@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/faysal/fvm/versions/3.29.2/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/faysal/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/faysal/Projects/Nartec Projects/gtrack_nartec/android/app/.cxx/Debug/1y652b5u/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/faysal/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/faysal/Projects/Nartec Projects/gtrack_nartec/android/app/.cxx/Debug/1y652b5u/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

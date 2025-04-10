@@ -145,6 +145,8 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                   builder: (context, state) {
                     return DropdownButtonFormField<CategoryModel>(
                       dropdownColor: Colors.white,
+                      isDense: true,
+                      isExpanded: true,
                       decoration: const InputDecoration(
                         hintText: 'Select Category',
                         border: OutlineInputBorder(),
@@ -154,7 +156,7 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                         return DropdownMenuItem<CategoryModel>(
                           value: category,
                           child: Text(
-                              "${category.mainDescription} - ${category.subCategoryCode}"),
+                              "${category.mainDescription} - ${category.subDescription}"),
                         );
                       }).toList(),
                       onChanged: (value) {
@@ -472,17 +474,20 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                       ...assetItems
                           .map((item) => Column(
                                 children: [
-                                  _buildInfoRow('Type :', item.type),
-                                  _buildInfoRow('Model :', item.model),
-                                  _buildInfoRow('QTY :', item.qty.toString()),
+                                  _buildInfoRow('Type :', item.type ?? 'null'),
                                   _buildInfoRow(
-                                      'Asset Class :', item.assetClass),
-                                  _buildInfoRow('M-Code :', item.mCode),
-                                  _buildInfoRow('S-Code :', item.sCode),
+                                      'Model :', item.model ?? 'null'),
+                                  _buildInfoRow('QTY :', item.qty.toString()),
+                                  _buildInfoRow('Asset Class :',
+                                      item.assetClass ?? 'null'),
+                                  _buildInfoRow(
+                                      'M-Code :', item.mCode ?? 'null'),
+                                  _buildInfoRow(
+                                      'S-Code :', item.sCode ?? 'null'),
                                   _buildInfoRow('Major Description :',
-                                      item.majorDescription),
+                                      item.majorDescription ?? 'null'),
                                   _buildInfoRow('Minor Description :',
-                                      item.minorDescription),
+                                      item.minorDescription ?? 'null'),
                                   // _buildInfoRow('Country :', item.country),
                                   // _buildInfoRow('State :', item.state),
                                   // _buildInfoRow('City :', item.city),
@@ -566,8 +571,8 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
                           backgroundColor: AppColors.skyBlue,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        onPressed: () {
-                          fatsCubit.sendBarcode(assetItems);
+                        onPressed: () async {
+                          await fatsCubit.sendBarcode(assetItems);
                         },
                         child: state is FatsSendBarcodeLoading
                             ? const Text(
@@ -679,24 +684,24 @@ class _SendBarcodeScreenState extends State<SendBarcodeScreen> {
 }
 
 class AssetItem {
-  final String type;
-  final String model;
+  final String? type;
+  final String? model;
   int qty;
-  final String assetClass;
-  final String mCode;
-  final String sCode;
-  final String majorDescription;
-  final String minorDescription;
-  final String country;
-  final String state;
-  final String city;
-  final String area;
-  final String department;
-  final String departmentCode;
-  final String businessName;
-  final String buildingName;
-  final String buildingNumber;
-  final String floorNumber;
+  final String? assetClass;
+  final String? mCode;
+  final String? sCode;
+  final String? majorDescription;
+  final String? minorDescription;
+  final String? country;
+  final String? state;
+  final String? city;
+  final String? area;
+  final String? department;
+  final String? departmentCode;
+  final String? businessName;
+  final String? buildingName;
+  final String? buildingNumber;
+  final String? floorNumber;
 
   AssetItem({
     required this.type,
