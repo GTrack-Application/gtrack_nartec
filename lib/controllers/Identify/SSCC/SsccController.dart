@@ -18,7 +18,7 @@ class SsccController {
 
     final response = await httpService.request(url);
 
-    var data = response.body as List;
+    var data = response.data as List;
 
     if (response.success) {
       List<SsccModel> products =

@@ -8,6 +8,7 @@ import 'package:gtrack_nartec/blocs/Identify/sscc/sscc_states.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
+import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/SSCC/SsccModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/SSCC/add_sscc_screen.dart';
@@ -32,16 +33,19 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
 
   String? userId, gcp, memberCategoryDescription;
 
+  late final SsccCubit ssccCubit;
+
   @override
   void initState() {
     super.initState();
+    ssccCubit = SsccCubit.get(context);
 
-    AppPreferences.getMemberId().then((value) => userId = value);
+    AppPreferences.getGs1UserId().then((value) => userId = value);
     AppPreferences.getGcp().then((value) => gcp = value);
     AppPreferences.getMemberCategoryDescription()
         .then((value) => memberCategoryDescription = value);
 
-    BlocProvider.of<SsccCubit>(context).getSsccData();
+    ssccCubit.getSsccData();
 
     super.initState();
   }
@@ -75,14 +79,10 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
         bloc: BlocProvider.of<SsccCubit>(context),
         listener: (context, state) {
           if (state is SsccErrorState) {
+            AppSnackbars.normal(context, state.message);
           } else if (state is SsccLoadedState) {
             if (state.data.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("No data found for this user."),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              AppSnackbars.normal(context, "No data found for this user.");
             }
             table = state.data;
           } else if (state is SsccDeleted) {
@@ -98,7 +98,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
         builder: (context, state) {
           return RefreshIndicator(
             onRefresh: () async {
-              BlocProvider.of<SsccCubit>(context).getSsccData();
+              ssccCubit.getSsccData();
             },
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -127,7 +127,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                     ),
                     const SizedBox(height: 16),
                     Row(
-                      spacing: 16,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: PrimaryButtonWidget(
@@ -141,6 +141,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                                 );
                               }),
                         ),
+                        SizedBox(width: 16),
                         Expanded(
                           child: PrimaryButtonWidget(
                             text: "Bulk SSCC",
@@ -156,13 +157,11 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                     const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Expanded(
-                        child: TextField(
-                          controller: searchController,
-                          onChanged: (value) {},
-                          decoration: const InputDecoration(
-                            suffixIcon: Icon(Ionicons.search_outline),
-                          ),
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: (value) {},
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(Ionicons.search_outline),
                         ),
                       ),
                     ),
@@ -183,201 +182,205 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    state is SsccLoadingState
-                        ? Shimmer.fromColors(
-                            baseColor: AppColors.grey,
-                            highlightColor: AppColors.white,
-                            child: Container(
-                              height: 500,
-                              width: MediaQuery.of(context).size.width,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: AppColors.grey,
-                                  width: 1,
-                                ),
-                                color: Colors.black38,
-                              ),
-                            ),
-                          )
-                        : state is SsccLoadedState
-                            ? Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                margin: const EdgeInsets.only(
-                                    bottom: 10, left: 5, right: 5),
-                                child: ListView.builder(
-                                  physics: const BouncingScrollPhysics(),
-                                  itemCount: table.length,
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return Dismissible(
-                                      key: UniqueKey(),
-                                      direction: DismissDirection.endToStart,
-                                      movementDuration:
-                                          const Duration(seconds: 1),
-                                      secondaryBackground: Container(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            bottomRight: Radius.circular(10),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              "Swipe to Delete",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            const Icon(
-                                              Icons.delete,
-                                              color: Colors.white,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      background: Container(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              "Swipe to Delete",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            const Icon(
-                                              Icons.delete,
-                                              color: Colors.white,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      confirmDismiss: (direction) {
-                                        return showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: const Text("Are you sure?"),
-                                            content: const Text(
-                                                "Do you want to delete this product?"),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  BlocProvider.of<SsccCubit>(
-                                                          context)
-                                                      .deleteSscc(table[index]
-                                                          .id
-                                                          .toString());
+                    if (state is SsccLoadingState)
+                      buildLoading()
+                    else if (state is SsccErrorState)
+                      buildError(state.message)
+                    else if (ssccCubit.ssccList.isEmpty)
+                      buildEmpty()
+                    else
+                      buildLoaded(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
-                                                  BlocProvider.of<SsccCubit>(
-                                                          context)
-                                                      .getSsccData();
-                                                  Navigator.of(context)
-                                                      .pop(true);
-                                                },
-                                                child: const Text("Yes"),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(false);
-                                                },
-                                                child: const Text("No"),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                      onDismissed: (direction) {
-                                        BlocProvider.of<SsccCubit>(context)
-                                            .deleteSscc(
-                                                table[index].id.toString());
-                                      },
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.9,
-                                        height: 50,
-                                        alignment: Alignment.center,
-                                        margin: const EdgeInsets.only(
-                                            left: 5,
-                                            right: 5,
-                                            bottom: 5,
-                                            top: 5),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: AppColors.skyBlue),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 1,
-                                              blurRadius: 1,
-                                              offset: const Offset(0, 1),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 5),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "${index + 1}",
-                                                style: const TextStyle(
-                                                    fontSize: 12),
-                                              ),
-                                              Text(
-                                                table[index].ssccType ?? "",
-                                                style: const TextStyle(
-                                                    fontSize: 12),
-                                              ),
-                                              Text(
-                                                table[index]
-                                                        .sSCCBarcodeNumber ??
-                                                    "",
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            : Container(),
+  buildLoading() {
+    return Shimmer.fromColors(
+      baseColor: AppColors.grey,
+      highlightColor: AppColors.white,
+      child: Container(
+        height: 500,
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: AppColors.grey,
+            width: 1,
+          ),
+          color: Colors.black38,
+        ),
+      ),
+    );
+  }
+
+  buildEmpty() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("No data found for this user."),
+        ],
+      ),
+    );
+  }
+
+  buildError(String message) {
+    return Center(
+      child: Text(
+        message,
+        style: const TextStyle(
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  buildLoaded() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.only(bottom: 10, left: 5, right: 5),
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        itemCount: table.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Dismissible(
+            key: UniqueKey(),
+            direction: DismissDirection.endToStart,
+            movementDuration: const Duration(seconds: 1),
+            secondaryBackground: Container(
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Swipe to Delete",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+            background: Container(
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Swipe to Delete",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+            confirmDismiss: (direction) {
+              return showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Are you sure?"),
+                  content: const Text("Do you want to delete this product?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        BlocProvider.of<SsccCubit>(context)
+                            .deleteSscc(table[index].id.toString());
+
+                        BlocProvider.of<SsccCubit>(context).getSsccData();
+                        Navigator.of(context).pop(true);
+                      },
+                      child: const Text("Yes"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text("No"),
+                    ),
+                  ],
+                ),
+              );
+            },
+            onDismissed: (direction) {
+              BlocProvider.of<SsccCubit>(context)
+                  .deleteSscc(table[index].id.toString());
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 50,
+              alignment: Alignment.center,
+              margin:
+                  const EdgeInsets.only(left: 5, right: 5, bottom: 5, top: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.skyBlue),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${index + 1}",
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    Text(
+                      table[index].ssccType ?? "",
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    Text(
+                      table[index].sSCCBarcodeNumber ?? "",
+                      style: const TextStyle(fontSize: 10),
+                    ),
                   ],
                 ),
               ),
