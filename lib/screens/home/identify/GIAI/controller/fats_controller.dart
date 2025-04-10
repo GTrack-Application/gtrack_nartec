@@ -30,7 +30,8 @@ class FatsController {
       return data.map((e) => CountryModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -47,7 +48,8 @@ class FatsController {
       return data.map((e) => StateModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -64,7 +66,8 @@ class FatsController {
       return data.map((e) => CityModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -80,7 +83,8 @@ class FatsController {
       return data.map((e) => CategoryModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -95,7 +99,8 @@ class FatsController {
       return data.map((e) => BrandModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -180,7 +185,8 @@ class FatsController {
       return data;
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -198,7 +204,8 @@ class FatsController {
       return data.map((e) => GenerateTagsModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -259,7 +266,8 @@ class FatsController {
       return data.map((e) => EmployeeNameModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -275,7 +283,8 @@ class FatsController {
       return TagModel.fromJson(data[0]);
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -291,7 +300,8 @@ class FatsController {
       return data.map((e) => VarifiedAssetModel.fromJson(e)).toList();
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 
@@ -390,7 +400,8 @@ class FatsController {
       return data;
     } else {
       var data = jsonDecode(response.body);
-      throw Exception(data['message']);
+      throw Exception(
+          data['message'] ?? data['error'] ?? "Something went wrong");
     }
   }
 }
