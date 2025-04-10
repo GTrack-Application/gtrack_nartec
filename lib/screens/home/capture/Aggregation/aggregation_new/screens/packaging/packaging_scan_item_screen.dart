@@ -276,60 +276,45 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          OutlinedButton.icon(
-                            icon: const Icon(Icons.cancel),
-                            label: const Text('CANCEL'),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
+                          Expanded(
+                            child: PrimaryButtonWidget(
+                              text: "Cancel",
+                              height: 36,
+                              backgroundColor: AppColors.danger,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                             ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
                           ),
                           const SizedBox(width: 12),
-                          ElevatedButton.icon(
-                            icon: const Icon(
-                              Icons.add_circle,
-                              color: Colors.white,
-                            ),
-                            label: const Text(
-                              'ADD RECORDS',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: AppColors.pink,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                            ),
-                            onPressed: () {
-                              final recordCount = int.tryParse(
-                                recordsController.text,
-                              );
-
-                              if (recordCount != null &&
-                                  recordCount > 0 &&
-                                  recordCount <= batchItems.length) {
-                                setState(() {
-                                  // Take the first 'recordCount' items and append to scannedItems
-                                  cubit.scannedItems.addAll(
-                                    batchItems.take(recordCount).toList(),
+                          Expanded(
+                            child: PrimaryButtonWidget(
+                                text: "Add",
+                                height: 36,
+                                backgroundColor: AppColors.green,
+                                onPressed: () {
+                                  final recordCount = int.tryParse(
+                                    recordsController.text,
                                   );
-                                });
-                                Navigator.pop(context);
-                              } else {
-                                // Show error
-                                AppSnackbars.danger(
-                                  context,
-                                  'Please enter a valid number of records',
-                                );
-                              }
-                            },
+
+                                  if (recordCount != null &&
+                                      recordCount > 0 &&
+                                      recordCount <= batchItems.length) {
+                                    setState(() {
+                                      // Take the first 'recordCount' items and append to scannedItems
+                                      cubit.scannedItems.addAll(
+                                        batchItems.take(recordCount).toList(),
+                                      );
+                                    });
+                                    Navigator.pop(context);
+                                  } else {
+                                    // Show error
+                                    AppSnackbars.danger(
+                                      context,
+                                      'Please enter a valid number of records',
+                                    );
+                                  }
+                                }),
                           ),
                         ],
                       ),
@@ -738,7 +723,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
                                       height: 1, color: Colors.transparent),
                               itemBuilder: (context, index) {
                                 final item = scannedItems[index];
-                                return buildScannedItemCard(item);
+                                return buildScannedItemCard(item, index);
                               },
                             ),
 
@@ -828,7 +813,7 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
     );
   }
 
-  Container buildScannedItemCard(SerializationModel item) {
+  Container buildScannedItemCard(SerializationModel item, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -981,11 +966,10 @@ class _PackagingScanItemScreenState extends State<PackagingScanItemScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Record #1',
+                  'Record # ${index + 1}',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade700,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 Row(
