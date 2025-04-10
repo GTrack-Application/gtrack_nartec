@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_brace_in_string_interps
+// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_null_comparison
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/foundation.dart';
@@ -356,7 +356,7 @@ class _GIAIScreenState extends State<GIAIScreen> {
                       data: tagNumber == null ||
                               tagNumber.isEmpty ||
                               tagNumber == "null"
-                          ? ""
+                          ? "null"
                           : tagNumber,
                       color: Colors.black,
                       height: 60,

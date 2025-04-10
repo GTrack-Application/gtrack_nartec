@@ -287,7 +287,11 @@ class AssetCard extends StatelessWidget {
                     height: 60,
                     child: BarcodeWidget(
                       barcode: Barcode.code128(),
-                      data: barcode,
+                      data: barcode == null ||
+                              barcode.isEmpty ||
+                              barcode == "null"
+                          ? "null"
+                          : barcode,
                       backgroundColor: Colors.white,
                     ),
                   ),
