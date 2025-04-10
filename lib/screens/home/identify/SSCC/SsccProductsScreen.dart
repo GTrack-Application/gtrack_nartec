@@ -40,7 +40,7 @@ class _SsccProductsScreenState extends State<SsccProductsScreen> {
     super.initState();
     ssccCubit = SsccCubit.get(context);
 
-    AppPreferences.getMemberId().then((value) => userId = value);
+    AppPreferences.getGs1UserId().then((value) => userId = value);
     AppPreferences.getGcp().then((value) => gcp = value);
     AppPreferences.getMemberCategoryDescription()
         .then((value) => memberCategoryDescription = value);
