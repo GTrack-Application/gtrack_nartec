@@ -402,6 +402,8 @@ class _JourneyScreenState extends State<JourneyScreen>
                               await salesOrderCubit.statusUpdate(
                                 widget.salesOrderId,
                                 {'arrivalTime': now.toIso8601String()},
+                                widget.mapModel[0].latitude!,
+                                widget.mapModel[0].longitude!,
                               );
                             },
                             icon: state is StatusUpdateLoading

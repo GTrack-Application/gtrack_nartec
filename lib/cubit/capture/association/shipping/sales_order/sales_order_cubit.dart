@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gtrack_nartec/controllers/capture/Association/Shipping/sales_order_new/sales_order_controller.dart';
+import 'package:gtrack_nartec/controllers/epcis_controller.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_state.dart';
 
 class SalesOrderCubit extends Cubit<SalesOrderState> {
@@ -46,15 +47,21 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
     }
   }
 
-  Future<void> statusUpdate(String id, Map<String, dynamic> body) async {
+  Future<void> statusUpdate(
+    String id,
+    Map<String, dynamic> body,
+    String? latitude,
+    String? longitude,
+  ) async {
     try {
       emit(StatusUpdateLoading());
       await SalesOrderController.statusUpdate(id, body);
-      //TODO: Implement EPCIS event API
-      // EPCISController.insertNewEPCISEvent(
-      //   eventType: "ObjectEvent",
-      //   gln: "gln",
-      // );
+      await EPCISController.insertNewEPCISEvent(
+        eventType: "ObjectEvent",
+        gln: "gln",
+        latitude: latitude ?? "0.0",
+        longitude: longitude ?? "0.0",
+      );
       emit(StatusUpdateLoaded("Status updated successfully"));
     } catch (e) {
       emit(StatusUpdateError(e.toString()));

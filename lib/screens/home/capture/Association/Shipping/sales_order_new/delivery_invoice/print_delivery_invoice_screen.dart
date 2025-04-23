@@ -117,8 +117,10 @@ class _PrintDeliveryInvoiceScreenState
                               widget.salesOrderId,
                               {
                                 'endJourneyTime': now.toIso8601String(),
-                                'status': 'Completed'
+                                'status': 'Completed',
                               },
+                              widget.mapModel[0].latitude!,
+                              widget.mapModel[0].longitude!,
                             );
                           },
                           style: ElevatedButton.styleFrom(

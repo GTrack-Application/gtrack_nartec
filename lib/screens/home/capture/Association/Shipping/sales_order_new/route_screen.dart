@@ -342,8 +342,12 @@ class _RouteScreenState extends State<RouteScreen> {
                 child: buildMapAndInfoContent(
                   () {
                     final now = DateTime.now();
-                    salesOrderCubit.statusUpdate(widget.salesOrderId,
-                        {"startJourneyTime": now.toIso8601String()});
+                    salesOrderCubit.statusUpdate(
+                      widget.salesOrderId,
+                      {"startJourneyTime": now.toIso8601String()},
+                      state.mapModel[0].latitude.toString(),
+                      state.mapModel[0].longitude.toString(),
+                    );
                   },
                   state is StatusUpdateLoading
                       ? const Center(
