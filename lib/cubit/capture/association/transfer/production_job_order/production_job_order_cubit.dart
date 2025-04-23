@@ -157,7 +157,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         },
       );
 
-      final data = response.data;
       if (response.success) {
         final data = response.data as List;
         final binLocations = data.map((e) => BinLocation.fromJson(e)).toList();
@@ -352,7 +351,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         },
       );
 
-      final result = await Future.any([
+      await Future.any([
         // update bom API call
         _httpService.request(
           // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
@@ -448,7 +447,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         },
       );
 
-      final result = await Future.any([
+      await Future.any([
         // EPCIS API Call
         // EPCISController.insertEPCISEvent(
         //   type: "Transaction Event",
