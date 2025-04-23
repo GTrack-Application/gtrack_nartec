@@ -50,6 +50,11 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
     try {
       emit(StatusUpdateLoading());
       await SalesOrderController.statusUpdate(id, body);
+      //TODO: Implement EPCIS event API
+      // EPCISController.insertNewEPCISEvent(
+      //   eventType: "ObjectEvent",
+      //   gln: "gln",
+      // );
       emit(StatusUpdateLoaded("Status updated successfully"));
     } catch (e) {
       emit(StatusUpdateError(e.toString()));

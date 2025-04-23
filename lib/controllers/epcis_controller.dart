@@ -94,6 +94,9 @@ class EPCISController {
     List? bizTransactionList,
     List? childEPCs,
     List? childQuantityList,
+    List? sourceList,
+    List? destinationList,
+    List? quantityList,
   }) async {
     // String? token;
     // await AppPreferences.getToken().then((value) => token = value.toString());
@@ -195,6 +198,50 @@ class EPCISController {
         "gs1CompanyPrefix": "$gs1CompanyPrefix",
         "longitude": "-122.4194",
         "latitude": "37.7749"
+      };
+    } else if (eventType == "ObjectEvent") {
+      payload = {
+        "type": "ObjectEvent",
+        "action": "ADD",
+        "bizStep": "shipping",
+        "disposition": "in_transit",
+        "epcList": ["urn:epc:id:sgtin:0614141.00001.1234"],
+        "eventTime": eventTimeZoneOffSet,
+        "eventTimeZoneOffset": eventTimeZoneOffSet,
+        "readPoint": {"id": "urn:epc:id:sgln:0614141.07346.1234"},
+        "bizLocation": {"id": "urn:epc:id:sgln:0614141.07346.1234"},
+        "bizTransactionList": bizTransactionList ??
+            [
+              {
+                "type": "po",
+                "bizTransaction": "urn:epc:id:gdti:0614141.00001.1234"
+              }
+            ],
+        "sourceList": sourceList ??
+            [
+              {
+                "type": "owning_party",
+                "source": "urn:epc:id:sgln:0614141.07346.1234"
+              }
+            ],
+        "destinationList": destinationList ??
+            [
+              {
+                "type": "owning_party",
+                "destination": "urn:epc:id:sgln:0614141.07347.5678"
+              }
+            ],
+        "quantityList": quantityList ??
+            [
+              {
+                "epcClass": "urn:epc:class:sgtin:0614141.00001.*",
+                "quantity": 10,
+                "uom": "EA"
+              }
+            ],
+        "gs1CompanyPrefix": gs1CompanyPrefix,
+        "longitude": latitude ?? "-122.4194",
+        "latitude": longitude ?? "37.7749"
       };
     }
 
