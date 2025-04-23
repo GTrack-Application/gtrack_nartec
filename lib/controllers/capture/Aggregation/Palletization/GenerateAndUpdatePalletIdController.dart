@@ -1,9 +1,10 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names, file_names
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GenerateAndUpdatePalletIdController {
   static Future<List<dynamic>> generateAndUpdatePalletId(
@@ -18,7 +19,7 @@ class GenerateAndUpdatePalletIdController {
     print(serialNoListString);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/generateAndUpdatePalletIds?serialNumberList[]=$serialNoListString&binLocation=$dropdownValue";
+        "${AppUrls.gtrack}/api/generateAndUpdatePalletIds?serialNumberList[]=$serialNoListString&binLocation=$dropdownValue";
 
     print(url);
 

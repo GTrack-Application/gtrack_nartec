@@ -16,7 +16,7 @@ class GetAllTblShipmentReceivedCLController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/getRemainingQtyFromShipmentCounter?CONTAINERID=$containerId&SHIPMENTID=$shipmentId&ITEMID=$itemId";
+        "${AppUrls.gtrack}/api/getRemainingQtyFromShipmentCounter?CONTAINERID=$containerId&SHIPMENTID=$shipmentId&ITEMID=$itemId";
 
     final uri = Uri.parse(url);
 

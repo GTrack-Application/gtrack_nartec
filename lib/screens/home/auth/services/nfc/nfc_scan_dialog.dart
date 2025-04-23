@@ -1,14 +1,15 @@
 // ignore_for_file: unused_field
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/screens/home_screen.dart';
-import 'package:nfc_manager/nfc_manager.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:nfc_manager/nfc_manager.dart';
 // import 'package:solitaire/constants/constant.dart';
 // import 'package:solitaire/cubit/auth/auth_cubit.dart';
 
@@ -127,7 +128,7 @@ class _NFCScanDialogState extends State<NFCScanDialog> {
       });
 
       final response = await http.post(
-        Uri.parse('${AppUrls.baseUrlWith7010}/api/memberSubUser/login/nfc'),
+        Uri.parse('${AppUrls.gtrack}/api/memberSubUser/login/nfc'),
         headers: {
           'Content-Type': 'application/json',
         },

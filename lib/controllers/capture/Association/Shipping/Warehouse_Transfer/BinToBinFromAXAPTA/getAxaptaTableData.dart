@@ -1,10 +1,11 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/Association/Mapping/BinToBinAxapta/GetAxaptaTableModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GetAxaptaTableDataController {
   static Future<List<GetAxaptaTableDataModel>> getAllTable(
@@ -13,7 +14,7 @@ class GetAxaptaTableDataController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/getExpectedTransferOrderByTransferId?TRANSFERID=${transferID.toString().trim()}";
+        "${AppUrls.gtrack}/api/getExpectedTransferOrderByTransferId?TRANSFERID=${transferID.toString().trim()}";
     print("url: $url");
 
     final uri = Uri.parse(url);

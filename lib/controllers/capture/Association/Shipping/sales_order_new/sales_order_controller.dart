@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -17,8 +15,7 @@ import 'package:mime/mime.dart';
 final _logger = Logger();
 
 class SalesOrderController {
-  static HttpService httpWith7010 =
-      HttpService(baseUrl: AppUrls.baseUrlWith7010);
+  static HttpService httpWith7010 = HttpService(baseUrl: AppUrls.gtrack);
 
   static Future<List<SalesOrderModel>> getSalesOrder() async {
     final subUser = await AppPreferences.getUserId();
@@ -62,15 +59,11 @@ class SalesOrderController {
   static Future<List<MapModel>> getMapModel(String customerId) async {
     final token = await AppPreferences.getToken();
 
-    final url = '${AppUrls.baseUrlWith7010}/api/member?id=$customerId';
-
-    print("Raw API response: $url");
+    final url = '${AppUrls.gtrack}/api/member?id=$customerId';
 
     final headers = {'Authorization': 'Bearer $token'};
 
     final response = await http.get(Uri.parse(url), headers: headers);
-
-    print("Raw API response: ${response.body}");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = jsonDecode(response.body) as List;
@@ -87,7 +80,7 @@ class SalesOrderController {
   static Future<void> statusUpdate(String id, Map<String, dynamic> body) async {
     final token = await AppPreferences.getToken();
 
-    final url = '${AppUrls.baseUrlWith7010}/api/salesInvoice/master/$id';
+    final url = '${AppUrls.gtrack}/api/salesInvoice/master/$id';
 
     final headers = {
       'Authorization': 'Bearer $token',
@@ -96,8 +89,6 @@ class SalesOrderController {
 
     final response = await http.put(Uri.parse(url),
         headers: headers, body: jsonEncode(body));
-
-    print(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return jsonDecode(response.body);
@@ -113,7 +104,7 @@ class SalesOrderController {
   /// Uploads images to the server. If an image exceeds 5 MB, it is resized before uploading.
   static Future<String> uploadImage(File images, String id) async {
     var url = Uri.parse(
-        "${AppUrls.baseUrlWith7010}/api/salesInvoice/addSalesInvoiceSignature/$id");
+        "${AppUrls.gtrack}/api/salesInvoice/addSalesInvoiceSignature/$id");
 
     final token = await AppPreferences.getToken();
 
@@ -163,7 +154,7 @@ class SalesOrderController {
     final token = await AppPreferences.getToken();
 
     final url =
-        '${AppUrls.baseUrlWith7010}/api/salesInvoice/addSalesInvoiceDetailImages/$id/$salesInvoiceId';
+        '${AppUrls.gtrack}/api/salesInvoice/addSalesInvoiceDetailImages/$id/$salesInvoiceId';
 
     final headers = {
       'Authorization': 'Bearer $token',

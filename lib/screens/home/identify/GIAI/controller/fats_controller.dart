@@ -22,7 +22,7 @@ import 'package:mime/mime.dart';
 
 class FatsController {
   static Future<List<CountryModel>> getContries() async {
-    final url = '${AppUrls.baseUrlWith7010}/api/countries';
+    final url = '${AppUrls.gtrack}/api/countries';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -37,7 +37,7 @@ class FatsController {
 
   // /api/states?country_id=12'
   static Future<List<StateModel>> getStates(int countryId) async {
-    final url = '${AppUrls.baseUrlWith7010}/api/states?country_id=$countryId';
+    final url = '${AppUrls.gtrack}/api/states?country_id=$countryId';
     print(url);
     final response = await http.get(Uri.parse(url));
 
@@ -55,7 +55,7 @@ class FatsController {
 
   // http://localhost:7000/api/cities?state_id=269
   static Future<List<CityModel>> getCities(int stateId) async {
-    final url = '${AppUrls.baseUrlWith7010}/api/cities?state_id=$stateId';
+    final url = '${AppUrls.gtrack}/api/cities?state_id=$stateId';
     print(url);
     final response = await http.get(Uri.parse(url));
 
@@ -73,8 +73,7 @@ class FatsController {
 
   static Future<List<CategoryModel>> getCategories() async {
     final memberId = await AppPreferences.getMemberId();
-    final url =
-        '${AppUrls.baseUrlWith7010}/api/giai/categories?memberId=$memberId';
+    final url = '${AppUrls.gtrack}/api/giai/categories?memberId=$memberId';
     print(url);
     final response = await http.get(Uri.parse(url));
 
@@ -90,7 +89,7 @@ class FatsController {
 
   static Future<List<BrandModel>> getBrands(String giaiCategoryId) async {
     final url =
-        '${AppUrls.baseUrlWith7010}/api/giai/brands?giaiCategoryId=$giaiCategoryId';
+        '${AppUrls.gtrack}/api/giai/brands?giaiCategoryId=$giaiCategoryId';
     print(url);
     final response = await http.get(Uri.parse(url));
 
@@ -107,7 +106,7 @@ class FatsController {
   // send barcode
   static Future<void> sendBarcode(List<AssetItem> assetItems) async {
     final url =
-        '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder/insertAssetMasterEncoder';
+        '${AppUrls.gtrack}/api/assetMasterEncoder/insertAssetMasterEncoder';
     final token = await AppPreferences.getToken();
     final memberId = await AppPreferences.getMemberId();
 
@@ -194,8 +193,7 @@ class FatsController {
   static Future<List<GenerateTagsModel>> getTags() async {
     final memberId = await AppPreferences.getMemberId();
 
-    final url =
-        '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder?memberId=$memberId';
+    final url = '${AppUrls.gtrack}/api/assetMasterEncoder?memberId=$memberId';
 
     final response = await http.get(Uri.parse(url));
 
@@ -212,7 +210,7 @@ class FatsController {
   // generate tags
   static Future<void> generateTags() async {
     final url =
-        '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder/generateAssetMasterEncodeAssetCaptureTagNumber';
+        '${AppUrls.gtrack}/api/assetMasterEncoder/generateAssetMasterEncodeAssetCaptureTagNumber';
     final token = await AppPreferences.getToken();
     final memberId = await AppPreferences.getMemberId();
 
@@ -247,8 +245,7 @@ class FatsController {
     final memberId = await AppPreferences.getMemberId();
     final token = await AppPreferences.getToken();
 
-    final url =
-        '${AppUrls.baseUrlWith7010}/api/memberSubUser?member_id=$memberId';
+    final url = '${AppUrls.gtrack}/api/memberSubUser?member_id=$memberId';
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -275,7 +272,7 @@ class FatsController {
   static Future<TagModel> getTagDetails(String tagNumber) async {
     final memberId = await AppPreferences.getMemberId();
     final url =
-        '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder?memberId=$memberId&TagNumber=$tagNumber';
+        '${AppUrls.gtrack}/api/assetMasterEncoder?memberId=$memberId&TagNumber=$tagNumber';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -292,7 +289,7 @@ class FatsController {
   static Future<List<VarifiedAssetModel>> getVarifiedAsset() async {
     final memberId = await AppPreferences.getMemberId();
     final url =
-        '${AppUrls.baseUrlWith7010}/api/assetCapture/getMasterEncodeAssetCaptureFinal?memberId=$memberId';
+        '${AppUrls.gtrack}/api/assetCapture/getMasterEncodeAssetCaptureFinal?memberId=$memberId';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -324,7 +321,7 @@ class FatsController {
     final memberData = await AppPreferences.getMemberId();
     final token = await AppPreferences.getToken();
     final url =
-        '${AppUrls.baseUrlWith7010}/api/assetCapture/createAssetMasterEncodeAssetCaptureFinal';
+        '${AppUrls.gtrack}/api/assetCapture/createAssetMasterEncodeAssetCaptureFinal';
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.headers['Authorization'] = 'Bearer $token';
@@ -376,7 +373,7 @@ class FatsController {
     required String majorCode,
     required String giaiCategoryId,
   }) async {
-    final url = '${AppUrls.baseUrlWith7010}/api/giai/brands';
+    final url = '${AppUrls.gtrack}/api/giai/brands';
 
     final headers = {
       'Content-Type': 'application/json',

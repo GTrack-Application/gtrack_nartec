@@ -39,7 +39,7 @@ class CaptureController {
     required String expiryDate,
     required String manufacturingDate,
   }) async {
-    String url = "${AppUrls.baseUrlWith7010}/api/insertControlledSerials";
+    String url = "${AppUrls.gtrack}/api/insertControlledSerials";
     final uri = Uri.parse(url);
     var body = jsonEncode({
       "GTIN": gtin,
@@ -69,8 +69,7 @@ class CaptureController {
   Future<List<GTINModell>> getProducts({String? gtin}) async {
     final token = await AppPreferences.getToken();
 
-    String url =
-        "${AppUrls.baseUrlWith7010}/api/getAllRecordsByGTIN?GTIN=${gtin!}";
+    String url = "${AppUrls.gtrack}/api/getAllRecordsByGTIN?GTIN=${gtin!}";
 
     final response = await http.get(
       Uri.parse(url),

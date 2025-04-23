@@ -20,8 +20,7 @@ import 'package:http/http.dart' as http;
 
 class GTINController {
   static final HttpService httpService = HttpService(baseUrl: AppUrls.gs1Url);
-  static final HttpService gs1710Service =
-      HttpService(baseUrl: AppUrls.baseUrlWith7010);
+  static final HttpService gs1710Service = HttpService(baseUrl: AppUrls.gtrack);
   static final HttpService upcHubService = HttpService(baseUrl: AppUrls.upcHub);
 
   // static Future<List<GTIN_Model>> getProducts() async {

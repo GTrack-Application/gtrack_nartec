@@ -5,7 +5,7 @@ import 'package:gtrack_nartec/models/capture/transformation/attribute_option_mod
 import 'package:gtrack_nartec/models/capture/transformation/event_station_model.dart';
 
 class TransformationController {
-  final HttpService http7010 = HttpService(baseUrl: AppUrls.baseUrlWith7010);
+  final HttpService http7010 = HttpService(baseUrl: AppUrls.gtrack);
 
   /* 
   ########################################################################## 

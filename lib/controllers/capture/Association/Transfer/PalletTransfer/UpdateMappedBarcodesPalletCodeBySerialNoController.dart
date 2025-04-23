@@ -1,10 +1,11 @@
 // ignore_for_file: avoid_print, camel_case_types
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/Association/Mapping/Sales_Order/getMappedBarcodedsByItemCodeAndBinLocationModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class UpdateMappedBarcodesPalletCodeBySerialNoController {
   static Future<void> updateBin(
@@ -15,7 +16,7 @@ class UpdateMappedBarcodesPalletCodeBySerialNoController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        '${AppUrls.baseUrlWith7010}/api/updateMappedBarcodesPalletCodeBySerialNo';
+        '${AppUrls.gtrack}/api/updateMappedBarcodesPalletCodeBySerialNo';
 
     print("url : $url");
 

@@ -15,8 +15,8 @@ class ProductInformationController {
       String gtin) async {
     List<PromotionalOfferModel> promotionalOffers = [];
     try {
-      var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWith7010}/api/getPromotionalOffersByGtin/$gtin'));
+      var response = await http.get(
+          Uri.parse('${AppUrls.gtrack}/api/getPromotionalOffersByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -36,8 +36,8 @@ class ProductInformationController {
       String gtin) async {
     List<ProductContentsModel> productContents = [];
     try {
-      var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWith7010}/api/getProductContentByGtin/$gtin'));
+      var response = await http.get(
+          Uri.parse('${AppUrls.gtrack}/api/getProductContentByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -59,7 +59,7 @@ class ProductInformationController {
     List<LocationOriginModel> productLocationOrigin = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWith7010}/api/getProductLocationOriginByGtin/$gtin'));
+          '${AppUrls.gtrack}/api/getProductLocationOriginByGtin/$gtin'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseBody = jsonDecode(response.body);
@@ -82,7 +82,7 @@ class ProductInformationController {
     List<ProductRecallModel> productRecall = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWith7010}/api/getProductLocationOriginByGtin/$gtin'));
+          '${AppUrls.gtrack}/api/getProductLocationOriginByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -102,8 +102,8 @@ class ProductInformationController {
   static Future<List<RecipeModel>> getRecipeByGtin(String gtin) async {
     List<RecipeModel> recipe = [];
     try {
-      var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWith7010}/api/getRecipeDataByGtin/$gtin'));
+      var response = await http
+          .get(Uri.parse('${AppUrls.gtrack}/api/getRecipeDataByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -125,7 +125,7 @@ class ProductInformationController {
     List<PackagingCompositionModel> packagingCompositionModel = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWith7010}/api/getAlltblPkgCompositionDataByGtin/$gtin'));
+          '${AppUrls.gtrack}/api/getAlltblPkgCompositionDataByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -147,7 +147,7 @@ class ProductInformationController {
     List<LeafletsModel> leafletsModel = [];
     try {
       var response = await http.get(Uri.parse(
-          '${AppUrls.baseUrlWith7010}/api/getProductLeafLetsDataByGtin/$gtin'));
+          '${AppUrls.gtrack}/api/getProductLeafLetsDataByGtin/$gtin'));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);

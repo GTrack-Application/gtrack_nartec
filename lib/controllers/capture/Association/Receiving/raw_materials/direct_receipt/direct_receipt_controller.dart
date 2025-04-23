@@ -5,7 +5,6 @@ import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/CountryListModel.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/ShipmentDataModel.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/raw_materials/direct_receipt/UnitListModel.dart';
-
 import 'package:http/http.dart' as http;
 
 class DirectReceiptController {
@@ -14,7 +13,7 @@ class DirectReceiptController {
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    const url = "${AppUrls.baseUrlWith7010}/api/getReceivingTypes";
+    const url = "${AppUrls.gtrack}/api/getReceivingTypes";
 
     final uri = Uri.parse(url);
 
@@ -42,7 +41,7 @@ class DirectReceiptController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7010}/api/getShipmentData?receivingType=$receivingTypeId&id=$shipmentIdNo";
+        "${AppUrls.gtrack}/api/getShipmentData?receivingType=$receivingTypeId&id=$shipmentIdNo";
 
     final uri = Uri.parse(url);
 

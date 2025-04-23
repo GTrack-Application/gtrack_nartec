@@ -1,9 +1,10 @@
 // ignore_for_file: file_names, avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class ValidateShipmentIdFromShipmentReveivedClController {
   static Future<bool> palletizeSerialNo(String shipmentId) async {
@@ -11,7 +12,7 @@ class ValidateShipmentIdFromShipmentReveivedClController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=$shipmentId";
+        "${AppUrls.gtrack}/api/validateShipmentIdFromShipmentReceivedCl?SHIPMENTID=$shipmentId";
 
     final uri = Uri.parse(url);
 

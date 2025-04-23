@@ -145,7 +145,7 @@ class FatsCubit extends Cubit<FatsState> {
   ) async {
     final token = await AppPreferences.getToken();
     emit(FatsHandleSubmitLoading());
-    final deleteUrl = '${AppUrls.baseUrlWith7010}/api/assetMasterEncoder/$id';
+    final deleteUrl = '${AppUrls.gtrack}/api/assetMasterEncoder/$id';
     print(deleteUrl);
     final deleteHeaders = {'Authorization': 'Bearer $token'};
     print(deleteHeaders);

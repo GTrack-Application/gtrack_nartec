@@ -1,10 +1,11 @@
 // ignore_for_file: file_names, depend_on_referenced_packages, avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'dart:convert';
 
 class InsertManyIntoMappedBarcodeController {
   static Future<void> getData(
@@ -21,7 +22,7 @@ class InsertManyIntoMappedBarcodeController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7010}/api/insertManyIntoMappedBarcode";
+    String url = "${AppUrls.gtrack}/api/insertManyIntoMappedBarcode";
     print("url: $url");
     final uri = Uri.parse(url);
 

@@ -10,8 +10,8 @@ class TraceabilityController {
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    final url = Uri.parse(
-        "${AppUrls.baseUrlWith7010}/api/getGtrackEPCISLogs?GTIN=$gtin");
+    final url =
+        Uri.parse("${AppUrls.gtrack}/api/getGtrackEPCISLogs?GTIN=$gtin");
 
     final headers = <String, String>{
       "Content-Type": "application/json",

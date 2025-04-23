@@ -1,9 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GetQtyReceivedController {
   static Future<num> getAllTable(String transferID, String itemID) async {
@@ -11,7 +12,7 @@ class GetQtyReceivedController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/getQtyReceivedFromTransferBinToBinCl?TRANSFERID=$transferID&ITEMID=$itemID";
+        "${AppUrls.gtrack}/api/getQtyReceivedFromTransferBinToBinCl?TRANSFERID=$transferID&ITEMID=$itemID";
     print("url: $url");
 
     final uri = Uri.parse(url);

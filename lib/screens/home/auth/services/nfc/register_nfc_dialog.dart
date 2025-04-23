@@ -1,13 +1,14 @@
 // ignore_for_file: unused_field
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
-import 'package:nfc_manager/nfc_manager.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:nfc_manager/nfc_manager.dart';
 
 class RegisterNFCDialog extends StatefulWidget {
   const RegisterNFCDialog({
@@ -117,7 +118,7 @@ class _RegisterNFCDialogState extends State<RegisterNFCDialog> {
     final userId = await AppPreferences.getUserId();
     try {
       final response = await http.put(
-        Uri.parse('${AppUrls.baseUrlWith7010}/api/memberSubUser/$userId'),
+        Uri.parse('${AppUrls.gtrack}/api/memberSubUser/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Cookie': 'token=$token',

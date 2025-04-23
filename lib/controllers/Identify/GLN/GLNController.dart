@@ -15,7 +15,7 @@ class GLNController {
 
   static Future<List<PackedItemsModel>> getData() async {
     String? token = await AppPreferences.getToken();
-    String url = "${AppUrls.baseUrlWith7010}/api/getAllPackedItems";
+    String url = "${AppUrls.gtrack}/api/getAllPackedItems";
 
     log(url);
 

@@ -1,12 +1,13 @@
 // ignore_for_file: unnecessary_null_comparison
 
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
-import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
-import 'package:barcode_widget/barcode_widget.dart';
+import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+
 import '../cubit/fats_cubit.dart';
 import '../cubit/fats_state.dart';
 import '../model/varified_asset_model.dart';
@@ -345,7 +346,7 @@ class AssetCard extends StatelessWidget {
                       ?.replaceAll(RegExp(r'^/+'), '')
                       .replaceAll("\\", "/") ??
                   '';
-              final imageUrl = "${AppUrls.baseUrlWith7010}/$formattedPath";
+              final imageUrl = "${AppUrls.gtrack}/$formattedPath";
 
               return Padding(
                 padding: const EdgeInsets.only(right: 6),

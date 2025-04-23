@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/packing/GtinProductDetailsModel.dart';
@@ -49,7 +50,7 @@ class GtinProductDetailsController {
     String? userId = await AppPreferences.getUserId();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    const url = "${AppUrls.baseUrlWith7010}/api/insertPackedItem";
+    const url = "${AppUrls.gtrack}/api/insertPackedItem";
 
     final uri = Uri.parse(url);
 

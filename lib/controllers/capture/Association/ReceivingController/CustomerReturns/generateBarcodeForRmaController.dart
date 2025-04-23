@@ -2,10 +2,11 @@
 
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GenerateBarcodeForRmaController {
   static Future<String> getData(
@@ -16,7 +17,7 @@ class GenerateBarcodeForRmaController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7010}/api/generateBarcodeForRma";
+    String url = "${AppUrls.gtrack}/api/generateBarcodeForRma";
     print("url: $url");
 
     final uri = Uri.parse(url);

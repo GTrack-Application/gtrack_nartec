@@ -11,7 +11,7 @@ class ItemDetailsController {
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    const url = "${AppUrls.baseUrlWith7010}/api/getReceivingTypes";
+    const url = "${AppUrls.gtrack}/api/getReceivingTypes";
 
     final uri = Uri.parse(url);
 
@@ -19,7 +19,7 @@ class ItemDetailsController {
       "Content-Type": "application/json",
     };
 
-    var body;
+    Map<String, Object?> body;
     if (assets != null && assets.isNotEmpty) {
       body = {
         "userId": userId,

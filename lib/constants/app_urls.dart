@@ -3,7 +3,8 @@ abstract class AppUrls {
       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjEsIlVzZXJOYW1lIjoiQWJkdWwgTWFqaWQiLCJFbWFpbCI6IjU1IiwiQWRkZWRCeU1lbWJlcklEIjoiNiIsIklzU3VwZXJBZG1pbiI6ZmFsc2UsImlhdCI6MTY5MjQ1MDQ4MSwiZXhwIjoxNzAwMjI2NDgxfQ.N1OdcXGMU5GXBkFkwOc6j_XNGRRqtP6Yo-yf_H2wu3M';
 
   // static const String baseUrlWith7000 = 'http://gs1ksa.org:7000';
-  static const String baseUrlWith7010 = 'https://gs1ksa.org:7010';
+  // static const String baseUrlWith7010 = 'https://gs1ksa.org:7010';
+  static const String gtrack = 'https://backend.gtrack.online';
   static const String domain = 'https://gs1ksa.org';
 
   // Alessa urls

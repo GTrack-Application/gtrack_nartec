@@ -1,10 +1,11 @@
 // ignore_for_file: avoid_print, file_names
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/reveiving/supplier_receipt/GetTblStockMasterByItemIdModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GetTblStockMasterByItemIdController {
   static Future<List<GetTblStockMasterByItemIdModel>> getData(
@@ -13,7 +14,7 @@ class GetTblStockMasterByItemIdController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/getTblStockMasterByItemId?itemid=$itemId";
+        "${AppUrls.gtrack}/api/getTblStockMasterByItemId?itemid=$itemId";
 
     final uri = Uri.parse(url);
 

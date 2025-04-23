@@ -1,10 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class InsertAllDataController {
   static Future<void> postData(
@@ -25,7 +26,7 @@ class InsertAllDataController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7010}/api/insertTblTransferBinToBinCL";
+    String url = "${AppUrls.gtrack}/api/insertTblTransferBinToBinCL";
 
     final uri = Uri.parse(url);
 
@@ -92,7 +93,7 @@ class InsertAllDataController {
     String? userId;
     await AppPreferences.getToken().then((value) => userId = value);
 
-    String url = "${AppUrls.baseUrlWith7010}/api/insertTblTransferJournalCL";
+    String url = "${AppUrls.gtrack}/api/insertTblTransferJournalCL";
 
     final uri = Uri.parse(url);
 

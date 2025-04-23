@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/assembling_bundling/BundleItemsModel.dart';
@@ -15,7 +16,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7010}/api/getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
+        "${AppUrls.gtrack}/api/getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
 
     final uri = Uri.parse(url);
 
@@ -47,7 +48,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7010}/api/getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
+        "${AppUrls.gtrack}/api/getAssemblingsByUserAndBarcode?user_id=$userId&field=$gtin";
 
     print(url);
 
@@ -83,7 +84,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
     String? userId = await AppPreferences.getUserId();
 
-    const url = "${AppUrls.baseUrlWith7010}/api/createnewbundling";
+    const url = "${AppUrls.gtrack}/api/createnewbundling";
 
     final uri = Uri.parse(url);
 
@@ -122,7 +123,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
     String? userId = await AppPreferences.getUserId();
 
-    const url = "${AppUrls.baseUrlWith7010}/api/createnewassembling";
+    const url = "${AppUrls.gtrack}/api/createnewassembling";
 
     final uri = Uri.parse(url);
 
@@ -157,7 +158,7 @@ class AssemblingController {
     // String? userId = await AppPreferences.getUserId();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    final url = "${AppUrls.baseUrlWith7010}/api/getAllPackedItems";
+    final url = "${AppUrls.gtrack}/api/getAllPackedItems";
 
     final uri = Uri.parse(url);
 
@@ -188,8 +189,7 @@ class AssemblingController {
     // String? token = await AppPreferences.getToken();
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
-    final url =
-        "${AppUrls.baseUrlWith7010}/api/getBundlingByUserId?user_id=$userId";
+    final url = "${AppUrls.gtrack}/api/getBundlingByUserId?user_id=$userId";
 
     final uri = Uri.parse(url);
 
@@ -220,7 +220,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7010}/api/getadd_bundlingByuser_id?user_id=$userId";
+        "${AppUrls.gtrack}/api/getadd_bundlingByuser_id?user_id=$userId";
 
     final uri = Uri.parse(url);
 
@@ -249,7 +249,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7010}/api/getadd_assemblingByuser_id?user_id=$userId";
+        "${AppUrls.gtrack}/api/getadd_assemblingByuser_id?user_id=$userId";
 
     final uri = Uri.parse(url);
 
@@ -278,7 +278,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7010}/api/getBundlingByUserId?user_id=$userId&GTIN=$gtin";
+        "${AppUrls.gtrack}/api/getBundlingByUserId?user_id=$userId&GTIN=$gtin";
 
     final uri = Uri.parse(url);
 
@@ -307,7 +307,7 @@ class AssemblingController {
     // String url = "${AppUrls.baseUrlWith3091}api/products";
 
     final url =
-        "${AppUrls.baseUrlWith7010}/api/get_assembling_By_UserId_list?user_id=$userId&GTIN=$gtin";
+        "${AppUrls.gtrack}/api/get_assembling_By_UserId_list?user_id=$userId&GTIN=$gtin";
 
     final uri = Uri.parse(url);
 

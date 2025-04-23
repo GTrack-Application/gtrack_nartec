@@ -1,17 +1,18 @@
 // ignore_for_file: avoid_print, file_names
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/palletization/GetAllTblLocationsCLModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GetMapBarcodeDataByItemCodeController {
   static Future<List<GetAllTblLocationsCLModel>> getData() async {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7010}/api/getAllTblLocationsCL";
+    String url = "${AppUrls.gtrack}/api/getAllTblLocationsCL";
     print("url: $url");
 
     final uri = Uri.parse(url);

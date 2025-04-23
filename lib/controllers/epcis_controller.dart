@@ -19,7 +19,7 @@ class EPCISController {
     // String? token;
     // await AppPreferences.getToken().then((value) => token = value.toString());
 
-    final url = Uri.parse('${AppUrls.baseUrlWith7010}/api/insertEPCISEvent');
+    final url = Uri.parse('${AppUrls.gtrack}/api/insertEPCISEvent');
 
     final headers = {
       'Authorization': 'Bearer token',

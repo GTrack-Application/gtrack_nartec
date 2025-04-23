@@ -1,10 +1,11 @@
 // ignore_for_file: camel_case_types, avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/Association/ReceivingModel/CustomerReturns/GetWmsReturnSalesOrderByReturnItemNumModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class getWmsReturnSalesOrderByReturnItemNumController {
   static Future<List<getWmsReturnSalesOrderByReturnItemNumModel>> getData(
@@ -13,7 +14,7 @@ class getWmsReturnSalesOrderByReturnItemNumController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=$rmaValue";
+        "${AppUrls.gtrack}/api/getWmsReturnSalesOrderByReturnItemNum?RETURNITEMNUM=$rmaValue";
     print("url: $url");
 
     final uri = Uri.parse(url);

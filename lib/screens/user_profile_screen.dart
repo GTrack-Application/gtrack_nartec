@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
@@ -7,7 +9,6 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/screens/home/auth/services/nfc/register_nfc_dialog.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -295,7 +296,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     try {
       final response = await http.put(
-        Uri.parse('${AppUrls.baseUrlWith7010}/api/memberSubUser/$userId'),
+        Uri.parse('${AppUrls.gtrack}/api/memberSubUser/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Cookie': 'token=$token',

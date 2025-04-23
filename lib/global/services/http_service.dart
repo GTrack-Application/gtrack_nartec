@@ -18,8 +18,7 @@ class HttpService {
   final String _baseUrl;
   final LogsService _logger = LogsService();
 
-  HttpService({String? baseUrl})
-      : _baseUrl = baseUrl ?? AppUrls.baseUrlWith7010;
+  HttpService({String? baseUrl}) : _baseUrl = baseUrl ?? AppUrls.gtrack;
 
   Future<Map<String, String>> _getHeaders() async {
     final accessToken = await AppPreferences.getToken();

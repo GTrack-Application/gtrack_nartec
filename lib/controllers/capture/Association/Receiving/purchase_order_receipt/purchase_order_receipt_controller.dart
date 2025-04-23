@@ -1,16 +1,16 @@
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/pallet_number_details_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/purchase_order_details_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/purchase_order_receipt/purchase_order_receipt_model.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class PurchaseOrderReceiptController {
   static Future<List<PurchaseOrderReceiptModel>>
       getPurchaseOrderReceipt() async {
-    final url =
-        Uri.parse("${AppUrls.baseUrlWith7010}/api/grnpurchaseorder/master");
+    final url = Uri.parse("${AppUrls.gtrack}/api/grnpurchaseorder/master");
 
     final response = await http.get(url);
 
@@ -31,7 +31,7 @@ class PurchaseOrderReceiptController {
     ];
 
     final url = Uri.parse(
-        "${AppUrls.baseUrlWith7010}/api/purchaseOrder/master/dynamicData?filters=${Uri.encodeComponent(jsonEncode(filters))}");
+        "${AppUrls.gtrack}/api/purchaseOrder/master/dynamicData?filters=${Uri.encodeComponent(jsonEncode(filters))}");
 
     final response =
         await http.get(url, headers: {'Authorization': 'Bearer $token'});
@@ -56,7 +56,7 @@ class PurchaseOrderReceiptController {
     ];
 
     final url = Uri.parse(
-        "${AppUrls.baseUrlWith7010}/api/purchaseOrder/master/dynamicData?filters=${Uri.encodeComponent(jsonEncode(filters))}");
+        "${AppUrls.gtrack}/api/purchaseOrder/master/dynamicData?filters=${Uri.encodeComponent(jsonEncode(filters))}");
 
     print(url);
 
@@ -81,7 +81,7 @@ class PurchaseOrderReceiptController {
     final token = await AppPreferences.getToken();
 
     final url = Uri.parse(
-        "${AppUrls.baseUrlWith7010}/api/expectedGoodsReceipt/details?palletNumber=$palletNumber");
+        "${AppUrls.gtrack}/api/expectedGoodsReceipt/details?palletNumber=$palletNumber");
 
     final response =
         await http.get(url, headers: {'Authorization': 'Bearer $token'});
@@ -111,7 +111,7 @@ class PurchaseOrderReceiptController {
     final token = await AppPreferences.getToken();
 
     final url = Uri.parse(
-        "${AppUrls.baseUrlWith7010}/api/expectedGoodsReceipt/createExpectedGoodsReceipt");
+        "${AppUrls.gtrack}/api/expectedGoodsReceipt/createExpectedGoodsReceipt");
 
     final body = jsonEncode({
       "palletCode": palletNo,
@@ -164,8 +164,8 @@ class PurchaseOrderReceiptController {
   ) async {
     final token = await AppPreferences.getToken();
 
-    final url = Uri.parse(
-        "${AppUrls.baseUrlWith7010}/api/grnpurchaseorder/processGoodsReceipt");
+    final url =
+        Uri.parse("${AppUrls.gtrack}/api/grnpurchaseorder/processGoodsReceipt");
 
     final body = jsonEncode({
       "purchaseOrderNumber": purchaseOrderDetails.purchaseOrderNumber,

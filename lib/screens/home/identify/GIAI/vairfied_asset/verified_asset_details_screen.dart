@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
+
 import '../model/varified_asset_model.dart';
 
 class VerifiedAssetDetailsScreen extends StatefulWidget {
@@ -250,7 +251,7 @@ class _VerifiedAssetDetailsScreenState
                       ?.replaceAll(RegExp(r'^/+'), '')
                       .replaceAll("\\", "/") ??
                   '';
-              final imageUrl = "${AppUrls.baseUrlWith7010}/$formattedPath";
+              final imageUrl = "${AppUrls.gtrack}/$formattedPath";
 
               return Padding(
                 padding: const EdgeInsets.only(right: 8.0),

@@ -1,10 +1,11 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/mapping_barcode/GetShipmentReceivedTableModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GetPalletTableController {
   static Future<List<GetShipmentReceivedTableModel>> getAllTable(
@@ -13,7 +14,7 @@ class GetPalletTableController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7010}/api/getItemInfoByPalletCode";
+    String url = "${AppUrls.gtrack}/api/getItemInfoByPalletCode";
     print("url: $url");
 
     final uri = Uri.parse(url);

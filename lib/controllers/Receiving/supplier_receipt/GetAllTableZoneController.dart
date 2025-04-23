@@ -12,7 +12,7 @@ class GetAllTableZoneController {
     String? tokenNew;
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
-    String url = "${AppUrls.baseUrlWith7010}/api/getAllTblRZones";
+    String url = "${AppUrls.gtrack}/api/getAllTblRZones";
 
     final uri = Uri.parse(url);
 

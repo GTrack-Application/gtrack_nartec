@@ -1824,8 +1824,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                           const SizedBox(height: 16),
                           if (leaflet.pdfDoc.isNotEmpty) ...[
                             PdfViewer(
-                                path:
-                                    "${AppUrls.baseUrlWith7010}/${leaflet.pdfDoc}")
+                                path: "${AppUrls.gtrack}/${leaflet.pdfDoc}")
                           ],
                         ],
                       ),

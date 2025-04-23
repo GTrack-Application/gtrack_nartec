@@ -13,7 +13,7 @@ class GetItemNameByItemIdController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/getOneMapBarcodeDataByItemCode?ItemCode=$itemId";
+        "${AppUrls.gtrack}/api/getOneMapBarcodeDataByItemCode?ItemCode=$itemId";
 
     final uri = Uri.parse(url);
 

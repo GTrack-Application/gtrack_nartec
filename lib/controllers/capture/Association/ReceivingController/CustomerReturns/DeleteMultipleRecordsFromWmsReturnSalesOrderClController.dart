@@ -1,9 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class DeleteMultipleRecordsFromWmsReturnSalesOrderClController {
   static Future<void> getData(
@@ -13,7 +14,7 @@ class DeleteMultipleRecordsFromWmsReturnSalesOrderClController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/deleteMultipleRecordsFromWmsReturnSalesOrderCl";
+        "${AppUrls.gtrack}/api/deleteMultipleRecordsFromWmsReturnSalesOrderCl";
     print("url: $url");
 
     final uri = Uri.parse(url);

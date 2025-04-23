@@ -1,12 +1,12 @@
 // ignore_for_file: avoid_print, non_constant_identifier_names, file_names, unused_local_variable
 
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/models/capture/aggregation/palletization/GetControlledSerialBySerialNoModel.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class GeneratePalletController {
   static Future<List<GetControlledSerialBySerialNoModel>> generatePallet(
@@ -16,7 +16,7 @@ class GeneratePalletController {
     await AppPreferences.getToken().then((value) => tokenNew = value);
 
     String url =
-        "${AppUrls.baseUrlWith7010}/api/getControlledSerialBySerialNo?serialNo=$serialNo";
+        "${AppUrls.gtrack}/api/getControlledSerialBySerialNo?serialNo=$serialNo";
     final uri = Uri.parse(url);
 
     final headers = <String, String>{
@@ -57,7 +57,7 @@ class GeneratePalletController {
     String? userId;
     await AppPreferences.getUserId().then((value) => userId = value);
 
-    String url = "${AppUrls.baseUrlWith7010}/api/insertPalletData";
+    String url = "${AppUrls.gtrack}/api/insertPalletData";
     final uri = Uri.parse(url);
 
     log(uri.toString());

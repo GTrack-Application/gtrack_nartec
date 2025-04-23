@@ -9,8 +9,7 @@ class PalletTransferController {
   static Future<List<PurchaseOrderReceiptModel>> getPalletTransfer() async {
     final token = await AppPreferences.getToken();
 
-    final url =
-        Uri.parse('${AppUrls.baseUrlWith7010}/api/grnpurchaseorder/master');
+    final url = Uri.parse('${AppUrls.gtrack}/api/grnpurchaseorder/master');
 
     final response = await http.get(
       url,
