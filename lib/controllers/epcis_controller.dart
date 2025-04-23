@@ -206,10 +206,11 @@ class EPCISController {
         "bizStep": "shipping",
         "disposition": "in_transit",
         "epcList": ["urn:epc:id:sgtin:0614141.00001.1234"],
-        "eventTime": eventTimeZoneOffSet,
+        // ["\"eventTime\" must be in ISO 8601 date format"]
+        "eventTime": eventTime,
         "eventTimeZoneOffset": eventTimeZoneOffSet,
-        "readPoint": {"id": "urn:epc:id:sgln:0614141.07346.1234"},
-        "bizLocation": {"id": "urn:epc:id:sgln:0614141.07346.1234"},
+        "readPoint": {"id": "urn:epc:id:sgln:$gln"},
+        "bizLocation": {"id": "urn:epc:id:sgln:$gln"},
         "bizTransactionList": bizTransactionList ??
             [
               {
