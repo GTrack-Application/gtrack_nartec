@@ -347,6 +347,7 @@ class _RouteScreenState extends State<RouteScreen> {
                       {"startJourneyTime": now.toIso8601String()},
                       state.mapModel[0].latitude.toString(),
                       state.mapModel[0].longitude.toString(),
+                      state.mapModel[0].gln.toString(),
                     );
                   },
                   state is StatusUpdateLoading

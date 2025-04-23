@@ -52,13 +52,14 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
     Map<String, dynamic> body,
     String? latitude,
     String? longitude,
+    String? gln,
   ) async {
     try {
       emit(StatusUpdateLoading());
       await SalesOrderController.statusUpdate(id, body);
       await EPCISController.insertNewEPCISEvent(
         eventType: "ObjectEvent",
-        gln: "gln",
+        gln: gln,
         latitude: latitude ?? "0.0",
         longitude: longitude ?? "0.0",
       );

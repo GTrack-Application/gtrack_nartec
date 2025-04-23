@@ -121,6 +121,7 @@ class _PrintDeliveryInvoiceScreenState
                               },
                               widget.mapModel[0].latitude!,
                               widget.mapModel[0].longitude!,
+                              widget.mapModel[0].gln!,
                             );
                           },
                           style: ElevatedButton.styleFrom(

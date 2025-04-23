@@ -219,17 +219,11 @@ class EPCISController {
             ],
         "sourceList": sourceList ??
             [
-              {
-                "type": "owning_party",
-                "source": "urn:epc:id:sgln:0614141.07346.1234"
-              }
+              {"type": "owning_party", "source": "urn:epc:id:sgln:$gln"}
             ],
         "destinationList": destinationList ??
             [
-              {
-                "type": "owning_party",
-                "destination": "urn:epc:id:sgln:0614141.07347.5678"
-              }
+              {"type": "owning_party", "destination": "urn:epc:id:sgln:$gln"}
             ],
         "quantityList": quantityList ??
             [

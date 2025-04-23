@@ -68,8 +68,9 @@ class _PicklistDetailsScreenState extends State<PicklistDetailsScreen> {
                 await salesOrderCubit.statusUpdate(
                   widget.salesOrderId,
                   {'unloadingTime': now.toIso8601String()},
-                  "0.00",
-                  "0.00",
+                  widget.mapModel[0].latitude,
+                  widget.mapModel[0].longitude,
+                  widget.mapModel[0].gln,
                 );
               },
               style: ElevatedButton.styleFrom(

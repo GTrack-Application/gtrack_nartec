@@ -404,6 +404,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                                 {'arrivalTime': now.toIso8601String()},
                                 widget.mapModel[0].latitude!,
                                 widget.mapModel[0].longitude!,
+                                widget.mapModel[0].gln!,
                               );
                             },
                             icon: state is StatusUpdateLoading
