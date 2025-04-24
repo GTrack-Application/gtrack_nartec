@@ -441,7 +441,7 @@ class _RouteScreenState extends State<RouteScreen> {
               // Show overlay message when map model is empty or null
               if (mapModel == null || mapModel!.isEmpty)
                 Container(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                   alignment: Alignment.center,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -451,7 +451,7 @@ class _RouteScreenState extends State<RouteScreen> {
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         ),
