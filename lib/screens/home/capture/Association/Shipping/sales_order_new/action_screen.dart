@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/action_screens/picklist_details_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/capture_images/picklist_details_screen_1.dart';
@@ -17,12 +18,14 @@ class ActionScreen extends StatefulWidget {
     required this.salesOrderId,
     required this.mapModel,
     required this.subSalesOrder,
+    required this.salesOrderModel,
   });
 
   final String customerId;
   final String salesOrderId;
   final List<MapModel> mapModel;
   final List<SubSalesOrderModel> subSalesOrder;
+  final SalesOrderModel salesOrderModel;
 
   @override
   State<ActionScreen> createState() => _ActionScreenState();
@@ -129,6 +132,7 @@ class _ActionScreenState extends State<ActionScreen> {
                       salesOrderId: widget.salesOrderId,
                       mapModel: widget.mapModel,
                       subSalesOrder: widget.subSalesOrder,
+                      salesOrderModel: widget.salesOrderModel,
                     ),
                   );
                 },
@@ -183,6 +187,7 @@ class _ActionScreenState extends State<ActionScreen> {
                       salesOrderId: widget.salesOrderId,
                       mapModel: widget.mapModel,
                       subSalesOrder: widget.subSalesOrder,
+                      salesOrderModel: widget.salesOrderModel,
                     ),
                   );
                 },

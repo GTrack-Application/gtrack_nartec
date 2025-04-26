@@ -5,6 +5,7 @@ import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sal
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/delivery_invoice/print_delivery_invoice_screen.dart';
 
@@ -15,12 +16,14 @@ class PicklistDetailsScreen2 extends StatefulWidget {
     required this.salesOrderId,
     required this.mapModel,
     required this.subSalesOrder,
+    required this.salesOrderModel,
   });
 
   final String customerId;
   final String salesOrderId;
   final List<MapModel> mapModel;
   final List<SubSalesOrderModel> subSalesOrder;
+  final SalesOrderModel salesOrderModel;
 
   @override
   State<PicklistDetailsScreen2> createState() => _PicklistDetailsScreen2State();
@@ -55,6 +58,7 @@ class _PicklistDetailsScreen2State extends State<PicklistDetailsScreen2> {
                 salesOrderId: widget.salesOrderId,
                 mapModel: widget.mapModel,
                 subSalesOrder: widget.subSalesOrder,
+                salesOrderModel: widget.salesOrderModel,
               ),
             );
           },

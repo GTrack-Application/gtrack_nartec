@@ -12,6 +12,7 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/map_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/action_screen.dart';
 import 'package:http/http.dart' as http;
@@ -23,12 +24,14 @@ class JourneyScreen extends StatefulWidget {
     required this.salesOrderId,
     required this.mapModel,
     required this.subSalesOrder,
+    required this.salesOrderModel,
   });
 
   final String customerId;
   final String salesOrderId;
   final List<MapModel> mapModel;
   final List<SubSalesOrderModel> subSalesOrder;
+  final SalesOrderModel salesOrderModel;
 
   @override
   State<JourneyScreen> createState() => _JourneyScreenState();
@@ -266,6 +269,7 @@ class _JourneyScreenState extends State<JourneyScreen>
               salesOrderId: widget.salesOrderId,
               mapModel: widget.mapModel,
               subSalesOrder: widget.subSalesOrder,
+              salesOrderModel: widget.salesOrderModel,
             ),
           );
         }
@@ -405,6 +409,47 @@ class _JourneyScreenState extends State<JourneyScreen>
                                 widget.mapModel[0].latitude!,
                                 widget.mapModel[0].longitude!,
                                 widget.mapModel[0].gln!,
+                                widget.subSalesOrder
+                                    .map(
+                                      (e) => "urn:epc:id:sgtin:${e.productId}",
+                                    )
+                                    .toList(),
+                                widget.subSalesOrder
+                                    .map(
+                                      (e) => {
+                                        "type": widget.salesOrderModel
+                                            .purchaseOrderNumber,
+                                        "bizTransaction":
+                                            "${widget.salesOrderModel.purchaseOrderNumber}"
+                                      },
+                                    )
+                                    .toList(),
+                                widget.subSalesOrder
+                                    .map((e) => {
+                                          "type": "owning_party",
+                                          "source":
+                                              "urn:epc:id:sgln:${widget.mapModel[0].gln}"
+                                        })
+                                    .toList(),
+                                widget.subSalesOrder
+                                    .map(
+                                      (e) => {
+                                        "type": "owning_party",
+                                        "destination":
+                                            "urn:epc:id:sgln:${widget.mapModel[0].gln}"
+                                      },
+                                    )
+                                    .toList(),
+                                widget.subSalesOrder
+                                    .map(
+                                      (e) => {
+                                        "epcClass":
+                                            "urn:epc:class:sgtin:${widget.salesOrderModel.purchaseOrderNumber}",
+                                        "quantity": e.quantity,
+                                        "uom": "EA"
+                                      },
+                                    )
+                                    .toList(),
                               );
                             },
                             icon: state is StatusUpdateLoading

@@ -9,14 +9,20 @@ import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
+import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/route_screen.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_details_screen.dart';
 
 class SubSalesOrderScreen extends StatefulWidget {
-  const SubSalesOrderScreen({super.key, required this.salesOrderId});
+  const SubSalesOrderScreen({
+    super.key,
+    required this.salesOrderId,
+    required this.salesOrderModel,
+  });
 
   final String salesOrderId;
+  final SalesOrderModel salesOrderModel;
 
   @override
   State<SubSalesOrderScreen> createState() => _SubSalesOrderScreenState();
@@ -157,6 +163,7 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
                                     '',
                                 salesOrderId: widget.salesOrderId,
                                 subSalesOrder: subSalesOrder,
+                                salesOrderModel: widget.salesOrderModel,
                               ),
                             );
                           } else {

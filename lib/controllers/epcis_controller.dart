@@ -205,7 +205,9 @@ class EPCISController {
         "action": "ADD",
         "bizStep": "shipping",
         "disposition": "in_transit",
-        "epcList": ["urn:epc:id:sgtin:0614141.00001.1234"],
+        "epcList": epcList ?? ["urn:epc:id:sgtin:0614141.00001.1234"],
+        // product id will be in the sgtin format
+
         // ["\"eventTime\" must be in ISO 8601 date format"]
         "eventTime": eventTime,
         "eventTimeZoneOffset": eventTimeZoneOffSet,

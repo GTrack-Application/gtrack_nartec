@@ -53,6 +53,11 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
     String? latitude,
     String? longitude,
     String? gln,
+    List<String>? epcList,
+    List<Map<String, dynamic>>? bizTransactionList,
+    List<Map<String, dynamic>>? sourceList,
+    List<Map<String, dynamic>>? destinationList,
+    List<Map<String, dynamic>>? childEPCs,
   ) async {
     try {
       emit(StatusUpdateLoading());
@@ -62,6 +67,10 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
         gln: gln,
         latitude: latitude ?? "0.0",
         longitude: longitude ?? "0.0",
+        epcList: epcList,
+        sourceList: sourceList,
+        destinationList: destinationList,
+        bizTransactionList: bizTransactionList,
       );
       emit(StatusUpdateLoaded("Status updated successfully"));
     } catch (e) {

@@ -136,6 +136,7 @@ class _SalesOrderScreenState extends State<SalesOrderScreen> {
               context: context,
               screen: SubSalesOrderScreen(
                 salesOrderId: order.id ?? '',
+                salesOrderModel: order,
               ),
             );
           },
