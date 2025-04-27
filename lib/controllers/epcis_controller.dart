@@ -90,6 +90,11 @@ class EPCISController {
     String? gln,
     String? latitude,
     String? longitude,
+    String? parentID,
+    String? customProcessName,
+    String? customProcessId,
+    Map? readPoint,
+    Map? bizLocation,
     List? epcList,
     List? bizTransactionList,
     List? childEPCs,
@@ -151,7 +156,7 @@ class EPCISController {
         "action": "ADD",
         "bizStep": "packing",
         "disposition": "packed",
-        "parentID": "urn:epc:id:sscc:$gs1CompanyPrefix.0000000001",
+        "parentID": parentID ?? "urn:epc:id:sscc:$gs1CompanyPrefix.0000000001",
         "childEPCs": childEPCs ??
             [
               "urn:epc:id:sgtin:$gs1CompanyPrefix.00001.1234",
@@ -159,8 +164,8 @@ class EPCISController {
             ],
         "eventTime": eventTime,
         "eventTimeZoneOffset": eventTimeZoneOffSet,
-        "readPoint": {"id": "urn:epc:id:sgln:$gln"},
-        "bizLocation": {"id": "urn:epc:id:sgln:$gln"},
+        "readPoint": readPoint ?? {"id": "urn:epc:id:sgln:$gln"},
+        "bizLocation": bizLocation ?? {"id": "urn:epc:id:sgln:$gln"},
         "childQuantityList": childQuantityList ??
             [
               {
@@ -174,7 +179,9 @@ class EPCISController {
             ],
         "gs1CompanyPrefix": "$gs1CompanyPrefix",
         "longitude": "$longitude",
-        "latitude": "$latitude"
+        "latitude": "$latitude",
+        "custom_process_name": customProcessName ?? "custom_process_name",
+        "custom_process_id": customProcessId ?? "custom_process_id",
       };
     } else if (eventType == "TransactionEvent") {
       payload = {

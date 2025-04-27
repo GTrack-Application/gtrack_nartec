@@ -146,6 +146,11 @@ class AggregationCubit extends Cubit<AggregationState> {
       final memberId = await AppPreferences.getMemberId();
       final gs1CompanyPrefix = await AppPreferences.getGs1Prefix();
 
+      String? ssccNumber;
+      String? ssccId;
+      String? sGtinId;
+      String? sGtinNumber;
+
       // Get the bin location ID (using the selectedBinLocation from state)
       final binLocationId = selectedBinLocationId;
 
@@ -179,6 +184,49 @@ class AggregationCubit extends Cubit<AggregationState> {
               "binLocationId": binLocationId,
               "serialsList": serialsList,
             };
+
+      // Make the API call First
+      final response = await httpService.request(
+        url,
+        method: HttpMethod.post,
+        payload: payload,
+      );
+
+      if (!isGtinPackaging) {
+        ssccId = response.data['data']['id'];
+        ssccNumber = response.data['data']['SSCCNo'];
+      }
+
+      await EPCISController.insertNewEPCISEvent(
+        eventType: "AggregationEvent",
+        latitude: selectedBinLocation?.latitude?.toString(),
+        longitude: selectedBinLocation?.longitude?.toString(),
+        gln: selectedBinLocation?.gln?.toString(),
+        parentID: isGtinPackaging
+            ? "urn:epc:id:sgtin:$gs1CompanyPrefix.$sGtinNumber"
+            : "urn:epc:id:sscc:$gs1CompanyPrefix.$ssccNumber",
+        readPoint: isGtinPackaging
+            ? {"id": "urn:epc:id:sgtin:$sGtinNumber"}
+            : {"id": "urn:epc:id:sscc:$ssccNumber"},
+        bizLocation: isGtinPackaging
+            ? {"id": "urn:epc:id:sgtin:$sGtinNumber"}
+            : {"id": "urn:epc:id:sscc:$ssccNumber"},
+        childQuantityList: scannedItems
+            .map(
+              (e) => {
+                "epcClass": "urn:epc:class:sgtin:$gs1CompanyPrefix.${e.gTIN}.*",
+                "quantity": 1,
+              },
+            )
+            .toList(),
+        childEPCs: scannedItems
+            .map(
+              (e) => "urn:epc:id:sgtin:$gs1CompanyPrefix.${e.gTIN}",
+            )
+            .toList(),
+        customProcessName: isGtinPackaging ? "gtinPackaging" : "ssccPackaging",
+        customProcessId: isGtinPackaging ? "$sGtinId" : "$ssccId",
+      );
 
       // Send Epcis Event
       // await EPCISController.insertEPCISEvent(
@@ -220,33 +268,6 @@ class AggregationCubit extends Cubit<AggregationState> {
       //       )
       //       .toList(),
       // );
-
-      await EPCISController.insertNewEPCISEvent(
-        eventType: "AggregationEvent",
-        latitude: selectedBinLocation?.latitude?.toString(),
-        longitude: selectedBinLocation?.longitude?.toString(),
-        gln: selectedBinLocation?.gln?.toString(),
-        childQuantityList: scannedItems
-            .map(
-              (e) => {
-                "epcClass": "urn:epc:class:sgtin:$gs1CompanyPrefix.${e.gTIN}.*",
-                "quantity": 1,
-              },
-            )
-            .toList(),
-        childEPCs: scannedItems
-            .map(
-              (e) => "urn:epc:id:sgtin:$gs1CompanyPrefix.${e.gTIN}",
-            )
-            .toList(),
-      );
-
-      // Make the API call
-      final response = await httpService.request(
-        url,
-        method: HttpMethod.post,
-        payload: payload,
-      );
 
       if (response.success) {
         emit(PackagingSaved(message: 'Packaging saved successfully'));
