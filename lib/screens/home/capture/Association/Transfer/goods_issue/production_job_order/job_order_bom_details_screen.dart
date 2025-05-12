@@ -71,6 +71,35 @@ class _JobOrderBomDetailsScreenState extends State<JobOrderBomDetailsScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 16),
+                  PrimaryButtonWidget(
+                    onPressed: () {
+                      final product = _productionJobOrderCubit.gs1Data;
+                      if (widget.isSalesOrder == true) {
+                        AppNavigator.goToPage(
+                          context: context,
+                          screen: SalesOrderScanAssetScreen(
+                            barcode: widget.barcode,
+                            bomStartData: product,
+                            isSalesOrder: widget.isSalesOrder,
+                          ),
+                        );
+                      } else {
+                        AppNavigator.goToPage(
+                          context: context,
+                          screen: JobOrderBomStartScreen1(
+                            gtin: widget.barcode,
+                            productName: product.productnameenglish ?? '',
+                            isSalesOrder: widget.isSalesOrder,
+                          ),
+                        );
+                      }
+                    },
+                    text: "Start Picking",
+                    height: 30,
+                    width: 150,
+                    backgroundColor: AppColors.pink,
+                  ),
                 ],
               ),
             );

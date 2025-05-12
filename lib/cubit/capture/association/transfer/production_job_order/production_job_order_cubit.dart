@@ -24,6 +24,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   ProductionJobOrder? order;
   String bomStartType = 'pallet';
   List<MappedBarcode> items = [];
+  late BomStartModel gs1Data;
 
   List<ProductionJobOrder> filteredOrders = [];
   List<ProductionJobOrder> _orders = [];
@@ -126,10 +127,12 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       if (response.success) {
         final data = response.data;
         if (data['products']?.isNotEmpty ?? false) {
-          final bomStartData = BomStartModel.fromJson(data['products'][0]);
-          emit(ProductionJobOrderBomStartLoaded(bomStartData: bomStartData));
+          gs1Data = BomStartModel.fromJson(data['products'][0]);
+          emit(ProductionJobOrderBomStartLoaded(bomStartData: gs1Data));
         } else {
-          emit(ProductionJobOrderBomStartError(message: 'No product found'));
+          gs1Data = BomStartModel();
+          emit(ProductionJobOrderBomStartError(
+              message: 'Product Details not found for $barcode'));
         }
       } else {
         emit(ProductionJobOrderBomStartError(

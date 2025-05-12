@@ -44,7 +44,7 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sales Order Scan Asset'),
+        title: Text('Scan Packages'),
         backgroundColor: AppColors.pink,
       ),
       body: BlocConsumer<JobOrderCubit, JobOrderState>(
