@@ -58,10 +58,6 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
             AppSnackbars.warning(context, state.message);
           } else if (state is SaveAssetTagsLoaded) {
             AppSnackbars.normal(context, 'Assets saved successfully');
-            // AppNavigator.goToPage(
-            //   context: context,
-            //   screen: JobOrderItemDetailsScreen(order: widget.order),
-            // );
             AppNavigator.goToPage(
               context: context,
               screen: JobOrderBomStartScreen1(
@@ -70,10 +66,16 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
                 isSalesOrder: widget.isSalesOrder,
               ),
             );
+          } else if (state is PackagingScanError) {
+            AppSnackbars.warning(context, state.message);
+          } else if (state is PackagingScanLoaded) {
+            controller.clear();
+            AppSnackbars.normal(context, 'Package scanned successfully');
           }
         },
         builder: (context, state) {
-          final scanned = jobOrderCubit.assets.isNotEmpty;
+          // Use packageResults instead of assets to check if we have scanned items
+          final scanned = jobOrderCubit.packagingScanResults.isNotEmpty;
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -89,7 +91,7 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
                         controller: controller,
                         hintText: "Enter/Scan Tag Number",
                         onEditingComplete: () {
-                          jobOrderCubit.getAssetsByTagNumber(
+                          jobOrderCubit.scanPackagingBySscc(
                             controller.text.trim(),
                           );
                         },
@@ -99,7 +101,7 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
                       child: PrimaryButtonWidget(
                         text: "Scan",
                         onPressed: () {
-                          jobOrderCubit.getAssetsByTagNumber(
+                          jobOrderCubit.scanPackagingBySscc(
                             controller.text.trim(),
                           );
                         },
@@ -193,7 +195,7 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header section with asset count
+        // Header section with package count
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           decoration: BoxDecoration(
@@ -206,7 +208,7 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
               Icon(Icons.info_outline, color: AppColors.pink, size: 18),
               const SizedBox(width: 8),
               Text(
-                "Scanned Assets: ${jobOrderCubit.assets.length}",
+                "Scanned Packages: ${jobOrderCubit.packagingScanResults.keys.length}",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -218,95 +220,102 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
         ),
         const SizedBox(height: 12),
 
-        // Assets table header
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          decoration: BoxDecoration(
-            color: AppColors.pink,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
-            ),
-          ),
-          child: Row(
-            children: [
-              Text(
-                "Tag Number",
-                style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w500),
-              ),
-              const Spacer(),
-              Text(
-                "Transfer Date",
-                style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-        ),
-
-        // Assets list
-        Flexible(
-          child: jobOrderCubit.assets.isEmpty
+        // Package cards list
+        Expanded(
+          child: jobOrderCubit.packagingScanResults.isEmpty
               ? Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      "No assets scanned yet",
+                      "No packages scanned yet",
                       style: TextStyle(color: AppColors.grey),
                     ),
                   ),
                 )
-              : ListView.separated(
+              : ListView.builder(
                   shrinkWrap: true,
                   physics: const ClampingScrollPhysics(),
-                  itemCount: jobOrderCubit.assets.length,
-                  separatorBuilder: (context, index) => Divider(
-                      height: 1, color: AppColors.grey.withValues(alpha: 0.2)),
+                  itemCount: jobOrderCubit.packagingScanResults.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: index.isEven
-                            ? AppColors.grey.withValues(alpha: 0.05)
-                            : AppColors.white,
+                    final ssccNo = jobOrderCubit.packagingScanResults.keys
+                        .elementAt(index);
+                    final packageList =
+                        jobOrderCubit.packagingScanResults[ssccNo] ?? [];
+
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 8,
-                        children: [
-                          Row(
-                            spacing: 8,
-                            children: [
-                              Icon(
-                                Icons.qr_code_scanner_rounded,
-                                size: 16,
-                                color: AppColors.pink,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  jobOrderCubit.assets[index].tagNumber ?? '',
-                                  style: TextStyle(fontSize: 14),
-                                  overflow: TextOverflow.ellipsis,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.qr_code, color: AppColors.pink),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "SSCC: $ssccNo",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                dateFormat(transferDate.toIso8601String()),
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                          TextFormFieldWidget(
-                            controller:
-                                jobOrderCubit.assets[index].productionLine!,
-                            hintText: "Production Line",
-                          ),
-                        ],
+                                const Spacer(),
+                                // Show count of items
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.pink.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    "${packageList.length} items",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.pink,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(),
+                            // List of items in the package
+                            ...packageList
+                                .map((item) => Container(
+                                      margin: const EdgeInsets.only(bottom: 8),
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.grey.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Description: ${item['description'] ?? 'N/A'}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                              "Serial GTIN: ${item['serialGTIN'] ?? 'N/A'}"),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                              "Serial No: ${item['serialNo'] ?? 'N/A'}"),
+                                        ],
+                                      ),
+                                    ))
+                                .toList(),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -351,58 +360,33 @@ class _SalesOrderScanAssetScreenState extends State<SalesOrderScanAssetScreen> {
                     },
                   );
                   if (picked != null) {
-                    final TimeOfDay? timePicked = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(transferDate),
-                      builder: (context, child) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: ColorScheme.light(
-                              primary: AppColors.pink,
-                            ),
-                          ),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if (timePicked != null) {
-                      setState(() {
-                        transferDate = DateTime(
-                          picked.year,
-                          picked.month,
-                          picked.day,
-                          timePicked.hour,
-                          timePicked.minute,
-                        );
-                      });
-                    }
+                    setState(() {
+                      transferDate = picked;
+                    });
                   }
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 14,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(
                         color: AppColors.grey.withValues(alpha: 0.3)),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         Icons.calendar_today,
+                        size: 18,
                         color: AppColors.pink,
-                        size: 16,
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        dateTimeFormat(transferDate.toIso8601String()),
+                        dateFormat(transferDate.toIso8601String()),
                         style: TextStyle(fontSize: 14),
-                      ),
-                      const Spacer(),
-                      Icon(
-                        Icons.arrow_drop_down,
-                        color: AppColors.grey,
-                        size: 20,
                       ),
                     ],
                   ),

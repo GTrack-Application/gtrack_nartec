@@ -1,0 +1,676 @@
+{
+  "level": "container",
+  "ssccNo": "06287665913236286",
+  "container": {
+    "id": "cm9pvw6co002rmxnioihafuwk",
+    "SSCCNo": "06287665913236286",
+    "containerCode": "container checking code",
+    "description": "description added",
+    "memberId": "cm5i2dmve0001ojvkzoz2lt7v",
+    "binLocationId": "1B9E2B94-C904-4ABA-A527-F539D646EC25",
+    "status": "active",
+    "createdAt": "2025-04-20T16:51:14.854Z",
+    "updatedAt": "2025-04-20T16:51:14.854Z",
+    "pallets": [
+      {
+        "id": "cm8lh0nk600023krt90f717lk",
+        "SSCCNo": "06289317381138429",
+        "description": "Mixed cartons pallet",
+        "memberId": "cm5fhascy0003xv1q15p5e0vv",
+        "binLocationId": "cm81iqnt20000u30cd9pymmea",
+        "status": "active",
+        "createdAt": "2025-03-23T10:04:02.233Z",
+        "updatedAt": "2025-04-20T16:51:14.854Z",
+        "containerId": "cm9pvw6co002rmxnioihafuwk",
+        "ssccPackages": [
+          {
+            "id": "cm8ofcjmb0009gg71r6p1ru6d",
+            "SSCCNo": "06282743934472411",
+            "packagingType": "grouping",
+            "description": "2 diffr gtins of 5 items as group",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "cm7vogfgc001chhrs0jwpi2he",
+            "status": "active",
+            "createdAt": "2025-03-25T11:40:36.561Z",
+            "updatedAt": "2025-05-10T09:13:31.779Z",
+            "palletId": "cm8lh0nk600023krt90f717lk",
+            "containerId": null,
+            "details": []
+          },
+          {
+            "id": "cm8off05z000hgg71hlh1ehat",
+            "SSCCNo": "06285533396117512",
+            "packagingType": "batching",
+            "description": "diff gtin inside of 6",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "cm7vojdw0001ehhrsl6o2j9ie",
+            "status": "active",
+            "createdAt": "2025-03-25T11:42:31.317Z",
+            "updatedAt": "2025-05-10T09:13:31.779Z",
+            "palletId": "cm8lh0nk600023krt90f717lk",
+            "containerId": null,
+            "details": []
+          },
+          {
+            "id": "cm8ptp46k0006r71tfq25y1o6",
+            "SSCCNo": "06282924552868127",
+            "packagingType": "box_carton",
+            "description": "description",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "7D892F9D-4258-4266-AB36-10A1AD719E12",
+            "status": "active",
+            "createdAt": "2025-03-26T11:10:03.880Z",
+            "updatedAt": "2025-05-10T09:13:31.779Z",
+            "palletId": "cm8lh0nk600023krt90f717lk",
+            "containerId": null,
+            "details": [
+              {
+                "id": "cm8ptp46w0007r71te8394r22",
+                "masterPackagingId": "cm8ptp46k0006r71tfq25y1o6",
+                "binLocationId": null,
+                "serialGTIN": "6285561001107",
+                "serialNo": "5561001107-batch1-1190",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8ptp46w0008r71tsfemzp82",
+                "masterPackagingId": "cm8ptp46k0006r71tfq25y1o6",
+                "binLocationId": null,
+                "serialGTIN": "6285561001107",
+                "serialNo": "5561001107-batch1-1191",
+                "includedGTINPackages": []
+              }
+            ]
+          },
+          {
+            "id": "cm8qbnw50000bu3qba682m8ms",
+            "SSCCNo": "06287617556979261",
+            "packagingType": "box_carton",
+            "description": "2 serials GTIN inside with total of 6 items",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "cm81iqnt20000u30cd9pymmea",
+            "status": "active",
+            "createdAt": "2025-03-26T19:32:59.890Z",
+            "updatedAt": "2025-05-10T09:13:31.779Z",
+            "palletId": "cm8lh0nk600023krt90f717lk",
+            "containerId": null,
+            "details": [
+              {
+                "id": "cm8qbnw55000cu3qbm8bgo3dm",
+                "masterPackagingId": "cm8qbnw50000bu3qba682m8ms",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-10-1098",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8qbnw56000du3qbte7d51q6",
+                "masterPackagingId": "cm8qbnw50000bu3qba682m8ms",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-10-1099",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8qbnw56000eu3qbvdgmawuf",
+                "masterPackagingId": "cm8qbnw50000bu3qba682m8ms",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-10-1100",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8qbnw56000fu3qb7os2pf8h",
+                "masterPackagingId": "cm8qbnw50000bu3qba682m8ms",
+                "binLocationId": null,
+                "serialGTIN": "6285561001213",
+                "serialNo": "5561001213-AB123-1156",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8qbnw56000gu3qb5avp26wy",
+                "masterPackagingId": "cm8qbnw50000bu3qba682m8ms",
+                "binLocationId": null,
+                "serialGTIN": "6285561001213",
+                "serialNo": "5561001213-AB123-1157",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8qbnw56000hu3qb5ipdk8fk",
+                "masterPackagingId": "cm8qbnw50000bu3qba682m8ms",
+                "binLocationId": null,
+                "serialGTIN": "6285561001213",
+                "serialNo": "5561001213-AB123-1158",
+                "includedGTINPackages": []
+              }
+            ]
+          }
+        ],
+        "gtinPackages": []
+      },
+      {
+        "id": "cm8ln1xh3000uar6fhzg1aysn",
+        "SSCCNo": "06284123272575736",
+        "description": "Pallet",
+        "memberId": "cm5fhascy0003xv1q15p5e0vv",
+        "binLocationId": "cm7vojdw0001ehhrsl6o2j9ie",
+        "status": "active",
+        "createdAt": "2025-03-23T12:52:59.702Z",
+        "updatedAt": "2025-04-20T16:51:14.854Z",
+        "containerId": "cm9pvw6co002rmxnioihafuwk",
+        "ssccPackages": [
+          {
+            "id": "cm8lhkbm60008b6bt4i1p0gmq",
+            "SSCCNo": "06284245863551728",
+            "packagingType": "consolidating",
+            "description": "Consolidating Description Added",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "82BBB806-2E7B-46D6-A053-51B3A49B0F19",
+            "status": "active",
+            "createdAt": "2025-03-23T10:19:20.140Z",
+            "updatedAt": "2025-05-10T09:12:14.422Z",
+            "palletId": "cm8ln1xh3000uar6fhzg1aysn",
+            "containerId": null,
+            "details": [
+              {
+                "id": "cm8lhkbmd0009b6btxebvvk5j",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-169",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbmd000ab6bt9skd29si",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-170",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbmd000bb6bto1sj0n7a",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-171",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbmd000cb6bt4ywyxh92",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-172",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbmd000db6btpmx1l0zi",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-173",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbmd000eb6bt3vtjw5re",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-174",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbmd000fb6btw7x90khs",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-175",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbme000gb6btbhdl3u1r",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-176",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbme000hb6bt8a00o0tp",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-177",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lhkbme000ib6bt20eeesvf",
+                "masterPackagingId": "cm8lhkbm60008b6bt4i1p0gmq",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-178",
+                "includedGTINPackages": []
+              }
+            ]
+          },
+          {
+            "id": "cm8lyiq3y0003bfvlcxcnw30y",
+            "SSCCNo": "06287135939865313",
+            "packagingType": "box_carton",
+            "description": "Check box",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "48DEE88B-E27D-4DD6-B583-18C09ECA329D",
+            "status": "active",
+            "createdAt": "2025-03-23T18:13:59.081Z",
+            "updatedAt": "2025-05-10T09:12:34.288Z",
+            "palletId": "cm8ln1xh3000uar6fhzg1aysn",
+            "containerId": null,
+            "details": [
+              {
+                "id": "cm8lyiq440004bfvl2s4yer2f",
+                "masterPackagingId": "cm8lyiq3y0003bfvlcxcnw30y",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-174",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lyiq440005bfvl805wulho",
+                "masterPackagingId": "cm8lyiq3y0003bfvlcxcnw30y",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-175",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lyiq440006bfvlr661zzwl",
+                "masterPackagingId": "cm8lyiq3y0003bfvlcxcnw30y",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-176",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lyiq440007bfvlaa3x6l76",
+                "masterPackagingId": "cm8lyiq3y0003bfvlcxcnw30y",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-177",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8lyiq440008bfvlsh920m91",
+                "masterPackagingId": "cm8lyiq3y0003bfvlcxcnw30y",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-178",
+                "includedGTINPackages": []
+              }
+            ]
+          },
+          {
+            "id": "cm8mrr03o000251ay3g4ec6ip",
+            "SSCCNo": "06289427319422152",
+            "packagingType": "box_carton",
+            "description": "Box Carton Description added",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "1B9E2B94-C904-4ABA-A527-F539D646EC25",
+            "status": "active",
+            "createdAt": "2025-03-24T07:52:14.146Z",
+            "updatedAt": "2025-05-10T09:12:34.288Z",
+            "palletId": "cm8ln1xh3000uar6fhzg1aysn",
+            "containerId": null,
+            "details": [
+              {
+                "id": "cm8mrr03w000351ayf21vpyl8",
+                "masterPackagingId": "cm8mrr03o000251ay3g4ec6ip",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-177",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mrr03w000451ayrso72y7x",
+                "masterPackagingId": "cm8mrr03o000251ay3g4ec6ip",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-04062026-178",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mrr03w000551aynhw66fit",
+                "masterPackagingId": "cm8mrr03o000251ay3g4ec6ip",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-12323-491",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mrr03w000651ayz9mhoxtp",
+                "masterPackagingId": "cm8mrr03o000251ay3g4ec6ip",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-12323-492",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mrr03w000751ayrtumrqdy",
+                "masterPackagingId": "cm8mrr03o000251ay3g4ec6ip",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-12323-493",
+                "includedGTINPackages": []
+              }
+            ]
+          },
+          {
+            "id": "cm8myfkpy000w51ay30llmzsm",
+            "SSCCNo": "06288975932929599",
+            "packagingType": "box_carton",
+            "description": "5 items inside of GTIN: 6285561001107",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "cm81iqnt20000u30cd9pymmea",
+            "status": "active",
+            "createdAt": "2025-03-24T10:59:18.309Z",
+            "updatedAt": "2025-05-10T09:12:34.288Z",
+            "palletId": "cm8ln1xh3000uar6fhzg1aysn",
+            "containerId": null,
+            "details": [
+              {
+                "id": "cm8myfkq6000x51aytnrs5s9o",
+                "masterPackagingId": "cm8myfkpy000w51ay30llmzsm",
+                "binLocationId": null,
+                "serialGTIN": "6285561001107",
+                "serialNo": "5561001107-AB-201-1141",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8myfkq6000y51aynsc829oc",
+                "masterPackagingId": "cm8myfkpy000w51ay30llmzsm",
+                "binLocationId": null,
+                "serialGTIN": "6285561001107",
+                "serialNo": "5561001107-AB-201-1142",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8myfkq6000z51aynt4bx3yk",
+                "masterPackagingId": "cm8myfkpy000w51ay30llmzsm",
+                "binLocationId": null,
+                "serialGTIN": "6285561001107",
+                "serialNo": "5561001107-AB-201-1143",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8myfkq6001051aym9ldr3sc",
+                "masterPackagingId": "cm8myfkpy000w51ay30llmzsm",
+                "binLocationId": null,
+                "serialGTIN": "6285561001107",
+                "serialNo": "5561001107-AB-201-1144",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8myfkq6001151aympam7w0s",
+                "masterPackagingId": "cm8myfkpy000w51ay30llmzsm",
+                "binLocationId": null,
+                "serialGTIN": "6285561001107",
+                "serialNo": "5561001107-AB-201-1145",
+                "includedGTINPackages": []
+              }
+            ]
+          },
+          {
+            "id": "cm8mz3658001w51ayaj7ci5sv",
+            "SSCCNo": "06285429972854229",
+            "packagingType": "batching",
+            "description": "2 gtin item inside for batches for 7 items",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "cm81iqnt20000u30cd9pymmea",
+            "status": "active",
+            "createdAt": "2025-03-24T11:17:39.163Z",
+            "updatedAt": "2025-05-10T09:12:34.288Z",
+            "palletId": "cm8ln1xh3000uar6fhzg1aysn",
+            "containerId": null,
+            "details": [
+              {
+                "id": "cm8mz365e001x51ay33l2z2ep",
+                "masterPackagingId": "cm8mz3658001w51ayaj7ci5sv",
+                "binLocationId": null,
+                "serialGTIN": "6285561001213",
+                "serialNo": "5561001213-AB123-1156",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mz365e001y51ayv5jugz3i",
+                "masterPackagingId": "cm8mz3658001w51ayaj7ci5sv",
+                "binLocationId": null,
+                "serialGTIN": "6285561001213",
+                "serialNo": "5561001213-AB123-1157",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mz365e001z51ay9l814x48",
+                "masterPackagingId": "cm8mz3658001w51ayaj7ci5sv",
+                "binLocationId": null,
+                "serialGTIN": "6285561001213",
+                "serialNo": "5561001213-AB123-1158",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mz365e002051ay1tg8va00",
+                "masterPackagingId": "cm8mz3658001w51ayaj7ci5sv",
+                "binLocationId": null,
+                "serialGTIN": "6285561001213",
+                "serialNo": "5561001213-AB123-1159",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mz365e002151ayzhkvmnpo",
+                "masterPackagingId": "cm8mz3658001w51ayaj7ci5sv",
+                "binLocationId": null,
+                "serialGTIN": "6285561001213",
+                "serialNo": "5561001213-AB123-1160",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mz365e002251ayqbv3ov7y",
+                "masterPackagingId": "cm8mz3658001w51ayaj7ci5sv",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-10-1098",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8mz365e002351ayohtfby0h",
+                "masterPackagingId": "cm8mz3658001w51ayaj7ci5sv",
+                "binLocationId": null,
+                "serialGTIN": "6285561000957",
+                "serialNo": "5561000957-10-1099",
+                "includedGTINPackages": []
+              }
+            ]
+          },
+          {
+            "id": "cm8o6k3wx0026cj8e92bp1yym",
+            "SSCCNo": "06284848879397841",
+            "packagingType": "batching",
+            "description": "test",
+            "memberId": "cm5fhascy0003xv1q15p5e0vv",
+            "binLocationId": "cm7vojdw0001ehhrsl6o2j9ie",
+            "status": "active",
+            "createdAt": "2025-03-25T07:34:32.912Z",
+            "updatedAt": "2025-05-10T09:12:34.288Z",
+            "palletId": "cm8ln1xh3000uar6fhzg1aysn",
+            "containerId": null,
+            "details": [
+              {
+                "id": "cm8o6k3x30027cj8ei14rgee1",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-443",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x30028cj8estdpw48d",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-444",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x30029cj8edh430m7l",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-445",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002acj8ecycxsea9",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-446",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002bcj8ev6z67h0x",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-447",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002ccj8ezg13fz9t",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-448",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002dcj8ei637dhst",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-449",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002ecj8e4924jbm7",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-450",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002fcj8eyou2cjzg",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-451",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002gcj8e366gxuwc",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-452",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002hcj8ebxolnnh9",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-443",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002icj8e4jd7tq96",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-444",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002jcj8eyv50h3z8",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-445",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002kcj8e3ozcl0kn",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-446",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002lcj8ecazuz5m4",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-447",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002mcj8erd0vo4mq",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-448",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002ncj8etwurd0ax",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-449",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x3002ocj8ezace9sbj",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-450",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x4002pcj8eth1wu18k",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-451",
+                "includedGTINPackages": []
+              },
+              {
+                "id": "cm8o6k3x4002qcj8ewkh6w9zl",
+                "masterPackagingId": "cm8o6k3wx0026cj8e92bp1yym",
+                "binLocationId": null,
+                "serialGTIN": "6281000004036",
+                "serialNo": "1000004036-M-452",
+                "includedGTINPackages": []
+              }
+            ]
+          }
+        ],
+        "gtinPackages": []
+      }
+    ],
+    "ssccPackages": [],
+    "gtinPackages": []
+  },
+  "message": "Data found in container level."
+}

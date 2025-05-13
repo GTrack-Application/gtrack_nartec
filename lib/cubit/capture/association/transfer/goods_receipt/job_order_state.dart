@@ -58,3 +58,16 @@ class SaveAssetTagsError extends JobOrderState {
   final String message;
   SaveAssetTagsError({required this.message});
 }
+
+// * Packaging Scan by SSCC Number
+class PackagingScanLoading extends JobOrderState {}
+
+class PackagingScanLoaded extends JobOrderState {
+  final dynamic response;
+  PackagingScanLoaded({required this.response});
+}
+
+class PackagingScanError extends JobOrderState {
+  final String message;
+  PackagingScanError({required this.message});
+}
