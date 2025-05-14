@@ -34,10 +34,11 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     gtinCubit = GtinCubit.get(context);
     gtinCubit.getDigitalLinkViewData(widget.barcode);
     gtinCubit.getReviews(widget.barcode);
+    gtinCubit.getNutritionFacts(widget.barcode);
   }
 
   @override
@@ -86,7 +87,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                   tabs: const [
                     Tab(text: 'Overview'),
                     Tab(text: 'Details'),
-                    Tab(text: 'Certification'),
                     Tab(text: 'Sustainability'),
                   ],
                 ),
@@ -102,9 +102,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
 
                     // Details Tab
                     _buildDetailsTab(),
-
-                    // Certification Tab
-                    _buildCertificationTab(),
 
                     // Sustainability Tab
                     _buildSustainabilityTab(),
@@ -138,7 +135,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             child: Row(
               children: List.generate(
-                4,
+                3,
                 (index) => Expanded(
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -343,15 +340,8 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                               children: [
                                 Row(
                                   children: [
-                                    Container(
-                                      width: 24,
-                                      height: 24,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.grey
-                                            .withValues(alpha: 0.2),
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
+                                    const Icon(Icons.star,
+                                        color: AppColors.gold, size: 20),
                                     const SizedBox(width: 8),
                                     Container(
                                       width: 100,
@@ -560,6 +550,12 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           child: buildAllergenInformation(context),
         ),
         _InfoExpansionTile(
+          title: 'Nutrition Facts',
+          icon: Icons.restaurant_menu,
+          iconColor: Colors.orange,
+          child: buildNutritionFactsInformation(context),
+        ),
+        _InfoExpansionTile(
           title: 'Retailers',
           icon: Icons.store,
           iconColor: AppColors.skyBlue,
@@ -567,7 +563,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
         ),
         _InfoExpansionTile(
           title: 'Ingredients Information',
-          icon: Icons.restaurant_menu,
+          icon: Icons.list_alt,
           iconColor: AppColors.green,
           child: buildIngredientInformation(context),
         ),
@@ -617,37 +613,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
     );
   }
 
-  Widget _buildCertificationTab() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.verified_outlined,
-            size: 80,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Certification Information',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'No certification data available',
-            style: TextStyle(
-              color: Colors.grey[500],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSustainabilityTab() {
     return Center(
       child: Column(
@@ -672,6 +637,166 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
             'No sustainability data available',
             style: TextStyle(
               color: Colors.grey[500],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildNutritionFactsInformation(BuildContext context) {
+    return BlocBuilder<GtinCubit, GtinState>(
+      bloc: gtinCubit,
+      builder: (context, state) {
+        if (state is GtinNutritionFactsLoadingState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (gtinCubit.nutritionFacts.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.no_food_outlined,
+                    size: 48,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No nutrition facts available',
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: gtinCubit.nutritionFacts
+              .map((nutritionFact) => Card(
+                    color: AppColors.white,
+                    elevation: 2,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nutrition Facts',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          const Divider(thickness: 2),
+                          const SizedBox(height: 8),
+                          _nutritionInfoRow('Serving Size',
+                              nutritionFact.servingSize ?? 'N/A'),
+                          _nutritionInfoRow('Serving Per Package',
+                              nutritionFact.servingPerPackage ?? 'N/A'),
+                          _nutritionInfoRow('Amount Per Serving',
+                              nutritionFact.amountPerServing ?? 'N/A'),
+                          const Divider(),
+                          _nutritionInfoRow(
+                              'Calories', nutritionFact.calories ?? 'N/A',
+                              isBold: true),
+                          _nutritionInfoRow('Daily Value',
+                              '${nutritionFact.dailyValue ?? 'N/A'}%'),
+                          const Divider(),
+                          _nutritionInfoRow('Total Fats',
+                              '${nutritionFact.totalFats ?? 'N/A'}g',
+                              isBold: true),
+                          _nutritionInfoRow('Saturated Fats',
+                              '${nutritionFact.saturatedFats ?? 'N/A'}g'),
+                          _nutritionInfoRow('Monounsaturated',
+                              '${nutritionFact.monounsaturated ?? 'N/A'}g'),
+                          _nutritionInfoRow('Polyunsaturated',
+                              '${nutritionFact.polyunsaturated ?? 'N/A'}g'),
+                          _nutritionInfoRow('Trans Fat',
+                              '${nutritionFact.transFat ?? 'N/A'}g'),
+                          const Divider(),
+                          _nutritionInfoRow('Cholesterol',
+                              '${nutritionFact.cholesterol ?? 'N/A'}mg',
+                              isBold: true),
+                          _nutritionInfoRow(
+                              'Sodium', '${nutritionFact.sodium ?? 'N/A'}mg',
+                              isBold: true),
+                          const Divider(),
+                          _nutritionInfoRow('Total Carbohydrates',
+                              '${nutritionFact.totalCarbohydrates ?? 'N/A'}g',
+                              isBold: true),
+                          _nutritionInfoRow('Dietary Fibers',
+                              '${nutritionFact.dietaryFibers ?? 'N/A'}g'),
+                          _nutritionInfoRow('Total Sugars',
+                              '${nutritionFact.totalSugars ?? 'N/A'}g'),
+                          _nutritionInfoRow(
+                              'Added Sugar',
+                              nutritionFact.containsAddedSugar == true
+                                  ? 'Yes'
+                                  : 'No'),
+                          const Divider(),
+                          _nutritionInfoRow(
+                              'Protein', '${nutritionFact.protein ?? 'N/A'}g',
+                              isBold: true),
+                          if (nutritionFact.remarks != null &&
+                              nutritionFact.remarks!.isNotEmpty) ...[
+                            const Divider(),
+                            Text(
+                              'Remarks:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              nutritionFact.remarks!,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  Widget _nutritionInfoRow(String label, String value, {bool isBold = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+              color: Colors.grey[700],
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+              color: Colors.grey[800],
             ),
           ),
         ],
@@ -964,7 +1089,7 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.skyBlue,
-                foregroundColor: AppColors.white,
+                foregroundColor: Colors.white,
                 minimumSize: const Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -1594,13 +1719,13 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
                     Icon(
                       Icons.restaurant_menu,
                       size: 48,
-                      color: AppColors.grey,
+                      color: Colors.grey,
                     ),
                     SizedBox(height: 16),
                     Text(
                       'No recipe information available',
                       style: TextStyle(
-                        color: AppColors.grey,
+                        color: Colors.grey,
                         fontSize: 16,
                       ),
                     ),

@@ -10,6 +10,7 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/image_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/instruction_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/leaflet_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/nutrition_facts_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
@@ -314,6 +315,24 @@ class GTINController {
       return ReviewModel.fromJson(response.data);
     } else {
       throw Exception('Failed to submit review');
+    }
+  }
+
+  static Future<List<NutritionFactsModel>> fetchNutritionFacts(
+      String barcode) async {
+    final response = await upcHubService.request(
+      '/api/digitalLinks/nutritionFacts?barcode=$barcode',
+      method: HttpMethod.get,
+    );
+
+    if (response.success) {
+      final data = json.decode(response.body);
+      final List<dynamic> nutritionFactsJson = data['nutritionFacts'];
+      return nutritionFactsJson
+          .map((json) => NutritionFactsModel.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load nutrition facts');
     }
   }
 }
