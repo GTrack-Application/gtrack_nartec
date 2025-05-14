@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
@@ -8,7 +5,6 @@ import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_asset_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/goods_receipt/job_order/job_order_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/shipping/scan_packages/container_response_model.dart';
 
 part 'job_order_state.dart';
 
@@ -27,12 +23,10 @@ class JobOrderCubit extends Cubit<JobOrderState> {
 
   // Maps
   final Map<String, List<JobOrderAssetModel>> _assetsByTagNumber = {};
-  final Map<String, List<Map>> _packagingScanResults = {};
 
   // Getters
   get items => _selectedItems;
   List<JobOrderAssetModel> get assets => _assets;
-  Map<String, List<Map>> get packagingScanResults => _packagingScanResults;
 
   // Other Variables
   bool isSaveAssetTagsForSalesOrder = false;
@@ -247,68 +241,6 @@ class JobOrderCubit extends Cubit<JobOrderState> {
       }
     } catch (error) {
       emit(SaveAssetTagsError(message: error.toString()));
-    }
-  }
-
-  Future<void> scanPackagingBySscc(String ssccNo) async {
-    if (state is PackagingScanLoading) {
-      return;
-    }
-    emit(PackagingScanLoading());
-    try {
-      final token = await AppPreferences.getToken();
-
-      // check if the ssccNo is already scanned
-      if (_packagingScanResults.containsKey(ssccNo)) {
-        emit(PackagingScanError(message: 'Packaging already scanned'));
-        return;
-      }
-
-      // call the API
-      final response = await _httpService.request(
-        '/api/scanPackaging/sscc?ssccNo=$ssccNo',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.success) {
-        if (response.data['level'] == 'container') {
-          final containerData = ContainerResponseModel.fromJson(response.data);
-
-          // Initialize an empty list for this ssccNo if it doesn't exist yet
-          if (!_packagingScanResults.containsKey(ssccNo)) {
-            _packagingScanResults[ssccNo] = [];
-          }
-
-          for (final pallet in containerData.container.pallets) {
-            for (final ssccPackage in pallet.ssccPackages) {
-              for (final detail in ssccPackage.details) {
-                _packagingScanResults[ssccNo]!.add({
-                  "ssccNo": ssccPackage.ssccNo,
-                  "description": ssccPackage.description,
-                  "memberId": ssccPackage.memberId,
-                  "binLocationId": ssccPackage.binLocationId,
-                  "masterPackagingId": detail.masterPackagingId,
-                  "serialGTIN": detail.serialGTIN,
-                  "serialNo": detail.serialNo,
-                });
-              }
-            }
-          }
-        }
-
-        log("_packagingScanResults: " + jsonEncode(_packagingScanResults));
-
-        // Emit the loaded state with the scan results for this SSCC
-        emit(PackagingScanLoaded(response: _packagingScanResults[ssccNo]));
-      } else {
-        emit(PackagingScanError(
-            message: response.message ?? 'Failed to scan packaging'));
-      }
-    } catch (error) {
-      emit(PackagingScanError(message: error.toString()));
     }
   }
 }

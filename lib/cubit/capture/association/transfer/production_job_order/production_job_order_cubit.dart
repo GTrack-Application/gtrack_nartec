@@ -10,7 +10,9 @@ import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobO
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
-import 'package:gtrack_nartec/models/capture/Association/shipping/scan_packages/container_response_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/container_response_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/pallet_response_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/sscc_response_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/shipping/vehicle_model.dart';
 
 class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
@@ -42,6 +44,15 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   List<VehicleModel> get vehicles => _vehicles;
   Map<String, List<Map>> get packagingScanResults => _packagingScanResults;
   List<Map> get selectedpackagingScanResults => _selectedpackagingScanResults;
+
+  // Selected Data
+  SubSalesOrderModel? selectedSubSalesOrder;
+
+  /*
+  ##############################################################################
+  ! Packaging Scan
+  ##############################################################################
+  */
 
   // Item selection methods
   void toggleItemSelection(Map item) {
@@ -79,8 +90,194 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     emit(PackagingSelectionChanged(selected: _selectedpackagingScanResults));
   }
 
-  // Selected Data
-  SubSalesOrderModel? selectedSubSalesOrder;
+  Future<void> getMappedBarcodes(
+    String gtin, {
+    String? palletCode,
+    String? serialNo,
+  }) async {
+    if (state is ProductionJobOrderMappedBarcodesLoading) return;
+    if (palletCode != null) {
+      if (palletCode.isEmpty) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'Pallet code is required',
+        ));
+        return;
+      }
+    } else if (serialNo != null) {
+      if (serialNo.isEmpty) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'Serial number is required',
+        ));
+        return;
+      }
+    }
+    emit(ProductionJobOrderMappedBarcodesLoading());
+    try {
+      // If picked quantity is equal to the quantity, don't fetch mapped barcodes
+      if (quantityPicked >= (bomStartData?.quantity ?? 0)) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'You have reached the maximum quantity',
+        ));
+        return;
+      }
+      final token = await AppPreferences.getToken();
+      String url = '/api/mappedBarcodes?';
+      if (palletCode != null) {
+        url += 'PalletCode=$palletCode&GTIN=$gtin';
+      } else if (serialNo != null) {
+        url += 'ItemSerialNo=$serialNo&GTIN=$gtin';
+      }
+
+      final response = await _httpService.request(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.success) {
+        final data = response.data;
+        final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
+        if (mappedBarcodes.data?.isEmpty ?? true) {
+          emit(ProductionJobOrderMappedBarcodesError(
+            message: 'No mapped barcodes found for $gtin',
+          ));
+          return;
+        }
+        // add all new list but don't add duplicates
+        // final newItems = mappedBarcodes.data
+        //     ?.where((element) => !items.any((e) => e.id == element.id))
+        //     .toList();
+        final newItems = mappedBarcodes.data;
+        items.addAll(newItems ?? []);
+        // increment quantity
+        if (bomStartData != null) {
+          bomStartData = bomStartData!.increasePickedQuantity();
+          quantityPicked++;
+        }
+
+        emit(ProductionJobOrderMappedBarcodesLoaded(
+            mappedBarcodes: mappedBarcodes));
+      } else {
+        emit(ProductionJobOrderMappedBarcodesError(
+            message: 'Failed to fetch mapped barcodes'));
+      }
+    } catch (e) {
+      emit(ProductionJobOrderMappedBarcodesError(message: e.toString()));
+    }
+  }
+
+  Future<void> scanPackagingBySscc(String ssccNo) async {
+    if (state is ProductionJobOrderMappedBarcodesLoading) {
+      return;
+    }
+    emit(ProductionJobOrderMappedBarcodesLoading());
+    try {
+      final token = await AppPreferences.getToken();
+
+      // check if the ssccNo is already scanned
+      if (_packagingScanResults.containsKey(ssccNo)) {
+        emit(ProductionJobOrderMappedBarcodesError(
+            message: 'Packaging already scanned'));
+        return;
+      }
+
+      // call the API
+      final response = await _httpService.request(
+        '/api/scanPackaging/sscc?ssccNo=$ssccNo',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.success) {
+        if (response.data['level'] == 'container') {
+          final containerData = ContainerResponseModel.fromJson(response.data);
+
+          // Initialize an empty list for this ssccNo if it doesn't exist yet
+          if (!_packagingScanResults.containsKey(ssccNo)) {
+            _packagingScanResults[ssccNo] = [];
+          }
+
+          for (final pallet in containerData.container.pallets) {
+            for (final ssccPackage in pallet.ssccPackages) {
+              for (final detail in ssccPackage.details) {
+                _packagingScanResults[ssccNo]!.add({
+                  "ssccNo": ssccPackage.ssccNo,
+                  "description": ssccPackage.description,
+                  "memberId": ssccPackage.memberId,
+                  "binLocationId": ssccPackage.binLocationId,
+                  "masterPackagingId": detail.masterPackagingId,
+                  "serialGTIN": detail.serialGTIN,
+                  "serialNo": detail.serialNo,
+                });
+              }
+            }
+          }
+        } else if (response.data['level'] == 'pallet') {
+          final palletData = PalletResponseModel.fromJson(response.data);
+
+          // Initialize an empty list for this ssccNo if it doesn't exist yet
+          if (!_packagingScanResults.containsKey(ssccNo)) {
+            _packagingScanResults[ssccNo] = [];
+          }
+
+          for (final pallet in palletData.pallet.ssccPackages) {
+            for (final detail in pallet.details) {
+              _packagingScanResults[ssccNo]!.add({
+                "ssccNo": pallet.ssccNo,
+                "description": pallet.description,
+                "memberId": pallet.memberId,
+                "binLocationId": pallet.binLocationId,
+                "masterPackagingId": detail.masterPackagingId,
+                "serialGTIN": detail.serialGTIN,
+                "serialNo": detail.serialNo,
+              });
+            }
+          }
+        } else if (response.data['level'] == 'sscc') {
+          final ssccData = SSCCResponseModel.fromJson(response.data);
+
+          // Initialize an empty list for this ssccNo if it doesn't exist yet
+          if (!_packagingScanResults.containsKey(ssccNo)) {
+            _packagingScanResults[ssccNo] = [];
+          }
+
+          for (final detail in ssccData.sscc.details) {
+            _packagingScanResults[ssccNo]!.add({
+              "ssccNo": ssccData.sscc.ssccNo,
+              "description": ssccData.sscc.description,
+              "memberId": ssccData.sscc.memberId,
+              "binLocationId": ssccData.sscc.binLocationId,
+              "masterPackagingId": detail.masterPackagingId,
+              "serialGTIN": detail.serialGTIN,
+              "serialNo": detail.serialNo,
+            });
+          }
+        }
+
+        // Emit the loaded state with the scan results for this SSCC
+        // emit(PackagingScanLoaded(response: _packagingScanResults));
+        emit(ProductionJobOrderMappedBarcodesLoaded(
+          mappedBarcodes: _packagingScanResults,
+        ));
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to scan packaging';
+        emit(ProductionJobOrderMappedBarcodesError(message: errorMessage));
+      }
+    } catch (error) {
+      emit(ProductionJobOrderMappedBarcodesError(message: error.toString()));
+    }
+  }
+
+  /*
+  ##############################################################################
+  ! End
+  ##############################################################################
+  */
 
   Future<void> getProductionJobOrders() async {
     emit(ProductionJobOrderLoading());
@@ -212,150 +409,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       }
     } catch (e) {
       emit(ProductionJobOrderBinLocationsError(message: e.toString()));
-    }
-  }
-
-  Future<void> getMappedBarcodes(
-    String gtin, {
-    String? palletCode,
-    String? serialNo,
-  }) async {
-    if (state is ProductionJobOrderMappedBarcodesLoading) return;
-    if (palletCode != null) {
-      if (palletCode.isEmpty) {
-        emit(ProductionJobOrderMappedBarcodesError(
-          message: 'Pallet code is required',
-        ));
-        return;
-      }
-    } else if (serialNo != null) {
-      if (serialNo.isEmpty) {
-        emit(ProductionJobOrderMappedBarcodesError(
-          message: 'Serial number is required',
-        ));
-        return;
-      }
-    }
-    emit(ProductionJobOrderMappedBarcodesLoading());
-    try {
-      // If picked quantity is equal to the quantity, don't fetch mapped barcodes
-      if (quantityPicked >= (bomStartData?.quantity ?? 0)) {
-        emit(ProductionJobOrderMappedBarcodesError(
-          message: 'You have reached the maximum quantity',
-        ));
-        return;
-      }
-      final token = await AppPreferences.getToken();
-      String url = '/api/mappedBarcodes?';
-      if (palletCode != null) {
-        url += 'PalletCode=$palletCode&GTIN=$gtin';
-      } else if (serialNo != null) {
-        url += 'ItemSerialNo=$serialNo&GTIN=$gtin';
-      }
-
-      final response = await _httpService.request(
-        url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.success) {
-        final data = response.data;
-        final mappedBarcodes = MappedBarcodesResponse.fromJson(data);
-        if (mappedBarcodes.data?.isEmpty ?? true) {
-          emit(ProductionJobOrderMappedBarcodesError(
-            message: 'No mapped barcodes found for $gtin',
-          ));
-          return;
-        }
-        // add all new list but don't add duplicates
-        // final newItems = mappedBarcodes.data
-        //     ?.where((element) => !items.any((e) => e.id == element.id))
-        //     .toList();
-        final newItems = mappedBarcodes.data;
-        items.addAll(newItems ?? []);
-        // increment quantity
-        if (bomStartData != null) {
-          bomStartData = bomStartData!.increasePickedQuantity();
-          quantityPicked++;
-        }
-
-        emit(ProductionJobOrderMappedBarcodesLoaded(
-            mappedBarcodes: mappedBarcodes));
-      } else {
-        emit(ProductionJobOrderMappedBarcodesError(
-            message: 'Failed to fetch mapped barcodes'));
-      }
-    } catch (e) {
-      emit(ProductionJobOrderMappedBarcodesError(message: e.toString()));
-    }
-  }
-
-  Future<void> scanPackagingBySscc(String ssccNo) async {
-    if (state is ProductionJobOrderMappedBarcodesLoading) {
-      return;
-    }
-    emit(ProductionJobOrderMappedBarcodesLoading());
-    try {
-      final token = await AppPreferences.getToken();
-
-      // check if the ssccNo is already scanned
-      if (_packagingScanResults.containsKey(ssccNo)) {
-        emit(ProductionJobOrderMappedBarcodesError(
-            message: 'Packaging already scanned'));
-        return;
-      }
-
-      // call the API
-      final response = await _httpService.request(
-        '/api/scanPackaging/sscc?ssccNo=$ssccNo',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.success) {
-        if (response.data['level'] == 'container') {
-          final containerData = ContainerResponseModel.fromJson(response.data);
-
-          // Initialize an empty list for this ssccNo if it doesn't exist yet
-          if (!_packagingScanResults.containsKey(ssccNo)) {
-            _packagingScanResults[ssccNo] = [];
-          }
-
-          for (final pallet in containerData.container.pallets) {
-            for (final ssccPackage in pallet.ssccPackages) {
-              for (final detail in ssccPackage.details) {
-                _packagingScanResults[ssccNo]!.add({
-                  "ssccNo": ssccPackage.ssccNo,
-                  "description": ssccPackage.description,
-                  "memberId": ssccPackage.memberId,
-                  "binLocationId": ssccPackage.binLocationId,
-                  "masterPackagingId": detail.masterPackagingId,
-                  "serialGTIN": detail.serialGTIN,
-                  "serialNo": detail.serialNo,
-                });
-              }
-            }
-          }
-        } else if (response.data['level'] == 'sscc') {
-        } else if (response.data['level'] == 'pallet') {}
-
-        // Emit the loaded state with the scan results for this SSCC
-        // emit(PackagingScanLoaded(response: _packagingScanResults));
-        emit(ProductionJobOrderMappedBarcodesLoaded(
-          mappedBarcodes: _packagingScanResults,
-        ));
-      } else {
-        final errorMessage =
-            response.data?['message'] ?? 'Failed to scan packaging';
-        emit(ProductionJobOrderMappedBarcodesError(message: errorMessage));
-      }
-    } catch (error) {
-      emit(ProductionJobOrderMappedBarcodesError(message: error.toString()));
     }
   }
 
