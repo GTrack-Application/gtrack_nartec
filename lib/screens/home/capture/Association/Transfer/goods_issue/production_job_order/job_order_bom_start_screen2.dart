@@ -213,7 +213,9 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                   ),
                   suffixIcon: IconButton(
                     onPressed: () {
-                      cubit.scanPackagingBySscc(palletController.text);
+                      cubit.scanPackagingBySscc(
+                        palletCode: palletController.text,
+                      );
                     },
                     icon: Icon(state is PackagingScanLoading
                         ? Icons.hourglass_empty
@@ -484,12 +486,15 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                   ),
                   suffixIcon: IconButton(
                     onPressed: () {
-                      cubit.getMappedBarcodes(
-                        context
-                                .read<ProductionJobOrderCubit>()
-                                .bomStartData
-                                ?.productId ??
-                            '',
+                      //   cubit.getMappedBarcodes(
+                      //     context
+                      //             .read<ProductionJobOrderCubit>()
+                      //             .bomStartData
+                      //             ?.productId ??
+                      //         '',
+                      //     serialNo: serialController.text,
+                      //   );
+                      cubit.scanPackagingBySscc(
                         serialNo: serialController.text,
                       );
                     },

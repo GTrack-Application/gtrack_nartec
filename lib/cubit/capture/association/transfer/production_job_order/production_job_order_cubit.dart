@@ -12,6 +12,7 @@ import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobO
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/container_response_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/pallet_response_model.dart';
+import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/serial_response_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/sscc_response_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/shipping/vehicle_model.dart';
 
@@ -168,24 +169,47 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     }
   }
 
-  Future<void> scanPackagingBySscc(String ssccNo) async {
+  Future<void> scanPackagingBySscc({
+    String? palletCode,
+    String? serialNo,
+  }) async {
     if (state is ProductionJobOrderMappedBarcodesLoading) {
       return;
+    }
+
+    if (palletCode != null) {
+      if (palletCode.isEmpty) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'Pallet code is required',
+        ));
+        return;
+      }
+    } else if (serialNo != null) {
+      if (serialNo.isEmpty) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'Serial number is required',
+        ));
+        return;
+      }
     }
     emit(ProductionJobOrderMappedBarcodesLoading());
     try {
       final token = await AppPreferences.getToken();
 
       // check if the ssccNo is already scanned
-      if (_packagingScanResults.containsKey(ssccNo)) {
+      if (_packagingScanResults.containsKey(serialNo ?? palletCode)) {
         emit(ProductionJobOrderMappedBarcodesError(
             message: 'Packaging already scanned'));
         return;
       }
 
+      final path = palletCode != null
+          ? '/api/scanPackaging/sscc?ssccNo=$palletCode'
+          : '/api/ssccPackaging/details?serialNo=$serialNo&association=true';
+
       // call the API
       final response = await _httpService.request(
-        '/api/scanPackaging/sscc?ssccNo=$ssccNo',
+        path,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -193,67 +217,92 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       );
 
       if (response.success) {
-        if (response.data['level'] == 'container') {
-          final containerData = ContainerResponseModel.fromJson(response.data);
+        // If we are scanning by pallet
+        if (palletCode != null) {
+          if (response.data['level'] == 'container') {
+            final containerData =
+                ContainerResponseModel.fromJson(response.data);
 
-          // Initialize an empty list for this ssccNo if it doesn't exist yet
-          if (!_packagingScanResults.containsKey(ssccNo)) {
-            _packagingScanResults[ssccNo] = [];
-          }
+            // Initialize an empty list for this ssccNo if it doesn't exist yet
+            if (!_packagingScanResults.containsKey(palletCode)) {
+              _packagingScanResults[palletCode] = [];
+            }
 
-          for (final pallet in containerData.container.pallets) {
-            for (final ssccPackage in pallet.ssccPackages) {
-              for (final detail in ssccPackage.details) {
-                _packagingScanResults[ssccNo]!.add({
-                  "ssccNo": ssccPackage.ssccNo,
-                  "description": ssccPackage.description,
-                  "memberId": ssccPackage.memberId,
-                  "binLocationId": ssccPackage.binLocationId,
+            for (final pallet in containerData.container.pallets) {
+              for (final ssccPackage in pallet.ssccPackages) {
+                for (final detail in ssccPackage.details) {
+                  _packagingScanResults[palletCode]!.add({
+                    "ssccNo": ssccPackage.ssccNo,
+                    "description": ssccPackage.description,
+                    "memberId": ssccPackage.memberId,
+                    "binLocationId": ssccPackage.binLocationId,
+                    "masterPackagingId": detail.masterPackagingId,
+                    "serialGTIN": detail.serialGTIN,
+                    "serialNo": detail.serialNo,
+                  });
+                }
+              }
+            }
+          } else if (response.data['level'] == 'pallet') {
+            final palletData = PalletResponseModel.fromJson(response.data);
+
+            // Initialize an empty list for this ssccNo if it doesn't exist yet
+            if (!_packagingScanResults.containsKey(palletCode)) {
+              _packagingScanResults[palletCode] = [];
+            }
+
+            for (final pallet in palletData.pallet.ssccPackages) {
+              for (final detail in pallet.details) {
+                _packagingScanResults[palletCode]!.add({
+                  "ssccNo": pallet.ssccNo,
+                  "description": pallet.description,
+                  "memberId": pallet.memberId,
+                  "binLocationId": pallet.binLocationId,
                   "masterPackagingId": detail.masterPackagingId,
                   "serialGTIN": detail.serialGTIN,
                   "serialNo": detail.serialNo,
                 });
               }
             }
-          }
-        } else if (response.data['level'] == 'pallet') {
-          final palletData = PalletResponseModel.fromJson(response.data);
+          } else if (response.data['level'] == 'sscc') {
+            final ssccData = SSCCResponseModel.fromJson(response.data);
 
-          // Initialize an empty list for this ssccNo if it doesn't exist yet
-          if (!_packagingScanResults.containsKey(ssccNo)) {
-            _packagingScanResults[ssccNo] = [];
-          }
+            // Initialize an empty list for this ssccNo if it doesn't exist yet
+            if (!_packagingScanResults.containsKey(palletCode)) {
+              _packagingScanResults[palletCode] = [];
+            }
 
-          for (final pallet in palletData.pallet.ssccPackages) {
-            for (final detail in pallet.details) {
-              _packagingScanResults[ssccNo]!.add({
-                "ssccNo": pallet.ssccNo,
-                "description": pallet.description,
-                "memberId": pallet.memberId,
-                "binLocationId": pallet.binLocationId,
+            for (final detail in ssccData.sscc.details) {
+              _packagingScanResults[palletCode]!.add({
+                "ssccNo": ssccData.sscc.ssccNo,
+                "description": ssccData.sscc.description,
+                "memberId": ssccData.sscc.memberId,
+                "binLocationId": ssccData.sscc.binLocationId,
                 "masterPackagingId": detail.masterPackagingId,
                 "serialGTIN": detail.serialGTIN,
                 "serialNo": detail.serialNo,
               });
             }
           }
-        } else if (response.data['level'] == 'sscc') {
-          final ssccData = SSCCResponseModel.fromJson(response.data);
+        }
 
+        // If we are scanning by serial
+        else if (serialNo != null) {
+          final serialResponse = SerialResponseModel.fromJson(response.data);
           // Initialize an empty list for this ssccNo if it doesn't exist yet
-          if (!_packagingScanResults.containsKey(ssccNo)) {
-            _packagingScanResults[ssccNo] = [];
+          if (!_packagingScanResults.containsKey(serialNo)) {
+            _packagingScanResults[serialNo] = [];
           }
 
-          for (final detail in ssccData.sscc.details) {
-            _packagingScanResults[ssccNo]!.add({
-              "ssccNo": ssccData.sscc.ssccNo,
-              "description": ssccData.sscc.description,
-              "memberId": ssccData.sscc.memberId,
-              "binLocationId": ssccData.sscc.binLocationId,
-              "masterPackagingId": detail.masterPackagingId,
-              "serialGTIN": detail.serialGTIN,
-              "serialNo": detail.serialNo,
+          for (final item in serialResponse.data.items) {
+            _packagingScanResults[serialNo]!.add({
+              "ssccNo": item.masterPackaging.ssccNo,
+              "description": item.masterPackaging.description,
+              "memberId": item.masterPackaging.memberId,
+              "binLocationId": item.masterPackaging.binLocationId,
+              "masterPackagingId": item.masterPackaging.id,
+              "serialGTIN": item.serialGTIN,
+              "serialNo": item.serialNo,
             });
           }
         }
