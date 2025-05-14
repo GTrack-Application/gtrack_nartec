@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
@@ -12,6 +10,7 @@ import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobO
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
+import 'package:gtrack_nartec/models/capture/Association/shipping/scan_packages/container_response_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/shipping/vehicle_model.dart';
 
 class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
@@ -35,8 +34,50 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   int quantityPicked = 0;
   String? selectedGLN;
 
+  // Maps
+  final Map<String, List<Map>> _packagingScanResults = {};
+  final List<Map> _selectedpackagingScanResults = [];
+
   // Getters
   List<VehicleModel> get vehicles => _vehicles;
+  Map<String, List<Map>> get packagingScanResults => _packagingScanResults;
+  List<Map> get selectedpackagingScanResults => _selectedpackagingScanResults;
+
+  // Item selection methods
+  void toggleItemSelection(Map item) {
+    final existingIndex = _selectedpackagingScanResults.indexWhere((element) =>
+        element['serialGTIN'] == item['serialGTIN'] &&
+        element['serialNo'] == item['serialNo']);
+
+    if (existingIndex >= 0) {
+      _selectedpackagingScanResults.removeAt(existingIndex);
+      quantityPicked--;
+    } else {
+      // // If picked quantity is equal to the quantity, don't fetch mapped barcodes
+      if (quantityPicked >= (bomStartData?.quantity ?? 0)) {
+        emit(ProductionJobOrderMappedBarcodesError(
+          message: 'You have reached the maximum quantity',
+        ));
+        return;
+      }
+
+      _selectedpackagingScanResults.add(item);
+      quantityPicked++;
+    }
+    emit(PackagingSelectionChanged(selected: _selectedpackagingScanResults));
+  }
+
+  bool isItemSelected(Map item) {
+    return _selectedpackagingScanResults.any((element) =>
+        element['serialGTIN'] == item['serialGTIN'] &&
+        element['serialNo'] == item['serialNo']);
+  }
+
+  void clearSelectedItems() {
+    _selectedpackagingScanResults.clear();
+    quantityPicked = 0;
+    emit(PackagingSelectionChanged(selected: _selectedpackagingScanResults));
+  }
 
   // Selected Data
   SubSalesOrderModel? selectedSubSalesOrder;
@@ -68,7 +109,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
 
   Future<void> searchProductionJobOrders(String query) async {
     try {
-      log(query);
       if (query.isEmpty) {
         filteredOrders = _orders;
         emit(ProductionJobOrderLoaded(orders: _orders));
@@ -171,7 +211,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
             message: 'Failed to fetch bin locations'));
       }
     } catch (e) {
-      log(e.toString());
       emit(ProductionJobOrderBinLocationsError(message: e.toString()));
     }
   }
@@ -251,6 +290,72 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       }
     } catch (e) {
       emit(ProductionJobOrderMappedBarcodesError(message: e.toString()));
+    }
+  }
+
+  Future<void> scanPackagingBySscc(String ssccNo) async {
+    if (state is ProductionJobOrderMappedBarcodesLoading) {
+      return;
+    }
+    emit(ProductionJobOrderMappedBarcodesLoading());
+    try {
+      final token = await AppPreferences.getToken();
+
+      // check if the ssccNo is already scanned
+      if (_packagingScanResults.containsKey(ssccNo)) {
+        emit(ProductionJobOrderMappedBarcodesError(
+            message: 'Packaging already scanned'));
+        return;
+      }
+
+      // call the API
+      final response = await _httpService.request(
+        '/api/scanPackaging/sscc?ssccNo=$ssccNo',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.success) {
+        if (response.data['level'] == 'container') {
+          final containerData = ContainerResponseModel.fromJson(response.data);
+
+          // Initialize an empty list for this ssccNo if it doesn't exist yet
+          if (!_packagingScanResults.containsKey(ssccNo)) {
+            _packagingScanResults[ssccNo] = [];
+          }
+
+          for (final pallet in containerData.container.pallets) {
+            for (final ssccPackage in pallet.ssccPackages) {
+              for (final detail in ssccPackage.details) {
+                _packagingScanResults[ssccNo]!.add({
+                  "ssccNo": ssccPackage.ssccNo,
+                  "description": ssccPackage.description,
+                  "memberId": ssccPackage.memberId,
+                  "binLocationId": ssccPackage.binLocationId,
+                  "masterPackagingId": detail.masterPackagingId,
+                  "serialGTIN": detail.serialGTIN,
+                  "serialNo": detail.serialNo,
+                });
+              }
+            }
+          }
+        } else if (response.data['level'] == 'sscc') {
+        } else if (response.data['level'] == 'pallet') {}
+
+        // Emit the loaded state with the scan results for this SSCC
+        // emit(PackagingScanLoaded(response: _packagingScanResults));
+        emit(ProductionJobOrderMappedBarcodesLoaded(
+          mappedBarcodes: _packagingScanResults,
+        ));
+      } else {
+        final errorMessage =
+            response.data?['message'] ?? 'Failed to scan packaging';
+        emit(ProductionJobOrderMappedBarcodesError(message: errorMessage));
+      }
+    } catch (error) {
+      emit(ProductionJobOrderMappedBarcodesError(message: error.toString()));
     }
   }
 
@@ -426,7 +531,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         throw Exception('Failed to update mapped barcodes');
       }
     } catch (e) {
-      log(e.toString());
       emit(ProductionJobOrderUpdateMappedBarcodesError(message: e.toString()));
     }
   }
@@ -476,7 +580,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
             'vehicleId': selectedVehicle?.id.toString(),
           },
         ).catchError((error) {
-          log(error.toString());
           throw Exception(error.data['message'] ??
               error.data['error'] ??
               'Failed to update mapped barcodes');

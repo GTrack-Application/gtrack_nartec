@@ -71,3 +71,16 @@ class PackagingScanError extends JobOrderState {
   final String message;
   PackagingScanError({required this.message});
 }
+
+// * Package Item Selection
+class PackagingItemSelectionUpdated extends JobOrderState {
+  final int totalSelectedItems;
+  final Map<String, Set<String>> selectedNestedItems;
+  final Set<String> selectedPackages;
+
+  PackagingItemSelectionUpdated({
+    required this.totalSelectedItems,
+    required this.selectedNestedItems,
+    required this.selectedPackages,
+  });
+}

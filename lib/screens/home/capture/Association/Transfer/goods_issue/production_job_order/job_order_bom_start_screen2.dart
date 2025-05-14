@@ -37,7 +37,7 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
     cubit.bomStartData = bom;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transfer By Pallet'),
+        title: const Text('Scan By Serial | Pallet'),
         backgroundColor: AppColors.pink,
       ),
       body: SingleChildScrollView(
@@ -49,71 +49,41 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
               if (state is ProductionJobOrderMappedBarcodesError) {
                 AppSnackbars.danger(context, state.message);
               } else if (state is ProductionJobOrderMappedBarcodesLoaded) {
-                AppSnackbars.success(
-                  context,
-                  state.mappedBarcodes.message ?? '',
-                );
+                // AppSnackbars.success(
+                //   context,
+                //   state.mappedBarcodes.message ?? '',
+                // );
               }
             },
             builder: (context, state) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16,
                 children: [
-                  Row(
-                    children: [
-                      const Text('Quantity: '),
-                      Text("${bom?.quantity ?? 0}"),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Text('Picked Quantity: '),
-                      // Text("${bom?.quantityPicked ?? 0}"),
-                      Text("${cubit.quantityPicked}"),
-                    ],
-                  ),
-                  // Radio Buttons for BY PALLET or BY SERIAL
-                  Row(
-                    spacing: 8,
-                    children: [
-                      Radio<String>(
-                        value: 'pallet',
-                        groupValue: selectedType,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedType = value!;
-                          });
-                        },
-                        activeColor: AppColors.pink,
-                      ),
-                      const Text('BY PALLET'),
-                      Radio<String>(
-                        value: 'serial',
-                        groupValue: selectedType,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedType = value!;
-                          });
-                        },
-                        activeColor: AppColors.pink,
-                      ),
-                      const Text('BY SERIAL'),
-                    ],
-                  ),
+                  // Quantity information
+                  _buildInfoRow('Quantity:', '${bom?.quantity ?? 0}'),
+                  const SizedBox(height: 8),
+                  _buildInfoRow('Picked Quantity:', '${cubit.quantityPicked}'),
+                  const SizedBox(height: 16),
 
+                  // Radio Buttons for scanning mode
+                  _buildScanTypeSelector(),
+                  const SizedBox(height: 16),
+
+                  // Conditional form based on selected type
                   if (selectedType == 'pallet')
                     _buildPalletForm()
                   else
                     _buildSerialForm(),
-                  if ((state is ProductionJobOrderMappedBarcodesError) ||
-                      (state is ProductionJobOrderMappedBarcodesLoaded &&
-                          state.mappedBarcodes.data?.isNotEmpty == true))
-                    _buildScannedItems(),
-                  // if (state is ProductionJobOrderMappedBarcodesError)
-                  //   Text(state.message,
-                  //       style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 16),
 
+                  // Scanned items display
+                  //   if ((state is ProductionJobOrderMappedBarcodesError) ||
+                  //       (state is ProductionJobOrderMappedBarcodesLoaded &&
+                  //           state.mappedBarcodes.data?.isNotEmpty == true))
+                  _buildScannedItems(),
+                  const SizedBox(height: 16),
+
+                  // WIP Location input
                   const Text("Scan WIP Location"),
                   TextFormField(
                     controller: locationController,
@@ -121,52 +91,10 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                       hintText: 'WIP Location',
                     ),
                   ),
-                  BlocConsumer<ProductionJobOrderCubit,
-                      ProductionJobOrderState>(
-                    listener: (context, state) {
-                      if (state
-                          is ProductionJobOrderUpdateMappedBarcodesLoaded) {
-                        AppSnackbars.success(context, state.message);
-                        AppNavigator.pushAndRemoveUntil(
-                          context: context,
-                          screen: const HomeScreen(),
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      final isLoading = state
-                          is ProductionJobOrderUpdateMappedBarcodesLoading;
-                      return PrimaryButtonWidget(
-                        text: "Save",
-                        backgroundColor: AppColors.pink,
-                        onPressed: () {
-                          if (locationController.text.isEmpty) {
-                            AppSnackbars.normal(context,
-                                "Please Enter WIP Location in order to proceed");
-                            return;
-                          } else if (cubit.items.isEmpty) {
-                            AppSnackbars.normal(context,
-                                "Please scan at least one item in order to proceed");
-                            return;
-                          } else if (isLoading) {
-                            return;
-                          }
+                  const SizedBox(height: 24),
 
-                          context
-                              .read<ProductionJobOrderCubit>()
-                              .updateMappedBarcodes(
-                                locationController.text,
-                                cubit.items,
-                                oldOrder: context
-                                    .read<ProductionJobOrderCubit>()
-                                    .order!,
-                                qty: cubit.quantityPicked,
-                              );
-                        },
-                        isLoading: isLoading,
-                      );
-                    },
-                  ),
+                  // Save button
+                  _buildSaveButton(),
                 ],
               );
             },
@@ -176,32 +104,118 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
     );
   }
 
+  /// Builds a simple information row with a label and value
+  Widget _buildInfoRow(String label, String value) {
+    return Row(
+      children: [
+        Text(label),
+        const SizedBox(width: 4),
+        Text(value),
+      ],
+    );
+  }
+
+  /// Builds the scan type selector (Pallet vs Serial)
+  Widget _buildScanTypeSelector() {
+    return Row(
+      children: [
+        Radio<String>(
+          value: 'pallet',
+          groupValue: selectedType,
+          onChanged: (value) {
+            setState(() {
+              selectedType = value!;
+            });
+          },
+          activeColor: AppColors.pink,
+        ),
+        const Text('BY PALLET'),
+        const SizedBox(width: 16),
+        Radio<String>(
+          value: 'serial',
+          groupValue: selectedType,
+          onChanged: (value) {
+            setState(() {
+              selectedType = value!;
+            });
+          },
+          activeColor: AppColors.pink,
+        ),
+        const Text('BY SERIAL'),
+      ],
+    );
+  }
+
+  /// Builds the save button with validation logic
+  Widget _buildSaveButton() {
+    return BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
+      listener: (context, state) {
+        if (state is ProductionJobOrderUpdateMappedBarcodesLoaded) {
+          AppSnackbars.success(context, state.message);
+          AppNavigator.pushAndRemoveUntil(
+            context: context,
+            screen: const HomeScreen(),
+          );
+        }
+      },
+      builder: (context, state) {
+        final isLoading =
+            state is ProductionJobOrderUpdateMappedBarcodesLoading;
+        return PrimaryButtonWidget(
+          text: "Save",
+          backgroundColor: AppColors.pink,
+          onPressed: () {
+            if (locationController.text.isEmpty) {
+              AppSnackbars.normal(
+                  context, "Please Enter WIP Location in order to proceed");
+              return;
+            } else if (cubit.items.isEmpty) {
+              AppSnackbars.normal(
+                  context, "Please scan at least one item in order to proceed");
+              return;
+            } else if (isLoading) {
+              return;
+            }
+
+            context.read<ProductionJobOrderCubit>().updateMappedBarcodes(
+                  locationController.text,
+                  cubit.items,
+                  oldOrder: context.read<ProductionJobOrderCubit>().order!,
+                  qty: cubit.quantityPicked,
+                );
+          },
+          isLoading: isLoading,
+        );
+      },
+    );
+  }
+
   Widget _buildPalletForm() {
+    final productionJobOrderCubit = context.read<ProductionJobOrderCubit>();
     return BlocBuilder<ProductionJobOrderCubit, ProductionJobOrderState>(
       bloc: cubit,
       builder: (context, state) {
         return Form(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16,
             children: [
-              const Text("Scan Pallet Number"),
+              const Text("Scan Pallet Number",
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: palletController,
                 decoration: InputDecoration(
                   hintText: 'Pallet Number',
+                  border: const OutlineInputBorder(),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 16,
+                  ),
                   suffixIcon: IconButton(
                     onPressed: () {
-                      cubit.getMappedBarcodes(
-                        context
-                                .read<ProductionJobOrderCubit>()
-                                .bomStartData
-                                ?.productId ??
-                            '',
-                        palletCode: palletController.text,
-                      );
+                      cubit.scanPackagingBySscc(palletController.text);
                     },
-                    icon: Icon(state is ProductionJobOrderMappedBarcodesLoading
+                    icon: Icon(state is PackagingScanLoading
                         ? Icons.hourglass_empty
                         : Icons.qr_code),
                   ),
@@ -215,191 +229,236 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
   }
 
   Widget _buildScannedItems() {
-    final items = cubit.items;
+    final items = cubit.packagingScanResults;
+    final packages = cubit.packagingScanResults.entries;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            RichText(
-              text: TextSpan(
-                style: const TextStyle(fontSize: 16, color: Colors.black),
-                children: [
-                  TextSpan(
-                    text: 'Scanned Items (${items.length}) ',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: 'Scanned Items (${items.length}) ',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                cubit.clearItems();
-              },
-              child: const Text(
-                'Clear All',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.w500,
                 ),
-              ),
+                if (cubit.selectedpackagingScanResults.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(left: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppColors.pink.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${cubit.selectedpackagingScanResults.length} selected',
+                      style: TextStyle(
+                        color: AppColors.pink,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            Row(
+              children: [
+                if (cubit.selectedpackagingScanResults.isNotEmpty)
+                  TextButton(
+                    onPressed: () {
+                      cubit.clearSelectedItems();
+                    },
+                    child: const Text(
+                      'Clear Selection',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                TextButton(
+                  onPressed: () {
+                    cubit.clearItems();
+                  },
+                  child: const Text(
+                    'Clear All',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
         const SizedBox(height: 8),
-        ...items.map((item) => Card(
-              color: AppColors.white,
-              margin: const EdgeInsets.only(bottom: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          item.itemDesc ?? '',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+        ...packages.map(
+          (package) => Card(
+            color: AppColors.white,
+            margin: const EdgeInsets.only(bottom: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(color: Colors.grey.shade300),
+            ),
+            elevation: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Package SSCC header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'SSCC: ${package.key}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        IconButton(
-                          onPressed: () {
-                            // Remove individual item
-                            cubit.removeItem(item);
-                          },
-                          icon: const Icon(Icons.close),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Item Code: ${item.itemCode}',
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
                       ),
+                      IconButton(
+                        onPressed: () {
+                          // Remove this SSCC entry
+                          cubit.packagingScanResults.remove(package.key);
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.close),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
+                  ),
+
+                  Text(
+                    'Total items: ${package.value.length}',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 14,
                     ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'GTIN',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Text(
-                                item.gtin ?? '',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Serial No',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Text(
-                                item.itemSerialNo ?? '',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Location',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          item.binLocation ?? '',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Pallet Code',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          item.palletCode ?? '',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Record #${items.indexOf(item) + 1}',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          'SDFADSFADS',
-                          style: TextStyle(
-                            color: Colors.blue[700],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Individual package details
+                  ...package.value
+                      .map((item) => _buildSelectionItem(item))
+                      .toList(),
+                ],
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildSelectionItem(Map item) {
+    final isSelected = cubit.isItemSelected(item);
+
+    return GestureDetector(
+      onTap: () {
+        cubit.toggleItemSelection(item);
+        setState(() {});
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.pink.withOpacity(0.05)
+              : Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? AppColors.pink : Colors.grey.shade200,
+            width: isSelected ? 1.5 : 1,
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Checkbox for selection
+            Padding(
+              padding: const EdgeInsets.only(right: 12, top: 4),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: Checkbox(
+                  value: isSelected,
+                  activeColor: AppColors.pink,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  onChanged: (value) {
+                    cubit.toggleItemSelection(item);
+                    setState(() {});
+                  },
                 ),
               ),
-            )),
-      ],
+            ),
+
+            // Item details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item['description'] != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        item['description'] ?? '',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          color: isSelected ? AppColors.pink : Colors.black,
+                        ),
+                      ),
+                    ),
+
+                  // First row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildInfoField(
+                            'GTIN', item['serialGTIN'] ?? 'N/A'),
+                      ),
+                      Expanded(
+                        child: _buildInfoField(
+                            'Serial', item['serialNo'] ?? 'N/A'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Second row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildInfoField(
+                            'Member ID', item['memberId'] ?? 'N/A'),
+                      ),
+                      Expanded(
+                        child: _buildInfoField(
+                            'Location', item['binLocationId'] ?? 'N/A'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -410,13 +469,19 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
         return Form(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 8.0,
             children: [
-              Text("Scan Serial Number"),
+              const Text("Scan Serial Number",
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: serialController,
                 decoration: InputDecoration(
                   hintText: 'Serial Number',
+                  border: const OutlineInputBorder(),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 16,
+                  ),
                   suffixIcon: IconButton(
                     onPressed: () {
                       cubit.getMappedBarcodes(
@@ -438,6 +503,28 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildInfoField(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+          ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }

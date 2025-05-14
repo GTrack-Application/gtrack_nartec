@@ -1,6 +1,5 @@
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
 import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
 import 'package:gtrack_nartec/models/capture/Association/shipping/vehicle_model.dart';
@@ -60,7 +59,7 @@ class ProductionJobOrderBinLocationsError extends ProductionJobOrderState {
 class ProductionJobOrderMappedBarcodesLoading extends ProductionJobOrderState {}
 
 class ProductionJobOrderMappedBarcodesLoaded extends ProductionJobOrderState {
-  final MappedBarcodesResponse mappedBarcodes;
+  final dynamic mappedBarcodes;
 
   ProductionJobOrderMappedBarcodesLoaded({required this.mappedBarcodes});
 }
@@ -101,4 +100,25 @@ class VehiclesLoaded extends ProductionJobOrderState {
 class VehiclesError extends ProductionJobOrderState {
   final String message;
   VehiclesError({required this.message});
+}
+
+// packaging scan states
+
+class PackagingScanLoading extends ProductionJobOrderState {}
+
+class PackagingScanLoaded extends ProductionJobOrderState {
+  final Map<String, List<Map>> response;
+  PackagingScanLoaded({required this.response});
+}
+
+class PackagingScanError extends ProductionJobOrderState {
+  final String message;
+  PackagingScanError({required this.message});
+}
+
+// Package selection states
+class PackagingSelectionChanged extends ProductionJobOrderState {
+  final List<Map> selected;
+
+  PackagingSelectionChanged({required this.selected});
 }

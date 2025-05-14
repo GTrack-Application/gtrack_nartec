@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
@@ -44,7 +42,7 @@ class _SubSalesOrderScreenState extends State<SubSalesOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sales Order'),
+        title: const Text('Sales Order Details'),
         backgroundColor: AppColors.pink,
       ),
       body: BlocConsumer<SalesOrderCubit, SalesOrderState>(
