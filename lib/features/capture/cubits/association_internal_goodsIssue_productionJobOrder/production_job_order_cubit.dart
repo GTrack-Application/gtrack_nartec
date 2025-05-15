@@ -2,27 +2,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
 import 'package:gtrack_nartec/controllers/epcis_controller.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association_internal_goodsIssue_productionJobOrder/production_job_order_state.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/bin_locations_model.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/bom_start_model.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/mapped_barcodes_model.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/production_job_order.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/production_job_order_bom.dart';
+import 'package:gtrack_nartec/features/capture/models/scan_packages/container_response_model.dart';
+import 'package:gtrack_nartec/features/capture/models/scan_packages/pallet_response_model.dart';
+import 'package:gtrack_nartec/features/capture/models/scan_packages/serial_response_model.dart';
+import 'package:gtrack_nartec/features/capture/models/scan_packages/sscc_response_model.dart';
 import 'package:gtrack_nartec/global/services/http_service.dart';
 import 'package:gtrack_nartec/models/capture/Association/Receiving/sales_order/sub_sales_order_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/mapped_barcodes_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/container_response_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/pallet_response_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/serial_response_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/scan_packages/sscc_response_model.dart';
 import 'package:gtrack_nartec/models/capture/Association/shipping/vehicle_model.dart';
 
 class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   ProductionJobOrderCubit() : super(ProductionJobOrderInitial());
-  final HttpService _httpService = HttpService();
-  final HttpService _httpServiceForDomain =
-      HttpService(baseUrl: AppUrls.domain);
 
-  ProductionJobOrderBom? bomStartData;
+  // HTTP Services
+  final HttpService _httpService = HttpService();
+  final HttpService _httpServiceForDomain = HttpService(
+    baseUrl: AppUrls.domain,
+  );
+
+  ProductionJobOrderDetail? jobOrderDetail;
   ProductionJobOrder? order;
   String bomStartType = 'pallet';
   List<MappedBarcode> items = [];
@@ -66,7 +69,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       quantityPicked--;
     } else {
       // // If picked quantity is equal to the quantity, don't fetch mapped barcodes
-      if (quantityPicked >= (bomStartData?.quantity ?? 0)) {
+      if (quantityPicked >= (jobOrderDetail?.quantity ?? 0)) {
         emit(ProductionJobOrderMappedBarcodesError(
           message: 'You have reached the maximum quantity',
         ));
@@ -115,7 +118,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     emit(ProductionJobOrderMappedBarcodesLoading());
     try {
       // If picked quantity is equal to the quantity, don't fetch mapped barcodes
-      if (quantityPicked >= (bomStartData?.quantity ?? 0)) {
+      if (quantityPicked >= (jobOrderDetail?.quantity ?? 0)) {
         emit(ProductionJobOrderMappedBarcodesError(
           message: 'You have reached the maximum quantity',
         ));
@@ -153,8 +156,8 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
         final newItems = mappedBarcodes.data;
         items.addAll(newItems ?? []);
         // increment quantity
-        if (bomStartData != null) {
-          bomStartData = bomStartData!.increasePickedQuantity();
+        if (jobOrderDetail != null) {
+          jobOrderDetail = jobOrderDetail!.increasePickedQuantity();
           quantityPicked++;
         }
 
@@ -322,6 +325,143 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
     }
   }
 
+  void pickSelectedItems({required String orderDetailId}) async {
+    emit(PickItemsLoading());
+    try {
+      if (state is PickItemsLoading) {
+        return;
+      }
+
+      final token = await AppPreferences.getToken();
+      final path = '/api/packagingPickActivity';
+
+      final response = await _httpService.request(
+        path,
+        method: HttpMethod.post,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        payload: _selectedpackagingScanResults
+            .map((scannedItem) => {
+                  "contextType": "sales",
+                  "contextId": orderDetailId,
+                  "serialGTIN": scannedItem['serialGTIN'],
+                  "serialNo": scannedItem['serialNo'],
+                  "pickedQuantity": "1",
+                  "binLocationId": scannedItem['binLocationId'],
+                  "pickedBy": scannedItem['memberId']
+                })
+            .toList(),
+      );
+
+      if (response.success) {
+        emit(PickItemsLoaded(message: response.data['message']));
+      } else {
+        emit(PickItemsError(message: response.data['message']));
+      }
+    } catch (e) {
+      emit(PickItemsError(message: e.toString()));
+    }
+  }
+
+  void updateMappedBarcodes(
+    String location,
+    List<MappedBarcode> scannedItems, {
+    ProductionJobOrder? oldOrder,
+    int? qty,
+    String? gln,
+  }) async {
+    emit(ProductionJobOrderUpdateMappedBarcodesLoading());
+
+    try {
+      final itemIds = scannedItems.map((item) => item.id).toList();
+
+      final response = await _httpService.request(
+        "/api/mappedBarcodes/updateBinLocationForMappedBarcodes",
+        method: HttpMethod.put,
+        payload: {
+          'ids': itemIds,
+          'newBinLocation': location,
+        },
+      );
+
+      await Future.any([
+        // update bom API call
+        _httpService.request(
+          // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
+          "/api/bom/${jobOrderDetail?.id}", // jobOrderId || id
+          method: HttpMethod.put,
+          payload: {
+            'binLocation': location,
+            'quantityPicked': "$qty",
+          },
+        ),
+        // EPCIS API Call
+        // EPCISController.insertEPCISEvent(
+        //   type: "Transaction Event",
+        //   action: "ADD",
+        //   bizStep: "shipping",
+        //   disposition: "in_transit",
+        //   gln: gln,
+        // ),
+
+        EPCISController.insertNewEPCISEvent(
+          eventType: "TransactionEvent",
+          latitude: selectedBinLocation?.latitude?.toString(),
+          longitude: selectedBinLocation?.longitude?.toString(),
+          gln: selectedBinLocation?.gln,
+        ),
+
+        _httpService.request(
+          "/api/workInProgress/checkAndCreateWIPItems",
+          method: HttpMethod.post,
+          payload: {
+            'jobOrderDetailId': "${jobOrderDetail?.jobOrderDetailsId}",
+          },
+        ),
+        // update mapped barcodes API call
+        _httpService.request(
+          "/api/salesInvoice/master/${oldOrder?.id}",
+          method: HttpMethod.put,
+          payload: {
+            'binLocationId': location,
+          },
+        ),
+      ]);
+
+      // // EPCIS API Call
+      // await EPCISController.insertEPCISEvent(
+      //   type: "Transaction Event",
+      //   action: "ADD",
+      //   bizStep: "shipping",
+      //   disposition: "in_transit",
+      // );
+
+      // await _httpService.request(
+      //   // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
+      //   "/api/bom/${bomStartData?.id}", // jobOrderId || id
+      //   method: HttpMethod.put,
+      //   data: {
+      //     'binLocation': location,
+      //     'quantityPicked': "$quantityPicked",
+      //   },
+      // );
+
+      if (response.success) {
+        final data = response.data;
+        emit(ProductionJobOrderUpdateMappedBarcodesLoaded(
+          message: data['message'],
+          updatedCount: data['updatedCount'],
+        ));
+      } else {
+        throw Exception('Failed to update mapped barcodes');
+      }
+    } catch (e) {
+      emit(ProductionJobOrderUpdateMappedBarcodesError(message: e.toString()));
+    }
+  }
+
   /*
   ##############################################################################
   ! End
@@ -386,7 +526,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       if (response.success) {
         final List<dynamic> data = response.data;
         final bomItems =
-            data.map((e) => ProductionJobOrderBom.fromJson(e)).toList();
+            data.map((e) => ProductionJobOrderDetail.fromJson(e)).toList();
         emit(ProductionJobOrderBomLoaded(bomItems: bomItems));
       } else {
         emit(ProductionJobOrderBomError(message: 'Failed to fetch BOM items'));
@@ -537,103 +677,6 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       }
     } catch (e) {
       emit(ProductionJobOrderMappedBarcodesError(message: e.toString()));
-    }
-  }
-
-  void updateMappedBarcodes(
-    String location,
-    List<MappedBarcode> scannedItems, {
-    ProductionJobOrder? oldOrder,
-    int? qty,
-    String? gln,
-  }) async {
-    emit(ProductionJobOrderUpdateMappedBarcodesLoading());
-
-    try {
-      final itemIds = scannedItems.map((item) => item.id).toList();
-
-      final response = await _httpService.request(
-        "/api/mappedBarcodes/updateBinLocationForMappedBarcodes",
-        method: HttpMethod.put,
-        payload: {
-          'ids': itemIds,
-          'newBinLocation': location,
-        },
-      );
-
-      await Future.any([
-        // update bom API call
-        _httpService.request(
-          // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
-          "/api/bom/${bomStartData?.id}", // jobOrderId || id
-          method: HttpMethod.put,
-          payload: {
-            'binLocation': location,
-            'quantityPicked': "$qty",
-          },
-        ),
-        // EPCIS API Call
-        // EPCISController.insertEPCISEvent(
-        //   type: "Transaction Event",
-        //   action: "ADD",
-        //   bizStep: "shipping",
-        //   disposition: "in_transit",
-        //   gln: gln,
-        // ),
-
-        EPCISController.insertNewEPCISEvent(
-          eventType: "TransactionEvent",
-          latitude: selectedBinLocation?.latitude?.toString(),
-          longitude: selectedBinLocation?.longitude?.toString(),
-          gln: selectedBinLocation?.gln,
-        ),
-
-        _httpService.request(
-          "/api/workInProgress/checkAndCreateWIPItems",
-          method: HttpMethod.post,
-          payload: {
-            'jobOrderDetailId': "${bomStartData?.jobOrderDetailsId}",
-          },
-        ),
-        // update mapped barcodes API call
-        _httpService.request(
-          "/api/salesInvoice/master/${oldOrder?.id}",
-          method: HttpMethod.put,
-          payload: {
-            'binLocationId': location,
-          },
-        ),
-      ]);
-
-      // // EPCIS API Call
-      // await EPCISController.insertEPCISEvent(
-      //   type: "Transaction Event",
-      //   action: "ADD",
-      //   bizStep: "shipping",
-      //   disposition: "in_transit",
-      // );
-
-      // await _httpService.request(
-      //   // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
-      //   "/api/bom/${bomStartData?.id}", // jobOrderId || id
-      //   method: HttpMethod.put,
-      //   data: {
-      //     'binLocation': location,
-      //     'quantityPicked': "$quantityPicked",
-      //   },
-      // );
-
-      if (response.success) {
-        final data = response.data;
-        emit(ProductionJobOrderUpdateMappedBarcodesLoaded(
-          message: data['message'],
-          updatedCount: data['updatedCount'],
-        ));
-      } else {
-        throw Exception('Failed to update mapped barcodes');
-      }
-    } catch (e) {
-      emit(ProductionJobOrderUpdateMappedBarcodesError(message: e.toString()));
     }
   }
 

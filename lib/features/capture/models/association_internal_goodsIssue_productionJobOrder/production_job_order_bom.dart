@@ -1,4 +1,4 @@
-class ProductionJobOrderBom {
+class ProductionJobOrderDetail {
   String? id;
   String? jobOrderDetailsId;
   String? productId;
@@ -16,7 +16,7 @@ class ProductionJobOrderBom {
   String? updatedAt;
   JobOrderDetails? jobOrderDetails;
 
-  ProductionJobOrderBom(
+  ProductionJobOrderDetail(
       {this.id,
       this.jobOrderDetailsId,
       this.productId,
@@ -34,7 +34,7 @@ class ProductionJobOrderBom {
       this.updatedAt,
       this.jobOrderDetails});
 
-  ProductionJobOrderBom.fromJson(Map<String, dynamic> json) {
+  ProductionJobOrderDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     jobOrderDetailsId = json['jobOrderDetailsId'];
     productId = json['productId'];
@@ -78,8 +78,8 @@ class ProductionJobOrderBom {
     return data;
   }
 
-  ProductionJobOrderBom copyWith({int? newQuantity}) {
-    return ProductionJobOrderBom(
+  ProductionJobOrderDetail copyWith({int? newQuantity}) {
+    return ProductionJobOrderDetail(
         id: id,
         jobOrderDetailsId: jobOrderDetailsId,
         productId: productId,
@@ -98,8 +98,8 @@ class ProductionJobOrderBom {
         jobOrderDetails: jobOrderDetails);
   }
 
-  ProductionJobOrderBom increaseQuantity() {
-    final newBom = ProductionJobOrderBom(
+  ProductionJobOrderDetail increaseQuantity() {
+    final newBom = ProductionJobOrderDetail(
       id: id,
       jobOrderDetailsId: jobOrderDetailsId,
       productId: productId,
@@ -120,8 +120,8 @@ class ProductionJobOrderBom {
     return newBom;
   }
 
-  ProductionJobOrderBom increasePickedQuantity() {
-    final newBom = ProductionJobOrderBom(
+  ProductionJobOrderDetail increasePickedQuantity() {
+    final newBom = ProductionJobOrderDetail(
       id: id,
       jobOrderDetailsId: jobOrderDetailsId,
       productId: productId,

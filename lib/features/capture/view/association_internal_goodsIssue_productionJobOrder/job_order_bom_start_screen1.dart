@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association_internal_goodsIssue_productionJobOrder/production_job_order_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association_internal_goodsIssue_productionJobOrder/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/screens/home/capture/Association/Shipping/sales_order_new/sales_order_transfer_by_pallet_screen.dart';
-import 'package:gtrack_nartec/screens/home/capture/Association/Transfer/goods_issue/production_job_order/job_order_bom_start_screen2.dart';
+import 'package:gtrack_nartec/features/capture/view/association_internal_goodsIssue_productionJobOrder/pick_items_screen.dart';
 
 class JobOrderBomStartScreen1 extends StatefulWidget {
   final String gtin;
@@ -190,7 +190,7 @@ class _JobOrderBomStartScreen1State extends State<JobOrderBomStartScreen1> {
                                 } else {
                                   AppNavigator.goToPage(
                                     context: context,
-                                    screen: JobOrderBomStartScreen2(),
+                                    screen: PickItemsScreen(),
                                   );
                                 }
                               }

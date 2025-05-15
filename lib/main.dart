@@ -10,7 +10,7 @@ import 'package:gtrack_nartec/cubit/capture/association/receiving/purchase_order
 import 'package:gtrack_nartec/cubit/capture/association/receiving/raw_materials/item_details/item_details_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/shipping/sales_order/sales_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/association/transfer/goods_receipt/job_order_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association_internal_goodsIssue_productionJobOrder/production_job_order_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/capture_cubit.dart';
 import 'package:gtrack_nartec/cubit/capture/transformation/transformation_cubit.dart';
 import 'package:gtrack_nartec/cubit/share/share_cubit.dart';

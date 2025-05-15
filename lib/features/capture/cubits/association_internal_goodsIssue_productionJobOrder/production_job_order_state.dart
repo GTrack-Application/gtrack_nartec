@@ -1,7 +1,7 @@
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bin_locations_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/bom_start_model.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order.dart';
-import 'package:gtrack_nartec/models/capture/Association/Transfer/ProductionJobOrder/production_job_order_bom.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/bin_locations_model.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/bom_start_model.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/production_job_order.dart';
+import 'package:gtrack_nartec/features/capture/models/association_internal_goodsIssue_productionJobOrder/production_job_order_bom.dart';
 import 'package:gtrack_nartec/models/capture/Association/shipping/vehicle_model.dart';
 
 abstract class ProductionJobOrderState {}
@@ -23,7 +23,7 @@ class ProductionJobOrderError extends ProductionJobOrderState {
 class ProductionJobOrderBomLoading extends ProductionJobOrderState {}
 
 class ProductionJobOrderBomLoaded extends ProductionJobOrderState {
-  final List<ProductionJobOrderBom> bomItems;
+  final List<ProductionJobOrderDetail> bomItems;
   ProductionJobOrderBomLoaded({required this.bomItems});
 }
 
@@ -121,4 +121,18 @@ class PackagingSelectionChanged extends ProductionJobOrderState {
   final List<Map> selected;
 
   PackagingSelectionChanged({required this.selected});
+}
+
+// Pick items states
+
+class PickItemsLoading extends ProductionJobOrderState {}
+
+class PickItemsLoaded extends ProductionJobOrderState {
+  final String message;
+  PickItemsLoaded({required this.message});
+}
+
+class PickItemsError extends ProductionJobOrderState {
+  final String message;
+  PickItemsError({required this.message});
 }

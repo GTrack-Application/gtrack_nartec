@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_cubit.dart';
-import 'package:gtrack_nartec/cubit/capture/association/transfer/production_job_order/production_job_order_state.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association_internal_goodsIssue_productionJobOrder/production_job_order_cubit.dart';
+import 'package:gtrack_nartec/features/capture/cubits/association_internal_goodsIssue_productionJobOrder/production_job_order_state.dart';
 import 'package:gtrack_nartec/global/common/colors/app_colors.dart';
 import 'package:gtrack_nartec/global/common/utils/app_navigator.dart';
 import 'package:gtrack_nartec/global/common/utils/app_snakbars.dart';
 import 'package:gtrack_nartec/global/widgets/buttons/primary_button.dart';
 import 'package:gtrack_nartec/screens/home_screen.dart';
 
-class JobOrderBomStartScreen2 extends StatefulWidget {
-  const JobOrderBomStartScreen2({super.key});
+class PickItemsScreen extends StatefulWidget {
+  const PickItemsScreen({super.key});
 
   @override
-  State<JobOrderBomStartScreen2> createState() =>
-      _JobOrderBomStartScreen2State();
+  State<PickItemsScreen> createState() => _PickItemsScreenState();
 }
 
-class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
+class _PickItemsScreenState extends State<PickItemsScreen> {
   final cubit = ProductionJobOrderCubit();
   final locationController = TextEditingController();
   final palletController = TextEditingController();
@@ -27,78 +26,99 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
   void initState() {
     super.initState();
     setState(() {
-      cubit.quantityPicked = cubit.bomStartData?.quantityPicked ?? 0;
+      cubit.quantityPicked = cubit.jobOrderDetail?.quantityPicked ?? 0;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final bom = context.watch<ProductionJobOrderCubit>().bomStartData;
-    cubit.bomStartData = bom;
+    final bom = context.watch<ProductionJobOrderCubit>().jobOrderDetail;
+    cubit.jobOrderDetail = bom;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scan By Serial | Pallet'),
         backgroundColor: AppColors.pink,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
-            bloc: cubit,
-            listener: (context, state) {
-              if (state is ProductionJobOrderMappedBarcodesError) {
-                AppSnackbars.danger(context, state.message);
-              } else if (state is ProductionJobOrderMappedBarcodesLoaded) {
-                // AppSnackbars.success(
-                //   context,
-                //   state.mappedBarcodes.message ?? '',
-                // );
-              }
-            },
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Quantity information
-                  _buildInfoRow('Quantity:', '${bom?.quantity ?? 0}'),
-                  const SizedBox(height: 8),
-                  _buildInfoRow('Picked Quantity:', '${cubit.quantityPicked}'),
-                  const SizedBox(height: 16),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
+          bloc: cubit,
+          listener: (context, state) {
+            if (state is ProductionJobOrderMappedBarcodesError) {
+              AppSnackbars.danger(context, state.message);
+            } else if (state is ProductionJobOrderMappedBarcodesLoaded) {
+              // AppSnackbars.success(
+              //   context,
+              //   state.mappedBarcodes.message ?? '',
+              // );
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Quantity information
+                _buildInfoRow('Quantity:', '${bom?.quantity ?? 0}'),
+                const SizedBox(height: 8),
+                _buildInfoRow('Picked Quantity:', '${cubit.quantityPicked}'),
+                const SizedBox(height: 16),
 
-                  // Radio Buttons for scanning mode
-                  _buildScanTypeSelector(),
-                  const SizedBox(height: 16),
+                // Radio Buttons for scanning mode
+                _buildScanTypeSelector(),
+                const SizedBox(height: 16),
 
-                  // Conditional form based on selected type
-                  if (selectedType == 'pallet')
-                    _buildPalletForm()
-                  else
-                    _buildSerialForm(),
-                  const SizedBox(height: 16),
+                // Conditional form based on selected type
+                if (selectedType == 'pallet')
+                  _buildPalletForm()
+                else
+                  _buildSerialForm(),
+                const SizedBox(height: 16),
 
-                  // Scanned items display
-                  //   if ((state is ProductionJobOrderMappedBarcodesError) ||
-                  //       (state is ProductionJobOrderMappedBarcodesLoaded &&
-                  //           state.mappedBarcodes.data?.isNotEmpty == true))
-                  _buildScannedItems(),
-                  const SizedBox(height: 16),
+                // Scanned items display with scroll
+                Expanded(
+                  child: _buildScannedItems(),
+                ),
+                const SizedBox(height: 16),
 
-                  // WIP Location input
-                  const Text("Scan WIP Location"),
-                  TextFormField(
-                    controller: locationController,
-                    decoration: const InputDecoration(
-                      hintText: 'WIP Location',
-                    ),
+                // WIP Location input
+                const Text("Scan WIP Location"),
+                TextFormField(
+                  controller: locationController,
+                  decoration: const InputDecoration(
+                    hintText: 'WIP Location',
                   ),
-                  const SizedBox(height: 24),
+                ),
+                const SizedBox(height: 24),
 
-                  // Save button
-                  _buildSaveButton(),
-                ],
-              );
-            },
-          ),
+                // Pick selected items
+                BlocBuilder<ProductionJobOrderCubit, ProductionJobOrderState>(
+                  builder: (context, state) {
+                    return PrimaryButtonWidget(
+                      text: "Pick selected Items",
+                      backgroundColor: AppColors.green,
+                      height: 36,
+                      isLoading: state is PickItemsLoading,
+                      onPressed: () {
+                        // Pick selected items
+                        final orderDetailId = context
+                                .read<ProductionJobOrderCubit>()
+                                .jobOrderDetail
+                                ?.id ??
+                            '';
+                        cubit.pickSelectedItems(
+                          orderDetailId: orderDetailId,
+                        );
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Save button
+                _buildSaveButton(),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -146,6 +166,8 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
     );
   }
 
+  ///
+
   /// Builds the save button with validation logic
   Widget _buildSaveButton() {
     return BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
@@ -164,6 +186,7 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
         return PrimaryButtonWidget(
           text: "Save",
           backgroundColor: AppColors.pink,
+          height: 36,
           onPressed: () {
             if (locationController.text.isEmpty) {
               AppSnackbars.normal(
@@ -272,95 +295,116 @@ class _JobOrderBomStartScreen2State extends State<JobOrderBomStartScreen2> {
                   ),
               ],
             ),
-            Row(
-              children: [
-                if (cubit.selectedpackagingScanResults.isNotEmpty)
-                  TextButton(
-                    onPressed: () {
-                      cubit.clearSelectedItems();
-                    },
-                    child: const Text(
-                      'Clear Selection',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                TextButton(
-                  onPressed: () {
-                    cubit.clearItems();
-                  },
-                  child: const Text(
-                    'Clear All',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.w500,
-                    ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (cubit.selectedpackagingScanResults.isNotEmpty)
+              TextButton(
+                onPressed: () {
+                  cubit.clearSelectedItems();
+                },
+                child: const Text(
+                  'Clear Selection',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
                   ),
                 ),
-              ],
+              ),
+            TextButton(
+              onPressed: () {
+                cubit.clearItems();
+              },
+              child: const Text(
+                'Clear All',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        ...packages.map(
-          (package) => Card(
-            color: AppColors.white,
-            margin: const EdgeInsets.only(bottom: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-              side: BorderSide(color: Colors.grey.shade300),
-            ),
-            elevation: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Package SSCC header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'SSCC: ${package.key}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          // Remove this SSCC entry
-                          cubit.packagingScanResults.remove(package.key);
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.close),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                    ],
-                  ),
-
-                  Text(
-                    'Total items: ${package.value.length}',
+        Expanded(
+          child: items.isEmpty
+              ? Center(
+                  child: Text(
+                    'No items scanned yet',
                     style: TextStyle(
                       color: Colors.grey.shade600,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ...packages.map(
+                        (package) => Card(
+                          color: AppColors.white,
+                          margin: const EdgeInsets.only(bottom: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          elevation: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Package SSCC header
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'SSCC: ${package.key}',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        // Remove this SSCC entry
+                                        cubit.packagingScanResults
+                                            .remove(package.key);
+                                        setState(() {});
+                                      },
+                                      icon: const Icon(Icons.close),
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                    ),
+                                  ],
+                                ),
 
-                  // Individual package details
-                  ...package.value
-                      .map((item) => _buildSelectionItem(item))
-                      .toList(),
-                ],
-              ),
-            ),
-          ),
-        )
+                                Text(
+                                  'Total items: ${package.value.length}',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Individual package details
+                                ...package.value
+                                    .map((item) => _buildSelectionItem(item)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+        ),
       ],
     );
   }
