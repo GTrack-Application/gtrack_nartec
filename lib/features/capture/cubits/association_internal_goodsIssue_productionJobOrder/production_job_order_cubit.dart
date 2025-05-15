@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gtrack_nartec/constants/app_preferences.dart';
 import 'package:gtrack_nartec/constants/app_urls.dart';
@@ -326,33 +328,31 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   }
 
   void pickSelectedItems({required String orderDetailId}) async {
-    emit(PickItemsLoading());
     try {
       if (state is PickItemsLoading) {
         return;
       }
 
-      final token = await AppPreferences.getToken();
+      emit(PickItemsLoading());
       final path = '/api/packagingPickActivity';
+      final payload = _selectedpackagingScanResults
+          .map((scannedItem) => {
+                "contextType": "sales",
+                "contextId": orderDetailId,
+                "serialGTIN": scannedItem['serialGTIN'],
+                "serialNo": scannedItem['serialNo'],
+                "pickedQuantity": "1",
+                "binLocationId": scannedItem['binLocationId'],
+                "pickedBy": scannedItem['memberId']
+              })
+          .toList();
+
+      log(payload.toString());
 
       final response = await _httpService.request(
         path,
         method: HttpMethod.post,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        payload: _selectedpackagingScanResults
-            .map((scannedItem) => {
-                  "contextType": "sales",
-                  "contextId": orderDetailId,
-                  "serialGTIN": scannedItem['serialGTIN'],
-                  "serialNo": scannedItem['serialNo'],
-                  "pickedQuantity": "1",
-                  "binLocationId": scannedItem['binLocationId'],
-                  "pickedBy": scannedItem['memberId']
-                })
-            .toList(),
+        payload: payload,
       );
 
       if (response.success) {
@@ -366,67 +366,70 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   }
 
   void updateMappedBarcodes(
-    String location,
-    List<MappedBarcode> scannedItems, {
+    String location, {
     ProductionJobOrder? oldOrder,
     int? qty,
     String? gln,
   }) async {
     emit(ProductionJobOrderUpdateMappedBarcodesLoading());
 
+    final gs1CompanyPrefix = await AppPreferences.getGs1Prefix();
     try {
-      final itemIds = scannedItems.map((item) => item.id).toList();
-
-      final response = await _httpService.request(
-        "/api/mappedBarcodes/updateBinLocationForMappedBarcodes",
-        method: HttpMethod.put,
-        payload: {
-          'ids': itemIds,
-          'newBinLocation': location,
-        },
-      );
-
-      await Future.any([
+      final results = await Future.any([
         // update bom API call
         _httpService.request(
-          // "/api/bom/${oldOrder?.jobOrderMaster?.id}",
-          "/api/bom/${jobOrderDetail?.id}", // jobOrderId || id
+          "/api/bom/${jobOrderDetail?.id}", // sales order detail id
           method: HttpMethod.put,
           payload: {
             'binLocation': location,
-            'quantityPicked': "$qty",
+            'quantityPicked': "$quantityPicked",
           },
-        ),
-        // EPCIS API Call
-        // EPCISController.insertEPCISEvent(
-        //   type: "Transaction Event",
-        //   action: "ADD",
-        //   bizStep: "shipping",
-        //   disposition: "in_transit",
-        //   gln: gln,
-        // ),
-
-        EPCISController.insertNewEPCISEvent(
-          eventType: "TransactionEvent",
-          latitude: selectedBinLocation?.latitude?.toString(),
-          longitude: selectedBinLocation?.longitude?.toString(),
-          gln: selectedBinLocation?.gln,
         ),
 
         _httpService.request(
-          "/api/workInProgress/checkAndCreateWIPItems",
+          "/api/workInProgress/submitPickAndCreateWIP",
           method: HttpMethod.post,
           payload: {
             'jobOrderDetailId': "${jobOrderDetail?.jobOrderDetailsId}",
           },
         ),
         // update mapped barcodes API call
+        // _httpService.request(
+        //   "/api/salesInvoice/master/${oldOrder?.id}", // job order id
+        //   method: HttpMethod.put,
+        //   payload: {
+        //     'binLocationId': location,
+        //   },
+        // ),
+
+        // Then update Job Order Details
         _httpService.request(
-          "/api/salesInvoice/master/${oldOrder?.id}",
+          "/api/jobOrder/details/${jobOrderDetail?.jobOrderDetailsId}",
           method: HttpMethod.put,
           payload: {
-            'binLocationId': location,
+            "binLocationId": selectedBinLocation?.id.toString(),
           },
+        ),
+
+        // EPCIS API Call
+        EPCISController.insertNewEPCISEvent(
+          // eventType: "TransactionEvent",
+          eventType: "AssociationEvent",
+          latitude: selectedBinLocation?.latitude?.toString(),
+          longitude: selectedBinLocation?.longitude?.toString(),
+          gln: selectedBinLocation?.gln,
+          ssccNo: selectedpackagingScanResults.first['ssccNo'],
+          bizTransactionList: [
+            {
+              "type": "po",
+              "bizTransaction":
+                  "http://transaction.acme.com/jo/${jobOrderDetail?.jobOrderDetailsId}"
+            },
+          ],
+          childEPCs: selectedpackagingScanResults
+              .map((item) =>
+                  'urn:epc:id:sscc:$gs1CompanyPrefix.${item['ssccNo']}')
+              .toList(),
         ),
       ]);
 
@@ -448,15 +451,10 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
       //   },
       // );
 
-      if (response.success) {
-        final data = response.data;
-        emit(ProductionJobOrderUpdateMappedBarcodesLoaded(
-          message: data['message'],
-          updatedCount: data['updatedCount'],
-        ));
-      } else {
-        throw Exception('Failed to update mapped barcodes');
-      }
+      emit(ProductionJobOrderUpdateMappedBarcodesLoaded(
+        message: "Packaging process completed",
+        updatedCount: selectedpackagingScanResults.length,
+      ));
     } catch (e) {
       emit(ProductionJobOrderUpdateMappedBarcodesError(message: e.toString()));
     }

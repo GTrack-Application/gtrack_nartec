@@ -26,7 +26,11 @@ class _PickItemsScreenState extends State<PickItemsScreen> {
   void initState() {
     super.initState();
     setState(() {
-      cubit.quantityPicked = cubit.jobOrderDetail?.quantityPicked ?? 0;
+      cubit.quantityPicked = context
+              .read<ProductionJobOrderCubit>()
+              .jobOrderDetail
+              ?.quantityPicked ??
+          0;
     });
   }
 
@@ -34,6 +38,7 @@ class _PickItemsScreenState extends State<PickItemsScreen> {
   Widget build(BuildContext context) {
     final bom = context.watch<ProductionJobOrderCubit>().jobOrderDetail;
     cubit.jobOrderDetail = bom;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scan By Serial | Pallet'),
@@ -56,29 +61,32 @@ class _PickItemsScreenState extends State<PickItemsScreen> {
           builder: (context, state) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8.0,
               children: [
                 // Quantity information
-                _buildInfoRow('Quantity:', '${bom?.quantity ?? 0}'),
-                const SizedBox(height: 8),
-                _buildInfoRow('Picked Quantity:', '${cubit.quantityPicked}'),
-                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildInfoRow('Quantity:', '${bom?.quantity ?? 0}'),
+                    _buildInfoRow(
+                        'Picked Quantity:', '${cubit.quantityPicked}'),
+                  ],
+                ),
+                Divider(),
 
                 // Radio Buttons for scanning mode
                 _buildScanTypeSelector(),
-                const SizedBox(height: 16),
 
                 // Conditional form based on selected type
                 if (selectedType == 'pallet')
                   _buildPalletForm()
                 else
                   _buildSerialForm(),
-                const SizedBox(height: 16),
 
                 // Scanned items display with scroll
                 Expanded(
                   child: _buildScannedItems(),
                 ),
-                const SizedBox(height: 16),
 
                 // WIP Location input
                 const Text("Scan WIP Location"),
@@ -88,10 +96,18 @@ class _PickItemsScreenState extends State<PickItemsScreen> {
                     hintText: 'WIP Location',
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
 
                 // Pick selected items
-                BlocBuilder<ProductionJobOrderCubit, ProductionJobOrderState>(
+                BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
+                  bloc: cubit,
+                  listener: (context, state) {
+                    if (state is PickItemsLoaded) {
+                      AppSnackbars.success(context, state.message);
+                    } else if (state is PickItemsError) {
+                      AppSnackbars.danger(context, state.message);
+                    }
+                  },
                   builder: (context, state) {
                     return PrimaryButtonWidget(
                       text: "Pick selected Items",
@@ -112,7 +128,6 @@ class _PickItemsScreenState extends State<PickItemsScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 16),
 
                 // Save button
                 _buildSaveButton(),
@@ -171,6 +186,7 @@ class _PickItemsScreenState extends State<PickItemsScreen> {
   /// Builds the save button with validation logic
   Widget _buildSaveButton() {
     return BlocConsumer<ProductionJobOrderCubit, ProductionJobOrderState>(
+      bloc: cubit,
       listener: (context, state) {
         if (state is ProductionJobOrderUpdateMappedBarcodesLoaded) {
           AppSnackbars.success(context, state.message);
@@ -192,20 +208,22 @@ class _PickItemsScreenState extends State<PickItemsScreen> {
               AppSnackbars.normal(
                   context, "Please Enter WIP Location in order to proceed");
               return;
-            } else if (cubit.items.isEmpty) {
-              AppSnackbars.normal(
-                  context, "Please scan at least one item in order to proceed");
-              return;
             } else if (isLoading) {
               return;
             }
 
-            context.read<ProductionJobOrderCubit>().updateMappedBarcodes(
-                  locationController.text,
-                  cubit.items,
-                  oldOrder: context.read<ProductionJobOrderCubit>().order!,
-                  qty: cubit.quantityPicked,
-                );
+            // context.read<ProductionJobOrderCubit>().updateMappedBarcodes(
+            //       locationController.text,
+            //       cubit.items,
+            //       oldOrder: context.read<ProductionJobOrderCubit>().order!,
+            //       qty: cubit.quantityPicked,
+            //     );
+
+            cubit.updateMappedBarcodes(
+              locationController.text,
+              oldOrder: context.read<ProductionJobOrderCubit>().order,
+              qty: cubit.quantityPicked,
+            );
           },
           isLoading: isLoading,
         );
@@ -240,7 +258,7 @@ class _PickItemsScreenState extends State<PickItemsScreen> {
                         palletCode: palletController.text,
                       );
                     },
-                    icon: Icon(state is PackagingScanLoading
+                    icon: Icon(state is ProductionJobOrderMappedBarcodesLoading
                         ? Icons.hourglass_empty
                         : Icons.qr_code),
                   ),

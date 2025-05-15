@@ -88,6 +88,7 @@ class EPCISController {
   static Future<bool> insertNewEPCISEvent({
     required String eventType,
     String? gln,
+    String? ssccNo,
     String? latitude,
     String? longitude,
     String? parentID,
@@ -139,13 +140,6 @@ class EPCISController {
         "eventTimeZoneOffset": eventTimeZoneOffSet,
         "readPoint": {"id": "urn:epc:id:sgln:$gln"},
         "bizLocation": {"id": "urn:epc:id:sgln:$gln"},
-        // "quantityList": [
-        //   {
-        //     "epcClass": "urn:epc:class:sgtin:$gln",
-        //     "quantity": 1,
-        //     "uom": "EA"
-        //   }
-        // ],
         "gs1CompanyPrefix": "$gs1CompanyPrefix",
         "longitude": "$longitude",
         "latitude": "$latitude"
@@ -246,6 +240,40 @@ class EPCISController {
         "gs1CompanyPrefix": gs1CompanyPrefix,
         "longitude": latitude ?? "-122.4194",
         "latitude": longitude ?? "37.7749"
+      };
+    } else if (eventType == "AssociationEvent") {
+      payload = {
+        "parentID": "urn:epc:id:sscc:$gs1CompanyPrefix.$ssccNo",
+        "childEPCs": childEPCs ?? ['urn:epc:id:sscc:$gs1CompanyPrefix.$ssccNo'],
+        "action": "ADD",
+        "createdBy": memberId.toString(),
+        // Optional fields
+        "type": "AssociationEvent",
+        "bizStep": "shipping",
+        "disposition": "in_transit",
+        "eventTime": eventTime,
+        "eventTimeZoneOffset": eventTimeZoneOffSet,
+        "readPoint":
+            readPoint ?? {"id": "urn:epc:id:sgln:$gs1CompanyPrefix.$gln"},
+        "bizLocation":
+            bizLocation ?? {"id": "urn:epc:id:sgln:$gs1CompanyPrefix.$gln"},
+        "bizTransactionList": bizTransactionList ??
+            [
+              {
+                "type": "po",
+                "bizTransaction": "http://transaction.acme.com/jo/"
+              }
+            ],
+        "childQuantityList": childQuantityList ??
+            [
+              {
+                "epcClass": "urn:epc:class:sgtin:$gs1CompanyPrefix.$ssccNo",
+                "quantity": 1
+              }
+            ],
+        "gs1CompanyPrefix": gs1CompanyPrefix,
+        "longitude": longitude ?? "-122.4194",
+        "latitude": latitude ?? "37.7749"
       };
     }
 
