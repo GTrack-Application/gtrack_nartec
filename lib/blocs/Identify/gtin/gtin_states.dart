@@ -155,3 +155,14 @@ class GtinReviewErrorState extends GtinState {
 
   GtinReviewErrorState({required this.message});
 }
+
+// * Nutrition Facts
+class GtinNutritionFactsLoadingState extends GtinState {}
+
+class GtinNutritionFactsLoadedState extends GtinState {}
+
+class GtinNutritionFactsErrorState extends GtinState {
+  final String message;
+
+  GtinNutritionFactsErrorState(this.message);
+}

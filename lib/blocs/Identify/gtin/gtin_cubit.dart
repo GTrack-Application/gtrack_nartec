@@ -12,6 +12,7 @@ import 'package:gtrack_nartec/models/IDENTIFY/GTIN/image_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/ingredient_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/instruction_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/leaflet_model.dart';
+import 'package:gtrack_nartec/models/IDENTIFY/GTIN/nutrition_facts_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/packaging_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/promotional_offer_model.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/recipe_model.dart';
@@ -28,6 +29,7 @@ class GtinCubit extends Cubit<GtinState> {
   // * Lists
   final List<GTIN_Model> data = [];
   List<ReviewModel> _reviews = [];
+  List<NutritionFactsModel> _nutritionFacts = [];
 
   int _currentPage = 1;
   final int _pageSize = 20;
@@ -110,6 +112,7 @@ class GtinCubit extends Cubit<GtinState> {
   List<VideoModel> get videos => _videos;
   bool get hasMoreVideos => _hasMoreVideos;
   List<ReviewModel> get reviews => _reviews;
+  List<NutritionFactsModel> get nutritionFacts => _nutritionFacts;
   TextEditingController get searchController => _searchController;
 
   final TextEditingController _searchController = TextEditingController();
@@ -355,13 +358,25 @@ class GtinCubit extends Cubit<GtinState> {
   }
 
   // * Reviews
-  void getReviews(String gtin) async {
+  Future<void> getReviews(String gtin) async {
+    emit(GtinReviewsLoadingState());
     try {
-      final reviews = await GTINController.getReviews(gtin);
-      _reviews = reviews;
+      _reviews = await GTINController.getReviews(gtin);
       emit(GtinReviewsLoadedState());
     } catch (e) {
       emit(GtinReviewsErrorState(message: e.toString()));
+    }
+  }
+
+  Future<void> getNutritionFacts(String barcode) async {
+    _nutritionFacts.clear();
+    print('HI');
+    emit(GtinNutritionFactsLoadingState());
+    try {
+      _nutritionFacts = await GTINController.fetchNutritionFacts(barcode);
+      emit(GtinNutritionFactsLoadedState());
+    } catch (e) {
+      emit(GtinNutritionFactsErrorState(e.toString()));
     }
   }
 
