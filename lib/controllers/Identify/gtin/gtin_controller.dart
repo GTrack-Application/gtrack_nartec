@@ -21,7 +21,7 @@ import 'package:http/http.dart' as http;
 
 class GTINController {
   static final HttpService httpService = HttpService(baseUrl: AppUrls.gs1Url);
-  static final HttpService gs1710Service = HttpService(baseUrl: AppUrls.gtrack);
+  static final HttpService gtrackService = HttpService(baseUrl: AppUrls.gtrack);
   static final HttpService upcHubService = HttpService(baseUrl: AppUrls.upcHub);
 
   // static Future<List<GTIN_Model>> getProducts() async {
@@ -65,18 +65,19 @@ class GTINController {
     required int pageSize,
     String? searchQuery,
   }) async {
-    final userId = await AppPreferences.getGs1UserId();
+    final userId = await AppPreferences.getMemberId();
 
-    String url = 'api/products/';
+    String url = '/api/products/';
 
     if (searchQuery != null && searchQuery.isNotEmpty) {
       url +=
           "searchProductsBySelectedFields?searchText=$searchQuery&page=$page&limit=$pageSize";
     } else {
-      url += "paginatedProducts?page=$page&pageSize=$pageSize&user_id=$userId";
+      url +=
+          "paginatedProducts?page=$page&pageSize=$pageSize&member_id=$userId";
     }
 
-    final response = await httpService.request(url);
+    final response = await gtrackService.request(url);
 
     if (response.success) {
       return PaginatedGTINResponse.fromJson(response.data);
@@ -147,7 +148,7 @@ class GTINController {
     required int page,
     required int limit,
   }) async {
-    final response = await gs1710Service.request(
+    final response = await gtrackService.request(
       '/api/getPromotionalOffersByGtin/$gtin',
       method: HttpMethod.get,
     );
@@ -162,7 +163,7 @@ class GTINController {
     required int page,
     required int limit,
   }) async {
-    final response = await gs1710Service.request(
+    final response = await gtrackService.request(
       '/api/getRecipeDataByGtin/$gtin',
       method: HttpMethod.get,
     );
@@ -176,7 +177,7 @@ class GTINController {
     required int page,
     required int limit,
   }) async {
-    final response = await gs1710Service.request(
+    final response = await gtrackService.request(
       '/api/getProductLeafLetsDataByGtin/$gtin',
       method: HttpMethod.get,
     );

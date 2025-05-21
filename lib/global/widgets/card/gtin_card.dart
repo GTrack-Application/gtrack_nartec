@@ -105,7 +105,7 @@ class GtinProductCard extends StatelessWidget {
                   height: 100,
                   margin: const EdgeInsets.only(right: 12),
                   child: CachedNetworkImage(
-                    imageUrl: '${AppUrls.gs1Url}${product.frontImage}',
+                    imageUrl: '${AppUrls.gtrack}${product.frontImage}',
                     fit: BoxFit.contain,
                     errorWidget: (context, error, stackTrace) => const Icon(
                       Icons.image_not_supported,
@@ -172,7 +172,7 @@ class GtinProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 140,
+            width: 100,
             child: Text(
               label,
               style: const TextStyle(fontSize: 13),
