@@ -37,7 +37,6 @@ class GtinCubit extends Cubit<GtinState> {
   final List<GTIN_Model> _allProducts = [];
 
   List<AllergenModel> _allergens = [];
-  bool _hasMoreAllergens = true;
   int _currentAllergenPage = 1;
   static const int _allergenPageSize = 20;
 
@@ -89,28 +88,17 @@ class GtinCubit extends Cubit<GtinState> {
   // * Getters
   int get page => _currentPage;
   int get pageSize => _pageSize;
-  bool get hasMoreData => _hasMoreData;
   List<GTIN_Model> get products => _allProducts;
   List<AllergenModel> get allergens => _allergens;
-  bool get hasMoreAllergens => _hasMoreAllergens;
   List<RetailerModel> get retailers => _retailers;
-  bool get hasMoreRetailers => _hasMoreRetailers;
   List<IngredientModel> get ingredients => _ingredients;
-  bool get hasMoreIngredients => _hasMoreIngredients;
   List<PackagingModel> get packagings => _packagings;
-  bool get hasMorePackagings => _hasMorePackagings;
   List<PromotionalOfferModel> get promotions => _promotions;
-  bool get hasMorePromotions => _hasMorePromotions;
   List<RecipeModel> get recipes => _recipes;
-  bool get hasMoreRecipes => _hasMoreRecipes;
   List<LeafletModel> get leaflets => _leaflets;
-  bool get hasMoreLeaflets => _hasMoreLeaflets;
   List<ImageModel> get images => _images;
-  bool get hasMoreImages => _hasMoreImages;
   List<InstructionModel> get instructions => _instructions;
-  bool get hasMoreInstructions => _hasMoreInstructions;
   List<VideoModel> get videos => _videos;
-  bool get hasMoreVideos => _hasMoreVideos;
   List<ReviewModel> get reviews => _reviews;
   List<NutritionFactsModel> get nutritionFacts => _nutritionFacts;
   TextEditingController get searchController => _searchController;
@@ -194,45 +182,7 @@ class GtinCubit extends Cubit<GtinState> {
     }
   }
 
-  Future<void> getDigitalLinkViewData(String gtin,
-      {bool loadMore = false}) async {
-    if (!loadMore) {
-      emit(GtinDigitalLinkViewDataLoadingState());
-      _allergens.clear();
-      _retailers.clear();
-      _ingredients.clear();
-      _packagings.clear();
-      _promotions.clear();
-      _recipes.clear();
-      _leaflets.clear();
-      _images.clear();
-      _instructions.clear();
-      _videos.clear();
-      _currentAllergenPage = 1;
-      _currentRetailerPage = 1;
-      _currentIngredientPage = 1;
-      _currentPackagingPage = 1;
-      _currentPromotionPage = 1;
-      _currentRecipePage = 1;
-      _currentLeafletPage = 1;
-      _currentImagePage = 1;
-      _currentInstructionPage = 1;
-      _currentVideoPage = 1;
-    } else {
-      emit(GtinLoadingMoreDigitalLinkDataState(
-        currentAllergens: _allergens,
-        currentRetailers: _retailers,
-        currentIngredients: _ingredients,
-        currentPackagings: _packagings,
-        currentPromotions: _promotions,
-        currentRecipes: _recipes,
-        currentLeaflets: _leaflets,
-        currentImages: _images,
-        currentInstructions: _instructions,
-        currentVideos: _videos,
-      ));
-    }
-
+  Future<void> getDigitalLinkViewData(String gtin) async {
     try {
       final response = await GTINController.getDigitalLinkViewData(
         gtin,
@@ -240,7 +190,8 @@ class GtinCubit extends Cubit<GtinState> {
         limit: _videoPageSize,
       );
 
-      final allergenResponse = response['allergens'] as AllergenResponse;
+      // Fix: Handle allergens properly
+      final allergens = response['allergens'] as List<AllergenModel>;
       final retailerResponse = response['retailers'] as RetailerResponse;
       final ingredientResponse = response['ingredients'] as IngredientResponse;
       final packagingResponse = response['packagings'] as PackagingResponse;
@@ -251,28 +202,16 @@ class GtinCubit extends Cubit<GtinState> {
       final instructionResponse =
           response['instructions'] as InstructionResponse;
 
-      if (loadMore) {
-        _allergens.addAll(allergenResponse.allergens);
-        _retailers.addAll(retailerResponse.retailers);
-        _ingredients.addAll(ingredientResponse.ingredients);
-        _packagings.addAll(packagingResponse.packagings);
-        _promotions.addAll(promotionalResponse.offers);
-        _recipes.addAll(recipeResponse.recipes);
-        _leaflets.addAll(leafletResponse.leaflets);
-        _instructions.addAll(instructionResponse.instructions);
-      } else {
-        _allergens = allergenResponse.allergens;
-        _retailers = retailerResponse.retailers;
-        _ingredients = ingredientResponse.ingredients;
-        _packagings = packagingResponse.packagings;
-        _promotions = promotionalResponse.offers;
-        _recipes = recipeResponse.recipes;
-        _leaflets = leafletResponse.leaflets;
-        _instructions = instructionResponse.instructions;
-      }
+      // Fix: Assign allergens properly
+      _allergens = allergens;
+      _retailers = retailerResponse.retailers;
+      _ingredients = ingredientResponse.ingredients;
+      _packagings = packagingResponse.packagings;
+      _promotions = promotionalResponse.offers;
+      _recipes = recipeResponse.recipes;
+      _leaflets = leafletResponse.leaflets;
+      _instructions = instructionResponse.instructions;
 
-      _hasMoreAllergens =
-          _currentAllergenPage < allergenResponse.pagination.totalPages;
       _hasMoreRetailers =
           _currentRetailerPage < retailerResponse.pagination.totalPages;
       _hasMoreIngredients =
@@ -286,23 +225,11 @@ class GtinCubit extends Cubit<GtinState> {
           _currentInstructionPage < instructionResponse.totalPages;
 
       final imageResponse = response['images'] as ImageResponse;
-
-      if (loadMore) {
-        _images.addAll(imageResponse.images);
-      } else {
-        _images = imageResponse.images;
-      }
-
+      _images = imageResponse.images;
       _hasMoreImages = _currentImagePage < imageResponse.totalPages;
 
       final videoResponse = response['videos'] as VideoResponse;
-
-      if (loadMore) {
-        _videos.addAll(videoResponse.videos);
-      } else {
-        _videos = videoResponse.videos;
-      }
-
+      _videos = videoResponse.videos;
       _hasMoreVideos = _currentVideoPage < videoResponse.totalPages;
 
       emit(GtinDigitalLinkViewDataLoadedState(
@@ -312,48 +239,13 @@ class GtinCubit extends Cubit<GtinState> {
         packagings: _packagings,
         promotions: _promotions,
         recipes: _recipes,
-        hasMoreAllergens: _hasMoreAllergens,
-        hasMoreRetailers: _hasMoreRetailers,
-        hasMoreIngredients: _hasMoreIngredients,
-        hasMorePackagings: _hasMorePackagings,
-        hasMorePromotions: _hasMorePromotions,
-        hasMoreRecipes: _hasMoreRecipes,
         leaflets: _leaflets,
-        hasMoreLeaflets: _hasMoreLeaflets,
         images: _images,
-        hasMoreImages: _hasMoreImages,
         instructions: _instructions,
-        hasMoreInstructions: _hasMoreInstructions,
         videos: _videos,
-        hasMoreVideos: _hasMoreVideos,
       ));
     } catch (e) {
       emit(GtinDigitalLinkViewDataErrorState(message: e.toString()));
-    }
-  }
-
-  void loadMoreData(String gtin) {
-    if (_hasMoreAllergens ||
-        _hasMoreRetailers ||
-        _hasMoreIngredients ||
-        _hasMorePackagings ||
-        _hasMorePromotions ||
-        _hasMoreRecipes ||
-        _hasMoreLeaflets ||
-        _hasMoreImages ||
-        _hasMoreInstructions ||
-        _hasMoreVideos) {
-      _currentAllergenPage++;
-      _currentRetailerPage++;
-      _currentIngredientPage++;
-      _currentPackagingPage++;
-      _currentPromotionPage++;
-      _currentRecipePage++;
-      _currentLeafletPage++;
-      _currentImagePage++;
-      _currentInstructionPage++;
-      _currentVideoPage++;
-      getDigitalLinkViewData(gtin, loadMore: true);
     }
   }
 
@@ -365,6 +257,17 @@ class GtinCubit extends Cubit<GtinState> {
       emit(GtinReviewsLoadedState());
     } catch (e) {
       emit(GtinReviewsErrorState(message: e.toString()));
+    }
+  }
+
+  Future<void> getAllergenInformation(String barcode) async {
+    _allergens.clear();
+    emit(GetAllergenInformationLoading());
+    try {
+      _allergens = await GTINController.getAllergenInformation(barcode);
+      emit(GetAllergenInformationLoaded(_allergens));
+    } catch (e) {
+      emit(GetAllergenInformationError(e.toString()));
     }
   }
 
@@ -405,6 +308,17 @@ class GtinCubit extends Cubit<GtinState> {
       emit(GtinReviewsLoadedState());
     } catch (e) {
       emit(GtinReviewErrorState(message: e.toString()));
+    }
+  }
+
+  // Use this method specifically for loading allergen information in the allergen tab
+  Future<void> loadAllergenInformation(String barcode) async {
+    emit(GetAllergenInformationLoading());
+    try {
+      _allergens = await GTINController.getAllergenInformation(barcode);
+      emit(GetAllergenInformationLoaded(_allergens));
+    } catch (e) {
+      emit(GetAllergenInformationError(e.toString()));
     }
   }
 }

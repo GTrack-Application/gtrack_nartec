@@ -71,6 +71,9 @@ dependencies:
   path_provider: ^2.1.5
   equatable: ^2.0.7
   nfc_manager: ^3.5.0
+  share_plus: ^11.0.0
+  pdf: ^3.11.3
+  image: ^4.5.4
 
 icons_launcher:
   image_path: "assets/images/logo.png"

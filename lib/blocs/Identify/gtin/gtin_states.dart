@@ -67,16 +67,6 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
   final List<ImageModel> images;
   final List<InstructionModel> instructions;
   final List<VideoModel> videos;
-  final bool hasMoreAllergens;
-  final bool hasMoreRetailers;
-  final bool hasMoreIngredients;
-  final bool hasMorePackagings;
-  final bool hasMorePromotions;
-  final bool hasMoreRecipes;
-  final bool hasMoreLeaflets;
-  final bool hasMoreImages;
-  final bool hasMoreInstructions;
-  final bool hasMoreVideos;
 
   GtinDigitalLinkViewDataLoadedState({
     required this.allergens,
@@ -89,16 +79,6 @@ class GtinDigitalLinkViewDataLoadedState extends GtinState {
     required this.images,
     required this.instructions,
     required this.videos,
-    required this.hasMoreAllergens,
-    required this.hasMoreRetailers,
-    required this.hasMoreIngredients,
-    required this.hasMorePackagings,
-    required this.hasMorePromotions,
-    required this.hasMoreRecipes,
-    required this.hasMoreLeaflets,
-    required this.hasMoreImages,
-    required this.hasMoreInstructions,
-    required this.hasMoreVideos,
   });
 }
 
@@ -106,33 +86,6 @@ class GtinDigitalLinkViewDataErrorState extends GtinState {
   final String message;
 
   GtinDigitalLinkViewDataErrorState({required this.message});
-}
-
-// * Loading More States
-class GtinLoadingMoreDigitalLinkDataState extends GtinState {
-  final List<AllergenModel> currentAllergens;
-  final List<RetailerModel> currentRetailers;
-  final List<IngredientModel> currentIngredients;
-  final List<PackagingModel> currentPackagings;
-  final List<PromotionalOfferModel> currentPromotions;
-  final List<RecipeModel> currentRecipes;
-  final List<LeafletModel> currentLeaflets;
-  final List<ImageModel> currentImages;
-  final List<InstructionModel> currentInstructions;
-  final List<VideoModel> currentVideos;
-
-  GtinLoadingMoreDigitalLinkDataState({
-    required this.currentAllergens,
-    required this.currentRetailers,
-    required this.currentIngredients,
-    required this.currentPackagings,
-    required this.currentPromotions,
-    required this.currentRecipes,
-    required this.currentLeaflets,
-    required this.currentImages,
-    required this.currentInstructions,
-    required this.currentVideos,
-  });
 }
 
 // * Reviews
@@ -165,4 +118,18 @@ class GtinNutritionFactsErrorState extends GtinState {
   final String message;
 
   GtinNutritionFactsErrorState(this.message);
+}
+
+class GetAllergenInformationLoading extends GtinState {}
+
+class GetAllergenInformationLoaded extends GtinState {
+  final List<AllergenModel> allergens;
+
+  GetAllergenInformationLoaded(this.allergens);
+}
+
+class GetAllergenInformationError extends GtinState {
+  final String message;
+
+  GetAllergenInformationError(this.message);
 }

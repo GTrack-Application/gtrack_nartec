@@ -86,19 +86,27 @@ class GTINController {
     }
   }
 
-  static Future<AllergenResponse> getAllergenInformation(
+  static Future<List<AllergenModel>> getAllergenInformation(
     String gtin, {
-    required int page,
-    required int limit,
+    int page = 1,
+    int limit = 100,
   }) async {
     final response = await upcHubService.request(
-      '/api/digitalLinks/allergens?page=$page&pageSize=$limit&barcode=$gtin',
+      '/api/digitalLinks/ingredients?barcode=$gtin&page=$page&pageSize=$limit',
       method: HttpMethod.get,
     );
 
-    final allergenResponse = AllergenResponse.fromJson(response.data);
+    print(
+        "Url: ${AppUrls.upcHub}/api/digitalLinks/ingredients?barcode=$gtin&page=$page&pageSize=$limit");
 
-    return allergenResponse;
+    if (response.success) {
+      final data = response.data['ingredients'] as List;
+      return data.map((e) => AllergenModel.fromJson(e)).toList();
+    } else {
+      throw Exception(response.data['error'] ??
+          response.data['message'] ??
+          'Failed to load allergens');
+    }
   }
 
   static Future<RetailerResponse> getRetailerInformation(

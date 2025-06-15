@@ -46,7 +46,6 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
     // List<GTIN_Model> products = [];
     // bool hasMore = false;
     final products = gtinCubit.products;
-    bool hasMore = gtinCubit.hasMoreData;
     return Scaffold(
       appBar: AppBar(
         title: const Text('GTIN'),
@@ -132,8 +131,7 @@ class _GTINScreenV2State extends State<GTINScreenV2> {
                       },
                       child: ListView.builder(
                         controller: _scrollController,
-                        itemCount: products.length +
-                            (hasMore && state is GtinLoadingMoreState ? 1 : 0),
+                        itemCount: products.length,
                         itemBuilder: (context, index) {
                           final isMoreLoading = state is GtinLoadingMoreState &&
                               index == products.length;

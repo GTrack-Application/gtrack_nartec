@@ -13,6 +13,8 @@ import 'package:gtrack_nartec/global/widgets/pdf/pdf_viewer.dart';
 import 'package:gtrack_nartec/global/widgets/video/video_player_widget.dart';
 import 'package:gtrack_nartec/models/IDENTIFY/GTIN/GTINModel.dart';
 import 'package:gtrack_nartec/screens/home/identify/GTIN/digital_link_view_reviews_screen.dart';
+import 'package:gtrack_nartec/screens/home/identify/GTIN/widget/allergen_tab.dart';
+import 'package:gtrack_nartec/screens/home/identify/GTIN/widget/nutrition_facts_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DigitalLinkViewDataScreen extends StatefulWidget {
@@ -36,9 +38,11 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     gtinCubit = GtinCubit.get(context);
+    // Updated to call with page 1 and limit 100 by default
     gtinCubit.getDigitalLinkViewData(widget.barcode);
     gtinCubit.getReviews(widget.barcode);
     gtinCubit.getNutritionFacts(widget.barcode);
+    gtinCubit.getAllergenInformation(widget.barcode);
   }
 
   @override
@@ -57,10 +61,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
       body: BlocBuilder<GtinCubit, GtinState>(
         bloc: gtinCubit,
         builder: (context, state) {
-          if (state is GtinDigitalLinkViewDataLoadingState) {
-            return _buildLoadingPlaceholder(context);
-          }
-
           return Column(
             children: [
               // Tab Bar
@@ -112,281 +112,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           );
         },
       ),
-    );
-  }
-
-  Column _buildLoadingPlaceholder(BuildContext context) {
-    return Column(
-      children: [
-        // Tab Bar Placeholder
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.grey.withValues(alpha: 0.2),
-                spreadRadius: 1,
-                blurRadius: 3,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            child: Row(
-              children: List.generate(
-                3,
-                (index) => Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: index == 0
-                          ? AppColors.skyBlue.withValues(alpha: 0.1)
-                          : AppColors.grey.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        // Content Placeholder
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product Card Placeholder
-                Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.grey.withValues(alpha: 0.1),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Image placeholder
-                      Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: AppColors.grey.withValues(alpha: 0.2),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                          ),
-                        ),
-                      ),
-
-                      // Text placeholders
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              height: 18,
-                              decoration: BoxDecoration(
-                                color: AppColors.grey.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              height: 14,
-                              decoration: BoxDecoration(
-                                color: AppColors.grey.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Quick Info Cards Placeholder
-                GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1.5,
-                  children: List.generate(
-                    4,
-                    (index) => Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.grey.withValues(alpha: 0.1),
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: AppColors.grey.withValues(alpha: 0.2),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const Spacer(),
-                            Container(
-                              width: 80,
-                              height: 16,
-                              decoration: BoxDecoration(
-                                color: AppColors.grey.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Container(
-                              width: 60,
-                              height: 14,
-                              decoration: BoxDecoration(
-                                color: AppColors.grey.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Reviews Section Placeholder
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.grey.withValues(alpha: 0.1),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 150,
-                            height: 18,
-                            decoration: BoxDecoration(
-                              color: AppColors.grey.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            width: 40,
-                            height: 18,
-                            decoration: BoxDecoration(
-                              color: AppColors.grey.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      ...List.generate(
-                        2,
-                        (index) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: Container(
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: AppColors.grey.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(Icons.star,
-                                        color: AppColors.gold, size: 20),
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      width: 100,
-                                      height: 14,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.grey
-                                            .withValues(alpha: 0.2),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Container(
-                                      width: 70,
-                                      height: 14,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.grey
-                                            .withValues(alpha: 0.2),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const Spacer(),
-                                Container(
-                                  width: double.infinity,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        AppColors.grey.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -654,153 +379,8 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
           );
         }
 
-        if (gtinCubit.nutritionFacts.isEmpty) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.no_food_outlined,
-                    size: 48,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No nutrition facts available',
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: gtinCubit.nutritionFacts
-              .map((nutritionFact) => Card(
-                    color: AppColors.white,
-                    elevation: 2,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Nutrition Facts',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                          const Divider(thickness: 2),
-                          const SizedBox(height: 8),
-                          _nutritionInfoRow('Serving Size',
-                              nutritionFact.servingSize ?? 'N/A'),
-                          _nutritionInfoRow('Serving Per Package',
-                              nutritionFact.servingPerPackage ?? 'N/A'),
-                          _nutritionInfoRow('Amount Per Serving',
-                              nutritionFact.amountPerServing ?? 'N/A'),
-                          const Divider(),
-                          _nutritionInfoRow(
-                              'Calories', nutritionFact.calories ?? 'N/A',
-                              isBold: true),
-                          _nutritionInfoRow('Daily Value',
-                              '${nutritionFact.dailyValue ?? 'N/A'}%'),
-                          const Divider(),
-                          _nutritionInfoRow('Total Fats',
-                              '${nutritionFact.totalFats ?? 'N/A'}g',
-                              isBold: true),
-                          _nutritionInfoRow('Saturated Fats',
-                              '${nutritionFact.saturatedFats ?? 'N/A'}g'),
-                          _nutritionInfoRow('Monounsaturated',
-                              '${nutritionFact.monounsaturated ?? 'N/A'}g'),
-                          _nutritionInfoRow('Polyunsaturated',
-                              '${nutritionFact.polyunsaturated ?? 'N/A'}g'),
-                          _nutritionInfoRow('Trans Fat',
-                              '${nutritionFact.transFat ?? 'N/A'}g'),
-                          const Divider(),
-                          _nutritionInfoRow('Cholesterol',
-                              '${nutritionFact.cholesterol ?? 'N/A'}mg',
-                              isBold: true),
-                          _nutritionInfoRow(
-                              'Sodium', '${nutritionFact.sodium ?? 'N/A'}mg',
-                              isBold: true),
-                          const Divider(),
-                          _nutritionInfoRow('Total Carbohydrates',
-                              '${nutritionFact.totalCarbohydrates ?? 'N/A'}g',
-                              isBold: true),
-                          _nutritionInfoRow('Dietary Fibers',
-                              '${nutritionFact.dietaryFibers ?? 'N/A'}g'),
-                          _nutritionInfoRow('Total Sugars',
-                              '${nutritionFact.totalSugars ?? 'N/A'}g'),
-                          _nutritionInfoRow(
-                              'Added Sugar',
-                              nutritionFact.containsAddedSugar == true
-                                  ? 'Yes'
-                                  : 'No'),
-                          const Divider(),
-                          _nutritionInfoRow(
-                              'Protein', '${nutritionFact.protein ?? 'N/A'}g',
-                              isBold: true),
-                          if (nutritionFact.remarks != null &&
-                              nutritionFact.remarks!.isNotEmpty) ...[
-                            const Divider(),
-                            Text(
-                              'Remarks:',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              nutritionFact.remarks!,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ))
-              .toList(),
-        );
+        return NutritionFactsTab(nutritionFacts: gtinCubit.nutritionFacts);
       },
-    );
-  }
-
-  Widget _nutritionInfoRow(String label, String value, {bool isBold = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-              color: Colors.grey[700],
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-              color: Colors.grey[800],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -925,24 +505,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
             );
           },
         ),
-        if (gtinCubit.hasMoreIngredients)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: ElevatedButton(
-              onPressed: () {
-                gtinCubit.loadMoreData(widget.barcode);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.skyBlue,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text('Load More'),
-            ),
-          ),
       ],
     );
   }
@@ -978,188 +540,8 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
     return "${date.month}/${date.day}/${date.year}";
   }
 
-  Column buildAllergenInformation(BuildContext context) {
-    return Column(
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: gtinCubit.allergens.length,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          itemBuilder: (context, index) {
-            final allergen = gtinCubit.allergens[index];
-            return Container(
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    spreadRadius: 1,
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Product Name: ${allergen.productName}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.skyBlue.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Allergen Details",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.skyBlue,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        _allergenDetailRow("Name", allergen.allergenName),
-                        _allergenDetailRow("Type", allergen.allergenType),
-                        _allergenDetailRow("Severity", allergen.severity),
-                        _allergenDetailRow("Source", allergen.allergenSource),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.success.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Status",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.success,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        _allergenStatusRow(
-                          "Contains Allergen",
-                          allergen.containsAllergen,
-                        ),
-                        _allergenStatusRow(
-                          "May Contains",
-                          allergen.mayContain,
-                        ),
-                        _allergenStatusRow(
-                          "Cross Contamination Risk",
-                          allergen.crossContaminationRisk,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-        if (gtinCubit.hasMoreAllergens)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: ElevatedButton(
-              onPressed: () {
-                context
-                    .read<GtinCubit>()
-                    .getDigitalLinkViewData(widget.barcode);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.skyBlue,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text('Load More'),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _allergenDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(color: Colors.black87),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _allergenStatusRow(String label, bool value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 200,
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          Icon(
-            value ? Icons.check_circle : Icons.cancel,
-            color: value ? AppColors.green : AppColors.danger,
-            size: 20,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            value ? "Yes" : "No",
-            style: TextStyle(
-              color: value ? AppColors.green : AppColors.danger,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
+  Widget buildAllergenInformation(BuildContext context) {
+    return AllergenTab(allergens: gtinCubit.allergens);
   }
 
   Widget buildRetailerInformation(BuildContext context) {
@@ -1281,24 +663,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
             );
           },
         ),
-        if (gtinCubit.hasMoreRetailers)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: ElevatedButton(
-              onPressed: () {
-                gtinCubit.loadMoreData(widget.barcode);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.skyBlue,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text('Load More'),
-            ),
-          ),
       ],
     );
   }
@@ -1460,24 +824,6 @@ class _DigitalLinkViewDataScreenState extends State<DigitalLinkViewDataScreen>
             );
           },
         ),
-        if (gtinCubit.hasMorePackagings)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: ElevatedButton(
-              onPressed: () {
-                gtinCubit.loadMoreData(widget.barcode);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.skyBlue,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text('Load More'),
-            ),
-          ),
       ],
     );
   }
