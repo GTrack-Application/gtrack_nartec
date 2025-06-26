@@ -1,0 +1,26 @@
+{
+    "sourceFile": "lib/models/IDENTIFY/GTIN/leaflet_model.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1750924712400,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1750924724663,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n     linkType = json['LinkType'];\n     targetURL = json['TargetURL'];\n     gTIN = json['GTIN'];\n     pdfDoc = json['PdfDoc'];\n-    companyId = json['companyId'];\n+    companyId = json['companyId'].toString();\n   }\n \n   Map<String, dynamic> toJson() {\n     final Map<String, dynamic> data = <String, dynamic>{};\n"
+                },
+                {
+                    "date": 1750924730196,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,19 +5,20 @@\n   String? linkType;\n   String? targetURL;\n   String? gTIN;\n   String? pdfDoc;\n-  Null? companyId;\n+  String? companyId;\n \n-  LeafletModel(\n-      {this.iD,\n-      this.productLeafletInformation,\n-      this.lang,\n-      this.linkType,\n-      this.targetURL,\n-      this.gTIN,\n-      this.pdfDoc,\n-      this.companyId});\n+  LeafletModel({\n+    this.iD,\n+    this.productLeafletInformation,\n+    this.lang,\n+    this.linkType,\n+    this.targetURL,\n+    this.gTIN,\n+    this.pdfDoc,\n+    this.companyId,\n+  });\n \n   LeafletModel.fromJson(Map<String, dynamic> json) {\n     iD = json['ID'];\n     productLeafletInformation = json['ProductLeafletInformation'];\n"
+                }
+            ],
+            "date": 1750924712400,
+            "name": "Commit-0",
+            "content": "class LeafletModel {\n  int? iD;\n  String? productLeafletInformation;\n  String? lang;\n  String? linkType;\n  String? targetURL;\n  String? gTIN;\n  String? pdfDoc;\n  Null? companyId;\n\n  LeafletModel(\n      {this.iD,\n      this.productLeafletInformation,\n      this.lang,\n      this.linkType,\n      this.targetURL,\n      this.gTIN,\n      this.pdfDoc,\n      this.companyId});\n\n  LeafletModel.fromJson(Map<String, dynamic> json) {\n    iD = json['ID'];\n    productLeafletInformation = json['ProductLeafletInformation'];\n    lang = json['Lang'];\n    linkType = json['LinkType'];\n    targetURL = json['TargetURL'];\n    gTIN = json['GTIN'];\n    pdfDoc = json['PdfDoc'];\n    companyId = json['companyId'];\n  }\n\n  Map<String, dynamic> toJson() {\n    final Map<String, dynamic> data = <String, dynamic>{};\n    data['ID'] = iD;\n    data['ProductLeafletInformation'] = productLeafletInformation;\n    data['Lang'] = lang;\n    data['LinkType'] = linkType;\n    data['TargetURL'] = targetURL;\n    data['GTIN'] = gTIN;\n    data['PdfDoc'] = pdfDoc;\n    data['companyId'] = companyId;\n    return data;\n  }\n}\n"
+        }
+    ]
+}

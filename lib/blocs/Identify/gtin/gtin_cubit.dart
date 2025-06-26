@@ -37,52 +37,32 @@ class GtinCubit extends Cubit<GtinState> {
   final List<GTIN_Model> _allProducts = [];
 
   List<AllergenModel> _allergens = [];
-  int _currentAllergenPage = 1;
   static const int _allergenPageSize = 20;
 
   List<RetailerModel> _retailers = [];
-  bool _hasMoreRetailers = true;
-  int _currentRetailerPage = 1;
-  static const int _retailerPageSize = 10;
 
   List<IngredientModel> _ingredients = [];
-  bool _hasMoreIngredients = true;
-  int _currentIngredientPage = 1;
   static const int _ingredientPageSize = 10;
 
   List<PackagingModel> _packagings = [];
-  bool _hasMorePackagings = true;
-  int _currentPackagingPage = 1;
   static const int _packagingPageSize = 10;
 
   List<PromotionalOfferModel> _promotions = [];
-  bool _hasMorePromotions = true;
-  int _currentPromotionPage = 1;
   static const int _promotionPageSize = 10;
 
   List<RecipeModel> _recipes = [];
-  bool _hasMoreRecipes = true;
-  int _currentRecipePage = 1;
   static const int _recipePageSize = 10;
 
   List<LeafletModel> _leaflets = [];
-  bool _hasMoreLeaflets = true;
-  int _currentLeafletPage = 1;
   static const int _leafletPageSize = 10;
 
   List<ImageModel> _images = [];
-  bool _hasMoreImages = true;
-  int _currentImagePage = 1;
   static const int _imagePageSize = 10;
 
   List<InstructionModel> _instructions = [];
-  bool _hasMoreInstructions = true;
-  int _currentInstructionPage = 1;
   static const int _instructionPageSize = 10;
 
   List<VideoModel> _videos = [];
-  bool _hasMoreVideos = true;
-  int _currentVideoPage = 1;
   static const int _videoPageSize = 10;
 
   // * Getters
@@ -186,51 +166,36 @@ class GtinCubit extends Cubit<GtinState> {
     try {
       final response = await GTINController.getDigitalLinkViewData(
         gtin,
-        page: _currentVideoPage,
         limit: _videoPageSize,
       );
 
       // Fix: Handle allergens properly
       final allergens = response['allergens'] as List<AllergenModel>;
-      final retailerResponse = response['retailers'] as RetailerResponse;
+      final retailerResponse = response['data'] as List<RetailerModel>;
       final ingredientResponse = response['ingredients'] as IngredientResponse;
-      final packagingResponse = response['packagings'] as PackagingResponse;
+      final packagingResponse = response['packagings'] as List<PackagingModel>;
       final promotionalResponse =
-          response['promotions'] as PromotionalOfferResponse;
-      final recipeResponse = response['recipes'] as RecipeResponse;
-      final leafletResponse = response['leaflets'] as LeafletResponse;
+          response['promotionalOffers'] as List<PromotionalOfferModel>;
+      final recipeResponse = response as List<RecipeModel>;
+      final leafletResponse = response as List<LeafletModel>;
       final instructionResponse =
           response['instructions'] as InstructionResponse;
 
       // Fix: Assign allergens properly
       _allergens = allergens;
-      _retailers = retailerResponse.retailers;
+      _retailers = retailerResponse;
       _ingredients = ingredientResponse.ingredients;
-      _packagings = packagingResponse.packagings;
-      _promotions = promotionalResponse.offers;
-      _recipes = recipeResponse.recipes;
-      _leaflets = leafletResponse.leaflets;
+      _packagings = packagingResponse;
+      _promotions = promotionalResponse;
+      _recipes = recipeResponse;
+      _leaflets = leafletResponse;
       _instructions = instructionResponse.instructions;
 
-      _hasMoreRetailers =
-          _currentRetailerPage < retailerResponse.pagination.totalPages;
-      _hasMoreIngredients =
-          _currentIngredientPage < ingredientResponse.pagination.totalPages;
-      _hasMorePackagings = _currentPackagingPage < packagingResponse.totalPages;
-      _hasMorePromotions =
-          _currentPromotionPage < promotionalResponse.totalPages;
-      _hasMoreRecipes = _currentRecipePage < recipeResponse.totalPages;
-      _hasMoreLeaflets = _currentLeafletPage < leafletResponse.totalPages;
-      _hasMoreInstructions =
-          _currentInstructionPage < instructionResponse.totalPages;
+      final imageResponse = response['data'] as List<ImageModel>;
+      _images = imageResponse;
 
-      final imageResponse = response['images'] as ImageResponse;
-      _images = imageResponse.images;
-      _hasMoreImages = _currentImagePage < imageResponse.totalPages;
-
-      final videoResponse = response['videos'] as VideoResponse;
-      _videos = videoResponse.videos;
-      _hasMoreVideos = _currentVideoPage < videoResponse.totalPages;
+      final videoResponse = response['data'] as List<VideoModel>;
+      _videos = videoResponse;
 
       emit(GtinDigitalLinkViewDataLoadedState(
         allergens: _allergens,
@@ -273,7 +238,6 @@ class GtinCubit extends Cubit<GtinState> {
 
   Future<void> getNutritionFacts(String barcode) async {
     _nutritionFacts.clear();
-    print('HI');
     emit(GtinNutritionFactsLoadingState());
     try {
       _nutritionFacts = await GTINController.fetchNutritionFacts(barcode);
@@ -311,14 +275,95 @@ class GtinCubit extends Cubit<GtinState> {
     }
   }
 
-  // Use this method specifically for loading allergen information in the allergen tab
-  Future<void> loadAllergenInformation(String barcode) async {
-    emit(GetAllergenInformationLoading());
+  Future<void> getRetailersInformation(String gtin) async {
+    _retailers.clear();
+    emit(GetRetailerInformationLoading());
     try {
-      _allergens = await GTINController.getAllergenInformation(barcode);
-      emit(GetAllergenInformationLoaded(_allergens));
+      final newRetailers = await GTINController.getRetailerInformation(gtin);
+      _retailers.addAll(newRetailers);
+      emit(GetRetailerInformationLoaded(_retailers));
     } catch (e) {
-      emit(GetAllergenInformationError(e.toString()));
+      emit(GetRetailerInformationError(e.toString()));
     }
   }
+
+  Future<void> getPackagingInformation(String gtin) async {
+    _packagings.clear();
+    emit(GetPackagingInformationLoading());
+    try {
+      _packagings = await GTINController.getPackagingInformation(gtin);
+      emit(GetPackagingInformationLoaded(_packagings));
+    } catch (e) {
+      emit(GetPackagingInformationError(e.toString()));
+    }
+  }
+
+  Future<void> getPromotionalOffers(String gtin) async {
+    _promotions.clear();
+    emit(GetPromotionalOffersLoading());
+    try {
+      _promotions = await GTINController.getPromotionalOffers(gtin);
+
+      emit(GetPromotionalOffersLoaded(_promotions));
+    } catch (e) {
+      emit(GetPromotionalOffersError(e.toString()));
+    }
+  }
+
+  Future<void> getRecipes(String gtin) async {
+    _recipes.clear();
+    emit(GetRecipeInformationLoading());
+    try {
+      _recipes = await GTINController.getRecipeInformation(gtin);
+      emit(GetRecipeInformationLoaded(_recipes));
+    } catch (e) {
+      emit(GetRecipeInformationError(e.toString()));
+    }
+  }
+
+  Future<void> getImages(String gtin) async {
+    _images.clear();
+    emit(GetImagesLoading());
+    try {
+      _images = await GTINController.getImageInformation(gtin);
+      emit(GetImagesLoaded(_images));
+    } catch (e) {
+      emit(GetImagesError(e.toString()));
+    }
+  }
+
+  Future<void> getLeafletInformation(String gtin) async {
+    _leaflets.clear();
+    emit(GetLeafletLoading());
+    try {
+      _leaflets = await GTINController.getLeafletInformation(gtin);
+      emit(GetLeafletLoaded(_leaflets));
+    } catch (e) {
+      emit(GetLeafletError(e.toString()));
+    }
+  }
+
+  Future<void> getVideoInformation(String gtin) async {
+    _videos.clear();
+    emit(GetVideoLoading());
+    try {
+      _videos = await GTINController.getVideoInformation(gtin);
+      emit(GetVideoLoaded(_videos));
+    } catch (e) {
+      emit(GetVideoError(e.toString()));
+    }
+  }
+
+  Future<void> getReviewsInformation(String gtin) async {
+    _reviews.clear();
+    emit(GtinReviewsLoadingState());
+    try {
+      _reviews = await GTINController.getReviews(gtin);
+      emit(GtinReviewsLoadedState());
+    } catch (e) {
+      emit(GtinReviewsErrorState(message: e.toString()));
+    }
+  }
+
+  void getGtinData() {}
 }

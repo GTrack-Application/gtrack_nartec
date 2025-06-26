@@ -133,3 +133,101 @@ class GetAllergenInformationError extends GtinState {
 
   GetAllergenInformationError(this.message);
 }
+
+class GetRetailerInformationLoading extends GtinState {}
+
+class GetRetailerInformationLoaded extends GtinState {
+  final List<RetailerModel> retailers;
+
+  GetRetailerInformationLoaded(this.retailers);
+}
+
+class GetRetailerInformationError extends GtinState {
+  final String message;
+
+  GetRetailerInformationError(this.message);
+}
+
+class GetPackagingInformationLoading extends GtinState {}
+
+class GetPackagingInformationLoaded extends GtinState {
+  final List<PackagingModel> packagings;
+
+  GetPackagingInformationLoaded(this.packagings);
+}
+
+class GetPackagingInformationError extends GtinState {
+  final String message;
+
+  GetPackagingInformationError(this.message);
+}
+
+class GetPromotionalOffersLoading extends GtinState {}
+
+class GetPromotionalOffersLoaded extends GtinState {
+  final List<PromotionalOfferModel> promotions;
+
+  GetPromotionalOffersLoaded(this.promotions);
+}
+
+class GetPromotionalOffersError extends GtinState {
+  final String message;
+
+  GetPromotionalOffersError(this.message);
+}
+
+class GetRecipeInformationLoading extends GtinState {}
+
+class GetRecipeInformationLoaded extends GtinState {
+  final List<RecipeModel> recipes;
+
+  GetRecipeInformationLoaded(this.recipes);
+}
+
+class GetRecipeInformationError extends GtinState {
+  final String message;
+
+  GetRecipeInformationError(this.message);
+}
+
+class GetImagesLoading extends GtinState {}
+
+class GetImagesLoaded extends GtinState {
+  final List<ImageModel> images;
+
+  GetImagesLoaded(this.images);
+}
+
+class GetImagesError extends GtinState {
+  final String message;
+
+  GetImagesError(this.message);
+}
+
+class GetLeafletLoading extends GtinState {}
+
+class GetLeafletLoaded extends GtinState {
+  final List<LeafletModel> leaflets;
+
+  GetLeafletLoaded(this.leaflets);
+}
+
+class GetLeafletError extends GtinState {
+  final String message;
+
+  GetLeafletError(this.message);
+}
+
+class GetVideoLoading extends GtinState {}
+
+class GetVideoLoaded extends GtinState {
+  final List<VideoModel> videos;
+
+  GetVideoLoaded(this.videos);
+}
+
+class GetVideoError extends GtinState {
+  final String message;
+
+  GetVideoError(this.message);
+}

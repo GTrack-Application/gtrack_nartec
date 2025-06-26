@@ -1,0 +1,18 @@
+{
+    "sourceFile": "lib/models/IDENTIFY/GTIN/promotional_offer_model.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1750831477650,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1750831477650,
+            "name": "Commit-0",
+            "content": "class PromotionalOfferModel {\n  String? id;\n  String? promotionalOffers;\n  String? linkType;\n  String? logo;\n  String? lang;\n  String? targetURL;\n  String? gTIN;\n  String? expiryDate;\n  int? price;\n  String? banner;\n  String? companyId;\n  String? createdAt;\n  String? updatedAt;\n  String? lastModifiedBy;\n  String? domainName;\n  bool? isDefault;\n\n  PromotionalOfferModel(\n      {this.id,\n      this.promotionalOffers,\n      this.linkType,\n      this.logo,\n      this.lang,\n      this.targetURL,\n      this.gTIN,\n      this.expiryDate,\n      this.price,\n      this.banner,\n      this.companyId,\n      this.createdAt,\n      this.updatedAt,\n      this.lastModifiedBy,\n      this.domainName,\n      this.isDefault});\n\n  PromotionalOfferModel.fromJson(Map<String, dynamic> json) {\n    id = json['id'];\n    promotionalOffers = json['PromotionalOffers'];\n    linkType = json['LinkType'];\n    logo = json['logo'];\n    lang = json['Lang'];\n    targetURL = json['TargetURL'];\n    gTIN = json['GTIN'];\n    expiryDate = json['ExpiryDate'];\n    price = json['price'];\n    banner = json['banner'];\n    companyId = json['companyId'];\n    createdAt = json['created_at'];\n    updatedAt = json['updated_at'];\n    lastModifiedBy = json['last_modified_by'];\n    domainName = json['domainName'];\n    isDefault = json['is_default'];\n  }\n\n  Map<String, dynamic> toJson() {\n    final Map<String, dynamic> data = <String, dynamic>{};\n    data['id'] = id;\n    data['PromotionalOffers'] = promotionalOffers;\n    data['LinkType'] = linkType;\n    data['logo'] = logo;\n    data['Lang'] = lang;\n    data['TargetURL'] = targetURL;\n    data['GTIN'] = gTIN;\n    data['ExpiryDate'] = expiryDate;\n    data['price'] = price;\n    data['banner'] = banner;\n    data['companyId'] = companyId;\n    data['created_at'] = createdAt;\n    data['updated_at'] = updatedAt;\n    data['last_modified_by'] = lastModifiedBy;\n    data['domainName'] = domainName;\n    data['is_default'] = isDefault;\n    return data;\n  }\n}\n"
+        }
+    ]
+}

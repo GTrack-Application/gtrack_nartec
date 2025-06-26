@@ -1,52 +1,45 @@
 class LeafletModel {
-  final int id;
-  final String productLeafletInformation;
-  final String lang;
-  final String linkType;
-  final String targetUrl;
-  final String gtin;
-  final String pdfDoc;
-  final dynamic companyId;
+  int? iD;
+  String? productLeafletInformation;
+  String? lang;
+  String? linkType;
+  String? targetURL;
+  String? gTIN;
+  String? pdfDoc;
+  String? companyId;
 
   LeafletModel({
-    required this.id,
-    required this.productLeafletInformation,
-    required this.lang,
-    required this.linkType,
-    required this.targetUrl,
-    required this.gtin,
-    required this.pdfDoc,
+    this.iD,
+    this.productLeafletInformation,
+    this.lang,
+    this.linkType,
+    this.targetURL,
+    this.gTIN,
+    this.pdfDoc,
     this.companyId,
   });
 
-  factory LeafletModel.fromJson(Map<String, dynamic> json) {
-    return LeafletModel(
-      id: json['ID'],
-      productLeafletInformation: json['ProductLeafletInformation'],
-      lang: json['Lang'],
-      linkType: json['LinkType'],
-      targetUrl: json['TargetURL'],
-      gtin: json['GTIN'],
-      pdfDoc: json['PdfDoc'],
-      companyId: json['companyId'],
-    );
+  LeafletModel.fromJson(Map<String, dynamic> json) {
+    iD = json['ID'];
+    productLeafletInformation = json['ProductLeafletInformation'];
+    lang = json['Lang'];
+    linkType = json['LinkType'];
+    targetURL = json['TargetURL'];
+    gTIN = json['GTIN'];
+    pdfDoc = json['PdfDoc'];
+    companyId = json['companyId'].toString();
   }
-}
 
-class LeafletResponse {
-  final List<LeafletModel> leaflets;
-  final int totalPages;
-
-  LeafletResponse({
-    required this.leaflets,
-    required this.totalPages,
-  });
-
-  factory LeafletResponse.fromJson(List<dynamic> json) {
-    final leaflets = json.map((e) => LeafletModel.fromJson(e)).toList();
-    return LeafletResponse(
-      leaflets: leaflets,
-      totalPages: 1, // Since pagination isn't implemented in the API yet
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ID'] = iD;
+    data['ProductLeafletInformation'] = productLeafletInformation;
+    data['Lang'] = lang;
+    data['LinkType'] = linkType;
+    data['TargetURL'] = targetURL;
+    data['GTIN'] = gTIN;
+    data['PdfDoc'] = pdfDoc;
+    data['companyId'] = companyId;
+    return data;
   }
 }

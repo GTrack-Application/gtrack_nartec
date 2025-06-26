@@ -1,0 +1,18 @@
+{
+    "sourceFile": "lib/models/IDENTIFY/GTIN/review_model.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1750930600081,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1750930600081,
+            "name": "Commit-0",
+            "content": "class ReviewModel {\n  String? id;\n  String? locationIP;\n  String? senderId;\n  int? rating;\n  String? comments;\n  String? createdAt;\n  String? updatedAt;\n  String? productId;\n  String? productDescription;\n  String? brandName;\n  String? gTIN;\n  String? gcpGLNID;\n\n  ReviewModel(\n      {this.id,\n      this.locationIP,\n      this.senderId,\n      this.rating,\n      this.comments,\n      this.createdAt,\n      this.updatedAt,\n      this.productId,\n      this.productDescription,\n      this.brandName,\n      this.gTIN,\n      this.gcpGLNID});\n\n  ReviewModel.fromJson(Map<String, dynamic> json) {\n    id = json['id'];\n    locationIP = json['LocationIP'];\n    senderId = json['SenderId'];\n    rating = json['rating'];\n    comments = json['Comments'];\n    createdAt = json['createdAt'];\n    updatedAt = json['updatedAt'];\n    productId = json['ProductId'];\n    productDescription = json['ProductDescription'];\n    brandName = json['BrandName'];\n    gTIN = json['GTIN'];\n    gcpGLNID = json['gcpGLNID'];\n  }\n\n  Map<String, dynamic> toJson() {\n    final Map<String, dynamic> data = <String, dynamic>{};\n    data['id'] = id;\n    data['LocationIP'] = locationIP;\n    data['SenderId'] = senderId;\n    data['rating'] = rating;\n    data['Comments'] = comments;\n    data['createdAt'] = createdAt;\n    data['updatedAt'] = updatedAt;\n    data['ProductId'] = productId;\n    data['ProductDescription'] = productDescription;\n    data['BrandName'] = brandName;\n    data['GTIN'] = gTIN;\n    data['gcpGLNID'] = gcpGLNID;\n    return data;\n  }\n}\n"
+        }
+    ]
+}

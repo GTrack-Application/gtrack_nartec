@@ -1,0 +1,22 @@
+{
+    "sourceFile": "lib/models/IDENTIFY/GTIN/retailer_model.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1750754106042,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1750754114647,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,60 @@\n+class RetailerModel {\n+  String? id;\n+  String? productSku;\n+  String? barcode;\n+  String? storeId;\n+  String? storeName;\n+  String? storeGln;\n+  String? logo;\n+  String? createdAt;\n+  String? updatedAt;\n+  String? brandOwnerId;\n+  String? lastModifiedBy;\n+  String? domainName;\n+\n+  RetailerModel(\n+      {this.id,\n+      this.productSku,\n+      this.barcode,\n+      this.storeId,\n+      this.storeName,\n+      this.storeGln,\n+      this.logo,\n+      this.createdAt,\n+      this.updatedAt,\n+      this.brandOwnerId,\n+      this.lastModifiedBy,\n+      this.domainName});\n+\n+  RetailerModel.fromJson(Map<String, dynamic> json) {\n+    id = json['id'];\n+    productSku = json['product_sku'];\n+    barcode = json['barcode'];\n+    storeId = json['store_id'];\n+    storeName = json['store_name'];\n+    storeGln = json['store_gln'];\n+    logo = json['logo'];\n+    createdAt = json['created_at'];\n+    updatedAt = json['updated_at'];\n+    brandOwnerId = json['brand_owner_id'];\n+    lastModifiedBy = json['last_modified_by'];\n+    domainName = json['domainName'];\n+  }\n+\n+  Map<String, dynamic> toJson() {\n+    final Map<String, dynamic> data = <String, dynamic>{};\n+    data['id'] = id;\n+    data['product_sku'] = productSku;\n+    data['barcode'] = barcode;\n+    data['store_id'] = storeId;\n+    data['store_name'] = storeName;\n+    data['store_gln'] = storeGln;\n+    data['logo'] = logo;\n+    data['created_at'] = createdAt;\n+    data['updated_at'] = updatedAt;\n+    data['brand_owner_id'] = brandOwnerId;\n+    data['last_modified_by'] = lastModifiedBy;\n+    data['domainName'] = domainName;\n+    return data;\n+  }\n+}\n"
+                }
+            ],
+            "date": 1750754106042,
+            "name": "Commit-0",
+            "content": "class RetailerModel {\n  String? id;\n  String? productSku;\n  String? barcode;\n  String? storeId;\n  String? storeName;\n  String? storeGln;\n  String? logo;\n  String? createdAt;\n  String? updatedAt;\n  String? brandOwnerId;\n  String? lastModifiedBy;\n  String? domainName;\n\n  RetailerModel(\n      {this.id,\n      this.productSku,\n      this.barcode,\n      this.storeId,\n      this.storeName,\n      this.storeGln,\n      this.logo,\n      this.createdAt,\n      this.updatedAt,\n      this.brandOwnerId,\n      this.lastModifiedBy,\n      this.domainName});\n\n  RetailerModel.fromJson(Map<String, dynamic> json) {\n    id = json['id'];\n    productSku = json['product_sku'];\n    barcode = json['barcode'];\n    storeId = json['store_id'];\n    storeName = json['store_name'];\n    storeGln = json['store_gln'];\n    logo = json['logo'];\n    createdAt = json['created_at'];\n    updatedAt = json['updated_at'];\n    brandOwnerId = json['brand_owner_id'];\n    lastModifiedBy = json['last_modified_by'];\n    domainName = json['domainName'];\n  }\n\n  Map<String, dynamic> toJson() {\n    final Map<String, dynamic> data = new Map<String, dynamic>();\n    data['id'] = this.id;\n    data['product_sku'] = this.productSku;\n    data['barcode'] = this.barcode;\n    data['store_id'] = this.storeId;\n    data['store_name'] = this.storeName;\n    data['store_gln'] = this.storeGln;\n    data['logo'] = this.logo;\n    data['created_at'] = this.createdAt;\n    data['updated_at'] = this.updatedAt;\n    data['brand_owner_id'] = this.brandOwnerId;\n    data['last_modified_by'] = this.lastModifiedBy;\n    data['domainName'] = this.domainName;\n    return data;\n  }\n}\n"
+        }
+    ]
+}

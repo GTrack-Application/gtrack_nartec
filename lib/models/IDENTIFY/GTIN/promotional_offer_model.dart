@@ -1,58 +1,76 @@
 class PromotionalOfferModel {
-  final int id;
-  final String promotionalOffers;
-  final String linkType;
-  final String lang;
-  final String targetUrl;
-  final String gtin;
-  final String expiryDate;
-  final double price;
-  final String banner;
-  final dynamic companyId;
+  String? id;
+  String? promotionalOffers;
+  String? linkType;
+  String? logo;
+  String? lang;
+  String? targetURL;
+  String? gTIN;
+  String? expiryDate;
+  int? price;
+  String? banner;
+  String? companyId;
+  String? createdAt;
+  String? updatedAt;
+  String? lastModifiedBy;
+  String? domainName;
+  bool? isDefault;
 
-  PromotionalOfferModel({
-    required this.id,
-    required this.promotionalOffers,
-    required this.linkType,
-    required this.lang,
-    required this.targetUrl,
-    required this.gtin,
-    required this.expiryDate,
-    required this.price,
-    required this.banner,
-    this.companyId,
-  });
+  PromotionalOfferModel(
+      {this.id,
+      this.promotionalOffers,
+      this.linkType,
+      this.logo,
+      this.lang,
+      this.targetURL,
+      this.gTIN,
+      this.expiryDate,
+      this.price,
+      this.banner,
+      this.companyId,
+      this.createdAt,
+      this.updatedAt,
+      this.lastModifiedBy,
+      this.domainName,
+      this.isDefault});
 
-  factory PromotionalOfferModel.fromJson(Map<String, dynamic> json) {
-    return PromotionalOfferModel(
-      id: json['ID'],
-      promotionalOffers: json['PromotionalOffers'],
-      linkType: json['LinkType'],
-      lang: json['Lang'],
-      targetUrl: json['TargetURL'],
-      gtin: json['GTIN'],
-      expiryDate: json['ExpiryDate'],
-      price: json['price']?.toDouble() ?? 0.0,
-      banner: json['banner'],
-      companyId: json['companyId'],
-    );
+  PromotionalOfferModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    promotionalOffers = json['PromotionalOffers'];
+    linkType = json['LinkType'];
+    logo = json['logo'];
+    lang = json['Lang'];
+    targetURL = json['TargetURL'];
+    gTIN = json['GTIN'];
+    expiryDate = json['ExpiryDate'];
+    price = json['price'];
+    banner = json['banner'];
+    companyId = json['companyId'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    lastModifiedBy = json['last_modified_by'];
+    domainName = json['domainName'];
+    isDefault = json['is_default'];
   }
-}
 
-class PromotionalOfferResponse {
-  final List<PromotionalOfferModel> offers;
-  final int totalPages;
-
-  PromotionalOfferResponse({
-    required this.offers,
-    required this.totalPages,
-  });
-
-  factory PromotionalOfferResponse.fromJson(List<dynamic> json) {
-    final offers = json.map((e) => PromotionalOfferModel.fromJson(e)).toList();
-    return PromotionalOfferResponse(
-      offers: offers,
-      totalPages: 1, // Since pagination isn't implemented in the API yet
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['PromotionalOffers'] = promotionalOffers;
+    data['LinkType'] = linkType;
+    data['logo'] = logo;
+    data['Lang'] = lang;
+    data['TargetURL'] = targetURL;
+    data['GTIN'] = gTIN;
+    data['ExpiryDate'] = expiryDate;
+    data['price'] = price;
+    data['banner'] = banner;
+    data['companyId'] = companyId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['last_modified_by'] = lastModifiedBy;
+    data['domainName'] = domainName;
+    data['is_default'] = isDefault;
+    return data;
   }
 }

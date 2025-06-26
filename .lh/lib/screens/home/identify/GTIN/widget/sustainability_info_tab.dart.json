@@ -1,0 +1,22 @@
+{
+    "sourceFile": "lib/screens/home/identify/GTIN/widget/sustainability_info_tab.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1750932389464,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1750932401328,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import 'package:flutter/material.dart';\n \n class SustainabilityInfoTab extends StatelessWidget {\n-  const SustainabilityInfoTab({Key? key}) : super(key: key);\n+  const SustainabilityInfoTab({super.key});\n \n   @override\n   Widget build(BuildContext context) {\n     return SingleChildScrollView(\n"
+                }
+            ],
+            "date": 1750932389464,
+            "name": "Commit-0",
+            "content": "import 'package:flutter/material.dart';\n\nclass SustainabilityInfoTab extends StatelessWidget {\n  const SustainabilityInfoTab({Key? key}) : super(key: key);\n\n  @override\n  Widget build(BuildContext context) {\n    return SingleChildScrollView(\n      padding: const EdgeInsets.all(16.0),\n      child: Column(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: [\n          Text(\n            'Sustainability Information',\n            style: Theme.of(context).textTheme.headlineSmall?.copyWith(\n              color: Colors.green[700],\n              fontWeight: FontWeight.bold,\n            ),\n          ),\n          const SizedBox(height: 20),\n          \n          // Environmental Impact Section\n          Text(\n            'Environmental Impact:',\n            style: Theme.of(context).textTheme.titleMedium?.copyWith(\n              fontWeight: FontWeight.bold,\n            ),\n          ),\n          const SizedBox(height: 8),\n          _buildBulletPoint('100% Recyclable Packaging'),\n          _buildBulletPoint('Reduced Carbon Footprint Initiative'),\n          _buildBulletPoint('Sustainable Sourcing Practices'),\n          const SizedBox(height: 20),\n          \n          // Recycling Information Section\n          Text(\n            'Recycling Information:',\n            style: Theme.of(context).textTheme.titleMedium?.copyWith(\n              fontWeight: FontWeight.bold,\n            ),\n          ),\n          const SizedBox(height: 8),\n          _buildBulletPoint('Please recycle aluminum can'),\n          _buildBulletPoint('Check local recycling guidelines'),\n          const SizedBox(height: 20),\n          \n          // Sustainability Goals Section\n          Text(\n            'Sustainability Goals:',\n            style: Theme.of(context).textTheme.titleMedium?.copyWith(\n              fontWeight: FontWeight.bold,\n            ),\n          ),\n          const SizedBox(height: 8),\n          _buildBulletPoint('30% reduction in water usage by 2025'),\n          _buildBulletPoint('100% renewable energy in production by 2026'),\n          _buildBulletPoint('Zero waste to landfill by 2027'),\n        ],\n      ),\n    );\n  }\n\n  Widget _buildBulletPoint(String text) {\n    return Padding(\n      padding: const EdgeInsets.only(left: 16.0, bottom: 4.0),\n      child: Row(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: [\n          Text(\n            '• ',\n            style: TextStyle(\n              fontSize: 16,\n              fontWeight: FontWeight.bold,\n            ),\n          ),\n          Expanded(\n            child: Text(\n              text,\n              style: TextStyle(fontSize: 14),\n            ),\n          ),\n        ],\n      ),\n    );\n  }\n}"
+        }
+    ]
+}

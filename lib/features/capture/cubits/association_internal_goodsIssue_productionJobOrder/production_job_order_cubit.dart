@@ -375,7 +375,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
 
     final gs1CompanyPrefix = await AppPreferences.getGs1Prefix();
     try {
-      final results = await Future.any([
+      await Future.any([
         // update bom API call
         _httpService.request(
           "/api/bom/${jobOrderDetail?.id}", // sales order detail id

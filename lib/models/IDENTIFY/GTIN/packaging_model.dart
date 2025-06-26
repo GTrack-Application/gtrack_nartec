@@ -1,98 +1,93 @@
-class PackagingResponse {
-  final int currentPage;
-  final int pageSize;
-  final int totalProducts;
-  final int totalPages;
-  final List<PackagingModel> packagings;
-
-  PackagingResponse({
-    required this.currentPage,
-    required this.pageSize,
-    required this.totalProducts,
-    required this.totalPages,
-    required this.packagings,
-  });
-
-  factory PackagingResponse.fromJson(Map<String, dynamic> json) {
-    return PackagingResponse(
-      currentPage: json['currentPage'] ?? 0,
-      pageSize: json['pageSize'] ?? 0,
-      totalProducts: json['totalProducts'] ?? 0,
-      totalPages: json['totalPages'] ?? 0,
-      packagings: (json['packagings'] as List)
-          .map((e) => PackagingModel.fromJson(e))
-          .toList(),
-    );
-  }
-}
-
 class PackagingModel {
-  final String id;
-  final String status;
-  final String barcode;
-  final String packagingType;
-  final String material;
-  final String? dimensions;
-  final String weight;
-  final String? capacity;
-  final bool recyclable;
-  final bool biodegradable;
-  final String? packagingSupplier;
-  final String? costPerUnit;
-  final String color;
-  final String labeling;
-  final String brandOwnerId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> images;
-  final String lastModifiedBy;
-  final String domainName;
+  String? id;
+  String? status;
+  String? barcode;
+  String? packagingType;
+  String? material;
+  String? dimensions;
+  String? weight;
+  String? capacity;
+  bool? recyclable;
+  bool? biodegradable;
+  String? packagingSupplier;
+  String? costPerUnit;
+  String? color;
+  String? labeling;
+  String? brandOwnerId;
+  String? createdAt;
+  String? updatedAt;
+  List<String>? images;
+  String? lastModifiedBy;
+  String? domainName;
 
   PackagingModel({
-    required this.id,
-    required this.status,
-    required this.barcode,
-    required this.packagingType,
-    required this.material,
+    this.id,
+    this.status,
+    this.barcode,
+    this.packagingType,
+    this.material,
     this.dimensions,
-    required this.weight,
+    this.weight,
     this.capacity,
-    required this.recyclable,
-    required this.biodegradable,
+    this.recyclable,
+    this.biodegradable,
     this.packagingSupplier,
     this.costPerUnit,
-    required this.color,
-    required this.labeling,
-    required this.brandOwnerId,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.images,
-    required this.lastModifiedBy,
-    required this.domainName,
+    this.color,
+    this.labeling,
+    this.brandOwnerId,
+    this.createdAt,
+    this.updatedAt,
+    this.images,
+    this.lastModifiedBy,
+    this.domainName,
   });
 
-  factory PackagingModel.fromJson(Map<String, dynamic> json) {
-    return PackagingModel(
-      id: json['id'] ?? '',
-      status: json['status'] ?? '',
-      barcode: json['barcode'] ?? '',
-      packagingType: json['packaging_type'] ?? '',
-      material: json['material'] ?? '',
-      dimensions: json['dimensions'],
-      weight: json['weight']?.toString() ?? '0',
-      capacity: json['capacity'],
-      recyclable: json['recyclable'] ?? false,
-      biodegradable: json['biodegradable'] ?? false,
-      packagingSupplier: json['packaging_supplier'],
-      costPerUnit: json['cost_per_unit'],
-      color: json['color'] ?? '',
-      labeling: json['labeling'] ?? '',
-      brandOwnerId: json['brand_owner_id'] ?? '',
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      images: List<String>.from(json['images'] ?? []),
-      lastModifiedBy: json['last_modified_by'] ?? '',
-      domainName: json['domainName'] ?? '',
-    );
+  PackagingModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
+    status = json['status'].toString();
+    barcode = json['barcode'].toString();
+    packagingType = json['packaging_type'].toString();
+    material = json['material'].toString();
+    dimensions = json['dimensions'].toString();
+    weight = json['weight'].toString();
+    capacity = json['capacity'].toString();
+    recyclable = json['recyclable'];
+    biodegradable = json['biodegradable'];
+    packagingSupplier = json['packaging_supplier'].toString();
+    costPerUnit = json['cost_per_unit'].toString();
+    color = json['color'].toString();
+    labeling = json['labeling'].toString();
+    brandOwnerId = json['brand_owner_id'].toString();
+    createdAt = json['created_at'].toString();
+    updatedAt = json['updated_at'].toString();
+    images = json['images'].cast<String>();
+    lastModifiedBy = json['last_modified_by'].toString();
+    domainName = json['domainName'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['status'] = status;
+    data['barcode'] = barcode;
+    data['packaging_type'] = packagingType;
+    data['material'] = material;
+    data['dimensions'] = dimensions;
+    data['weight'] = weight;
+    data['capacity'] = capacity;
+    data['recyclable'] = recyclable;
+    data['biodegradable'] = biodegradable;
+    data['packaging_supplier'] = packagingSupplier;
+    data['cost_per_unit'] = costPerUnit;
+    data['color'] = color;
+    data['labeling'] = labeling;
+    data['brand_owner_id'] = brandOwnerId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['images'] = images;
+    data['last_modified_by'] = lastModifiedBy;
+    data['domainName'] = domainName;
+    return data;
   }
 }

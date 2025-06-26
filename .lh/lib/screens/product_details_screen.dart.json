@@ -1,0 +1,18 @@
+{
+    "sourceFile": "lib/screens/product_details_screen.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1750832511946,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1750832511946,
+            "name": "Commit-0",
+            "content": "\n"
+        }
+    ]
+}

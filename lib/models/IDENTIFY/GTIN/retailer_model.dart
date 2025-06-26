@@ -1,84 +1,60 @@
-class RetailerResponse {
-  final List<RetailerModel> retailers;
-  final RetailerPagination pagination;
-
-  RetailerResponse({
-    required this.retailers,
-    required this.pagination,
-  });
-
-  factory RetailerResponse.fromJson(Map<String, dynamic> json) {
-    return RetailerResponse(
-      retailers:
-          (json['data'] as List).map((e) => RetailerModel.fromJson(e)).toList(),
-      pagination: RetailerPagination.fromJson(json['pagination']),
-    );
-  }
-}
-
 class RetailerModel {
-  final String id;
-  final String productSku;
-  final String barcode;
-  final String storeId;
-  final String storeName;
-  final String storeGln;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String brandOwnerId;
-  final String lastModifiedBy;
-  final String domainName;
+  String? id;
+  String? productSku;
+  String? barcode;
+  String? storeId;
+  String? storeName;
+  String? storeGln;
+  String? logo;
+  String? createdAt;
+  String? updatedAt;
+  String? brandOwnerId;
+  String? lastModifiedBy;
+  String? domainName;
 
-  RetailerModel({
-    required this.id,
-    required this.productSku,
-    required this.barcode,
-    required this.storeId,
-    required this.storeName,
-    required this.storeGln,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.brandOwnerId,
-    required this.lastModifiedBy,
-    required this.domainName,
-  });
+  RetailerModel(
+      {this.id,
+      this.productSku,
+      this.barcode,
+      this.storeId,
+      this.storeName,
+      this.storeGln,
+      this.logo,
+      this.createdAt,
+      this.updatedAt,
+      this.brandOwnerId,
+      this.lastModifiedBy,
+      this.domainName});
 
-  factory RetailerModel.fromJson(Map<String, dynamic> json) {
-    return RetailerModel(
-      id: json['id'] ?? '',
-      productSku: json['product_sku'] ?? '',
-      barcode: json['barcode'] ?? '',
-      storeId: json['store_id'] ?? '',
-      storeName: json['store_name'] ?? '',
-      storeGln: json['store_gln'] ?? '',
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      brandOwnerId: json['brand_owner_id'] ?? '',
-      lastModifiedBy: json['last_modified_by'] ?? '',
-      domainName: json['domainName'] ?? '',
-    );
+  RetailerModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    productSku = json['product_sku'];
+    barcode = json['barcode'];
+    storeId = json['store_id'];
+    storeName = json['store_name'];
+    storeGln = json['store_gln'];
+    logo = json['logo'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    brandOwnerId = json['brand_owner_id'];
+    lastModifiedBy = json['last_modified_by'];
+    domainName = json['domainName'];
   }
-}
 
-class RetailerPagination {
-  final int total;
-  final int page;
-  final int pageSize;
-  final int totalPages;
-
-  RetailerPagination({
-    required this.total,
-    required this.page,
-    required this.pageSize,
-    required this.totalPages,
-  });
-
-  factory RetailerPagination.fromJson(Map<String, dynamic> json) {
-    return RetailerPagination(
-      total: json['total'] ?? 0,
-      page: json['page'] ?? 0,
-      pageSize: json['pageSize'] ?? 0,
-      totalPages: json['totalPages'] ?? 0,
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['product_sku'] = productSku;
+    data['barcode'] = barcode;
+    data['store_id'] = storeId;
+    data['store_name'] = storeName;
+    data['store_gln'] = storeGln;
+    data['logo'] = logo;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['brand_owner_id'] = brandOwnerId;
+    data['last_modified_by'] = lastModifiedBy;
+    data['domainName'] = domainName;
+    return data;
   }
 }

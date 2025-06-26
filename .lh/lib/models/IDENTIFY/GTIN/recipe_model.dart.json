@@ -1,0 +1,22 @@
+{
+    "sourceFile": "lib/models/IDENTIFY/GTIN/recipe_model.dart",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1750834483251,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1750834493926,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,13 @@\n class RecipeModel {\n   int? iD;\n-  Null? logo;\n+  String? logo;\n   String? title;\n   String? description;\n   String? ingredients;\n   String? linkType;\n   String? gTIN;\n-  Null? companyId;\n+  String? companyId;\n \n   RecipeModel(\n       {this.iD,\n       this.logo,\n"
+                }
+            ],
+            "date": 1750834483251,
+            "name": "Commit-0",
+            "content": "class RecipeModel {\n  int? iD;\n  Null? logo;\n  String? title;\n  String? description;\n  String? ingredients;\n  String? linkType;\n  String? gTIN;\n  Null? companyId;\n\n  RecipeModel(\n      {this.iD,\n      this.logo,\n      this.title,\n      this.description,\n      this.ingredients,\n      this.linkType,\n      this.gTIN,\n      this.companyId});\n\n  RecipeModel.fromJson(Map<String, dynamic> json) {\n    iD = json['ID'];\n    logo = json['logo'];\n    title = json['title'];\n    description = json['description'];\n    ingredients = json['ingredients'];\n    linkType = json['LinkType'];\n    gTIN = json['GTIN'];\n    companyId = json['companyId'];\n  }\n\n  Map<String, dynamic> toJson() {\n    final Map<String, dynamic> data = <String, dynamic>{};\n    data['ID'] = iD;\n    data['logo'] = logo;\n    data['title'] = title;\n    data['description'] = description;\n    data['ingredients'] = ingredients;\n    data['LinkType'] = linkType;\n    data['GTIN'] = gTIN;\n    data['companyId'] = companyId;\n    return data;\n  }\n}\n"
+        }
+    ]
+}

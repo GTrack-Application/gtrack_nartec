@@ -23,6 +23,8 @@ class GTINController {
   static final HttpService httpService = HttpService(baseUrl: AppUrls.gs1Url);
   static final HttpService gtrackService = HttpService(baseUrl: AppUrls.gtrack);
   static final HttpService upcHubService = HttpService(baseUrl: AppUrls.upcHub);
+  static final HttpService gtrackBackendOnline =
+      HttpService(baseUrl: AppUrls.gtrack);
 
   // static Future<List<GTIN_Model>> getProducts() async {
   //   final userId = await AppPreferences.getUserId();
@@ -86,18 +88,11 @@ class GTINController {
     }
   }
 
-  static Future<List<AllergenModel>> getAllergenInformation(
-    String gtin, {
-    int page = 1,
-    int limit = 100,
-  }) async {
+  static Future<List<AllergenModel>> getAllergenInformation(String gtin) async {
     final response = await upcHubService.request(
-      '/api/digitalLinks/ingredients?barcode=$gtin&page=$page&pageSize=$limit',
+      '/api/digitalLinks/ingredients?barcode=$gtin&page=1&pageSize=100',
       method: HttpMethod.get,
     );
-
-    print(
-        "Url: ${AppUrls.upcHub}/api/digitalLinks/ingredients?barcode=$gtin&page=$page&pageSize=$limit");
 
     if (response.success) {
       final data = response.data['ingredients'] as List;
@@ -109,18 +104,14 @@ class GTINController {
     }
   }
 
-  static Future<RetailerResponse> getRetailerInformation(
-    String gtin, {
-    required int page,
-    required int limit,
-  }) async {
+  static Future<List<RetailerModel>> getRetailerInformation(String gtin) async {
     final response = await upcHubService.request(
-      '/api/digitalLinks/retailers?page=$page&pageSize=$limit&barcode=$gtin',
+      '/api/digitalLinks/retailers?page=1&pageSize=100&barcode=$gtin',
       method: HttpMethod.get,
     );
 
-    final retailerResponse = RetailerResponse.fromJson(response.data);
-    return retailerResponse;
+    final data = response.data['data'] as List;
+    return data.map((e) => RetailerModel.fromJson(e)).toList();
   }
 
   static Future<IngredientResponse> getIngredientInformation(
@@ -137,78 +128,57 @@ class GTINController {
     return ingredientResponse;
   }
 
-  static Future<PackagingResponse> getPackagingInformation(
-    String gtin, {
-    required int page,
-    required int limit,
-  }) async {
+  static Future<List<PackagingModel>> getPackagingInformation(
+      String gtin) async {
     final response = await upcHubService.request(
-      '/api/digitalLinks/packagings?page=$page&pageSize=$limit&barcode=$gtin',
+      '/api/digitalLinks/packagings?barcode=$gtin&page=1&pageSize=100',
       method: HttpMethod.get,
     );
 
-    final packagingResponse = PackagingResponse.fromJson(response.data);
-    return packagingResponse;
+    final data = response.data['packagings'] as List;
+    return data.map((e) => PackagingModel.fromJson(e)).toList();
   }
 
-  static Future<PromotionalOfferResponse> getPromotionalOffers(
-    String gtin, {
-    required int page,
-    required int limit,
-  }) async {
-    final response = await gtrackService.request(
-      '/api/getPromotionalOffersByGtin/$gtin',
+  static Future<List<PromotionalOfferModel>> getPromotionalOffers(
+      String gtin) async {
+    final response = await upcHubService.request(
+      '/api/digitalLinks/promotionalOffers?page=1&pageSize=100&barcode=$gtin',
       method: HttpMethod.get,
     );
 
-    final promotionalResponse =
-        PromotionalOfferResponse.fromJson(response.data);
-    return promotionalResponse;
+    final data = response.data['promotionalOffers'] as List;
+    return data.map((e) => PromotionalOfferModel.fromJson(e)).toList();
   }
 
-  static Future<RecipeResponse> getRecipeInformation(
-    String gtin, {
-    required int page,
-    required int limit,
-  }) async {
-    final response = await gtrackService.request(
+  static Future<List<RecipeModel>> getRecipeInformation(String gtin) async {
+    final response = await gtrackBackendOnline.request(
       '/api/getRecipeDataByGtin/$gtin',
       method: HttpMethod.get,
     );
 
-    final recipeResponse = RecipeResponse.fromJson(response.data);
-    return recipeResponse;
+    final data = response.data as List;
+    return data.map((e) => RecipeModel.fromJson(e)).toList();
   }
 
-  static Future<LeafletResponse> getLeafletInformation(
-    String gtin, {
-    required int page,
-    required int limit,
-  }) async {
-    final response = await gtrackService.request(
+  static Future<List<LeafletModel>> getLeafletInformation(String gtin) async {
+    final response = await gtrackBackendOnline.request(
       '/api/getProductLeafLetsDataByGtin/$gtin',
       method: HttpMethod.get,
     );
 
-    final leafletResponse = LeafletResponse.fromJson(response.data);
-    return leafletResponse;
+    final data = response.data as List;
+    if (data.isEmpty) {
+      return [];
+    }
+    return data.map((e) => LeafletModel.fromJson(e)).toList();
   }
 
-  static Future<ImageResponse> getImageInformation(
-    String gtin, {
-    required int page,
-    required int limit,
-  }) async {
-    final response = await upcHubService.request(
-        "/api/digitalLinks/images?page=$page&pageSize=$limit&barcode=$gtin");
+  static Future<List<ImageModel>> getImageInformation(String gtin) async {
+    final response = await upcHubService
+        .request("/api/digitalLinks/images?barcode=$gtin&page=1&pageSize=100");
 
-    if (response.success) {
-      return ImageResponse.fromJson(response.data);
-    } else {
-      throw Exception(response.data['error'] ??
-          response.data['message'] ??
-          'Failed to load images');
-    }
+    final data = response.data['data'] as List;
+    return data.map((e) => ImageModel.fromJson(e)).toList();
   }
 
   static Future<InstructionResponse> getInstructionInformation(
@@ -226,23 +196,14 @@ class GTINController {
     }
   }
 
-  static Future<VideoResponse> getVideoInformation(
-    String gtin, {
-    required int page,
-    required int limit,
-  }) async {
+  static Future<List<VideoModel>> getVideoInformation(String gtin) async {
     final response = await upcHubService.request(
-      "/api/digitalLinks/videos?page=$page&pageSize=$limit&barcode=$gtin",
+      "/api/digitalLinks/videos?page=1&pageSize=100&barcode=$gtin",
       method: HttpMethod.get,
     );
 
-    if (response.success) {
-      return VideoResponse.fromJson(response.data);
-    } else {
-      throw Exception(response.data['error'] ??
-          response.data['message'] ??
-          'Failed to load videos');
-    }
+    final data = response.data['data'] as List;
+    return data.map((e) => VideoModel.fromJson(e)).toList();
   }
 
   static Future<Map<String, dynamic>> getDigitalLinkViewData(
@@ -252,16 +213,16 @@ class GTINController {
   }) async {
     try {
       final responses = await Future.wait([
-        getAllergenInformation(gtin, page: page, limit: limit),
-        getRetailerInformation(gtin, page: page, limit: limit),
+        getAllergenInformation(gtin),
+        getRetailerInformation(gtin),
         getIngredientInformation(gtin, page: page, limit: limit),
-        getPackagingInformation(gtin, page: page, limit: limit),
-        getPromotionalOffers(gtin, page: page, limit: limit),
-        getRecipeInformation(gtin, page: page, limit: limit),
-        getLeafletInformation(gtin, page: page, limit: limit),
-        getImageInformation(gtin, page: page, limit: limit),
+        getPackagingInformation(gtin),
+        getPromotionalOffers(gtin),
+        getRecipeInformation(gtin),
+        getLeafletInformation(gtin),
+        getImageInformation(gtin),
         getInstructionInformation(gtin, page: page, limit: limit),
-        getVideoInformation(gtin, page: page, limit: limit),
+        getVideoInformation(gtin),
       ]);
 
       return {
@@ -285,13 +246,11 @@ class GTINController {
     final response =
         await upcHubService.request('/api/productReview?ProductId=$gtin');
 
-    if (response.success) {
-      return (response.data as List)
-          .map((e) => ReviewModel.fromJson(e))
-          .toList();
-    } else {
-      throw Exception('Failed to load reviews');
+    final data = response.data as List;
+    if (data.isEmpty) {
+      return [];
     }
+    return data.map((e) => ReviewModel.fromJson(e)).toList();
   }
 
   static Future<ReviewModel> postReview({

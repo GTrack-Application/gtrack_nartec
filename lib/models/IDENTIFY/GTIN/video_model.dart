@@ -1,58 +1,44 @@
 class VideoModel {
-  final String id;
-  final String barcode;
-  final String videos;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String brandOwnerId;
-  final String lastModifiedBy;
-  final String domainName;
+  String? id;
+  String? barcode;
+  String? videos;
+  String? createdAt;
+  String? updatedAt;
+  String? brandOwnerId;
+  String? lastModifiedBy;
+  String? domainName;
 
-  VideoModel({
-    required this.id,
-    required this.barcode,
-    required this.videos,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.brandOwnerId,
-    required this.lastModifiedBy,
-    required this.domainName,
-  });
+  VideoModel(
+      {this.id,
+      this.barcode,
+      this.videos,
+      this.createdAt,
+      this.updatedAt,
+      this.brandOwnerId,
+      this.lastModifiedBy,
+      this.domainName});
 
-  factory VideoModel.fromJson(Map<String, dynamic> json) {
-    return VideoModel(
-      id: json['id'] ?? '',
-      barcode: json['barcode'] ?? '',
-      videos: json['videos'] ?? '',
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      brandOwnerId: json['brand_owner_id'] ?? '',
-      lastModifiedBy: json['last_modified_by'] ?? '',
-      domainName: json['domainName'] ?? '',
-    );
+  VideoModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    barcode = json['barcode'];
+    videos = json['videos'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    brandOwnerId = json['brand_owner_id'];
+    lastModifiedBy = json['last_modified_by'];
+    domainName = json['domainName'];
   }
-}
 
-class VideoResponse {
-  final List<VideoModel> videos;
-  final int totalPages;
-  final int currentPage;
-
-  VideoResponse({
-    required this.videos,
-    required this.totalPages,
-    required this.currentPage,
-  });
-
-  factory VideoResponse.fromJson(Map<String, dynamic> json) {
-    final videos = (json['data'] as List)
-        .map((item) => VideoModel.fromJson(item))
-        .toList();
-
-    return VideoResponse(
-      videos: videos,
-      totalPages: json['pagination']['totalPages'],
-      currentPage: json['pagination']['page'],
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['barcode'] = barcode;
+    data['videos'] = videos;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['brand_owner_id'] = brandOwnerId;
+    data['last_modified_by'] = lastModifiedBy;
+    data['domainName'] = domainName;
+    return data;
   }
 }
