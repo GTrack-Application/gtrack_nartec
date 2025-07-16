@@ -373,6 +373,7 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
   }) async {
     emit(ProductionJobOrderUpdateMappedBarcodesLoading());
 
+    final selectedFirstCardObj = order;
     final gs1CompanyPrefix = await AppPreferences.getGs1Prefix();
     try {
       await Future.any([
@@ -413,23 +414,43 @@ class ProductionJobOrderCubit extends Cubit<ProductionJobOrderState> {
 
         // EPCIS API Call
         EPCISController.insertNewEPCISEvent(
-          // eventType: "TransactionEvent",
-          eventType: "AssociationEvent",
+          eventType: "TransformationEvent",
           latitude: selectedBinLocation?.latitude?.toString(),
           longitude: selectedBinLocation?.longitude?.toString(),
           gln: selectedBinLocation?.gln,
-          ssccNo: selectedpackagingScanResults.first['ssccNo'],
+          inputEPCList: _selectedpackagingScanResults
+              .map((scannedItem) =>
+                  "urn:epc:id:sgtin:$gs1CompanyPrefix.${scannedItem['serialGTIN']}")
+              .toList(), // barcode of all selected scanned items,
+          outputEPCList: [
+            "urn:epc:id:sgtin:$gs1CompanyPrefix.${selectedFirstCardObj?.productId}"
+          ], // jis card par click karta hn uska gtin,
+
+          // ssccNo: selectedpackagingScanResults.first['ssccNo'],
           bizTransactionList: [
             {
-              "type": "po",
+              "type": "jo",
               "bizTransaction":
-                  "http://transaction.acme.com/jo/${jobOrderDetail?.jobOrderDetailsId}"
-            },
+                  "http://transaction.acme.com/jo/${selectedFirstCardObj?.jobOrderMaster?.jobOrderNumber}"
+            }, // pass job order number from master data of sales order
           ],
-          childEPCs: selectedpackagingScanResults
-              .map((item) =>
-                  'urn:epc:id:sscc:$gs1CompanyPrefix.${item['ssccNo']}')
+          inputQuantityList: _selectedpackagingScanResults
+              .map((scannedItem) => {
+                    "epcClass":
+                        "urn:epc:class:lgtin:$gs1CompanyPrefix.$scannedItem['serialGTIN']}",
+                    "quantity": 1,
+                    "uom": "EA"
+                  })
               .toList(),
+          // it will be same as input epc list (scanned items) just object format needed to be pass
+          outputQuantityList: _selectedpackagingScanResults
+              .map((scannedItem) => {
+                    "epcClass":
+                        "urn:epc:class:lgtin:$gs1CompanyPrefix.${selectedFirstCardObj?.productId}",
+                    "quantity": 1,
+                    "uom": "EA"
+                  })
+              .toList(), // same as output epc list but in diff format
         ),
       ]);
 

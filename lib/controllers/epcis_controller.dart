@@ -94,6 +94,7 @@ class EPCISController {
     String? parentID,
     String? customProcessName,
     String? customProcessId,
+    String? createdBy,
     Map? readPoint,
     Map? bizLocation,
     List? epcList,
@@ -103,6 +104,10 @@ class EPCISController {
     List? sourceList,
     List? destinationList,
     List? quantityList,
+    List? inputEPCList,
+    List? outputEPCList,
+    List? inputQuantityList,
+    List? outputQuantityList,
   }) async {
     // String? token;
     // await AppPreferences.getToken().then((value) => token = value.toString());
@@ -199,6 +204,59 @@ class EPCISController {
         "gs1CompanyPrefix": "$gs1CompanyPrefix",
         "longitude": "-122.4194",
         "latitude": "37.7749"
+      };
+    } else if (eventType == "TransformationEvent") {
+      payload = {
+        "type": "TransformationEvent",
+        "action": "ADD",
+        "createdBy": createdBy ?? "abdulmajid1m2@gmail.com",
+        "inputEPCList":
+            inputEPCList ?? ["urn:epc:id:sgtin:6285561.6285561000056"],
+        "outputEPCList":
+            outputEPCList ?? ["urn:epc:id:sgtin:6285561.6285561000155"],
+        "transformationID": "urn:epcglobal:cbv:tt:0614141:Transform-0001",
+        "bizStep": "urn:epcglobal:cbv:bizstep:assembling",
+        "disposition": "urn:epcglobal:cbv:disp:active",
+        "eventTime": eventTime ?? "2025-07-13T17:37:56.128Z",
+        "eventTimeZoneOffset": "+05:00",
+        "readPoint": {
+          "id": {"id": "urn:epc:id:sgln:$gs1CompanyPrefix.$gln"}
+        },
+        "bizLocation": {
+          "id": {"id": "urn:epc:id:sgln:$gs1CompanyPrefix.$gln"}
+        },
+        "bizTransactionList": bizTransactionList ??
+            [
+              {
+                "type": "po",
+                "bizTransaction":
+                    "http://transaction.acme.com/jo/cmd01dimr0005b7gozaljbglu"
+              }
+            ],
+        "sourceList": sourceList ?? [],
+        "destinationList": destinationList ?? [],
+        "sensorElementList": [],
+        "inputQuantityList": inputQuantityList ??
+            [
+              {
+                "epcClass": "urn:epc:class:lgtin:6285561.6285561000155",
+                "quantity": 1,
+                "uom": "EA"
+              }
+            ],
+        "outputQuantityList": outputQuantityList ??
+            [
+              {
+                "epcClass": "urn:epc:class:lgtin:6285561.6285561000155",
+                "quantity": 1,
+                "uom": "EA"
+              }
+            ],
+        "gs1CompanyPrefix": gs1CompanyPrefix ?? "6285561",
+        "longitude": latitude ?? "46.68340240337157",
+        "latitude": longitude ?? "24.729715230502638",
+        "creationDate":
+            DateTime.now().toIso8601String() ?? "2025-07-13T17:37:56.128Z"
       };
     } else if (eventType == "ObjectEvent") {
       payload = {
